@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Miniature Earth | World Trip Demo</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<link rel="stylesheet" href="world-trip/style.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+if ( location.protocol == 'file:' ) {
+	alert( 'This demo does not work with the file protocol due to browser security restrictions.' );
+}
+
+
+var myearth, mypin;
+
+var spain, nyc, california, hawaii, japan, thailand, kenia;
+var nycLocation = { lat: 40.689, lng: -74.046 };
+var nearDistance = 22;
+var activeMarker = false;
+
+
+window.addEventListener( "load", function() {
+
+	myearth = new Earth( document.getElementById('myearth'), {
+	
+		location: { lat: 12, lng: -3 },
+		zoom: 0.925,
+		draggable: false,
+		lightAmbience: 0.65,
+		light: 'sun',
+		lightIntensity: 0.55,
+		shininess: 0.12,
+		
+		mapSeaColor : '#dfd9d4',
+		mapLandColor : '#765f4f',
+		mapBorderColor : '#d2aa8a',
+		mapBorderWidth : 0.6,
+		
+	} );
+	
+	
+	myearth.addEventListener( "drawtexture", function() {
+	
+		// draw cork pattern
+		
+		myearth.mapContext.globalCompositeOperation = 'multiply';
+		var cells = 5;
+		var size = myearth.mapCanvas.height/cells;
+		
+		for ( var row = 0; row < cells; row++ ) {
+			for ( var col = 0; col < cells*2; col++ ) {
+				myearth.mapContext.drawImage(
+					document.getElementById('cork'),
+					0, 0, 256, 256,
+					col*size, row*size, size, size
+				);
+			}
+		}
+		
+		// draw tiki sticker
+
+		myearth.mapContext.globalCompositeOperation = 'source-over';
+		
+		myearth.mapContext.drawImage(
+			document.getElementById('sticker'),
+			0, 0, 254, 558,
+			myearth.mapCanvas.width*0.01, myearth.mapCanvas.height * 0.38, myearth.mapCanvas.width*0.05, myearth.mapCanvas.width*0.05 * (558/254)
+		);
+		
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+	
+		window.addEventListener( 'scroll' , syncScroll );
+			
+		// spain
+		
+		spain = this.addMarker( {
+			location : { lat: 40.4380637, lng: -3.7497477 },
+			mesh : ["Flag3", "Needle"],
+			color: 0xff1b20,					
+			scale: 1.35,
+			hotspot: true,
+			hotspotRadius: 0.7,
+			hotspotHeight : 1.2,
+			lookAt: nycLocation,
+		} );
+		
+		spain.tip = this.addOverlay( {
+			location : spain.location,
+			content : 'Spain',
+			depthScale : 0.25,
+			elementScale : 0.5,
+			visible : false,
+			className : 'tip-overlay'
+		} );
+
+		spain.addEventListener( "mouseover", showTip );
+		spain.addEventListener( "mouseout", hideTip );
+		
+		spain.activate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 1.3 );
+			this.animate( 'rotationX', 40 );
+			this.animate( 'scale', 1.62 );
+		};
+		spain.deactivate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 0 );
+			this.animate( 'rotationX', 0 );
+			this.animate( 'scale', 1.35 );
+		};
+		
+		
+		// california
+		
+		california = this.addMarker( {
+			location : { lat: 34.0311504, lng: -118.3289974 },
+			mesh : ["Pin2", "Needle"],
+			color: 0x2549ff,					
+			scale: 1.25,
+			hotspot: true,
+			hotspotRadius: 0.7,
+			hotspotHeight : 1.4,
+		} );
+		
+		california.tip = this.addOverlay( {
+			location : california.location,
+			content : 'California',
+			depthScale : 0.25,
+			elementScale : 0.5,
+			visible : false,
+			className : 'tip-overlay',
+		} );
+
+		california.addEventListener( "mouseover", showTip );
+		california.addEventListener( "mouseout", hideTip );
+		
+		california.activate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 1.2 );
+			this.animate( 'rotationX', -30 );
+			this.animate( 'rotationZ', 25 );
+			this.animate( 'scale', 1.5 );
+		};
+		california.deactivate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 0 );
+			this.animate( 'rotationX', 0 );
+			this.animate( 'rotationZ', 0 );
+			this.animate( 'scale', 1.25 );
+		};
+		
+		
+		// hawaii
+		
+		hawaii = this.addMarker( {
+			location : { lat: 21.3198546, lng: -157.9353933 },
+			mesh : ["Pin", "Needle"],
+			color: 0x30b81f,					
+			scale: 1.3,
+			hotspot: true,
+		} );
+		
+		hawaii.tip = this.addOverlay( {
+			location : hawaii.location,
+			content : 'Hawaii',
+			depthScale : 0.25,
+			elementScale : 0.5,
+			visible : false,
+			className : 'tip-overlay',
+		} );				
+
+		hawaii.addEventListener( "mouseover", showTip );
+		hawaii.addEventListener( "mouseout", hideTip );	
+		
+		hawaii.activate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 1.25 );
+			this.animate( 'rotationX', -18 );
+			this.animate( 'rotationZ', -16 );
+			this.animate( 'scale', 1.55 );
+		};
+		hawaii.deactivate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 0 );
+			this.animate( 'rotationX', 0 );
+			this.animate( 'rotationZ', 0 );
+			this.animate( 'scale', 1.3 );
+		};
+		
+		
+
+		// japan
+		
+		japan = this.addMarker( {
+			location : { lat: 35.6693859, lng: 139.6009549 },
+			mesh : ["Pin", "Needle"],
+			color: 0xff1b20,					
+			scale: 1.3,
+			hotspot: true,
+		} );
+		
+		japan.tip = this.addOverlay( {
+			location : japan.location,
+			content : 'Japan',
+			depthScale : 0.25,
+			elementScale : 0.5,
+			visible : false,
+			className : 'tip-overlay',
+		} );
+
+		japan.addEventListener( "mouseover", showTip );
+		japan.addEventListener( "mouseout", hideTip );
+						
+		japan.activate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 1.2 );
+			this.animate( 'rotationX', -20 );
+			this.animate( 'rotationZ', 20 );
+			this.animate( 'scale', 1.55 );
+		};
+		japan.deactivate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 0 );
+			this.animate( 'rotationX', 0 );
+			this.animate( 'rotationZ', 0 );
+			this.animate( 'scale', 1.3 );
+		};
+
+		
+		
+		// thailand
+		
+		thailand = this.addMarker( {
+			location : { lat: 13.7248934, lng: 100.492684 },
+			mesh : ["Flag", "Needle"],
+			color: 0x2549ff,					
+			scale: 1.3,
+			hotspot: true,
+			hotspotRadius: 0.7,
+			hotspotHeight : 1.2,
+			rotationY: 25,
+			rotationX: -15,
+		} );
+		
+		thailand.tip = this.addOverlay( {
+			location : thailand.location,
+			content : 'Thailand',
+			depthScale : 0.25,
+			elementScale : 0.5,
+			visible : false,
+			className : 'tip-overlay',
+		} );
+
+		thailand.addEventListener( "mouseover", showTip );
+		thailand.addEventListener( "mouseout", hideTip );
+		
+		thailand.activate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 1 );
+			this.animate( 'rotationX', -55 );
+			this.animate( 'rotationZ', 20 );
+			this.animate( 'scale', 1.55 );
+		};
+		thailand.deactivate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 0 );
+			this.animate( 'rotationX', -15 );
+			this.animate( 'rotationZ', 0 );
+			this.animate( 'scale', 1.3 );
+		};
+		
+		
+		
+		// kenia
+		
+		kenia = this.addMarker( {
+			location : { lat: -1.3030364, lng: 36.7771854 },
+			mesh : ["Pin2", "Needle"],
+			color: 0x30b81f,					
+			scale: 1.25,
+			hotspot: true,
+			hotspotRadius: 0.7,
+			hotspotHeight : 1.4,
+		} );
+		
+		kenia.tip = this.addOverlay( {
+			location : kenia.location,
+			content : 'Kenia',
+			depthScale : 0.25,
+			elementScale : 0.5,
+			visible : false,
+			className : 'tip-overlay tip-down',
+		} );
+
+		kenia.addEventListener( "mouseover", showTip );
+		kenia.addEventListener( "mouseout", hideTip );
+						
+		kenia.activate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 1.25 );
+			this.animate( 'rotationX', 40 );
+			this.animate( 'scale', 1.5 );
+		};
+		kenia.deactivate = function() {
+			this.stopAllAnimations();
+			
+			this.animate( 'offset', 0 );
+			this.animate( 'rotationX', 0 );
+			this.animate( 'scale', 1.25 );
+		};
+		
+		
+		
+		// lines
+		
+		// spain - nyc
+		
+		this.addLine( {
+			locations: [ spain.location, nycLocation ],
+			color : 0xed1717,
+			width: 1.25,
+			offsetFlow: 1,
+			dashed: true,
+			dashSize: 0.4,
+			dashRatio : 0.5,
+			dashOffset : 0.09
+		} );
+		
+		
+		// nyc - california
+		
+		this.addLine( {
+			polyLine: true,
+			locations: [
+				nycLocation,
+				{ lat: 43.091239, lng: -79.1718307 }, // niagara
+				{ lat: 41.6190188, lng: -88.1650261 }, // cicago
+				{ lat: 41.6915624, lng: -99.9371189 }, // nebraska
+				{ lat: 39.7862819, lng: -105.6015808 }, // denver
+				{ lat: 39.0098291, lng: -112.6382665 }, // utah
+				{ lat: 36.185957, lng: -115.4224017 }, // vegas
+				california.location
+			],
+			color : "black",
+			width: 1.25
+		} );
+		
+		
+		// california - hawaii
+		
+		this.addLine( {
+			polyLine: true,
+			locations: [
+				california.location,
+				{lat: 31.163160867378515, lng: -119.50505949419858},
+				{lat: 29.377335348017763, lng: -120.23347044155403},
+				{lat: 27.987920645411283, lng: -120.97509940385386},
+				{lat: 24.818344640116504, lng: -123.7714191048682},
+				{lat: 23.096585391744945, lng: -126.27515241387691},
+				{lat: 21.033975310374625, lng: -129.5042878834362},
+				{lat: 19.518891916312576, lng: -133.2488568815472},
+				{lat: 18.505240294212037, lng: -137.3071707879784},
+				{lat: 17.795533460575584, lng: -143.7123111588744},
+				{lat: 18.0782752401994, lng: -147.03263627747856},
+				{lat: 18.94030015038251, lng: -149.2445920470761},
+				{lat: 20.84908472810411, lng: -152.3034150012591},
+				{lat: 21.653851037350858, lng: -155.1422991629944},
+				hawaii.location
+			],
+			color : 0x3659cd,
+			width: 1.25
+		} );				
+
+		
+		// hawaii - japan
+		
+		this.addLine( {
+			locations: [ hawaii.location, japan.location ],
+			color : 0xed1717,
+			width: 1.25,
+			offsetFlow: 1,
+			dashed: true,
+			dashSize: 0.4,
+			dashRatio : 0.5,
+			dashOffset : 0.105
+		} );
+
+		
+		// japan - thailand
+		
+		this.addLine( {
+			polyLine: true,
+			locations: [
+				japan.location,
+				{lat: 32.78213447865391, lng: 136.12453232511197},
+				{lat: 30.99334320817764, lng: 132.8916545259063},
+				{lat: 30.04447218420276, lng: 130.3206330641471},
+				{lat: 29.48140910284833, lng: 127.5047189951175},
+				{lat: 27.80128581092784, lng: 122.55283848847692},
+				{lat: 26.162065164801025, lng: 120.97170608269381},
+				{lat: 24.4217894019055, lng: 119.6305602245371},
+				{lat: 23.007116918998207, lng: 117.8398367778564},
+				{lat: 22.42252630391176, lng: 114.39895578860998},
+				{lat: 22.500773152287213, lng: 113.52601819482305},
+				{lat: 21.585517427462356, lng: 113.27384587875595},
+				{lat: 19.67029099563807, lng: 113.24969787432671},
+				{lat: 17.85015961554018, lng: 112.44608934829685},
+				{lat: 14.874583708900815, lng: 111.46353892828185},
+				{lat: 11.308628561204666, lng: 110.27624534701265},
+				{lat: 9.421967600692518, lng: 108.24923243358782},
+				{lat: 7.262476614034991, lng: 106.14183029100957},
+				{lat: 6.929659710099698, lng: 104.295969360431},
+				{lat: 7.463023903932724, lng: 102.28354469453384},
+				{lat: 9.398907542411939, lng: 100.20496026033567},
+				{lat: 10.376634430500824, lng: 100.57506073256488},
+				thailand.location
+			],
+			color : 0x3659cd,
+			width: 1.25
+		} );
+		
+		
+		// thailand - kenia
+		
+		this.addLine( {
+			locations: [ thailand.location, kenia.location ],
+			color : 0xed1717,
+			width: 1.25,
+			offsetFlow: 1,
+			dashed: true,
+			dashSize: 0.4,
+			dashRatio : 0.5,
+			dashOffset : 0.09
+		} );
+
+		
+		syncScroll();
+
+	} );
+	
+	
+	// sunshine from fixed direction
+	
+	myearth.addEventListener( "change", function() {
+		this.sunLocation = { lat: this.location.lat + 30, lng: this.location.lng - 40 };	
+	} );
+	
+	
+	// add statue of liberty
+	
+	var ajax = new XMLHttpRequest();
+	ajax.onreadystatechange = function() {
+	
+		if ( this.readyState == 4 ) {
+		
+			Earth.addMesh( this.responseText );
+			
+			nyc = myearth.addMarker( {
+		
+				mesh : ["StatueOfLiberty"],
+				color: '#95c3d4',
+				shininess: 0.5,
+				
+				location : nycLocation,
+				scale: 0.01,
+				hotspot: true,
+				hotspotRadius: 0.6,
+				hotspotHeight : 1.8,
+				offset: 1,
+				rotationY: 50,
+			} );
+			
+			nyc.animate( 'scale', 1.5, { duration: 200 } );
+			nyc.animate( 'offset', 0, { duration: 800, easing: 'bounce' } );
+			
+		
+			nyc.tip = myearth.addOverlay( {
+				location : nycLocation,
+				content : 'New York',
+				depthScale : 0.25,
+				elementScale : 0.5,
+				visible : false,
+				className : 'tip-overlay',
+				transform: 'translate(-50%, 2em)'
+			} );
+
+			nyc.addEventListener( "mouseover", showTip );
+			nyc.addEventListener( "mouseout", hideTip );
+			
+		
+			nyc.activate = function() {
+				this.stopAllAnimations();
+				
+				this.animate( 'offset', 0.7 );
+				this.animate( 'rotationX', -40 );
+				this.animate( 'rotationY', 0 );
+				this.animate( 'scale', 1.65 );
+			};
+			nyc.deactivate = function() {
+				this.stopAllAnimations();
+				
+				this.animate( 'offset', 0 );
+				this.animate( 'rotationX', 0 );
+				this.animate( 'rotationY', 50 );
+				this.animate( 'scale', 1.5 );
+			};
+			
+			syncScroll();					
+			
+		}
+	};
+	ajax.open("GET", 'world-trip/statue-of-liberty.obj', true);
+	ajax.send();
+	
+	
+} );
+
+
+function getScrollProgress() {
+	if ( document.body.scrollTop ) {
+		return document.body.scrollTop / ( document.body.scrollHeight - window.innerHeight );	
+	} else if (document.documentElement.scrollTop) {
+		return document.documentElement.scrollTop / ( document.documentElement.scrollHeight - window.innerHeight );	
+	} else {
+		return 0;
+	}
+}
+
+function syncScroll() {
+
+	if ( getScrollProgress() > 0 ) document.body.classList.add('scrolled');
+
+	var lng = getScrollProgress() * -320 - 4;
+	
+	myearth.location = { lat: 12, lng: lng };
+	
+	
+	var places = [ spain, nyc, california, hawaii, japan, thailand, kenia ];
+	
+	var newActiveMarker = false;
+	
+	for ( var i in places ) {
+		if ( isNear( lng, places[i] ) ) {
+			newActiveMarker = places[i];
+			break;
+		}
+	}
+	
+	if ( newActiveMarker ) {
+		if (newActiveMarker != activeMarker) {
+			if ( activeMarker ) {
+				activeMarker.deactivate();
+			}
+			newActiveMarker.activate();
+		}
+	} else if ( activeMarker ) {
+		activeMarker.deactivate();
+	}
+	
+	activeMarker = newActiveMarker;
+	
+}
+
+function isNear( lng, marker ) {
+	if ( ! marker ) return false;
+
+	if ( Math.abs( lng - marker.location.lng ) > 180 ) {
+		lng = ( lng < 0 ) ? lng + 360 : lng - 360;
+	}
+
+	return ( lng > marker.location.lng - nearDistance && lng < marker.location.lng + nearDistance );
+}
+
+function showTip() {
+	this.tip.visible = true;
+}
+function hideTip() {
+	this.tip.visible = false;
+}
+
+</script>
+
+</head>
+
+<body>
+
+<div id="right">
+	<div id="myearth" class="earth-container"></div>
+</div><!--right-->
+
+<div id="left">
+
+	<section><div>
+		<h1>Trip Around<br>The World</h1>
+	</div></section>
+	
+	<section><div>
+		<h2 class="red">Spain</h2>
+		<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+	</div></section>
+	
+	<section><div style="transform: translateY(40%);">
+		<h2 class="nyc">New York</h2>
+		<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+	</div></section>
+	
+	<section><div>
+		<h2 class="blue">California</h2>
+		<p>Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus.</p>
+	</div></section>
+	
+	<section><div style="transform: translateY(-20%);">
+		<h2 class="green">Hawaii</h2>
+		<p>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+	</div></section>
+	
+	<section><div>
+		<h2 class="red">Japan</h2>
+		<p>Sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua.</p>
+	</div></section>
+	
+	<section><div style="transform: translateY(-45%);">
+		<h2 class="blue">Thailand</h2>
+		<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.</p>
+	</div></section>
+	
+	<section><div>
+		<h2 class="green">Kenia</h2>
+		<p>At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+	</div></section>
+	
+</div><!--left-->
+
+
+<svg id="icon-mousewheel" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="#765f4f" d="M16 2c1.103 0 2 .897 2 2v12c0 3.309-2.691 6-6 6s-6-2.691-6-6v-12c0-1.103.897-2 2-2h8zm4 2c0-2.209-1.791-4-4-4h-8c-2.209 0-4 1.791-4 4v12c0 4.418 3.582 8 8 8s8-3.582 8-8v-12zm-7 1c0-.552-.447-1-1-1s-1 .448-1 1v4c0 .552.447 1 1 1s1-.448 1-1v-4z"></path></svg>
+
+
+<div id="assets">
+	<img id="cork" src="world-trip/cork.jpg">
+	<img id="sticker" src="world-trip/sticker.svg">
+</div>
+
+
+
+</body>
+</html>

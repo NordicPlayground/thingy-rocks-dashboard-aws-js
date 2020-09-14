@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Miniature Earth Documentation</title>
+
+<link rel="stylesheet" href="assets/docs.css">
+<script src="assets/docs.js"></script>
+
+</head>
+<body class="has-index">
+	<div id="wrapper">
+		
+		<h1>Miniature Earth v2.6</h1>
+	
+		<h2 style="height:0;padding:0;margin:0;border:0;overflow:hidden">Index</h2>
+	
+		<div id="docs-index">
+			
+			<div class="docs-col">
+				<h3>API Reference</h3>
+				<ul>
+					<li>
+						<a href="api/earth.htm"><strong>Earth</strong></a>
+					</li>
+					
+					<li style="padding-top: 1em;">Objects:</li>
+					<li style="padding-left:1em;">
+						<a href="api/marker.htm"><strong>Marker</strong></a>
+						<span class="subtitle">A 3D object like a pin or flag</span>
+					</li>
+					<li style="padding-left:1em;">
+						<a href="api/image.htm"><strong>Image</strong></a>
+						<span class="subtitle">A graphic on the earth's surface</span>						
+					</li>
+					<li style="padding-left:1em;">
+						<a href="api/sprite.htm"><strong>Sprite</strong></a>
+						<span class="subtitle">A graphic pointing to the screen</span>						
+					</li>
+					<li style="padding-left:1em;">
+						<a href="api/line.htm"><strong>Line</strong></a>
+						<span class="subtitle">A 3D line object</span>
+					</li>
+					<li style="padding-left:1em;">
+						<a href="api/overlay.htm"><strong>Overlay</strong></a>
+						<span class="subtitle">Text or HTML attached to the earth</span>
+					</li>
+					
+					<li style="padding-top: 1em;">Other:</li>
+					<li style="padding-left:1em;"><a href="api/animation.htm">Animation</a></li>
+				</ul>
+				
+			</div>
+		
+			<div class="docs-col">
+				<h3>Styling</h3>
+				<ul>
+					<li><a href="../examples/map-styles.htm">Map Styles</a></li>
+					<li style="padding-left:1em;"><a href="../examples/map-custom-svg.htm">Map SVG</a></li>
+					<li style="padding-left:1em;"><a href="../examples/map-image.htm">Map Image</a></li>
+					<li><a href="../examples/properties/earth-light.htm">Light Types</a></li>
+					<li><a href="../examples/earth-styling.htm">Earth Styling</a></li>
+					<li><a href="../examples/properties/marker-meshes.htm">Builtin Marker Meshes</a></li>
+					
+				</ul>
+				
+				<h3>Control / Interaction</h3>
+				<ul>
+					<li><a href="../examples/earth-navigation.htm">Navigation</a></li>
+					<li><a href="../examples/get-location.htm">Get Location</a></li>
+					<li><a href="../examples/misc/click-events.htm">Hotspots / Click Events</a></li>
+					<li><a href="../examples/country-selector.htm">Country Selector</a></li>
+					<li><a href="../examples/drag-and-drop.htm">Drag and Drop</a></li>
+					<li><a href="../examples/rotate-by-keyboard.htm">Rotate by Keyboard</a></li>
+					<li><a href="../examples/rotate-by-mousewheel.htm">Rotate by Mousewheel</a></li>
+				</ul>
+
+				
+			</div>
+			
+			<div class="docs-col">
+				<h3>Topics</h3>
+				<ul>
+					<li><a href="../examples/misc/integration-minimal.htm">Minimal Example</a></li>
+					<li><a href="../examples/misc/integration-asynchronous.htm">Asynchronous Integration</a></li>
+					<li><a href="../examples/misc/integration-preload-fallback.htm">Preload & Fallback</a></li>
+					<li><a href="../examples/misc/object-types.htm">Object Types / Stacking</a></li>
+					<li><a href="../examples/misc/transparent-rendering.htm">Transparent Rendering</a></li>
+					<li><a href="../examples/occlusion.htm">Occlusion</a></li>
+					<li><a href="../examples/custom-marker-meshes.htm">Custom Marker Meshes</a></li>
+					<li><a href="../examples/animations.htm">Control Animations</a></li>
+					<li><a href="../examples/look-at-location.htm">Look at Location</a></li>
+					<li><a href="../examples/misc/earth-non-square.htm">Non-Square Container</a></li>
+					<li><a href="../examples/distance-angle-lerp.htm">Distance, Angle and Lerp</a></li>
+					<li><a href="../examples/misc/overlay-rotation.htm">Overlay Rotation</a></li>
+					<li><a href="../examples/draw-map-locations.htm">Draw Map Locations</a></li>
+					<li><a href="../examples/misc/capture-canvas-image.htm">Capture Image</a></li>
+				</ul>
+			</div>
+			
+			<div class="docs-col">
+				<h3>Demos</h3>
+				<ul>
+					<li><a href="../demo/flight-time.htm">Flight Time</a></li>
+					<li><a href="../demo/world-trip.htm">World Trip</a></li>
+					<li><a href="../demo/space-view.htm">Space View</a></li>
+					<li><a href="../demo/habitats.htm">Habitats</a></li>
+					<li><a href="../demo/world-news.htm">World News</a></li>
+					<li><a href="../demo/hologram.htm">Hologram</a></li>
+					<li><a href="../demo/european-union.htm">European Union</a></li>
+					<li><a href="../demo/photo-locations.htm">Photo Locations</a></li>
+					<li><a href="../demo/environment.htm">Environment</a></li>
+				</ul>
+			</div>
+		
+		</div><!--docs-index-->
+		
+		<div id="docs">
+		
+			<h2>Getting Started</h2>
+		
+			<h3>Integration Steps</h3>
+			<p>
+			- Add a container HTML element e.g. <code class="inline">&lt;div id="myearth"&gt;&lt;/div&gt;</code><br>
+			- Load <em>miniature.earth.js</em> (or <em>miniature.earth.core.js</em>)<br>
+			- Initiate and setup your earth with JavaScript code
+			</p>
+			<p>See the <a href="../examples/misc/integration-minimal.htm">Minimal Example</a>, <a href="../examples/misc/integration-asynchronous.htm">Asynchronous Integration</a> or <a href="../examples/misc/integration-preload-fallback.htm">Preload & Fallback</a>.</p>
+	
+			
+			<h3>Choosing miniature.earth.js or miniature.earth.core.js</h3>
+			<p><em>miniature.earth.js</em> bundles everything you need to start in one file.</p>
+			
+			<p><em>miniature.earth.core.js</em> is a slimmed-down version:<br>
+			- Without SVG map, so you need to use a <em><a href="api/earth.htm#mapimage">mapImage</a></em>.<br>
+			- Without 3D marker meshes but you can load <a href="../examples/custom-marker-meshes.htm">custom meshes</a> if you need markers.
+			</p>
+
+
+			<h3>Getting lat/lng Geo Coordinates</h3>
+			<p>You can use your favorite map service to get the lat/lng geo coordinates for a specific address. If you use Google Maps you can search an address and extract the coordinates right from your browsers URL: </p>
+<code><pre>
+https://www.google.com/maps/place/New+York+City,+USA/@<strong>40.6918636</strong>,<strong>-74.0965785</strong>,11.25z/data=...
+The coordinates as JavaScript object:          <strong>{ lat: 40.6918636, lng: -74.0965785 }</strong></pre></code>
+
+
+			<h2>Best Practices</h2>
+			
+			<h3 id="obj">Saving 3D files for custom markers</h3>
+			<p>Save your mesh as Wavefront (.obj) file in an uncompressed text format.<br>
+			- Apply modifiers, triangulate faces<br>
+			- Only meshes are supported, all other 3D features are ignored (like materials, UVs, ...)<br>
+			- The file can contain multiple objects/meshes at top level<br>
+			- The object/mesh names should only consist of letters and numbers<br>
+			- If you open your .obj file in a text editor it should look like this:</p>
+<code><pre>o MyMeshName
+v 0.625 0.0 0.0
+v 0.562 0.108 0.0
+...
+f 7 2 1
+f 2 9 3
+...
+</pre></code>
+			<p><a href="../examples/custom-marker-meshes.htm">Example: Custom Marker Meshes</a><br>
+			<a href="tools/get-obj-file-as-string.htm">Tool: Get .obj File as Minified String</a>
+			</p>
+			
+				
+
+			<h3>Gzip compression</h3>
+			<p>Enable gzip compression on your web server to reduce the filesize of miniature.earth.js to about 260KB.</p>			
+
+			<h3>Legacy Support (IE11)</h3>
+			<p>Support for Internet Explorer 11 is not enabled by default, so your fallback content will be displayed.<br>
+			You can <a href="../examples/misc/legacy-support-ie11.htm">enable support for IE11 with some trade-offs</a>:<br>
+			- IE11 doesn't support SVG maps. You need to use a <em><a href="api/earth.htm#mapimage">mapImage</a></em> or provide a <em><a href="api/earth.htm#ie11">fallbackMapUrlIE11</a></em>.<br>
+			- IE11 doesn't support <em>EarthInstance.<a href="api/earth.htm#maphittest">mapHitTest</a></em> and <a href="api/earth.htm#hittest">hitTest()</a></p>
+			
+			
+			<!--
+			<h2>Troubleshooting</h2>
+		
+			<h3>Opacity<br>
+			Render Order</h3>
+			<p>...</p>
+			
+			<h3>CORS (Cross-Origin Resource Sharing)<br>
+			Tainted Canvases</h3>
+			<p>https://developer.mozilla.org/en-US/docs/Web/HTML/CORS_enabled_image</p>
+			-->
+			
+
+			<h2>Changelog</h2>
+			
+			<h3>2.6</h3>
+			<p>
+			- Bug fixes<br>
+			- Performance improvement
+			</p>
+			
+			
+			<h3>2.5</h3>
+			<p>
+			- Serveral improvements and changes to <a href="../examples/misc/object-types.htm">stacking</a>, <a href="../examples/misc/transparent-rendering.htm">transparancy</a> and <a href="../examples/occlusion.htm">occlusion</a>. Please see the updated documentation.<br>
+			- The auto rotation is now framerate independent.<br>
+			- No more unwanted clicks are triggered after dragging.<br>
+			- The values of lat/lng objects are now automatically converted to numbers.<br>
+			- New method for objects: <a href="api/marker.htm#stopallanimations">stopAllAnimations()</a><br>
+			- New method: <em>EarthInstance</em>.<a href="api/earth.htm#hittest">hitTest()</a><br>
+			- New method: <em>EarthInstance</em>.<a href="api/earth.htm#destroy">destroy()</a><br>
+			- The default value of the <em><a href="api/marker.htm#hotspot">hotspot</a></em> property has been changed to <em>false</em>.<br>
+			- The <em>texture</em> property has been extended and renamed to <em>EarthInstance.<a href="api/earth.htm#mapimage">mapImage</a></em>.<br>
+			- Bugfix: the Wordpress integration example failed with some webservers<br>
+			- Improved documentation
+			</p>
+			
+			
+			<h3>2.1</h3>
+			<p>
+			- Bug fixes
+			</p>
+			
+			
+			<h3>2.0</h3>
+			<p>
+			- Added <a href="api/image.htm">Images</a> and <a href="api/sprite.htm">Sprites</a><br>
+			- Serveral changes to <a href="api/overlay.htm">Overlays</a><br>
+			- Many new properties and events<br>
+			- Performance and render quality improvements<br>
+			- In animation callbacks, <code class="inline">this</code> now refers to the animated element<br>
+			- New examples
+			</p>
+			
+			
+			<h3>1.3</h3>
+			<p>
+			- Bug fixes
+			</p>
+			
+			<h3>1.2</h3>
+			<p>
+			- More examples and three new demos<br>
+			- Improved documentation<br>
+			- <em>miniature.earth.core.js</em> now also contains the required CSS styles
+			</p>
+			
+			<h3>1.1</h3>
+			<p>
+			- Fix earth momentum on mobile devices
+			</p>
+			
+			
+		</div><!--docs-->
+		
+	</div>
+</body>
+</html>

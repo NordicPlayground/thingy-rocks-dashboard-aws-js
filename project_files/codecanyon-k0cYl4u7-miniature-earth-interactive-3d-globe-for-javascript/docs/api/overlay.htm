@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Overlay API</title>
+
+<link rel="stylesheet" href="../assets/docs.css">
+<script src="../assets/docs.js"></script>
+
+</head>
+<body  class="has-index">
+	<div id="wrapper">
+		
+		<h1>Overlay API</h1>
+		
+		<p style="text-align:left; font-size:1.2em; max-width: 40em;">An overlay attachs custom HTML content at a lat/lng location.</p>
+		<p style="text-align:left; font-size:1.2em; max-width: 40em;"><a href="../../examples/properties/overlay-properties.htm"><strong>Example: Overlay Properties</strong></a></p>
+		
+		
+		<div id="docs">
+		
+			<h2>Add an Overlay</h2>
+			
+			<p>Use <em>EarthInstance</em>.<a href="earth.htm#addoverlay">addOverlay( properties )</a></p>
+<code><pre>
+var myoverlay = myearth.addOverlay( {
+	location: { lat: 40.689, lng: -74.046 },
+	content : '&lt;strong&gt; New York &lt;/strong&gt;',
+	className : 'my-text-overlay',
+	depthScale : 0.5
+} );
+</pre></code>
+
+		
+			<h2 id="prop">Overlay Properties</h2>
+			
+			
+			<h3 id="location">location <var>(lat/lng object)</var> <mark class="animatable"></mark></h3>
+			<p class="default-value"><samp>{ lat: 0, lng: 0 }</samp></p>
+			<p>The geo location where the overlay is placed.</p>
+			
+			<h3 class="prop-group">offset <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>0</samp></p>
+			<p>Distance to the earth surface.</p>
+			
+			<h3 id="content">content <var>(html string)</var></h3>
+			<p>Text or HTML content of the overlay.<br>
+			See <a href="#overlay-html">Overlay HTML</a></p>
+			
+			<h3 id="classname">className <var>(string)</var></h3>
+			<p>CSS class(es) for overlay styling.<br>
+			See <a href="#overlay-html">Overlay HTML</a></p>
+
+			<h3>containerScale <var>(float)</var> <mark class="animatable"></mark></h3>
+			<p class="default-value"><samp>0</samp></p>
+			<p class="value-range"><samp>0.0 - 1.0</samp></p>
+			<p>Values greater than 0 adapt the overlay scaling to the size of the earth container.<br>
+			<a href="../../examples/properties/overlay-scaling.htm#containerscale">Example: Overlay containerScale</a></p>
+			
+			<h3 class="prop-group">zoomScale <var>(float)</var> <mark class="animatable"></mark></h3>
+			<p class="default-value"><samp>1</samp></p>
+			<p class="value-range"><samp>0.0 - 1.0</samp></p>
+			<p>Values greater than 0 adapt the overlay scaling to the earth <em>zoom</em>.<br>
+			<a href="../../examples/properties/overlay-scaling.htm#zoomscale">Example: Overlay zoomScale</a></p>
+			
+			<h3 class="prop-group">depthScale <var>(float)</var> <mark class="animatable"></mark></h3>
+			<p class="default-value"><samp>0</samp></p>
+			<p class="value-range"><samp>0.0 - 1.0</samp></p>
+			<p>Values greater than 0 adapt the overlay scaling to the distance to the camera.<br>
+			<a href="../../examples/properties/overlay-scaling.htm#depthscale">Example: Overlay depthScale</a></p>			
+			
+			<h3>visible <var>(boolean)</var></h3>
+			<p class="default-value"><samp>true</samp></p>
+
+			
+			<h3 id="occlude">occlude <var>(boolean)</var></h3>
+			<p class="default-value"><samp>true</samp></p>
+			<p>Set to <em>false</em> if you want the overlay to always stay in front of the earth.<br>
+			<a href="../../examples/occlusion.htm">Example: Occlusion</a></p>
+			
+			
+			<h3>Advanced:</h3>
+			
+			<div class="advanced">
+
+				<h3 id="occluded">occluded <var>(boolean)</var> <mark class="read-only"></mark></h3>
+				<p><em>occluded</em> is <em>true</em> if the overlay position is on the backside of the earth. Only available if <em>visible</em>.</p>
+
+				<h3>element <var>(HTMLElement)</var> <mark class="read-only"></mark></h3>
+				<p>Reference to the overlay element after initation.</p>
+				
+				<h3>earth <var>(EarthInstance)</var> <mark class="read-only"></mark></h3>
+				<p>Reference to the <em>EarthInstance</em>.</p>
+				
+			</div><!--advanced-->
+				
+			&nbsp;
+			
+			<div class="hint">
+				You can add custom properties that are copied over to the <em>OverlayInstance</em>.
+			</div>
+			
+			
+			<h2>Overlay Methods</h2>
+			
+				<h3 id="animate">animate( <var>property</var>, <var>value</var>, <var>animationProperties</var> ) <small>returns <em>AnimationInstance</em></small></h3>
+				<dl>
+				  <dt>property</dt><dd>Name of the animatable property (String)</dd>
+				  <dt>value</dt><dd>Target value</dd>
+				  <dt>animationProperties</dt><dd>Object of <a href="animation.htm#prop">animation properties</a></dd>
+				</dl>
+				<p><a href="../../examples/properties/animatable-properties.htm">Example: Animatable Properties</a></p>
+
+
+				<h3 id="stopallanimations">stopAllAnimations( <var>triggerComplete</var>, <var>jumpToEnd</var> ) </h3>
+				<dl>
+				  <dt>triggerComplete</dt><dd>(boolean) default: false | Calls the <em>complete</em> functions</dd>
+				  <dt>jumpToEnd</dt><dd>(boolean) default: false | Sets the properties immediately to their end values</a></dd>
+				</dl>
+
+				<p>Stops all animations of this object. To stop a specific animation use <em>AnimationInstance</em>.<a href="animation.htm#stop">stop()</a></p>
+
+
+				<h3>remove( )</h3>
+				<p>Removes the overlay permanently.</p>
+
+			
+			<h2>Overlay Events</h2>
+			
+
+				<h3 id="occlusion">occlusion</h3>
+				<p>The event is triggered when the overlay is added, when it becomes visible and when the <a href="#occluded"><em>occluded</em></a> property changes.<br>
+					<a href="../../examples/occlusion.htm">Example: Occlusion</a>
+				</p>
+				
+				
+				<h3>Regular JavaScript Events</h3>
+				<p>You can register events for HTML elements of your overlay content. </p>
+<code><pre>
+var myoverlay = myearth.addOverlay( {
+	location: { lat: 40.689, lng: -74.046 },
+	content : '&lt;button class="my-button">click me&lt;/button>'
+} );
+
+
+/* You can access children by using querySelector on the overlay element */
+myoverlay.element.querySelector('.my-button').addEventListener( 'click', function( ) {
+
+	alert( 'button was clicked!' );
+	
+	/* You can access the <em>OverlayInstance</em> by the <em>overlay</em> property of the overlay element */
+	this.closest('.earth-overlay').overlay.visible = false;	
+
+} );
+</pre></code>
+
+
+<div class="hint">
+	Overlays are not clickable by default (CSS: <em>pointer-events: none</em>) but links, buttons and input elements within overlays are clickable (CSS: <em>pointer-events: all</em>).
+<code><pre>&lt;a href="https://miniature.earth/">I'm clickable by default&lt;/a>
+&lt;div>Not clickable&lt;/div>
+&lt;div style="pointer-events: all;" onclick="alert('click!')">I've been made clickable&lt;/div>
+</pre></code>
+</div>
+
+
+			
+			<h2>Overlay CSS Classes</h2>
+
+			
+				<h3>earth-overlay</h3>
+				<p>
+					Every overlay element has this CSS class.
+				</p>
+					
+				<h3 id="earth-occluded">earth-occluded</h3>
+				<p>
+					This CSS class is added as long as the overlay location is on the backside of the earth.
+				</p>
+				
+				<p>These classes can be used for various effects.</p>
+<code><pre>
+.earth-overlay {
+	transition: opacity 0.5s ease;
+}
+.earth-occluded {
+	opacity: 0.5; /* semi-transparent if location is on the backside of the earth */
+}
+</pre></code>
+			
+				
+
+			<h2 id="overlay-html">Overlay HTML</h2>
+			
+			<p>An overlay is made up of this HTML code:</p>
+<code><pre><span style="opacity:0.7">&lt;div id="myearth" class="earth-container earth-ready">
+	&lt;canvas width="960" height="960">&lt;/canvas></span>
+	
+	<strong>&lt;div class="earth-overlay <em>(earth-occluded)</em>" style="<em>transform: ...; z-index: ...</em>">
+		&lt;div class="<em><a href="#classname">className</a></em>"> <em><a href="#content">content</a></em> &lt;/div>
+	&lt;/div></strong>
+	
+<span style="opacity:0.7">&lt;/div></span></pre></code>
+			
+
+
+			<h2 id="overlay-html">Overlay Position</h2>
+			
+			<p>The top left corner of your content is placed at the lat/lng <a href="#location"><em>location</em></a>. To change this position you can use styles like these:</p>
+<code><pre>&lt;style>
+.<strong>my-overlay-above</strong> {
+	<strong>transform: translate(-50%, -100%);</strong>
+	background-color: white;
+	color: black;
+	padding: 1em;
+}
+&lt;/style></pre></code>
+<code><pre>var myoverlay = myearth.addOverlay( {
+	location: { lat: 40.689, lng: -74.046 },
+	className : '<strong>my-overlay-above</strong>',
+	content : 'This content is centered above the location.'
+} );</pre></code>
+		
+
+		
+		</div><!--docs-->
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Rotate by Keyboard</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+document.addEventListener( "DOMContentLoaded", function() {
+
+
+	var myearth = new Earth( "myearth", {
+		location: { lat: 10, lng: -80 },
+		dragDamping : 0.9,
+		autoRotate: true,
+		autoRotateSpeed: 0,
+		autoRotateStart: 0,
+		autoRotateDelay: 0
+	} );
+	
+	
+	
+	var key_l, key_r;
+	var key_speed = 15;
+	
+	myearth.addEventListener( "ready", function() {
+		
+		// add key events
+		
+		document.addEventListener( "keydown", function( event ) {
+		
+			if ( event.keyCode == 37 ) { // left
+				key_l = true;
+				updateSpeed();
+				event.preventDefault();				
+				
+			} else if ( event.keyCode == 39 ) { // right
+				key_r = true;
+				updateSpeed();
+				event.preventDefault();
+				
+			}
+			
+		} );
+		
+		
+		document.addEventListener( "keyup", function( event ) {
+		
+			if ( event.keyCode == 37 ) { // left
+				key_l = false;
+				updateSpeed();
+				
+			} else if ( event.keyCode == 39 ) { // right
+				key_r = false;
+				updateSpeed();
+				
+			}
+			
+		} );
+		
+		
+		function updateSpeed() {
+		
+			if ( key_l && ! key_r ) {
+				myearth.autoRotateSpeed = key_speed;
+				
+			} else if ( key_r && ! key_l ) {
+				myearth.autoRotateSpeed = - key_speed;
+			
+			} else {
+				myearth.autoRotateSpeed = 0;
+			
+			}
+			
+		}
+		
+		
+	} );
+
+
+} );
+
+</script>
+
+</head>
+<body>
+
+	<h1>Rotate by Keyboard</h1>
+	
+	<p id="info">
+		Use keyboard arrows (left and right) to rotate the earth.
+	</p>
+	
+	
+	<div id="wrapper">
+		<div id="myearth"></div>		
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Earth Transparency</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "load", function() {
+
+	// mapSeaColor
+	
+	new Earth( "myearth", {
+		autoRotate : true,
+		
+		mapSeaColor : 'RGBA(0,150,255,0.7)',
+		transparent : true,
+	} );
+	
+	
+	// innerOpacity
+	
+	new Earth( "myearth2", {
+		autoRotate : true,
+		mapLandColor : 'green',
+		mapSeaColor : 'transparent',
+		transparent : true,
+		innerOpacity : 0.33
+	} );
+	
+	
+	// innerOpacity + innerColor
+	
+	new Earth( "myearth3", {
+		autoRotate : true,
+		mapLandColor : 'green',
+		mapSeaColor : 'transparent',
+		transparent : true,
+		innerOpacity : 0.33,
+		innerColor : '#000'
+	} );
+
+	
+} );
+
+</script>
+
+</head>
+<body>
+
+	<h1>Earth Transparency</h1>
+		
+	<p>This example shows the use of the earth properties <em>transparent</em>, <em>mapSeaColor</em>, <em>innerOpacity</em> and <em>innerColor</em> to achieve different effects.</p>
+		
+	<div id="multi-wrapper">
+	
+		<div class="earth-wrap">
+			<div id="myearth"></div>
+			mapSeaColor
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth2"></div>
+			innerOpacity
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth3"></div>
+			innerOpacity + innerColor
+		</div>		
+		
+	</div>
+	
+</body>
+</html>

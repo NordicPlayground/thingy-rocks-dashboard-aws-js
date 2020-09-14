@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Marker API</title>
+
+<link rel="stylesheet" href="../assets/docs.css">
+<script src="../assets/docs.js"></script>
+
+</head>
+<body  class="has-index">
+	<div id="wrapper">
+		
+		<h1>Marker API</h1>
+		
+		<p style="text-align:left; font-size:1.2em; max-width: 40em;">A marker is 3D object at a given lat/lng location. You can choose from built-in meshes such as pins and flags or use your own 3D geometry.</p>
+		<p style="text-align:left; font-size:1.2em; max-width: 40em;"><a href="../../examples/properties/marker-properties.htm"><strong>Example (Marker Properties)</strong></a></p>
+		
+		<div id="docs">
+		
+			<h2>Add a Marker</h2>
+			
+			<p>Use <em>EarthInstance</em>.<a href="earth.htm#addmarker">addMarker( properties )</a></p>
+<code><pre>
+var mymarker = myearth.addMarker( {
+	location: { lat : 22.5, lng : 20 },
+	mesh: ["Pin2", "Needle"],
+	color: "#00FF00"
+} );
+</pre></code>
+		
+			<h2 id="prop">Marker Properties</h2>
+			
+			<h3 id="location">location <var>(lat/lng object)</var> <mark class="animatable"></mark></h3>
+			<p class="default-value"><samp>{ lat: 0, lng: 0 }</samp></p>
+			<p>The geo location where the marker is placed.</p>
+			
+			<h3 class="prop-group">offset <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>0</samp></p>
+			<p>Distance to the earth surface.</p>
+			
+			<h3 id="mesh">mesh <var>(string) or (array of strings)</var> <mark class="init-only"></mark></h3>
+			<p class="default-value"><samp>["Pin", "Needle"]</samp></p>
+			<p>A marker consists of one or more meshes. The builtin mesh names are:<br>
+			<em>Pin, Pin2, Pin3, Flag, Flag2, Flag3, Needle, X, Diamond, Marker</em> and <em>Cone</em>.<br>
+			<a href="../../examples/properties/marker-meshes.htm">Example: Builtin Marker Meshes</a><br>
+			<a href="../../examples/custom-marker-meshes.htm">Example: Custom Marker Meshes</a></p>
+			
+			<h3>color, color2, ..., color8 <var>(color)</var> <mark class="animatable"></mark></h3>
+			<p class="default-value"><samp>#FF0000</samp></p>
+			<p>Colors of the meshes (in the order in which they are defined).</p>
+			
+					
+			<h3>scale <span style="font-weight:normal;">or</span> scaleX, scaleY, scaleZ <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>1</samp></p>
+			
+			
+			<h3>rotationX, rotationY, rotationZ <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>0</samp></p>
+			<p>Rotation in degrees.</p>
+
+			<h3 id="lookat" class="prop-group">lookAt <var>(lat/lng object) or false</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>false</samp></p>
+			<p>The marker is rotated around the Y axis to point at the defined lat/lng position.<br>
+			<a href="../../examples/look-at-location.htm">Example: Look at Location</a></p>
+			
+			
+			<h3 id="hotspot">hotspot <var>(boolean)</var> <mark class="init-only">*</mark></h3>
+			<p class="default-value"><samp>false</samp></p>
+			<p>Set to <em>true</em> if you add mouse/touch events to this marker. * After initation you can set <em>hotspot</em> to <em>false</em> to disable mouse/touch events temporarily.<br>
+			<a href="../../examples/misc/click-events.htm">Example: Click Events</a></p>
+			
+			<div class="advanced">
+			
+				<h3>hotspotRadius <var>(float)</var> <mark class="init-only"></mark> </h3>
+				<p class="default-value"><samp>0.5</samp></p>
+				
+				<h3 style="padding-top:0;">hotspotHeight <var>(float)</var> <mark class="init-only"></mark> </h3>
+				<p class="default-value"><samp>1.5</samp></p>
+				<p>Use <em>EarthInstance.<a href="earth.htm#showhotspots">showHotspots</em></a> to see the hotspot area.</p>
+
+			</div><!--advanced-->
+
+					
+			<h3>opacity <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>1</samp></p>
+			<p class="value-range"><samp>0.0 - 1.0</samp></p>
+		
+			<h3 class="prop-group">transparent <var>(boolean)</var> <mark class="init-only"></mark></h3>
+			<p class="default-value"><samp>false (if opacity not set)</samp></p>
+			<p>Set to <em>true</em> if you want to use <em>opacity</em>.</p>
+			
+			
+			<h3>visible <var>(boolean)</var></h3>
+			<p class="default-value"><samp>true</samp></p>
+						
+
+			<h3>Advanced:</h3>
+
+			<div class="advanced">
+			
+				<h3>align <var>(boolean)</var></h3>
+				<p class="default-value"><samp>true</samp></p>
+				<p>If set to <em>false</em> the marker points up and is not aligned with the earth surface.</p>
+			
+				<h3 id="occluded">occluded <var>(boolean) or undefined</var> <mark class="read-only"></mark></h3>
+				<p><em>occluded</em> is <em>true</em> if the marker is on the backside of the earth. Only available if <em>visible</em>.</p>
+		
+				<h3>shininess <var>(float)</var> <mark class="animatable"></mark></h3>
+				<p class="default-value"><samp>0.1</samp></p>
+				<p class="value-range"><samp>0.0 - 1.0</samp></p>
+				<p>Only if <em>light: "sun"</em>. Shininess of the surface.</p>
+				
+				<h3 class="prop-group">flatShading <var>(boolean)</var></h3>
+				<p class="default-value"><samp>false</samp></p>
+				<p>Only if <em>light: "sun"</em> or <em>light: "simple"</em>. Unsmoothed shading of the surface.</p>
+			
+				<h3>castShadow <var>(boolean)</var></h3>
+				<p class="default-value"><samp>true</samp></p>
+				<p>Cast a shadow on the earth or other markers. See <a href="earth.htm#shadows"><em>shadows</em></a>.</p>
+			
+				<h3 class="prop-group">receiveShadow <var>(boolean)</var></h3>
+				<p class="default-value"><samp>false</samp></p>
+				<p>Receive shadows of the earth or other markers. See <a href="earth.htm#shadows"><em>shadows</em></a>.</p>
+				
+				<h3>earth <var>(EarthInstance)</var> <mark class="read-only"></mark></h3>
+				<p>Reference to the <em>EarthInstance</em>.</p>
+				
+				<h3>object3d <var>(THREE.Object3D)</var></h3>
+				<p><a href="https://threejs.org/docs/">About THREE.js</a></p>
+
+			</div><!--advanced-->
+			
+			&nbsp;
+			
+			<div class="hint">
+				You can add custom properties that are copied over to the <em>MarkerInstance</em>.
+			</div>
+			
+			
+			<h2>Marker Methods</h2>
+			
+				<h3 id="animate">animate( <var>property</var>, <var>value</var>, <var>animationProperties</var> ) <small>returns <em>AnimationInstance</em></small></h3>
+				<dl>
+				  <dt>property</dt><dd>Name of the animatable property (String)</dd>
+				  <dt>value</dt><dd>Target value</dd>
+				  <dt>animationProperties</dt><dd>Object of <a href="animation.htm#prop">animation properties</a></dd>
+				</dl>
+				<p><a href="../../examples/properties/animatable-properties.htm">Example: Animatable Properties</a></p>
+
+
+				<h3 id="stopallanimations">stopAllAnimations( <var>triggerComplete</var>, <var>jumpToEnd</var> ) </h3>
+				<dl>
+				  <dt>triggerComplete</dt><dd>(boolean) default: false | Calls the <em>complete</em> functions</dd>
+				  <dt>jumpToEnd</dt><dd>(boolean) default: false | Sets the properties immediately to their end values</a></dd>
+				</dl>
+
+				<p>Stops all animations of this object. To stop a specific animation use <em>AnimationInstance</em>.<a href="animation.htm#stop">stop()</a></p>
+
+				<h3>remove( )</h3>
+				<p>Removes the marker permanently.</p>
+				
+			
+			<h2 id="events">Marker Events</h2>
+				
+				
+				<h3 id="click">click, mousedown, mouseup</h3>
+				<p>The events is triggered when you click or touch the hotspot area.</p>
+<code><pre>
+mymarker.addEventListener( 'click', function( ) {
+	this.earth.location = this.location;
+	console.log( this );
+} );
+</pre></code>
+
+<code><pre>
+mymarker.addEventListener( 'click', function( ) {
+	alert( this.myCustomProperty );
+} );
+</pre></code>
+
+
+				<h3>mouseover, mouseout</h3>
+				<p>The events are triggered when you move the mouse over the hotspot area.</p>
+<code><pre>
+mymarker.addEventListener( 'mouseover', function( ) {
+	myoverlay.location = this.location;
+	myoverlay.content = this.myMarkerTitle;
+	myoverlay.visible = true;
+} );
+
+mymarker.addEventListener( 'mouseout', function( ) {
+	myoverlay.visible = false;
+} );
+</pre></code>
+
+			&nbsp;
+				
+				<div class="hint">
+					The preceding events are only triggered if <em>hotspot</em> is <em>true</em>. You may need to adjust the <em>hotspotRadius</em> and <em>hotspotHeight</em>.
+				</div>
+				
+
+				<h3 id="occlusion">occlusion</h3>
+				<p>The event is triggered when the marker is added, when it becomes visible and when the <a href="#occluded"><em>occluded</em></a> property changes.<br>
+					<a href="../../examples/occlusion.htm">Example: Occlusion</a>
+				</p>
+				
+	
+			&nbsp;
+				<div class="hint">
+					<em>this</em> refers to the <em>MarkerInstance</em>.
+				</div>
+		
+		</div><!--docs-->
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Line alwaysBehind</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<style>
+
+.docs-tip {
+	transform: translate(-50%, 1em);
+}
+
+</style>
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: 0 },
+	} );
+	
+	myearth.addEventListener( "ready", function() {
+		
+		
+		this.addMarker( {
+			location : { lat: 10, lng: -30 },
+			mesh: ['Pin3'],
+			color: 'orange',
+			scale: 1.5
+		} );			
+		this.addMarker( {
+			location : { lat: 10, lng: -20 },
+			mesh: ['Pin3'],
+			color: 'cyan',
+			scale: 1.5,
+			transparent: true
+		} );
+		this.addMarker( {
+			location : { lat: 10, lng: 20 },
+			mesh: ['Pin3'],
+			color: 'orange',
+			scale: 1.5
+		} );			
+		this.addMarker( {
+			location : { lat: 10, lng: 30 },
+			mesh: ['Pin3'],
+			color: 'cyan',
+			scale: 1.5,
+			transparent: true
+		} );
+		
+		
+		this.addMarker( {
+			location : { lat: -10, lng: -30 },
+			mesh: ['Pin3'],
+			color: 'orange',
+			scale: 1.5
+		} );			
+		this.addMarker( {
+			location : { lat: -10, lng: -20 },
+			mesh: ['Pin3'],
+			color: 'cyan',
+			scale: 1.5,
+			transparent: true
+		} );
+		this.addMarker( {
+			location : { lat: -10, lng: 20 },
+			mesh: ['Pin3'],
+			color: 'orange',
+			scale: 1.5
+		} );			
+		this.addMarker( {
+			location : { lat: -10, lng: 30 },
+			mesh: ['Pin3'],
+			color: 'cyan',
+			scale: 1.5,
+			transparent: true
+		} );
+		
+		this.addOverlay( {
+			content: '<span style="color:blue">transparent lines</span> <br>cannot be rendered<br> behind <span style="color:orange">opaque objects</span>',
+			location : { lat: -12, lng: 20 },
+			className : 'docs-tip'
+		} );
+		
+		
+		
+		this.addLine( {
+			locations : [
+				{ lat: 10, lng: -5 },
+				{ lat: 10, lng: -45 },
+			],
+			offset : 0.1,
+			offsetFlow : 0.5,
+			width: 2,
+			color: 'red'
+		} );
+		
+		this.addLine( {
+			locations : [
+				{ lat: 10, lng: 5 },
+				{ lat: 10, lng: 45 },
+			],
+			offset : 0.1,
+			offsetFlow : 0.5,
+			width: 2,
+			color : 'blue',
+			transparent: true
+		} );
+		
+		this.addOverlay( {
+			content: 'alwaysBehind: false',
+			location : { lat: 10, lng: 0 },
+			className : 'docs-tip'
+		} );
+		
+		
+		this.addLine( {
+			locations : [
+				{ lat: -10, lng: -5 },
+				{ lat: -10, lng: -45 },
+			],
+			offset : 0.1,
+			offsetFlow : 0.5,
+			width: 2,
+			color: 'red',
+			alwaysBehind : true,
+		} );		
+		
+		this.addLine( {
+			locations : [
+				{ lat: -10, lng: 5 },
+				{ lat: -10, lng: 45 },
+			],
+			offset : 0.1,
+			offsetFlow : 0.5,
+			width: 2,
+			color : 'blue',
+			transparent: true,
+			alwaysBehind : true,
+		} );
+		
+		this.addOverlay( {
+			content: 'alwaysBehind: true',
+			location : { lat: -3, lng: 0 },
+			className : 'docs-tip'
+		} );
+		
+	} );
+	
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Line alwaysBehind</h1>
+	
+	<div id="wrapper">	
+		<div id="info">The red lines and orange markers are opaque.<br>
+		The blue lines and cyan markers are transparent.<br>
+		<br>
+		Lines set to <em>alwaysBehind: true</em> are rendered behind Markers, Images and other Lines,<br>
+		but transparent lines cannot be rendered behind opaque objects.
+		</div>
+		
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

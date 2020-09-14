@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Rotate by Mousewheel</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+document.addEventListener( "DOMContentLoaded", function() {
+
+
+	var myearth = new Earth( "myearth", {
+		location: { lat: 10, lng: -80 },
+		dragDamping : 0.9
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+		
+		// add mouse wheel event to the earth container element
+		myearth.element.addEventListener( "wheel", startWheelRotation );
+		
+	} );	
+	
+
+
+	// wheel settings
+	
+	var wheel_speed = 25;		// add this speed for one wheel turn.  values from 5 to 100
+	var wheel_damping = 0.5;	// slow down wheel momentum over time. values from 0.1 to 0.99
+	var min_momentum = 0.5;		// stop if momentum is less than this. values from 0.1 to 20
+	
+	
+	function startWheelRotation( event ) {
+	
+		// earth reference from container element
+		var earth = this.earth;
+		
+		// begin rotation
+		if ( ! earth.autoRotate ) {
+			earth.wheel_momentum = 0;
+			earth.autoRotate = true;
+			earth.autoRotateDelay = 0;
+			earth.autoRotateStart = 0;
+			earth.addEventListener( "update", updateWheelRotation );
+		}
+
+		// speed up
+		earth.wheel_momentum += Math.sign( event.deltaY ) * - wheel_speed;
+		
+		// prevent page scroll
+		event.preventDefault();
+		event.stopPropagation();
+		return false;
+	
+	}
+
+
+	function updateWheelRotation() {
+	
+		// slow down
+		this.wheel_momentum *= 1 - Math.min( this.deltaTime / 100 * wheel_damping, 0.99 );
+		
+		// stop rotation
+		if ( Math.abs(this.wheel_momentum) < min_momentum ) {
+			this.wheel_momentum = 0;
+			this.autoRotate = false;
+			this.autoRotateSpeed = 0;
+			this.removeEventListener( "update", updateWheelRotation );
+			return;
+		}
+		
+		// update speed
+		this.autoRotateSpeed = this.wheel_momentum;
+			
+	}
+
+
+} );
+
+</script>
+
+</head>
+<body>
+
+	<h1>Rotate by Mousewheel</h1>
+	
+	<p id="info">
+		Use your mousewheel to rotate the earth.
+	</p>
+	
+	
+	<div id="wrapper">
+		<div id="myearth"></div>		
+	</div>
+	
+</body>
+</html>

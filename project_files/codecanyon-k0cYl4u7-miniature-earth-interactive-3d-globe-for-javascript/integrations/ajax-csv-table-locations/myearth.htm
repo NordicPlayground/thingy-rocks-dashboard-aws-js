@@ -1,0 +1,134 @@
+
+<script>
+
+if ( location.protocol == 'file:' ) {
+	alert( 'This demo does not work with the file protocol due to browser security restrictions.' );
+}
+
+
+var EARTH_SCRIPT_URL = "miniature.earth.js";
+var EARTH_DATA_URL = "locations.csv";
+
+
+/* load earth.js after the page is loaded. */
+
+window.addEventListener( 'load', function() {
+	var script = document.createElement( "script" );
+	script.src = EARTH_SCRIPT_URL;
+	document.body.appendChild( script );	
+} );
+
+
+window.addEventListener( "earthjsload", function() {
+
+	/* setup earth */
+	
+	var myearth = new Earth( "myearth", {
+		location: { lat: 10, lng: -80 },
+		zoom: 1.2,
+		
+		/* more earth options here */
+	} );
+	
+	myearth.addEventListener( "ready", function() {
+	
+		/* load CSV data */
+		
+		var ajax = new XMLHttpRequest();
+		ajax.onreadystatechange = function() {
+			if ( this.readyState == 4 ) {
+				addMarkersFromCSV( myearth, this.responseText );				
+			}
+		};
+		ajax.open("GET", EARTH_DATA_URL, true);
+		ajax.send();
+		
+	} );
+	
+} );
+
+
+
+// CSV
+
+var CSV_LINE_SEP = 	'\n';
+var CSV_FIELD_SEP = ';';
+var CSV_TEXT_SEP = 	'"';
+
+function addMarkersFromCSV( earth, csv ) {
+
+	var lines = csv.split(CSV_LINE_SEP);
+	
+	for ( var i=0; i < lines.length; i++ ) {
+	
+		/* this simple example doesn't considers escapes, use a full CSV parser if needed */
+		var fields = lines[i].split(CSV_TEXT_SEP).join('').split(CSV_FIELD_SEP);
+
+		var marker = earth.addMarker( {
+			mesh : "Pin3",
+			color: 'blue',
+			location : { lat: parseFloat(fields[1]), lng: parseFloat(fields[2]) },
+			scale: 0.5,
+			hotspotHeight: 0.25,
+			hotspotRadius: 1.5,
+			title: fields[0] /* custom property */
+		} );
+		
+		// title tooltip
+		if ( marker.title ) {
+			marker.addEventListener( 'mouseover', showTitleOverlay );
+			marker.addEventListener( 'mouseout', hideTitleOverlay );
+		}
+
+	}
+
+}
+
+
+
+// handle overlays
+
+function showTitleOverlay() {
+	
+	// create an overlay for the markers on this earth on first use
+	
+	if ( ! this.earth.myOverlay ) {
+		this.earth.myOverlay = this.earth.addOverlay();
+	}
+	
+	this.earth.myOverlay.zoomScale = 0;
+	this.earth.myOverlay.content = this.title;
+	this.earth.myOverlay.location = this.location;
+	this.earth.myOverlay.visible = true;	
+	
+}
+
+function hideTitleOverlay() {
+	
+	if ( this.earth.myOverlay ) this.earth.myOverlay.visible = false; 
+	
+}
+
+
+</script>
+
+<style>
+
+.earth-overlay {
+	background-color: white;
+	box-shadow: 0 2px 8px black;
+	border-radius: 0px 12px 12px 12px;
+	padding: 0.25em 0.5em;
+}
+
+.earth-container {
+	margin: 0 auto;
+	max-width: 600px;
+}
+
+</style>
+
+
+<h2 style="margin-top: 2em; text-align: center">AJAX EXAMPLE, LOCATIONS FROM CSV TABLE</h2>
+
+<div id="myearth" class="earth-container"></div>

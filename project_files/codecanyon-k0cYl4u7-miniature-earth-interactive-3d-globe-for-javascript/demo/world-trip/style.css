@@ -1,0 +1,262 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	color: #765f4f;
+	font-size: 16px;
+}
+h1, h2 {
+	text-transform: uppercase;
+	letter-spacing: 0.15em;
+	line-height: 125%;
+	margin: 0;
+	padding: 0;
+}
+
+
+#myearth {
+	width: 100%;
+	max-width: 100vh;
+	transition: opacity 0.5s ease;
+	opacity: 0;
+}
+
+#myearth::after {
+	content: "";
+	position: absolute;
+	bottom: 10.25%;
+	left: 30%;
+	width: 50%;
+	height: 16%;
+	border-radius: 50%;
+	background-color: RGBA(0,0,0,0.8);
+	-webkit-filter: blur(3em);
+	filter: blur(3em);
+	transition: opacity 0.5s ease;
+	opacity: 0;
+}
+
+#myearth canvas {
+	transition: transform 0.5s ease;
+	transform: translateY(-5%);
+}
+
+#myearth.earth-ready::after,
+#myearth.earth-ready {
+	opacity: 1;
+}
+#myearth.earth-ready canvas {
+	transform: none;
+}
+
+
+
+h1 {
+	font-size: 1.6em;
+}
+h2 {
+	font-size: 1.3em;
+}
+h2::after {
+	content: "";
+	height: 12px;
+	width: 12px;
+	border-radius: 50%;
+	margin: 0.15em auto 0 auto;
+	display: block;
+	background-color: currentColor;
+}
+
+.red::after {
+	background-color: #ff1b20;
+}
+
+.blue::after {
+	background-color: #2549ff;
+}
+
+.green::after {
+	background-color: #30b81f;
+}
+
+.nyc::after {
+	background-color: #95c3d4;
+}
+
+
+
+p {
+	font-size: 1em;
+	margin: 0;
+	padding: 0.3em 0 0 0;
+}
+
+
+#left {
+	position: relative;
+	width: 32%;
+	min-width: 20em;
+	box-sizing: border-box;
+	margin-left: 9%;
+	padding: 0 0 33.333vh 0;
+	font-size: 1.4em;
+	line-height: 150%;
+	text-align: center;
+}
+#left::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0px;
+	margin-left: -1px;
+	height: 100%;
+	border-left: 2px #d2aa8a dashed;
+}
+
+
+section {
+	position: relative;
+	height: 33.333vh;
+	
+	display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-align-content: flex-start;
+    align-content: flex-start;
+    -webkit-align-items: center;
+    align-items: center;
+	box-sizing: border-box;
+}
+section > div {
+	position: relative;
+	z-index: 1;
+	background-color: white;
+}
+
+
+#right {
+	position: fixed;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 60%;
+	
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: column;
+	flex-direction: column;
+	-webkit-flex-wrap: nowrap;
+	flex-wrap: nowrap;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-align-items: start;
+	align-items: start;
+}
+
+
+
+
+.tip-overlay {
+	background-color: black;
+	color: white;
+	padding: 0.6em 0.75em 0.55em 0.75em;
+	border-radius: 0.2em;
+	font-family: sans-serif;
+	font-size: 0.8em;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	transform: translate(-50%, 1.5em);
+}
+
+.tip-overlay::after {
+	content: "";
+	position: absolute;
+	left: 50%;
+	top: 0;
+	background-color: black;
+	width: 0.6em;
+	height: 0.6em;
+	transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.tip-down {
+	transform: translate(-50%, -3em);
+}
+
+.tip-down::after {
+	top: 100%;
+}
+
+
+#assets {
+	height: 0;
+	overflow: hidden;
+	visibility: hidden;
+}
+
+
+#icon-mousewheel {
+	position: fixed;
+	bottom: calc(6vw - 12px);
+	right: calc(6vw - 12px);
+	z-index: 1;
+	pointer-events: none;
+	transition: opacity 1s ease;
+}
+
+.scrolled #icon-mousewheel {
+	opacity: 0;
+}
+
+@media not all and (pointer: fine), (-moz-touch-enabled) {
+	#icon-mousewheel {
+		display: none;
+	}
+}
+
+
+@media (max-height: 799px), (max-width: 1199px) {
+	#left {
+		font-size: calc( 0.8vw + 1.3vh );
+	}	
+}
+
+@media (max-aspect-ratio: 4/3) {
+	#left {
+		width: 84%;
+		padding-top: 50vh;
+		padding-bottom: 20vh;
+		margin: 0 auto;
+		max-width: 40em;
+		
+		font-size: calc( 1.3vw + 1.3vh );
+	}
+	#left section:first-child {
+		height: 12vh;
+	}
+	h1 {
+		font-size: 1.4em;
+	}
+	#right {
+		width: 100%;
+		bottom: auto;
+		height: 50vh;
+		z-index: 200;
+		background-color: white;
+	}
+	#element {
+		margin: 0 auto;
+		max-width: 50vh;
+	}
+	
+	#icon-mousewheel {
+		display: none;
+	}
+}
+
+

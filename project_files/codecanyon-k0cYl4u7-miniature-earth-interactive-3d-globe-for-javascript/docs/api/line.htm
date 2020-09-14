@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Line API</title>
+
+<link rel="stylesheet" href="../assets/docs.css">
+<script src="../assets/docs.js"></script>
+
+</head>
+<body  class="has-index">
+	<div id="wrapper">
+		
+		<h1>Line API</h1>
+		
+		<p style="text-align:left; font-size:1.2em; max-width: 40em;">Lines connect several locations with each other. You can choose between various styles.</p>
+		<p style="text-align:left; font-size:1.2em; max-width: 40em;"><a href="../../examples/properties/line-properties.htm"><strong>Example (Line Properties)</strong></a></p>
+		
+		
+		<div id="docs">
+		
+			<h2>Add a Line</h2>
+			
+			<p>Use <em>EarthInstance</em>.<a href="earth.htm#addline">addLine( properties )</a></p>
+<code><pre>
+var myline = myearth.addLine( {
+	locations: [
+		{ lat : 40.5, lng : -1 },
+		{ lat : 48.8, lng : 8.6 },
+	],
+	offsetFlow: 1,
+	width: 2
+} );
+</pre></code>
+
+		
+			<h2 id="prop">Line Properties</h2>
+			
+			
+			<h3>locations <var>(array of lat/lng objects)</var></h3>
+			<p class="default-value"><samp>[]</samp></p>
+			<p>You must provide at least to two locations (start and end point).</p>
+
+			<h3 id="offset">offset <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>0.01</samp></p>
+			<p>Distance to the earth surface.</p>
+			
+			<div class="advanced">
+				<h3>offsetFlow <var>(float)</var> <mark class="animatable"></mark> </h3>
+				<p class="default-value"><samp>0</samp></p>
+				<p>Offset at the end location. When used with <em>offsetEasing: "arc"</em> (default), this property determines the height of the arc.</p>
+				
+				<h3 class="prop-group">offsetEasing <var>(easing)</var> </h3>
+				<p class="default-value"><samp>"arc"</samp></p>
+				<p>An <a href="animation.htm#easing">easing</a> function that describes the <em>offsetFlow</em> from start to end.</p>
+			</div><!--advanced-->
+			
+			<h3>color <var>(color)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>#FF0000</samp></p>
+			
+			<h3>hairline <var>(boolean)</var> <mark class="init-only"></mark></h3>
+			<p class="default-value"><samp>false</samp></p>
+			
+			<h3 class="prop-group">width <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>1</samp></p>
+			<p>Only available if <em>hairline: false</em></p>
+			
+			<h3 class="prop-group">endWidth <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>-1 (same value as width)</samp></p>
+			<p>Width at the end point.<br>
+			Only available if <em>hairline: false</em></p>
+			
+			<h3>clip <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>1</samp></p>
+			<p class="value-range"><samp>0.0 - 1.0</samp></p>
+			<p>Displays only a part of the line. A <em>clip</em> value of 0.5 displays only the first half of the line.</p>
+			
+			<h3>dashed <var>(boolean)</var></h3>
+			<p class="default-value"><samp>true</samp></p>
+			
+			<div class="advanced">
+			
+				<h3>dashSize <var>(float)</var> <mark class="animatable"></mark> </h3>
+				<p class="default-value"><samp>0.5</samp></p>
+				
+				<h3 class="prop-group">dashRatio <var>(float)</var> <mark class="animatable"></mark> </h3>
+				<p class="default-value"><samp>0.5</samp></p>
+				<p class="value-range"><samp>0.01 - 0.99</samp></p>
+			
+				<h3 class="prop-group">dashOffset <var>(float)</var> <mark class="animatable"></mark> </h3>
+				<p class="default-value"><samp>0</samp></p>			
+
+			</div><!--advanced-->
+			
+			<div class="hint">
+				A dashed line is rendered as a <em>transparent</em> object and has some <a href="../../examples/misc/transparent-rendering.htm">limitations</a>.
+			</div>
+			
+
+			<h3>opacity <var>(float)</var> <mark class="animatable"></mark> </h3>
+			<p class="default-value"><samp>1</samp></p>
+			<p class="value-range"><samp>0.0 - 1.0</samp></p>
+		
+			<h3 class="prop-group">transparent <var>(boolean)</var> <mark class="init-only"></mark></h3>
+			<p class="default-value"><samp>false (if opacity is not set and dashed: false)</samp></p>
+			<p>Needs to be <em>true</em> for using <em>opacity</em> and <em>dashed</em> lines.<br>
+			<a href="../../examples/misc/transparent-rendering.htm">Example: Transparent Rendering</a></p>
+
+			
+			<h3>visible <var>(boolean)</var></h3>
+			<p class="default-value"><samp>true</samp></p>
+			
+
+			<h3>Advanced:</h3>
+
+			<div class="advanced">
+			
+				<h3>alwaysBehind <var>(boolean)</var></h3>
+				<p class="default-value"><samp>false</samp></p>
+				<p>Lines set to <em>alwaysBehind: true</em> are rendered behind Markers, Images and other Lines.<br>
+				<a href="../../examples/properties/line-alwaysbehind.htm">Example: alwaysBehind</a><br>
+				
+				</p>
+		
+				<h3>earth <var>(EarthInstance)</var> <mark class="read-only"></mark></h3>
+				<p>Reference to the <em>EarthInstance</em>.</p>
+				
+				<h3>object3d <var>(THREE.Object3D)</var></h3>
+				<p><a href="https://threejs.org/docs/">About THREE.js</a></p>
+
+			</div><!--advanced-->
+			
+			&nbsp;
+			
+			<div class="hint">
+				You can add custom properties that are copied over to the <em>LineInstance</em>.
+			</div>
+			
+			
+			<h2>Line Methods</h2>
+			
+				<h3 id="animate">animate( <var>property</var>, <var>value</var>, <var>animationProperties</var> ) <small>returns <em>AnimationInstance</em></small></h3>
+				<dl>
+				  <dt>property</dt><dd>Name of the animatable property (String)</dd>
+				  <dt>value</dt><dd>Target value</dd>
+				  <dt>animationProperties</dt><dd>Object of <a href="animation.htm#prop">animation properties</a></dd>
+				</dl>
+				<p><a href="../../examples/properties/animatable-properties.htm">Example: Animatable Properties</a></p>
+
+
+				<h3 id="stopallanimations">stopAllAnimations( <var>triggerComplete</var>, <var>jumpToEnd</var> ) </h3>
+				<dl>
+				  <dt>triggerComplete</dt><dd>(boolean) default: false | Calls the <em>complete</em> functions</dd>
+				  <dt>jumpToEnd</dt><dd>(boolean) default: false | Sets the properties immediately to their end values</a></dd>
+				</dl>
+
+				<p>Stops all animations of this object. To stop a specific animation use <em>AnimationInstance</em>.<a href="animation.htm#stop">stop()</a></p>
+
+				<h3>remove( )</h3>
+				<p>Removes the line permanently.</p>
+		
+		</div><!--docs-->
+		
+	</div>
+</body>
+</html>

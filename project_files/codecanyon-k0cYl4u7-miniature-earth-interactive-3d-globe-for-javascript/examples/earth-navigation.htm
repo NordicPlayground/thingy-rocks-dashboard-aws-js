@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Navigation</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+var myearth;
+
+window.addEventListener( "earthjsload", function() {
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: 0 },
+		autoRotateStart : 150,
+		autoRotateDelay: 0,
+		zoomable: true
+	} );
+	
+	myearth.addEventListener( "change", function() {
+		
+		// update zoom button state
+		document.getElementById( 'zoom-in' ).disabled = ( this.zoom >= this.zoomMax );
+		document.getElementById( 'zoom-out' ).disabled = ( this.zoom <= this.zoomMin );
+		
+	} );
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Navigation</h1>
+
+	<div id="wrapper">
+	
+		<div id="info">
+			This example uses <a href="../docs/api/earth.htm#autorotate"><em>autoRotate</em></a>, <a href="../docs/api/earth.htm#zoom"><em>zoom</em></a> and the <a href="../docs/api/earth.htm#goto">goTo()</a> method.<br>
+			<br>
+			&nbsp;
+		</div>
+	
+		<button onmousedown=" myearth.autoRotate=true; myearth.autoRotateSpeed=8; " onmouseup=" myearth.autoRotate=false; "> &lt; Rotate (hold down) </button>
+		<button onmousedown=" myearth.autoRotate=true; myearth.autoRotateSpeed=-8; " onmouseup=" myearth.autoRotate=false; "> &gt; </button>
+		&nbsp;
+		<button id="zoom-in" onclick=" myearth.animate( 'zoom', myearth.zoom + 0.1 ); "> Zoom + </button>
+		<button id="zoom-out" onclick=" myearth.animate( 'zoom', myearth.zoom - 0.1 ); "> Zoom - </button>
+		
+		<div style="height: 1em;"></div>
+		
+		<button onclick=" myearth.goTo( { lat: 40.7, lng: -74.1 }, { duration: 300 } ); "> GoTo NYC<br>in exactly 300ms </button>
+		<button onclick=" myearth.goTo( { lat: 35.6, lng: 139.6 }, { relativeDuration: 100 } ); "> GoTo Tokyo<br>in 100ms/1000km</button>
+		<button onclick=" myearth.goTo( { lat: 54, lng: -5 }, { zoom: 1.2, duration: 200, relativeDuration: 100 } ); "> GoTo and zoom<br>(synchronized) UK </button>
+		<button onclick=" myearth.goTo( { lat: -25, lng: 131 }, { approachAngle: 20, duration: 200, relativeDuration: 100 } ); "> Approach Australia<br>if out of view </button>
+		
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Click Events</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 20, lng: 0 },
+		showHotspots : true
+	} );
+	
+	myearth.addEventListener( "click", function() {
+		logEvent( 'Earth', 'click' );
+	} );	
+	myearth.addEventListener( "mousedown", function() {
+		logEvent( 'Earth', 'mousedown' );
+	} );	
+	myearth.addEventListener( "mouseup", function() {
+		logEvent( 'Earth', 'mouseup' );
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+
+		// image
+		
+		var myimage = this.addImage( {
+			location : { lat: 45, lng: 0 },
+			color: 'green',
+			scale: 3,
+			hotspot : true
+		} );
+		
+		myimage.addEventListener( "click", function() {
+			logEvent( 'Image', 'click' );
+		} );
+		
+		
+		// marker
+			
+		var mymarker = this.addMarker( {
+			location : { lat: 45, lng: 0 },
+			mesh: ['Pin2', 'Needle'],
+			color: 'blue',
+			scale: 1.25,
+			hotspot : true
+		} );
+		
+		mymarker.addEventListener( "click", function() {
+			logEvent( 'Marker', 'click' );
+		} );
+		
+		
+		// sprite
+		
+		var mysprite = this.addSprite( {
+			location : { lat: 35, lng: 8 },
+			offset: 1,
+			color: 'yellow',
+			scale: 2,
+			hotspot : true
+		} );
+		
+		mysprite.addEventListener( "click", function() {
+			logEvent( 'Sprite', 'click' );
+		} );
+		
+		
+		
+		// overlay
+		
+		var myoverlay = this.addOverlay( {
+			location : { lat: 28, lng: -6 },
+			offset: 1.5,
+			elementScale: 1,
+			className : 'docs-tip clickable-overlay',
+			content: 'Overlay'
+		} );
+		
+		myoverlay.element.firstChild.addEventListener( 'click', function(){
+			logEvent( 'Overlay', 'click' );			
+		} );
+		
+		
+	} );
+	
+	
+} );
+
+
+function logEvent( obj, type ) {
+	document.getElementById('eventlog').value += obj + ': ' + type + '\n';
+	document.getElementById('eventlog').scrollTop = document.getElementById('eventlog').scrollHeight;
+}
+
+
+</script>
+
+<style>
+.clickable-overlay {
+	outline: 1px #00FF00 solid;
+	background-color:cyan;
+	color:black;
+	padding: 1em;
+	border-radius: 1em;
+	font-size: 30px;
+	
+	pointer-events: all; /* makes div element clickable */
+	cursor: pointer;	
+}
+</style>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Click Events</h1>
+	
+	<div id="wrapper">
+		<div id="intro">
+			Click or touch the earth or an object to see the events logged here:
+			<textarea id="eventlog" spellcheck="false" style="display: block; width: 30em; max-width: 90%; margin: 0.5em auto; height: 100px;"></textarea>
+		</div>
+	
+		<div id="myearth"></div>
+
+	</div>
+</body>
+</html>

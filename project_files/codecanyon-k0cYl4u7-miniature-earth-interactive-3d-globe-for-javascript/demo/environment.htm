@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Miniature Earth | Environment Demo</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<link rel="stylesheet" href="environment/environment.css">
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+if ( location.protocol == 'file:' ) {
+	alert( 'This demo does not work with the file protocol due to browser security restrictions.' );
+}
+
+
+window.addEventListener( "earthjsload", function() {
+
+	// setup earth
+
+	myearth = new Earth( 'myearth', {
+
+		location: { lat: 0, lng: 104 },
+		dragPolarLimit: 1,
+		dragDamping: 0.8,
+		
+		mapLandColor : '#93938c',
+		mapBorderColor : '#93938c',
+		mapSeaColor : '#4c5351',
+		mapBorderWidth : 0.3,
+
+		light: 'sun',
+		shadows: false,
+		sunLocation: {lat: 90, lng: 0},
+		lightIntensity: 0.35,
+		lightAmbience: 1,
+		
+		autoRotateSpeed: 0,
+		autoRotateStart: 0,
+		autoRotateDelay: 0
+		
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+	
+		myearth.addEventListener( "change", autoHideOverlays );
+	
+	
+		// load geometry
+		
+		var ajax = new XMLHttpRequest();
+		
+		ajax.onreadystatechange = function() {
+			if ( this.readyState == 4 ) {
+			
+				Earth.addMesh( this.responseText );
+				
+				addGarbage();
+				addTrees();
+				addIndustry();
+				addDesert();
+				
+			}
+		};
+		
+		ajax.open("GET", 'environment/environment.obj', true);
+		ajax.send();
+		
+		
+		// rotation by mouse wheel
+			
+		var wheel_momentum = 0;
+		
+		window.addEventListener("wheel", function(event) {
+		
+			document.body.classList.add('scrolled');
+			wheel_momentum += Math.sign( event.deltaY ) * -20;
+			myearth.autoRotate = true;
+			
+		});
+		
+		myearth.addEventListener( "update", function() {
+		
+			if ( ! myearth.autoRotate ) return;
+			
+			if ( Math.abs(wheel_momentum) < 0.01 ) {
+				wheel_momentum = 0;
+				myearth.autoRotate = false;
+				myearth.autoRotateSpeed = 0;
+				return;
+			}
+						
+			wheel_momentum *= 1 - Math.min(myearth.deltaTime/200, 0.2);
+			myearth.autoRotateSpeed = wheel_momentum;
+			
+		} );
+		
+
+	} );
+
+} );
+
+
+function addDesert() {
+
+	desert = myearth.addMarker( {
+		mesh : ["dunes"],
+		color: '#93938c',
+		offset: -0.6,
+		location : {lat: 9, lng: 27},
+		scale: 1.5,
+		hotspotRadius: 1.15,
+		hotspotHeight: 0.5,
+		rotationY: 110,
+		hotspot: true
+	} );
+	
+	myearth.addMarker( {
+		mesh : ["lake"],
+		color: '#4c5351',
+		offset: 0,
+		location : {lat: desert.location.lat - 1, lng: desert.location.lng - 1},
+		scale: 1.8,
+		hotspot: false,
+		rotationY: -20
+	} );
+	
+	
+	animateDesert();
+	
+	
+	var overlay = myearth.addOverlay( {
+		location : desert.location,
+		occlude: false,
+		visible: false,
+		content : '<div><div class="info-box">\
+		<strong>Desertification</strong><br>\
+		<div class="info-text">32,886 hectares per day<br>worldwide</div>\
+		<a href="https://en.wikipedia.org/wiki/Desertification">Learn more</a>\
+		</div></div>',
+		
+		// custom property
+		opener : desert
+	} );
+	
+	all_overlays.push( overlay );
+	
+	
+	desert.addEventListener( "click", showOverlay.bind(overlay) );
+	
+}
+
+function animateDesert() {
+	desert.animate( 'scale', 1.8, {duration: 12000, easing: 'out-quad'});
+	desert.animate( 'offset', -0.15, {duration: 12000, easing: 'out-quad'});
+	setTimeout( resetDesert, 20000 );
+}
+function resetDesert() {
+	desert.animate( 'scale', 1.5, {duration: 1500, easing: 'out-quad'});
+	desert.animate( 'offset', -0.6, {duration: 1500, easing: 'out-quad'});
+	setTimeout( animateDesert, 5000 );
+}
+
+
+
+function addIndustry() {
+
+	var factory_info = {
+		mesh : ["factory", "roof", "chimney", "door"],
+		color: '#888',
+		color2: '#655',
+		color3: '#999',
+		color4: '#555',
+		location : {lat: 28, lng: 93},
+		scale: 1.8,
+		hotspotRadius: 1.15,
+		hotspotHeight: 0.3,
+		hotspot: true
+	};
+
+	var industry = myearth.addMarker( factory_info );
+	addSmoke( industry, 1 );
+	
+	factory_info.hotspot = false;
+	factory_info.location = {lat: 33, lng: 85};
+	factory_info.scale = 1.45;
+	var building = myearth.addMarker( factory_info );
+	addSmoke( building, 2500 );
+	
+	factory_info.location = {lat: 35, lng: 100};
+	factory_info.scale = 1.35;
+	building = myearth.addMarker( factory_info );
+	addSmoke( building, 4250 );
+
+	
+	var overlay = myearth.addOverlay( {
+		location : {lat: industry.location.lat - 4, lng: industry.location.lng },
+
+		occlude: false,
+		visible: false,
+		content : '<div><div class="info-box">\
+		<strong>CO<sub>2</sub> Emissions</strong><br>\
+		<div class="info-text">96 billion tons per day<br>worldwide</div>\
+		<a href="https://en.wikipedia.org/wiki/List_of_countries_by_carbon_dioxide_emissions">Learn more</a>\
+		</div></div>',
+		
+		// custom property
+		opener : industry
+	} );
+	
+	all_overlays.push( overlay );
+	
+	
+	industry.addEventListener( "click", showOverlay.bind(overlay) );
+	
+}
+
+function addSmoke( factory, delay ) {
+
+	var smoke = myearth.addMarker( {
+		mesh : ["smoke"],
+		opacity: 0,
+		color: '#333',
+		location : {lat: factory.location.lat, lng: factory.location.lng + 2},
+		scale: factory.scale,
+		hotspot: false,
+		offset: 0.6 * factory.scale
+	} );
+	
+	setTimeout( function(){
+		smoke.animate('opacity', 0.5, {loop: true, duration: 3000, easing: 'arc'});
+		smoke.animate('offset', factory.scale, {loop: true, duration: 3000, easing: 'in-out-quad'});
+		smoke.animate('rotationY', 360, {loop: true, duration: 10000, easing: 'linear'});
+	}, delay );
+	
+}
+
+
+
+
+
+var trees = [];
+var tree_info = [
+	{relLat: 2, relLng : -2, scale: 1, rotY: 30, delay: 1000},
+	{relLat: 3, relLng : 2, scale: 0.9, rotY: -70, delay: 3000},
+	{relLat: -4, relLng : 3, scale: 0.8, rotY: 85, delay: 5400},
+	{relLat: 3, relLng : -8, scale: 0.9, rotY: 20, delay: 6600},
+	{relLat: 5, relLng : -3, scale: 0.95, rotY: -70, delay: 8000},
+	{relLat: -4.5, relLng : -4, scale: 1, rotY: 10, delay: 9500},
+	{relLat: 6, relLng : 5, scale: 0.8, rotY: -40, delay: 10200},
+	{relLat: -6, relLng : 5.2, scale: 0.9, rotY: 110, delay: 11000},
+	{relLat: -2, relLng : 7.5, scale: 1, rotY: -160, delay: 12000},
+	{relLat: 2, relLng : 8, scale: 0.85, rotY: -120, delay: 12600},
+];
+
+function addTrees() {
+
+	var tree_props = {
+		location : {lat: -12, lng: -55},
+		mesh : ["bark", "treetop"],
+		color: '#544',
+		color2: '#454',
+		scale: 0.9,
+		hotspotRadius: 2.2,
+		hotspotHeight: 0.3,
+		hotspot: true
+	};
+
+	var main_tree = myearth.addMarker( tree_props );
+	
+	tree_props.hotspot = false;
+	
+	for ( var i=0; i < tree_info.length; i++ ) {
+		tree_props.location = {lat: main_tree.location.lat + tree_info[i].relLat, lng: main_tree.location.lng + tree_info[i].relLng};
+		tree_props.scale = tree_info[i].scale;
+		tree_props.rotationY = tree_info[i].rotY;
+		trees.push( myearth.addMarker( tree_props ) );
+	}
+	
+	animateTrees();
+	
+	
+	var overlay = myearth.addOverlay( {
+		location : {lat: main_tree.location.lat + 2, lng: main_tree.location.lng },
+		transform: 'translate(0%, -100%)',
+		className : 'overlay-up',
+		occlude: false,
+		visible: false,
+		content : '<div><div class="info-box">\
+		<strong>Deforestation</strong><br>\
+		<div class="info-text">-14,257 hectares per day<br>worldwide</div>\
+		<a href="https://en.wikipedia.org/wiki/Deforestation">Learn more</a>\
+		</div></div>',
+		
+		// custom property
+		opener : main_tree
+	} );
+	
+	all_overlays.push( overlay );
+	
+	main_tree.addEventListener( "click", showOverlay.bind(overlay) );
+
+}
+
+function animateTrees() {
+	for ( var i=0; i < trees.length; i++ ) {
+		setTimeout( (function(){ this.animate( 'rotationZ', 90, { duration: 1000, easing: 'bounce' } ); }).bind(trees[i]), tree_info[i].delay );
+	}
+	
+	setTimeout( resetTrees, 20000 );
+}
+
+function resetTrees() {
+	for ( var i=0; i < trees.length; i++ ) {
+		trees[i].animate( 'rotationZ', 0, { duration: 1000, easing: 'elastic' } );
+	}
+	
+	setTimeout( animateTrees, 2000 );
+}
+
+
+
+
+function addGarbage() {
+
+	var garbage = myearth.addMarker( {
+		mesh : ["whirl", "trash", "trash2", "trash3"],
+		color: '#4c5351',
+		color2: '#777',
+		color3: '#222',
+		color4: '#ddd',
+		location : {lat: 18, lng: 177},
+		offset: 0,
+		scale: 1.4,
+		hotspotRadius: 1.5,
+		hotspotHeight: 0.25,
+		hotspot: true
+	} );
+	
+	garbage.animate( 'rotationY', 360, { loop: true, duration: 9000, easing: 'linear' } );
+	
+	
+	var seagull = myearth.addMarker( {
+		mesh : ["seagull"],
+		color: 'white',
+		location : {lat: 18, lng: 177},
+		offset: 0,
+		scale: 1.2,
+		hotspot: false
+	} );
+	
+	seagull.animate( 'rotationY', 360, { loop: true, duration: 17000, easing: 'linear' } );
+	seagull.animate( 'offset', -0.85, { loop: true, oscillate: true, duration: 4000, easing: 'in-out-quad' } );
+	
+	
+	var overlay = myearth.addOverlay( {
+		location : garbage.location,
+
+		occlude: false,
+		visible: false,
+		content : '<div><div class="info-box">\
+		<strong>Pacific Trash Vortex</strong><br>\
+		<div class="info-text">1.8 trillion plastic pieces</div>\
+		<a href="https://en.wikipedia.org/wiki/Great_Pacific_garbage_patch">Learn more</a>\
+		</div></div>',
+		
+		// custom property
+		opener : garbage
+	} );
+	
+	all_overlays.push( overlay );
+	
+	
+	garbage.addEventListener( "click", showOverlay.bind(overlay) );
+	
+}
+
+
+// overlay helper functions
+
+var all_overlays = [];
+
+function autoHideOverlays() {
+
+	for ( var i = 0; i < all_overlays.length; i++ ) {
+		if ( all_overlays[i].visible && ! all_overlays[i].animated && Earth.getAngle( all_overlays[i].earth.location, { lat: 0, lng: all_overlays[i].location.lng} ) > 25 ) {
+			hideOverlay.bind( all_overlays[i] )();
+		}
+	}
+
+}
+
+function showOverlay() {
+	this.opener.hotspot = false;
+	this.visible = true;
+	this.animated = true;
+	setTimeout( (function(){ this.element.classList.add('overlay-appear'); }).bind(this), 100 );
+	if ( ! this.earth.goTo( { lat: 0, lng: this.location.lng }, { approachAngle: 12, end: (function(){ this.animated = false; }).bind(this) } ) ) {
+		this.animated = false;
+	}
+}
+
+function hideOverlay() {
+	this.element.classList.remove('overlay-appear');
+	this.animated = true;
+	setTimeout( (function(){
+		this.visible = false;
+		this.animated = false;
+		this.opener.hotspot = true;
+	}).bind(this), 500 );
+}
+
+
+</script>
+
+</head>
+
+<body>
+	
+	<div id="wrapper">
+		<div id="myearth"></div>
+		
+		<svg id="icon-mousewheel" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#777" d="M16 2c1.103 0 2 .897 2 2v12c0 3.309-2.691 6-6 6s-6-2.691-6-6v-12c0-1.103.897-2 2-2h8zm4 2c0-2.209-1.791-4-4-4h-8c-2.209 0-4 1.791-4 4v12c0 4.418 3.582 8 8 8s8-3.582 8-8v-12zm-7 1c0-.552-.447-1-1-1s-1 .448-1 1v4c0 .552.447 1 1 1s1-.448 1-1v-4z"></path></svg>
+	</div>
+
+
+
+</body>
+</html>

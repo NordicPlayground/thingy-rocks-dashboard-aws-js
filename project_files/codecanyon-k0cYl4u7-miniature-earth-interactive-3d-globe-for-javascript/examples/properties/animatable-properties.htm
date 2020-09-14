@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Animatable Properties</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 20, lng: 0 },
+		autoRotate : true
+	} );
+	
+	myearth.addEventListener( "ready", function() {
+		
+		//offset
+		var marker1 = this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 35, lng: 0 },
+			offset: 0
+		} );
+		
+		marker1.animate( 'offset', 1, { loop: true, oscillate: true, duration: 1000, easing: 'in-out-cubic' } );
+		
+		
+		//rotate
+		var marker2 = this.addMarker( {
+			mesh : "X",
+			location : { lat: 35, lng: -45 },
+			offset: 0
+		} );
+		
+		marker2.animate( 'rotationY', 360, { loop: true, duration: 4000, easing: 'linear' } );
+
+		
+		//scale
+		var marker3 = this.addMarker( {
+			mesh : "Cone",
+			location : { lat: 35, lng: -90 },
+			scale: 0.5
+		} );
+		
+		marker3.animate( 'scale', 1.25, { loop: true, oscillate: true, duration: 2000, easing: 'in-out-quad' } );
+		
+		
+		//color
+		var marker4 = this.addMarker( {
+			mesh : ["Pin", "Needle"],
+			location : { lat: 35, lng: -135 },
+			color: 'red'
+		} );
+		
+		marker4.animate( 'color', 'blue', { loop: true, oscillate: true, duration: 2000, easing: 'in-out-quad' } );	
+		
+		
+		//location
+		var marker5 = this.addMarker( {
+			mesh : "Marker",
+			location : { lat: 35, lng: -180 },
+			color: 'red'
+		} );
+		
+		marker5.animate( 'location', { lat: 35, lng: 135 }, { loop: true, oscillate: true, duration: 2000, easing: 'in-out-quad' } );
+		
+		
+		//opacity
+		var marker6 = this.addMarker( {
+			mesh : "Diamond",
+			location : { lat: 35, lng: 90 },
+			opacity: 0
+		} );
+		
+		marker6.animate( 'opacity', 1, { loop: true, oscillate: true, duration: 2000 } );
+		
+		
+		//lookAt
+		var marker7 = this.addMarker( {
+			mesh : ["Flag", "Needle"],
+			location : { lat: 35, lng: 45 },
+			lookAt: { lat: 35, lng: 0 }
+		} );
+		
+		marker7.animate( 'lookAt', { lat: 35, lng: 90 }, { loop: true, oscillate: true, duration: 2000 } );
+		
+		
+		
+		// dashOffset
+		var dashedLine = this.addLine( {
+			locations : [
+				{ lat: 0, lng: 0 },
+				{ lat: 0, lng: 90 },
+			],
+			dashed: true,
+			dashSize: 0.25,
+			dashRatio: 0.5
+		} );
+		
+		dashedLine.animate( 'dashOffset', 1, { loop: true, oscillate: true, duration: 20000, easing: 'linear' } );
+		
+		
+		// clip
+		var dashedLine = this.addLine( {
+			locations : [
+				{ lat: 0, lng: 0 },
+				{ lat: 0, lng: -90 },
+			],
+			clip : 0
+		} );
+		
+		dashedLine.animate( 'clip', 1, { loop: true, oscillate: true, duration: 1000, easing: 'linear' } );
+		
+		
+		// offsetFlow
+		var dashedLine = this.addLine( {
+			locations : [
+				{ lat: 0, lng: -90 },
+				{ lat: 0, lng: -180 },
+			],
+			offsetFlow : 0
+		} );
+		
+		dashedLine.animate( 'offsetFlow', 1.5, { loop: true, oscillate: true, duration: 1000, easing: 'linear' } );
+		
+		
+		// width
+		var dashedLine = this.addLine( {
+			locations : [
+				{ lat: 0, lng: 90 },
+				{ lat: 0, lng: 180 },
+			],
+			offset: 0.05,
+			width: 0.01
+		} );
+		
+		dashedLine.animate( 'width', 3, { loop: true, oscillate: true, duration: 1000, easing: 'linear' } );
+		
+
+	} );
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1>Animatable Properties</h1>
+	
+	<div id="wrapper">
+	
+		<p>See <a href="../../docs/api/animation.htm">Animation API</a> and <a href="../../docs/api/marker.htm#animate">animate()</a></p>
+	
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

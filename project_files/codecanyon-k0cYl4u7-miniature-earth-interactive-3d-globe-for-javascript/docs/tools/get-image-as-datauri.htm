@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Get Image as dataURI</title>
+
+<link rel="stylesheet" href="../assets/docs.css">
+
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+function getDataURI( file ) {
+
+	if ( ! file ) return;
+
+	var reader  = new FileReader();
+
+	reader.addEventListener( "loadend", function () {
+
+		document.getElementById('input-wrap').style.display = 'none';
+		document.getElementById('output-wrap').style.display = 'block';
+	
+		document.getElementById('output').value = reader.result;
+		preview( reader.result );
+		
+	} );
+  
+	reader.readAsDataURL(file);
+	
+}
+
+
+var myearth, sprite;
+
+document.addEventListener( "DOMContentLoaded", function() {
+
+	myearth = new Earth( "myearth", {
+		draggable : false,
+		zoom : 1.2
+	} );
+	
+} );
+
+function preview( dataURI ) {
+	
+	if ( sprite) sprite.remove();
+	
+	sprite = myearth.addSprite( {
+		location : { lat: 0, lng: 0 },
+		image : dataURI,
+		scale : 4
+	} );
+
+}
+
+</script>
+
+</head>
+<body>
+
+	<h1>Get Image as dataURI</h1>
+	
+	<p>With this tool, you can convert an image to a dataURI to easily use it for <a href="../api/sprite.htm">Sprites</a> and <a href="../api/image.htm">Images</a>.</p>
+	
+	<div id="input-wrap">
+		<h2>Input</h2>
+		<div style="height: 0.5em"></div>
+		<p>Select your image: <input id="image" type="file" accept=".svg,.png,.gif,.jpg,.jpeg" onchange="getDataURI( this.files[0] )"><br><br>
+		SVG files are recommended but it is also possible to use PNG, GIF or JPG files.</p>
+	</div>
+	
+	<div id="output-wrap" style="display: none;">
+		<h2>Output</h2>
+		<div style="height: 0.5em"></div>
+		<p>
+			<textarea id="output" style="width: 100%; max-width: 1000px; margin: 0.5em auto; box-sizing: border-box; height: 150px;"></textarea><br>
+			<button onclick="document.getElementById('output').select(); document.execCommand('copy');">Copy to Clipboard</button>
+		</p>
+		
+		<p style="transform:translateY(2.5em);">Preview:</p>
+		<div id="myearth" style="max-width: 400px; margin: 3em auto;"></div>		
+	</div>
+	
+</body>
+</html>

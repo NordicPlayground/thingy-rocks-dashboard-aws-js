@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Miniature Earth | Habitats Demo</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<link rel="stylesheet" href="habitats/style.css">	
+
+<script src="habitats/jquery.js"></script>
+<script src="habitats/jquery-ui.js"></script>
+<script src="habitats/jquery.ui.touch-punch.min.js"></script>
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+var myearth, mypin;
+
+var overlays = {};
+
+var dragging = false;
+var dragRotateSpeed = -7;
+var dragRotateSpeedY = -6;
+
+var noDropX;
+var stopDragLocation;
+var pointerPos = {x: 0, y: 0};
+
+var mouse, distanceToCenter;
+var earthCenter;
+
+
+window.addEventListener( "earthjsload", function() {
+
+	$( ".drag-box" ).draggable( {
+	
+		containment: 'document',
+		start : startDrag,		
+		revert : dropIt
+		
+	} );
+
+
+	myearth = new Earth( 'myearth', {
+	
+		location: { lat: 15, lng: 24 },
+		zoom: 0.5,
+		quality: 4,	
+		light: 'none',
+		lightAmbience: 0,
+		
+		mapSeaColor : '#345fac',
+		mapLandColor : '#9bd037',
+		mapBorderColor : '#9bd037',	
+		mapBorderWidth : 0.4,		
+		mapStyles : '#GR, #ES, #PT, #PK, #MX, #PE, #AR, #BF, #ET, #GN, #SL, #LR, #CI, #GH, #TG, #BJ, #NG, #ZM, #AO, #RW, #BI, #TZ, #MW, #MZ { fill: #79b73a; stroke: #79b73a; } \
+#GL, #IS, #AQ { fill: #e5e8ee; stroke: #e5e8ee; } \
+#SE, #NO, #FI, #MY, #ID, #JP, #CA, #GT, #HN, #SV, #NI, #GF, #SR, #GY, #SS, #CM, #GQ, #CF, #GA, #CG, #CD, #UG, #BR { fill: #69b73b; stroke: #69b73b; } \
+#AU, #KE, #MG, #ZW, #TR, #IR, #KZ, #TJ, #KG, #AF, #CL, #MA, #ER, #DJ, #SO, #GM, #SN, #NA, #LS, #BW, #SZ, #ZA { fill: #97c75b; stroke: #97c75b; } \
+#SY, #JO, #LB, #IL, #KW, #SA, #AE, #QA, #YE, #OM, #IQ, #UZ, #TM, #DZ, #TN, #EG, #SD, #ML, #LY, #EH, #MR, #NE, #TD { fill: #e6e18b; stroke: #e6e18b; } \
+',
+		autoRotateDelay: 0,
+		autoRotateStart: 0,	
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+	
+		myearth.animate( 'lightAmbience', 1, { duration : 2500 } );
+		myearth.animate( 'zoom', 1, { duration : 2000, complete : function() {
+			myearth.zoomable = true;
+		} } );
+		
+		
+		noDropX = myearth.addMarker( {
+			mesh : "X",
+			color: 'red',
+			scale: 0.01,
+			offset: 0,
+			hotspot: false,
+			visible: false
+		} );	
+		
+		
+		overlays.bear = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal bear"></div>',
+			
+			dropLocations : [ // custom property
+				{ dropLocation: {lat: 58, lng: -96}, radius: 4000, location: { lat: 44, lng: -113 } },
+				{ dropLocation: {lat: 86, lng: 4.4}, radius: 4200, location: { lat: 70, lng: 118 } }
+			]
+		} );
+		
+		overlays.bison = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal bison"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: 44.5, lng: -100.4}, radius: 3000, location: {lat: 37, lng: -90}  },
+				{ dropLocation: {lat: 49.3, lng: 20.6}, radius: 2000, location: {lat: 49.3, lng: 20.6}  }
+			]
+		} );
+		
+		overlays.lama = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal lama"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: -19.4, lng: -58.44}, radius: 4000, location: {lat: -12.1, lng: -69.4 } }
+			]
+		} );
+		
+		overlays.croc = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal croc"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: -1.1, lng: -69.6}, radius: 4400, location: {lat: 6, lng: -73.14} },
+				{ dropLocation: {lat: 4.2, lng: 23.1}, radius: 4400, location: {lat: -8, lng: 17} },
+				{ dropLocation: {lat: 12.9, lng: 105.65}, radius: 6000, location: {lat: 12.9, lng: 105.65} },
+			]
+		} );
+		
+		overlays.lion = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, elementScale: 1,
+			content: '<div class="animal lion"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: -6, lng: 25}, radius: 4800, location: { lat: -28, lng: 22 } }
+			]
+		} );
+		
+		overlays.rihno = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal rihno"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: 4.7, lng: 16.2}, radius: 4200, location: {lat: 4.366, lng: 28.724} },
+				{ dropLocation: {lat: 18, lng: 93.2}, radius: 3500, location: {lat: 27.11, lng: 92.88} }
+			]
+		} );
+		
+		overlays.giraffe = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal giraffe"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: 1.23, lng: 24.86}, radius: 4400, location: { lat: -15, lng: 32 } }
+			]
+		} );
+		
+		overlays.elephant = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal elephant"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: -6, lng: 25}, radius: 4800, location: { lat: 11, lng: 12 } },
+				{ dropLocation: {lat: 14, lng: 96} , radius: 4800, location: { lat: 23, lng: 81 } },
+			]
+		} );
+		
+		overlays.camel = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal camel"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: 10.2, lng: 24.6}, radius: 5000, location: { lat: 20, lng: 46 } },
+				{ dropLocation: {lat: -17.7, lng: 137.9}, radius: 3000, location: { lat: -18, lng: 138 } },
+				{ dropLocation: {lat: 40.1, lng: 64}, radius: 4000, location: {lat: 40.1, lng: 64} },
+				{ dropLocation: {lat: -27.4, lng: -61.9}, radius: 4000, location: {lat: -38.9, lng: -66} },
+			]
+		} );
+		
+		overlays.reindeer = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal reindeer"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: 58, lng: -96}, radius: 4000, location: { lat: 59, lng: -102 } },
+				{ dropLocation: {lat: 86, lng: 4.4}, radius: 4200, location: { lat: 68, lng: 64 } }
+			]
+		} );
+		
+		overlays.kangaroo = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal kangaroo"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: -25.2, lng: 134.8}, radius: 3500, location: { lat: -25, lng: 123 } }
+			]
+		} );
+		
+		overlays.ostrich = myearth.addOverlay( {
+			visible : false,
+			depthScale: 0.75, 
+			elementScale: 1, 
+			content: '<div class="animal ostrich"></div>',
+			
+			dropLocations : [
+				{ dropLocation: {lat: 4, lng: 23}, radius: 4400, location: {lat: 11, lng: -7} },
+				{ dropLocation: {lat: -25.2, lng: 134.8}, radius: 3500, location: {lat: -29.5, lng: 144.4} },
+				{ dropLocation: {lat: -18, lng: -60}, radius: 4800, location: {lat: -8, lng: -47} },
+			]
+		} );
+		
+		
+		document.addEventListener( 'mousemove', function( event ) {
+			pointerPos.x = event.pageX;
+			pointerPos.y = event.pageY;
+		} );
+		
+		document.addEventListener( 'touchmove', function( event ) {
+			pointerPos.x = event.touches[0].pageX;
+			pointerPos.y = event.touches[0].pageY;
+		} );
+		
+		
+	} );
+	
+} );
+
+
+function startDrag() {
+
+	dragging = true;
+	startAutoRotate();
+	
+}
+
+
+function dropIt() {
+	
+	dragging = false;
+	stopAutoRotate();
+
+	
+	// drop over earth?
+	var earthPos = $(myearth.element).offset();
+	
+	if ( pointerPos.x < earthPos.left ||
+		pointerPos.y < earthPos.top ||
+		pointerPos.x > earthPos.left + myearth.element.clientWidth ||
+		pointerPos.y > earthPos.top + myearth.element.clientHeight ) {
+		console.log('revert (not on canvas)');
+		return true; // revert
+	}
+	
+	stopDragLocation = myearth.getLocation( pointerPos );
+	
+	if ( ! stopDragLocation ) {
+		console.log('revert (not on earth)');
+		return true; // revert
+	}
+	
+	
+	var dropLocation = dropHere( this.data('animal') );
+	
+	if ( ! dropLocation ) {
+	
+		noDropX.location = stopDragLocation;
+		noDropX.visible = true;
+		noDropX.animate( 'scale',  1.4, { duration: 500, complete : function() { 
+			noDropX.animate( 'scale', 0, { complete : function() { 
+				noDropX.visible = false;
+			} } );
+		} } );
+		
+		console.log('no drop');
+		
+		return true; // revert
+		
+	} else {
+	
+		var overlay = overlays[ this.data('animal') ];
+		overlay.location = dropLocation;
+		overlay.visible = true;		
+		
+		var offset = this.offset();
+		
+		this.css( {
+			position: 'absolute',
+			left: offset.left,
+			top: offset.top,
+			zIndex: 1000
+		} );		
+		
+		var elementOffset = $('#myearth').offset();
+		var dropPoint = myearth.getPoint( dropLocation );
+		
+		// jquery drop animation
+		this.animate(
+			{
+				left: elementOffset.left + dropPoint.x - this.width()/2,
+				top: elementOffset.top  + dropPoint.y - this.height()/2
+			},
+			{
+				duration: 400,
+				complete: function() {
+					overlay.element.classList.add( 'dropped' );
+					this.remove();
+				}
+			}
+		);		
+		
+		var $dragAnimal = this.find('.animal');
+		
+		setTimeout( function() {
+			var size = 0.75 * getScale( overlay.element.style.transform );
+			$dragAnimal.animate( { fontSize: size + 'em' }, { duration: 300 } );
+		}, 100);		
+		
+		return false;
+		
+	}
+	
+}
+
+function dropHere( animal ) {
+
+	var overlay = overlays[ animal ];
+	
+	for ( var i in overlay.dropLocations ) {
+		
+		var distance = Earth.getDistance( overlay.dropLocations[i].dropLocation, stopDragLocation );
+		if ( distance < overlay.dropLocations[i].radius ) {
+			return overlay.dropLocations[i].location;
+		}
+	
+	}
+	
+	return false;
+	
+}
+
+function getScale( transformString ) {
+
+	var m = transformString.match( /scale\(([0-9.]+)\)/i );
+	if ( ! m ) {
+		return 1;
+	} else {
+		return m[1];
+	}
+	
+}
+
+
+function startAutoRotate() {
+
+	myearth.autoRotate = true;
+	myearth.autoRotateSpeed = 0;
+	myearth.autoRotateSpeedUp = 0;
+	
+	earthCenter = $('#myearth').offset();
+	earthCenter.left += $('#myearth').width() / 2;
+	earthCenter.top += $('#myearth').height() / 2;
+
+	$(document).on( 'mousemove', updateAutoRotatePosition );
+	myearth.addEventListener( 'update' , updateAutoRotateMomentum );
+	
+}
+
+
+function updateAutoRotatePosition( event ) {
+
+	mouse = new THREE.Vector2( event.pageX - earthCenter.left, event.pageY - earthCenter.top );
+	distanceToCenter = mouse.length();
+	
+}
+
+function updateAutoRotateMomentum() {
+
+	var speed = 0, speedY = 0;
+	
+	var r = myearth.getRadius() * 1.1;
+	
+	if ( distanceToCenter < r ) {
+	
+		speed =  mouse.x / r * dragRotateSpeed;
+		speedY = mouse.y / r * dragRotateSpeedY;
+	
+	}
+	
+	myearth.autoRotateSpeed =  THREE.Math.lerp( myearth.autoRotateSpeed, speed, myearth.deltaTime/300 );
+	myearth.autoRotateSpeedUp = THREE.Math.lerp( myearth.autoRotateSpeedUp, speedY, myearth.deltaTime/300 );
+	
+}
+
+function stopAutoRotate() {
+
+	myearth.autoRotate = false;
+	$(document).off( 'mousemove', updateAutoRotatePosition );
+	myearth.removeEventListener( 'update' , updateAutoRotateMomentum );
+
+}
+	
+</script>
+
+</head>
+
+<body>
+
+	<div id="wrapper">
+	
+		<div class="animal-list">
+			<div><div class="drag-box" data-animal="kangaroo"><div class="animal kangaroo"></div></div></div>
+			<div><div class="drag-box" data-animal="rihno"><div class="animal rihno"></div></div></div>
+			<div><div class="drag-box" data-animal="lama"><div class="animal lama"></div></div></div>
+			<div><div class="drag-box" data-animal="croc"><div class="animal croc"></div></div></div>
+			<div><div class="drag-box" data-animal="camel"><div class="animal camel"></div></div></div>
+			<div><div class="drag-box" data-animal="lion"><div class="animal lion"></div></div></div>
+		</div>
+		
+		<div id="myearth" class="little-earth"></div>
+		
+		<div class="animal-list">
+			<div><div class="drag-box" data-animal="bison"><div class="animal bison"></div></div></div>
+			<div><div class="drag-box" data-animal="reindeer"><div class="animal reindeer"></div></div></div>
+			<div><div class="drag-box" data-animal="elephant"><div class="animal elephant"></div></div></div>
+			<div><div class="drag-box" data-animal="bear"><div class="animal bear"></div></div></div>
+			<div><div class="drag-box" data-animal="giraffe"><div class="animal giraffe"></div></div></div>
+			<div><div class="drag-box" data-animal="ostrich"><div class="animal ostrich"></div></div></div>
+		</div>
+		
+	</div>
+	
+	<div id="instructions">
+	
+		<svg id="icon-drag" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#444444" d="M12.537 2.592l-5.445 3.779c-1.504 1.043-1.877 3.108-.833 4.611l5.668 8.168c1.287 1.855 3.352 2.85 5.451 2.85 3.605 0 6.622-2.919 6.622-6.634 0-1.304-.384-2.621-1.182-3.773l-5.668-8.168c-.644-.927-1.676-1.425-2.726-1.425-.652 0-1.311.192-1.887.592zm.945 1.361c.751-.521 1.784-.334 2.307.416l1.415 2.042-3.912 2.693-2.36-3.403 2.55-1.748zm6.725 15.503c-2.252 1.563-5.356 1.002-6.919-1.25l-3.306-4.764 8.167-5.668 3.308 4.764c1.562 2.252 1.001 5.355-1.25 6.918zm-16.031-11.567l-2.499-1.74.62-.891 2.271 1.582c-.169.332-.3.681-.392 1.049zm.702 4.006l-2.299 1.615-.624-.888 2.414-1.699c.135.338.299.665.509.972zm-.778-1.906h-3.1v-1.085h3.029c-.013.366.005.729.071 1.085z"/></svg>
+		Drag the animals into their habitat
+	
+		<svg id="icon-mousewheel" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="#444444" d="M16 2c1.103 0 2 .897 2 2v12c0 3.309-2.691 6-6 6s-6-2.691-6-6v-12c0-1.103.897-2 2-2h8zm4 2c0-2.209-1.791-4-4-4h-8c-2.209 0-4 1.791-4 4v12c0 4.418 3.582 8 8 8s8-3.582 8-8v-12zm-7 1c0-.552-.447-1-1-1s-1 .448-1 1v4c0 .552.447 1 1 1s1-.448 1-1v-4z"/></svg>
+		Zoom
+		
+	</div>
+	
+
+	
+</body>
+</html>

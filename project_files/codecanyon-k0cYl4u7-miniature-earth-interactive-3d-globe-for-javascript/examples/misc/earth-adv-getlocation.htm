@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>getLocation / hitTest</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+var mouse_pos = { x: 0, y: 0 };
+
+document.addEventListener( "DOMContentLoaded", function() {
+
+	var myearth = new Earth( "myearth", {
+		location: { lat: 10, lng: -80 },
+		autoRotate: true,
+		autoRotateDelay: 500,
+		mapHitTest : true
+	} );
+	
+	
+	myearth.addEventListener( "update", function() {
+	
+		var location = myearth.getLocation( mouse_pos );
+		var svg_path = myearth.hitTest( location );
+		
+		document.getElementById('position_text').innerHTML = ( ! location ) ? 'MOUSE NOT OVER EARTH<br>&nbsp;' : JSON.stringify(location) + '<br>Path: ' + svg_path;
+		
+	} );	
+	
+	
+	document.addEventListener( "mousemove", function( event ) {
+	
+		mouse_pos.x = event.pageX;
+		mouse_pos.y = event.pageY;
+		
+	} );
+	
+} );
+
+</script>
+
+</head>
+<body>
+
+	<h1>getLocation / hitTest</h1>
+	
+	<p>
+		Location at mouse position:<br>
+		<span id="position_text"></span>
+	</p>
+	
+	<div id="myearth" style="max-width: 600px; margin: 2em auto; border: 1px black dotted;"></div>		
+
+</body>
+</html>

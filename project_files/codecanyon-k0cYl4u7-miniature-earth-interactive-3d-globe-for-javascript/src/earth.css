@@ -1,0 +1,72 @@
+/* earth container */
+
+.earth-container {
+	position: relative;
+	z-index: 1;
+}
+.earth-container::before {
+	content: "";
+	display: block;
+	padding-top: 100%;
+}
+.earth-container > canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	user-select: none;
+}
+
+
+/* cursors */
+
+.earth-draggable {
+	cursor: all-scroll;
+	cursor: -webkit-grab;
+	cursor: grab;
+}
+.earth-dragging * {
+	cursor: all-scroll;
+	cursor: -webkit-grabbing !important;
+	cursor: grabbing !important;
+}
+.earth-clickable {
+	cursor: pointer;
+}
+
+
+/* overlays */
+
+.earth-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	user-select: none;
+	pointer-events: none;
+	transform-origin: 0 0;
+}
+
+.earth-overlay a,
+.earth-overlay input,
+.earth-overlay button {
+	pointer-events: all;	
+}
+
+
+/* mapHitTest */
+
+.earth-hittest {
+	position: fixed;
+	width: 200vh;
+	max-width: 100%;
+	top: 0;
+	left: 0;
+	z-index: 999999;
+}
+.earth-hittest svg {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	margin: 0;
+	opacity: 0;
+}

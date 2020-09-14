@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Get .obj File as Minified String</title>
+
+<link rel="stylesheet" href="../assets/docs.css">
+
+<script>
+
+function getFile( file ) {
+
+	if ( ! file ) return;
+
+	var reader  = new FileReader();
+
+	reader.addEventListener( "loadend", function () {
+	
+		var obj = reader.result;
+		
+		// remove comments
+		obj = obj.replace( /#.+/g, '' ).trim();
+		
+		// line endings
+		obj = obj.split('\r').join('\\n');
+		obj = obj.split('\n').join('\\n');
+		obj = obj.split('\\n\\n').join('\\n');
+		
+		// reduce precision
+		var precision = Number(document.getElementById('precision').value);
+		obj = obj.replace( /([0-9]\.[0-9]+)/g, function( str, num ) {
+			return String( parseFloat(num).toPrecision( precision ) );
+		} );
+		
+		obj = 'var myobj = "' + obj + '";';	
+		document.getElementById('output').value = obj;
+		
+		// get mesh name
+		var matches = obj.match( /o ([^\\]+)/ );
+		var mesh_name = (matches[1]) ? matches[1] : 'meshname';
+		
+		document.getElementById('output_example').value = '<'+'script>\n\
+\n\
+window.addEventListener( "earthjsload", function() {\n\
+\n\
+	Earth.addMesh( myobj );\n\
+\n\
+	var myearth = new Earth( "myearth", {\n\
+		/* options */\n\
+	} );\n\
+\n\
+	myearth.addEventListener( "ready", function() {\n\
+\n\
+		this.addMarker( {\n\
+			mesh : "'+ mesh_name +'",\n\
+			location : { lat: 30, lng: 30 },\n\
+			scale: 2\n\
+		} );\n\
+\n\
+	} );\n\
+\n\
+} );\n\
+\n\
+' + obj + '\n\
+\n\
+<'+'/script>\n\
+\n\
+<div id="myearth"></div>';
+
+		document.getElementById('input-wrap').style.display = 'none';
+		document.getElementById('output-wrap').style.display = 'block';
+		
+	} );
+  
+	reader.readAsText(file);
+	
+}
+
+
+</script>
+
+</head>
+<body>
+
+	<h1>Get .obj File as Minified String</h1>
+	
+	<p>With this tool, you can convert a .obj 3D file into a JavaScript string to easily use it as a <a href="../api/marker.htm">Marker</a>.</p>
+	
+	<div style="height: 1em"></div>
+
+	<div id="input-wrap">
+		<h2>Input</h2>
+		<div style="height: 0.5em"></div>
+		
+		<p>Decimals: &nbsp; <input id="precision" type="number" min="1" max="8" value="2"></p>
+		<p>Select your .obj file: &nbsp; <input type="file" accept=".obj" onchange="getFile( this.files[0] )"></p>
+	</div>
+	
+	<div id="output-wrap" style="display: none;">
+		<h2>Output</h2>
+		<div style="height: 0.5em"></div>
+		
+		<p>
+			Your .obj as String: <br>
+			<textarea id="output" style="width: 100%; max-width: 1000px; margin: 0.5em auto; box-sizing: border-box; height: 150px;"></textarea><br>
+			<button onclick="document.getElementById('output').select(); document.execCommand('copy');">Copy to Clipboard</button>
+		</p>
+		
+		<div style="height: 2em"></div>
+		
+		<p>
+			Working Example: <br>
+			<textarea id="output_example" style="width: 100%; max-width: 1000px; margin: 0.5em auto; box-sizing: border-box; height: 600px;"></textarea><br>
+			<button onclick="document.getElementById('output_example').select(); document.execCommand('copy');">Copy to Clipboard</button>
+		</p>
+	</div>
+	
+	<div style="height: 3em"></div>
+	
+</body>
+</html>

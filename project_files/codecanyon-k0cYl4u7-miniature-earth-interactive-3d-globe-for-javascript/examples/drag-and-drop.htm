@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Drag and Drop</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+	var myearth = new Earth( "myearth", {
+		location: { lat: 10, lng: -80 }
+	} );
+	
+
+	// drag and drop settings
+	var rotation_speed = 8;
+	var drag_start_duration = 1000;
+	var drag_transition_duration = 200;
+	
+	var dragging = false;
+	var drag_object, marker_shadow, over_earth, drag_time, drag_transition_time, drag_start_location;
+	var earth_center_offset = { x: 0, y: 0 }, earth_radius = 0;
+	
+	var mouse_pos = { x: 0, y: 0 };
+	
+	document.addEventListener( "mousemove", function( event ) {				
+		mouse_pos.x = event.clientX;
+		mouse_pos.y = event.clientY;
+	} );
+	
+	document.addEventListener( "touchmove", function( event ) {				
+		mouse_pos.x = event.changedTouches[0].clientX;
+		mouse_pos.y = event.changedTouches[0].clientY;
+	} );
+
+
+	myearth.addEventListener( "ready", function() {
+	
+	
+		marker_shadow = this.addImage( {
+			color: 'black',
+			opacity: 0.8,
+			scale: 0.01,
+			visible: false			
+		} );
+		
+
+		
+		// red marker
+		
+		var marker = this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 40, lng: -74 },
+			hotspot : true,
+			transparent: true
+		} );
+		
+		marker.addEventListener( 'mousedown', startDrag );
+		
+		marker.addEventListener( 'dragend', function(){
+			document.getElementById('info').innerHTML = 'Marker dropped at: ' + JSON.stringify( this.location );
+		} );
+		
+		
+		
+		// blue sprite
+		
+		var sprite = this.addSprite( {
+			color: '#2549ff',
+			image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTIgNGM0LjQxMSAwIDggMy41ODkgOCA4cy0zLjU4OSA4LTggOC04LTMuNTg5LTgtOCAzLjU4OS04IDgtOHptMC0yYy01LjUyMyAwLTEwIDQuNDc3LTEwIDEwczQuNDc3IDEwIDEwIDEwIDEwLTQuNDc3IDEwLTEwLTQuNDc3LTEwLTEwLTEwem0wIDZjMi4yMDYgMCA0IDEuNzk0IDQgNHMtMS43OTQgNC00IDQtNC0xLjc5NC00LTQgMS43OTQtNCA0LTR6bTAtMmMtMy4zMTQgMC02IDIuNjg2LTYgNnMyLjY4NiA2IDYgNiA2LTIuNjg2IDYtNi0yLjY4Ni02LTYtNnptMCA0Yy0xLjEwNSAwLTIgLjg5Ni0yIDJzLjg5NSAyIDIgMiAyLS44OTYgMi0yLS44OTUtMi0yLTJ6Ii8+PC9zdmc+',
+			hotspot: true,
+			scale: 1.5,
+			location : { lat: 22, lng: -72 }
+		} );
+		
+		sprite.addEventListener( 'mousedown', startDrag );
+		
+		sprite.addEventListener( 'dragend', function(){
+			document.getElementById('info').innerHTML = 'Sprite dropped at: ' + JSON.stringify( this.location );
+		} );	
+	
+	
+	
+		// green image
+	
+		var image = this.addImage( {
+			color: '#30b81f',
+			image: sprite.image,
+			hotspot: true,
+			scale: 1.5,
+			location : { lat: 35, lng: -119 }
+		} );
+		
+		image.addEventListener( 'mousedown', startDrag );
+		
+		image.addEventListener( 'dragend', function(){
+			document.getElementById('info').innerHTML = 'Image dropped at: ' + JSON.stringify( this.location );
+		} );
+				
+
+		
+	} );	
+	
+
+	function startDrag() {
+
+		dragging = true;
+		this.earth.addEventListener( "update", updateDrag );
+		document.addEventListener( "mouseup", stopDrag );
+		document.documentElement.classList.add('earth-dragging');
+		
+		drag_object = this;
+		over_earth = false;
+		drag_time = 0;
+		drag_transition_time = 0;
+		drag_start_location = this.location;
+		earth_radius = drag_object.earth.getRadius();
+		
+		this.earth.draggable = false;
+		this.earth.dragMomentum = false;
+		this.earth.autoRotate = true;
+		this.earth.autoRotateDelay = 0;
+		this.earth.autoRotateStart = 0;
+		this.earth.autoRotateSpeed = 0;
+		this.earth.autoRotateSpeedUp = 0;
+		
+		
+		if ( drag_object.isMarker ) {
+			this.animate( 'offset', 0.6, {duration: 200, easing: 'in-out-quad'} );
+
+			marker_shadow.location = this.location;
+			marker_shadow.visible = true;
+			marker_shadow.animate( 'opacity', 0.5, {duration: 200, easing: 'in-out-quad'} );
+			marker_shadow.animate( 'scale', 0.3, {duration: 200, easing: 'in-out-quad'} );
+		}
+	}
+	
+	
+	function stopDrag() {
+
+		if ( ! dragging ) return;
+		
+		dragging = false;
+		drag_object.earth.removeEventListener( "update", updateDrag );
+		document.removeEventListener( "mouseup", stopDrag );
+		document.documentElement.classList.remove('earth-dragging');
+		
+		drag_object.earth.draggable = true;
+		drag_object.earth.dragMomentum = true;
+		drag_object.earth.autoRotate = false;
+		
+		
+		if ( drag_object.isMarker ) {
+			drag_object.animate( 'offset', 0, {duration: 200, easing: 'in-out-quad'} );
+			
+			marker_shadow.animate( 'opacity', 0.8, {duration: 200, easing: 'in-out-quad'} );
+			marker_shadow.animate( 'scale', 0.01, { duration: 200, easing: 'in-out-quad', complete: function(){ this.visible = false; } } );
+		}
+		
+		drag_object.dispatchEvent( { type: 'dragend' } );
+
+	}
+
+
+	function updateDrag() {
+
+		if ( ! dragging ) return;
+		
+		drag_time += drag_object.earth.deltaTime;
+		drag_transition_time += drag_object.earth.deltaTime;
+		
+		
+		var rect = drag_object.earth.element.getBoundingClientRect();
+		earth_center_offset.x = (mouse_pos.x - rect.left - rect.width / 2) / rect.width;
+		earth_center_offset.y = (mouse_pos.y - rect.top - rect.height / 2) / rect.height;
+		
+
+		var location = drag_object.earth.getLocation( mouse_pos );
+
+		if ( location ) { // mouse over earth
+		
+			if ( ! over_earth ) {
+				drag_start_location = drag_object.location;
+				drag_transition_time = 0;
+			}
+			over_earth = true;
+			
+		} else { // mouse not over earth
+		
+			if ( over_earth ) {
+				drag_start_location = drag_object.location;
+				drag_transition_time = 0;
+			}
+			over_earth = false;
+		
+			// get nearest location on earth
+			
+			var radius = 0.95;
+			var magnitude = Math.sqrt( earth_center_offset.x * earth_center_offset.x + earth_center_offset.y * earth_center_offset.y );
+			var direction = {
+				x : earth_center_offset.x / magnitude,
+				y : earth_center_offset.y / magnitude
+			};
+		
+
+			while ( ! location && radius > 0.8 ) {
+				var client_pos = {
+					x : rect.left + rect.width / 2 + direction.x * earth_radius * radius,
+					y : rect.top + rect.height / 2 + direction.y * earth_radius * radius
+				};
+				
+				location = drag_object.earth.getLocation( client_pos );
+				radius -= 0.01;
+			}
+		}
+		
+		if ( ! location ) return;
+
+
+		var start_speed = 1;
+		if ( drag_time < drag_start_duration ) { // ease start speed
+			start_speed = drag_time / drag_start_duration;
+		}
+		
+		if ( drag_transition_time < 200 ) { // ease to drag location
+			location = Earth.lerp( drag_start_location, location, drag_transition_time / drag_transition_duration );
+		}
+
+		drag_object.location = location;
+		if ( drag_object.isMarker ) {
+			marker_shadow.location = location;
+		}
+		
+		drag_object.earth.autoRotateSpeed =   easeDragSpeed( earth_center_offset.x ) * - rotation_speed * start_speed * 1.2;
+		drag_object.earth.autoRotateSpeedUp = easeDragSpeed( earth_center_offset.y ) * - rotation_speed * start_speed;
+
+	}
+	
+
+	function easeDragSpeed( pos ) {
+	
+		var sign = Math.sign(pos);
+		pos = Math.min( Math.abs(pos)*3, 1 );
+		pos -= 0.1;
+		if ( pos < 0 ) pos = 0;
+		return Earth.Animation.Easing['in-quart']( pos ) * sign;
+		
+	}
+
+
+} );
+
+</script>
+
+</head>
+<body>
+
+	<h1 style="padding-bottom:1em;">Drag and Drop</h1>
+	
+	<div id="info">
+		The objects are draggable!
+	</div>
+	
+	
+	<div id="wrapper">
+		<div id="myearth"></div>		
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Line Properties</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<style>
+
+.docs-tip {
+	transform: translate(-50%, -1em);
+}
+
+</style>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+
+	var myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: 0 },
+		autoRotate : true
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+		
+		// width
+		this.addLine( {
+			locations : [
+				{ lat: 35, lng: 0 },
+				{ lat: -35, lng: 0 },
+			],
+			offset: 0.02,
+			width: 2
+		} );
+		
+		this.addOverlay( {
+			content: 'width: 2',
+			location : { lat: 35, lng: 0 },
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// hairline
+		this.addLine( {
+			locations : [
+				{ lat: 35, lng: -45 },
+				{ lat: -35, lng: -45 },
+			],
+			hairline: true
+		} );
+		
+		this.addOverlay( {
+			content: 'hairline: true',
+			location : { lat: 35, lng: -45 },
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// dashed
+		this.addLine( {
+			locations : [
+				{ lat: 35, lng: -90 },
+				{ lat: -35, lng: -90 },
+			],
+			dashed: true,
+			dashSize: 0.25,
+			dashRatio: 0.5,
+			dashOffset: 0.25
+		} );
+		
+		this.addOverlay( {
+			content: 'dashed: true',
+			location : { lat: 35, lng: -90 },
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// offset
+		this.addLine( {
+			locations : [
+				{ lat: 35, lng: -135 },
+				{ lat: -35, lng: -135 },
+			],
+			offset: 0.5
+		} );
+		
+		this.addOverlay( {
+			content: 'offset: 0.5',
+			location : { lat: 35, lng: -135 },
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// offsetFlow
+		this.addLine( {
+			locations : [
+				{ lat: 35, lng: -180 },
+				{ lat: -35, lng: -180 },
+			],
+			offsetFlow: 1
+		} );
+		
+		this.addOverlay( {
+			content: 'offsetFlow: 1',
+			location : { lat: 35, lng: -180 },
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// offsetFlow linear
+		this.addLine( {
+			locations : [
+				{ lat: 45, lng: -180 },
+				{ lat: 45, lng: -180 },
+			],
+			color: 'cyan',
+			offsetFlow: 2,
+			offsetEasing: 'linear'
+		} );
+		
+		this.addOverlay( {
+			content: 'offsetFlow: 2 <br> offsetEasing: linear',
+			location : { lat: 45, lng: -180 },
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// offsetFlow + offsetEasing
+		this.addLine( {
+			locations : [
+				{ lat: 35, lng: 135 },
+				{ lat: -35, lng: 135 },
+			],
+			offsetFlow: 1.5,
+			offsetEasing: 'in-quad'
+		} );
+		
+		this.addOverlay( {
+			content: 'offsetFlow: 1.5 <br> offsetEasing: in-quad',
+			location : { lat: 35, lng: 135 },
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// clip
+		var clippedLine = this.addLine( {
+			locations : [
+				{ lat: 35, lng: 90 },
+				{ lat: -35, lng: 90 },
+			],
+			clip: 0
+		} );
+		
+		this.addOverlay( {
+			content: 'clip: 0 - 1',
+			location : { lat: 35, lng: 90 },
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		clippedLine.animate( 'clip', 1, { loop: true, oscillate: true, duration: 1000 } );
+		
+		
+		// endWidth
+		this.addLine( {
+			locations : [
+				{ lat: 35, lng: 45 },
+				{ lat: -35, lng: 45 },
+			],
+			offsetFlow: 0.1,
+			offsetEasing: 'linear',
+			width: 0.25,
+			endWidth: 4
+		} );
+		
+		this.addOverlay( {
+			content: 'endWidth: 4',
+			location : { lat: 35, lng: 45 },
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// multiple locations
+		this.addLine( {
+			locations : [
+				{ lat: 50, lng: -45 },
+				{ lat: 40, lng: -22.5 },
+				{ lat: 50, lng: 0 },
+				{ lat: 40, lng: 22.5 },
+				{ lat: 50, lng: 45 },
+			]
+		} );
+		
+		this.addOverlay( {
+			content: 'multiple locations',
+			location : { lat: 50, lng: 0 },
+			className : 'docs-tip', depthScale: 0.75,
+			offset: 0.25
+		} );
+		
+
+
+	} );
+
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1>Line Properties</h1>
+
+	<p>See <a href="../../docs/api/line.htm">Line API</a></p>
+	
+	<div id="wrapper">		
+		
+		<div id="myearth"></div>
+	
+	</div>
+</body>
+</html>

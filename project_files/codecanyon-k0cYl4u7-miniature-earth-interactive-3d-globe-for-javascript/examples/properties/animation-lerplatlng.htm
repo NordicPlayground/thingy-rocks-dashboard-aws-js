@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Animation lerpLatLng</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+var myearth, myearth2;
+
+
+window.addEventListener( "earthjsload", function() {
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 20, lng: 0 },
+		draggable : false
+	} );
+
+	myearth2 = new Earth( "myearth2", {
+		location: { lat: 20, lng: 0 },
+		draggable : false
+	} );
+	
+	setTimeout( goToTokyo, 1000 );
+	
+	
+	
+	myearth3 = new Earth( "myearth3", {
+		location: { lat: 0, lng: 0 },
+		draggable : false
+	} );
+	
+	var marker = myearth3.addMarker({
+		location: { lat: 30, lng: -40 },
+		color: "#00FF00",
+		opacity: 0.6,
+		mesh: "Pin3"
+	});
+	marker.animate( 'location', { lat : -30, lng: 40 }, { duration: 4000, lerpLatLng: true, loop: true } );
+
+	var marker2 = myearth3.addMarker({
+		location: { lat: 30, lng: -40 },
+		opacity: 0.6,
+		mesh: "Pin3"
+	});
+	marker2.animate( 'location', { lat : -30, lng: 40 }, { duration: 4000, lerpLatLng: false, loop: true } );
+	
+	
+	
+} );
+
+
+var tokyo_location = {lat: 35, lng: 140};
+
+function goToTokyo() {
+	myearth.location =  { lat: 20, lng: 0 };
+	myearth.goTo( tokyo_location,  { duration: 6000, lerpLatLng: true } );
+
+	myearth2.location =  { lat: 20, lng: 0 };
+	myearth2.goTo( tokyo_location, { duration: 6000, lerpLatLng: false } );
+}
+
+</script>
+
+</head>
+<body>
+
+	<h1>Animation lerpLatLng</h1>
+
+	<div id="multi-wrapper">
+		
+		<p>This example shows the effect of <em>lerpLatLng</em> on animations.<br>&nbsp;</p>
+		
+		<p style="width:100%;"><button onclick=" goToTokyo(); "> Navigate to Tokyo, Japan </button></p>
+
+		<div class="earth-wrap">
+			<div id="myearth"></div>
+			<em>lerpLatLng: true</em><br>
+			(avoid the polar regions)
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth2"></div>
+			<em>lerpLatLng: false</em><br>
+			(shortest path)
+		</div>
+		
+		
+		<p style="width:100%;">&nbsp;</p>
+		
+		
+		<div class="earth-wrap" style="max-width: 45%">
+			<div id="myearth3"></div>
+			<em>lerpLatLng: <span style="color:#00FF00">true</span> / <span style="color:red">false</span></em><br>
+		</div>
+
+	</div>
+</body>
+</html>

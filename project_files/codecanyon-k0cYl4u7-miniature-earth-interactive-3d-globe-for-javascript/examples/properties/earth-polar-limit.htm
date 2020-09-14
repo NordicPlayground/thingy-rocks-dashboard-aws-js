@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Polar Limit</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+var myearth, mymarker;
+var myearth2, mymarker2;
+var myearth3, mymarker3;
+
+
+window.addEventListener( "earthjsload", function() {
+
+	// polarLimit: 0
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: 0 },
+		draggable : false,
+		polarLimit: 0
+	} );
+	
+	mymarker = myearth.addMarker( {
+		mesh : ["Pin2", "Needle"],
+		location : { lat: 59, lng: 18 },
+		scale: 1.5
+	} );
+	
+
+	// polarLimit: 0.5
+
+	myearth2 = new Earth( "myearth2", {
+		location: { lat: 0, lng: 0 },
+		draggable : false,
+		polarLimit: 0.5
+	} );
+	
+	mymarker2 = myearth2.addMarker( {
+		mesh : ["Pin2", "Needle"],
+		location : { lat: 59, lng: 18 },
+		scale: 1.5
+	} );
+	
+
+	// polarLimit: 0.75
+
+	myearth3 = new Earth( "myearth3", {
+		location: { lat: 0, lng: 0 },
+		draggable : false,
+		polarLimit: 0.75
+	} );
+	
+	mymarker3 = myearth3.addMarker( {
+		mesh : ["Pin2", "Needle"],
+		location : { lat: 59, lng: 18 },
+		scale: 1.5
+	} );
+	
+	
+	setTimeout( goToMarker, 500 );
+	
+} );
+
+
+function goToMarker() {
+	myearth.location =  { lat: 0, lng: 0 };
+	myearth2.location =  { lat: 0, lng: 0 };
+	myearth3.location =  { lat: 0, lng: 0 };
+	myearth.goTo( mymarker.location, { relativeDuration: 2000 } );
+	myearth2.goTo( mymarker.location, { relativeDuration: 2000 } );
+	myearth3.goTo( mymarker.location, { relativeDuration: 2000 } );
+}
+
+</script>
+
+</head>
+<body>
+	<h1>Polar Limit</h1>
+	
+	<p>This example shows the effect of <a href="../../docs/api/earth.htm#polarlimit"><em>polarLimit</em></a> on the earth's <em>location</em> property and goTo() method.<br>&nbsp;</p>
+		
+	<div id="multi-wrapper">
+		
+		<p style="width:100%;"><button onclick=" goToMarker(); "> Navigate to Stockholm, Sweden </button></p>
+
+		<div class="earth-wrap">
+			<div id="myearth"></div>
+			polarLimit: 0
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth2"></div>
+			polarLimit: 0.5
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth3"></div>
+			polarLimit: 0.75
+		</div>
+
+	</div>
+</body>
+</html>

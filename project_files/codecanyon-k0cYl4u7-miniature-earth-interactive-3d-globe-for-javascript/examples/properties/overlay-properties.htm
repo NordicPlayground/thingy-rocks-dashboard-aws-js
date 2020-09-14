@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Overlay Properties</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<style>
+
+.my-text-overlay {
+	font-weight: bold;
+	text-shadow: 0 1px 2px white;
+	max-width: 20em;
+	text-align: center;
+	transform: translate(-50%, -50%);
+}
+
+
+.my-overlay {
+	background-color: white;
+	padding: 1em;
+	border-radius: 0.5em;
+	text-align: center;
+	max-width: 20em;
+	filter: drop-shadow( 0 1px 2px black );
+	margin-top: -0.5em;
+	transform: translate(-50%, -100%);
+}
+
+.my-overlay::after {
+	content: "";
+	background-color: white;
+	position: absolute;
+	left: 50%;
+	top: 100%;
+	width: 0.5em;
+	height: 0.5em;
+	transform: translate(-0.25em, -0.25em) rotate(45deg);
+}
+
+.my-overlay.top-anchor-point {
+	margin-top: 0.5em;
+	transform: translateX(-50%);
+}
+.my-overlay.top-anchor-point::after {
+	top: 0;
+}
+
+
+.custom-occlude {
+	transition: opacity 1s ease, color 1s ease, filter 1s ease !important;
+}
+.earth-occluded .custom-occlude {
+	opacity: 0.4;
+	color: red;
+	filter: drop-shadow( 0 1px 2px red );
+}
+
+</style>
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+
+	var myearth = new Earth( "myearth", {
+		quality: 4,
+		location: { lat: 0, lng: 0 },
+		autoRotate : true,
+		zoomable: true
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+		
+		// top anchor point
+		this.addOverlay( {
+			content: 'Text Overlay',
+			location : { lat: 35, lng: 0 },
+			className : 'my-text-overlay'
+		} );
+
+		// top anchor point
+		this.addOverlay( {
+			content: 'top anchor point',
+			location : { lat: 35, lng: -45 },
+			className : 'top-anchor-point my-overlay'
+		} );
+		
+		// events
+		this.addOverlay( {
+			content: '<a href="#" onclick="alert(\'click\');">clickable</a>',
+			location : { lat: 35, lng: -90 },
+			className : 'my-overlay'
+		} );
+		
+		// html content
+		this.addOverlay( {
+			content: '<em style="font-size:1.5em">HTML</em> <br> <button onclick="alert(\'click\');">Button</button>',
+			location : { lat: 35, lng: -135 },
+			className : 'my-overlay'
+		} );	
+		
+		// offset
+		this.addOverlay( {
+			content: 'offset: 1',
+			location : { lat: 35, lng: 180 },
+			className : 'my-overlay',
+			offset: 1
+		} );
+		
+		// elementScale
+		this.addOverlay( {
+			content: 'elementScale: 1',
+			location : { lat: 35, lng: 135 },
+			className : 'my-overlay',
+			elementScale: 1
+		} );
+		
+		// depthScale
+		this.addOverlay( {
+			content: 'depthScale: 0.75',
+			location : { lat: 35, lng: 90 },
+			className : 'my-overlay',
+			depthScale: 0.75
+		} );
+		
+		// zoomScale
+		this.addOverlay( {
+			content: 'zoomScale: 0',
+			location : { lat: 35, lng: 45 },
+			className : 'my-overlay',
+			zoomScale: 0
+		} );
+		
+		
+		// occlude
+		this.addOverlay( {
+			content: 'occlude: false',
+			location : { lat: -20, lng: 90 },
+			className : 'my-overlay',
+			occlude: false
+		} );
+		
+		// custom occlude
+		this.addOverlay( {
+			content: 'occlude: false',
+			location : { lat: -20, lng: -90 },
+			className: 'my-overlay custom-occlude',
+			occlude: false
+		} );
+		
+
+	} );
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1>Overlay Properties</h1>
+	
+	<p>See <a href="../../docs/api/overlay.htm">Overlay API</a></p>
+	
+	<div id="wrapper">		
+	
+		<div id="myearth" class="earth-js"></div>
+		
+	</div>
+</body>
+</html>

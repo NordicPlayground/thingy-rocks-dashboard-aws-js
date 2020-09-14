@@ -1,0 +1,316 @@
+body {
+	font-family: sans-serif;
+	text-align: center;
+}
+
+ul,
+dl,
+p {
+	line-height: 140%;
+}
+
+#wrapper {
+	margin: 0 auto;
+	max-width: 60em;
+	padding-bottom: 3em;
+}
+
+#multi-wrapper {
+	margin: 0 auto;
+	max-width: 100em;
+	padding-bottom: 3em;
+}
+
+.earth-wrap {
+	display: inline-block;
+	width: 100%;
+	max-width: 30%;
+}
+
+
+h1 {
+	font-size: 1.75em;
+	margin: 2.5em 0 0 0;
+	font-weight: normal;
+}
+
+#wrapper h1 {
+	margin-bottom: 0;
+	text-align: left;
+}
+
+h1 img {
+	width: 6em;
+	max-width: 70%;
+}
+
+h2 {
+	font-size: 1.25em;
+	font-weight: normal;
+	border-bottom: 1px #ccc dotted;
+	padding-top: 2em;
+	padding-bottom: 0.25em;
+}
+
+h3 {
+	padding-left: 1rem;
+	padding-top: 1.4rem;
+	font-size: 1.1em;
+	margin-bottom: -0.25em;
+}
+
+ .prop-group {
+	padding-top: 0.5rem;	 
+ }
+
+
+.docs-tip {
+	font-weight: bold;
+	color: black;
+	font-size: 1.2em;
+	transform: translateX(-50%);
+	padding: 0 0.25em;
+	border-radius: 0.25em;
+	background-color: RGBA(255,255,255,0.66);
+}
+
+
+#docs-index {
+	margin-top: 0;
+	text-align: left;
+}
+#docs-index::after {
+	content: "";
+	display: block;
+	clear: both;
+}
+
+#docs-index h3 {
+	padding-left: 0;
+}
+
+
+@media (max-width: 719px) {	
+	.docs-col:not(:first-child) h2 {
+		padding-top: 1em;
+	}
+}
+
+@media (min-width: 720px) {
+	.docs-col {
+		width: 25%;
+		float: left;
+		box-sizing: border-box;
+	}
+}
+
+
+#docs {
+	margin-top: 2em;
+	text-align: left;
+}
+
+#docs-index + #docs {
+	margin-top: 3em;	
+}
+
+#docs p {
+	padding-left: 1rem;
+}
+
+code {
+	display: block;
+	background-color: #eee;
+	margin: 0.5em 0 0.5em 1rem;
+	padding: 0.5em;
+}
+code.inline {
+	display: inline-block;
+	margin: 0;
+	padding: 0 0.25em;
+}
+.hint code {
+	margin: 0.5em 0 0 0;
+}
+
+pre {
+	margin: 0;
+	white-space: pre-wrap;
+}
+
+small,
+var {
+	color: #777;
+	font-weight: normal;
+	font-style: normal;
+}
+
+dl {
+	padding-left: 1rem;
+}
+
+@media (min-width: 720px) {
+	dt {
+		display: inline-block;
+		vertical-align: top;
+		width: 20%;
+		color: #777;
+	}
+	dd {
+		display: inline-block;
+		vertical-align: top;
+		width: 75%;
+		margin-left: 0;
+	}
+}
+
+
+.animatable {
+	display: inline-block;
+	font-weight: normal;
+	font-style: italic;
+	margin-left: 0.5em;
+	background-color: #207245;
+	color: white;
+	padding: 0 0.25em;
+}
+.animatable::before {
+	content: "animatable";
+}
+
+.x-only {
+	display: inline-block;
+	font-weight: normal;
+	font-style: italic;
+	margin-left: 0.5em;
+	background-color: #ddd;
+	color: black;
+	padding: 0 0.25em;
+}
+
+
+.init-only {
+	display: inline-block;
+	font-weight: normal;
+	font-style: italic;
+	margin-left: 0.5em;
+	background-color: #0071c5;
+	color: white;
+	padding: 0 0.25em;
+}
+.init-only::before {
+	content: "init-only";
+}
+
+.read-only {
+	display: inline-block;
+	font-weight: normal;
+	font-style: italic;
+	margin-left: 0.5em;
+	background-color: #ff8822;
+	color: white;
+	padding: 0 0.25em;
+}
+.read-only::before {
+	content: "read-only";
+}
+
+
+.default-value::before {
+	content: 'Default: ';
+	font-size: 0.9em;
+	vertical-align: -1px;
+}
+.default-value {
+	margin-top: 0.5em;
+}
+.default-value em {
+	font-size: 0.9em;
+	vertical-align: -1px;
+}
+
+.value-range::before {
+	content: 'Range: ';
+	font-size: 0.9em;
+	vertical-align: -1px;
+}
+.value-range {
+	margin-top: -1em;
+}
+.value-range em {
+	font-size: 0.9em;
+	vertical-align: -1px;
+}
+
+.advanced {
+	font-size: 0.85em;
+	opacity: 0.85;
+	padding: 0 0 0 1em;
+	border-left: 1px #ccc dotted;
+	margin: 2rem 0 1rem 1rem;
+}
+
+
+.advanced > :first-child {
+	margin-top: 0;
+	padding-top: 0;
+}
+
+.subtitle {
+	display: block;
+	font-size: 0.75em;
+	opacity: 0.6;
+	margin-top: -0.25em;
+}
+
+
+.hint {
+	background-color: #ffeab8;
+	margin: 0.5em 0 0.5em 1rem;
+	padding: 1em;
+}
+
+ul {
+	padding: 0;
+	margin: 1em 0;
+	list-style-type: none;
+}
+ul li {
+	padding: 0.25em 0;
+	text-align: left;	
+}
+
+
+.intro {
+	text-align: left;
+}
+
+#index {
+	position: fixed;
+	right: 5vw;
+	top: 4.75em;
+	font-size: 0.9em;
+	padding: 0;
+	margin: 0;
+	list-style-type: none;
+}
+#index li {
+	padding: 0.25em 0;
+	text-align: left;
+}
+#index a {
+	text-decoration: none;
+}
+
+@media (min-width: 1200px) and (max-width: 1499px) {
+	.has-index #wrapper {
+		padding-right: 12em;
+	}
+}
+
+@media (max-width: 1199px) {
+	#index {
+		position: static;
+		padding: 1em 0;
+	}
+}

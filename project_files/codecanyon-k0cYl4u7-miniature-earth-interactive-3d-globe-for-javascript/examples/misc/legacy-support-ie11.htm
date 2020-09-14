@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Legacy Support (IE 11)</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+	var myearth = new Earth( "myearth", {
+		
+		legacySupportIE11: true,
+		fallbackMapUrlIE11: '../assets/fallback-map.png'
+		
+	} );
+	
+	myearth.addMarker( {
+		mesh : ["Pin2", "Needle"],
+		location : { lat: 35, lng: -45 },
+		scale: 1.5
+	} );
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Legacy Support (IE 11)</h1>	
+	
+	<div id="wrapper">		
+		
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

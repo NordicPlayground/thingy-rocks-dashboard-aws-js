@@ -1,0 +1,264 @@
+html,
+body {
+	margin: 0;
+	padding: 0;
+	font-size: 16px;
+	font-family: sans-serif;
+	background-color: #ffffff;
+	color: #383838;
+}
+
+
+.ui-draggable-handle {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+
+.ui-draggable-dragging {
+	z-index: 1000;
+	pointer-events: none;
+}
+
+
+#wrapper {
+	display: -webkit-flex;
+	display: flex;
+	-webkit-flex-direction: row;
+	flex-direction: row;
+	-webkit-flex-wrap: nowrap;
+	flex-wrap: nowrap;
+	-webkit-justify-content: center;
+	justify-content: center;
+	-webkit-align-items: center;
+	align-items: center;
+	
+	margin: 0 auto;
+	max-width: 110vh;
+	min-height: 100vh;
+}
+
+#myearth {
+	width: 60em;
+	max-width: 100%;
+}
+
+.animal {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	background-image: url(animals.svg);
+	background-repeat: no-repeat;
+	background-size: auto 6.25em;
+	width: 6.25em;
+	height: 6.25em;
+	pointer-events: none;
+	font-size: 1em;
+}
+
+.drag-box {
+	margin: 0 auto;
+}
+
+#myearth .animal {
+	font-size: 0.75em;
+	opacity: 0;
+}
+#myearth .dropped .animal {
+	opacity: 1;
+}
+
+
+.bear {
+	transform: translate(-50%, -50%) scale(1.12);
+	background-position: 0% 100%;
+	height: 4.375em;
+}
+.bison {
+	transform: translate(-50%, -50%) scale(1.15);
+	background-position: 9.3% 100%;
+	height: 3.875em;
+}
+.lama {
+	transform: translate(-50%, -50%) scale(0.9);
+	background-position: 18.3% 100%;
+	width: 5.625em;
+}
+.croc {
+	transform: translate(-50%, -50%) scale(1.15);
+	background-position: 27.4% 100%;
+	height: 3.375em;
+}
+.lion {
+	transform: translate(-50%, -50%) scale(1.25);
+	background-position: 36.7% 100%;
+	height: 3.9em;
+}
+.rihno {
+	transform: translate(-50%, -50%) scale(1.25);
+	background-position: 45.8% 100%;
+	height: 3.375em;
+}
+.giraffe {
+	transform: translate(-50%, -50%) scale(1.35);
+	background-position: 54.8% 100%;
+	width: 3.812em;
+}
+.elephant {
+	transform: translate(-50%, -50%) scale(1.25);
+	background-position: 63.9% 100%;
+	height: 4.8em;
+}
+.camel {
+	transform: translate(-50%, -50%) scale(1.1);
+	background-position: 73% 100%;
+	height: 5.75em;
+}
+.reindeer {
+	transform: translate(-50%, -50%) scale(1.12);
+	background-position: 82% 100%;
+	height: 5.937em;
+}
+.kangaroo {
+	transform: translate(-50%, -50%) scale(1.2);
+	background-position: 91.1% 100%;
+	height: 4.812em;
+}
+.ostrich {
+	transform: translate(-50%, -50%) scale(1.1);
+	background-position: 100.2% 100%;
+	height: 4.437em;
+}
+
+
+#instructions {
+	height: 3em;
+	margin-top: -3em;
+	text-align: center;
+}
+#instructions svg {
+	display: inline-block;
+	vertical-align: -0.4em;
+}
+
+#icon-drag {
+	margin-right: 0.2em;
+	width: 1.5em;
+	height: 1.5em;
+}
+#icon-mousewheel {
+	margin-left: 1.2em;
+	width: 1.5em;
+	height: 1.5em;
+}
+
+
+.drag-box {
+	position: relative;
+	width: 8em;
+	height: 8em;
+	cursor: -webkit-grab;
+	cursor: grab;
+	border-radius: 33%;
+	z-index: 100;
+}
+
+.animal-list {
+	width: 8em;
+}
+.animal-list > div {
+	height: 8em;
+}
+
+.animal-list:first-child > div:nth-child(3),
+.animal-list:first-child > div:nth-child(4) {
+	margin-left: -3em;
+}
+.animal-list:last-child > div:nth-child(3),
+.animal-list:last-child > div:nth-child(4) {
+	margin-left: 3em;
+}
+
+.animal-list:first-child > div:nth-child(1),
+.animal-list:first-child > div:nth-child(6) {
+	margin-left: 3em;
+}
+.animal-list:last-child > div:nth-child(1),
+.animal-list:last-child > div:nth-child(6) {
+	margin-left: -3em;
+}
+			
+@media (max-height: 899px) {
+	.animal-list {
+		font-size: 1.5vh;
+	}
+}
+
+@media (max-width: 511px) {
+	#instructions {
+		font-size: 0.8em;
+	}
+}
+@media (max-aspect-ratio: 4/3) {
+	#wrapper {
+		display: block;
+		min-height: 0;
+	}
+	#instructions {
+		margin-top: 1em;
+		padding-bottom: 1.5em;
+	}
+	
+	.animal-list:first-child > div:nth-child(3),
+	.animal-list:first-child > div:nth-child(4) {
+		margin-left: 0;
+		margin-top: -6em;
+	}
+	.animal-list:last-child > div:nth-child(3),
+	.animal-list:last-child > div:nth-child(4) {
+		margin-left: 0;
+		margin-top: 6em;
+	}
+	
+	.animal-list:first-child > div:nth-child(1),
+	.animal-list:first-child > div:nth-child(6) {
+		margin-left: 0;
+		margin-top: 6em;
+	}
+	.animal-list:last-child > div:nth-child(1),
+	.animal-list:last-child > div:nth-child(6) {
+		margin-left: 0;
+		margin-top: -6em;
+	}
+	
+	.animal-list {
+		display: -webkit-flex;
+		display: flex;
+		-webkit-flex-direction: row;
+		flex-direction: row;
+		-webkit-flex-wrap: nowrap;
+		flex-wrap: nowrap;
+		-webkit-justify-content: space-around;
+		justify-content: space-around;
+		-webkit-align-content: flex-start;
+		align-content: flex-start;
+		-webkit-align-items: center;
+		align-items: center;
+		width: auto;
+		
+		font-size: 1.5vw;
+		
+		margin-top: -6em;
+		margin-bottom: 6em;
+	}
+	
+	.animal-list:first-child {
+		margin-top: 10em;
+		margin-bottom: -6em;
+	}
+	
+	
+	.animal-list > div {
+		width: 16.666%;
+	}
+	
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Asynchronous Integration</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+</head>
+<body>
+
+	<h1>Asynchronous Integration</h1>
+	
+	
+	<script>
+
+	/* load miniature.earth.js after the page is loaded. */
+
+	window.addEventListener( 'load', function() {
+		var script = document.createElement( "script" );
+		script.src = "../../miniature.earth.js";
+		document.body.appendChild( script );	
+	} );
+
+
+	window.addEventListener( "earthjsload", function() {
+
+		/* setup earth */
+		
+		var myearth = new Earth( "myearth", {
+			location: { lat: 10, lng: -80 },
+			/* more earth options here */
+		} );
+		
+		
+		/* add objects when earth is ready */
+
+		myearth.addEventListener( "ready", function() {
+		
+			this.addMarker( {
+				mesh : ["Pin2", "Needle"],
+				location : { lat: 40.6918636, lng: -74.0965785 },
+				/* more marker options here */
+			} );
+		
+		} );
+		
+	} );
+
+	</script>
+	
+	
+	<div style="max-width: 600px; margin: 2em auto;">
+		
+		<div id="myearth" class="earth-container"></div>		
+		
+	</div>
+	
+	
+</body>
+</html>

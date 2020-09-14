@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Control Animations</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: 0 }
+	} );
+	
+	myearth.addEventListener( "ready", function() {
+		
+		
+		// pin1 stop
+		
+		var pin1 = this.addMarker( {
+			mesh : ["Pin", "Needle"],
+			location : { lat: 40, lng: -30 },
+			offset: 0
+		} );
+		
+		pin1_animation = pin1.animate( 'offset', 1, { loop: true, duration: 2000, easing: 'arc' } );
+		
+		
+		// pin2 stop jumpToEnd
+		
+		var pin2 = this.addMarker( {
+			mesh : ["Pin", "Needle"],
+			location : { lat: 40, lng: 0 },
+			offset: 0
+		} );
+		
+		pin2_animation = pin2.animate( 'offset', 1, { loop: true, duration: 2000, easing: 'arc' } );
+		
+		
+		// pin3 end loop
+		
+		var pin3 = this.addMarker( {
+			mesh : ["Pin", "Needle"],
+			location : { lat: 40, lng: 30 }
+		} );
+		
+		pin3_animation = pin3.animate( 'offset', 1, { loop: true, duration: 2000, easing: 'arc' } );
+		
+		
+		
+		
+		// flag1 pause/resume
+		
+		var flag1 = this.addMarker( {
+			mesh : ["Flag", "Needle"],
+			location : { lat: 15, lng: -25 },
+			offset: 0
+		} );
+		
+		flag1_animation = flag1.animate( 'rotationY', 360, { loop: true, duration: 2000, easing: 'linear' } );
+		
+		
+		// flag2 reset time
+		
+		var flag2 = this.addMarker( {
+			mesh : ["Flag", "Needle"],
+			location : { lat: 15, lng: 0 },
+			offset: 0
+		} );
+		
+		flag2_animation = flag2.animate( 'rotationY', 360, { loop: true, duration: 2000, easing: 'linear' } );
+		
+		
+		// flag3 scale duration/time
+		
+		var flag3 = this.addMarker( {
+			mesh : ["Flag", "Needle"],
+			location : { lat: 15, lng: 25 }
+		} );
+		
+		flag3_animation = flag3.animate( 'rotationY', 360, { loop: true, duration: 2000, easing: 'linear' } );
+		
+		
+		
+		// multiple animations
+		
+		diamond = this.addMarker( {
+			mesh : "Diamond",
+			location : { lat: -10, lng: -20  }
+		} );
+		
+		diamond.animate( 'location', { lat: -10, lng: 20  }, { loop: true, oscillate: true, duration: 2000 } );
+		diamond.animate( 'scale', 1.3, { loop: true, oscillate: true, duration: 1000 } );
+		diamond.animate( 'color', '#00FF00', { loop: true, oscillate: true, duration: 2000 } );
+		diamond.animate( 'rotationY', 360, { loop: true, duration: 1200, easing: 'linear' } );
+		
+		
+		
+		// chained animations
+		
+		cone = this.addMarker( {
+			mesh : "Cone",
+			location : { lat: -25, lng: 20  }
+		} );
+		
+		
+		function start_cone_animation_loop() {
+	
+			cone.animate( 'location', { lat: -75, lng: 0  }, { duration: 2000, complete: function() {
+		
+				this.animate( 'location', { lat: -25, lng: -20  }, { duration: 2000, complete: function() {
+			
+					this.animate( 'location', { lat: -25, lng: 20  }, { duration: 1500, complete: start_cone_animation_loop } );	
+				
+				} } );	
+			
+			} } );
+			
+		}
+		
+		start_cone_animation_loop();
+			
+
+	} );
+		
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Control Animations</h1>
+	
+	<div id="wrapper">
+		<div id="info"><a href="../docs/api/animation.htm">Animations API</a></div>
+		
+		&nbsp; <br>
+		&nbsp; <br>
+	
+		<button onclick=" pin1_animation.stop(); "> Pin 1: stop() </button> &nbsp; 
+		<button onclick=" pin2_animation.stop(false, true); "> Pin 2: stop() jumpToEnd </button> &nbsp; 
+		<button onclick=" pin3_animation.loop = false; "> Pin 3: loop=false </button> <br>
+		
+		&nbsp; <br>
+		
+		<button onclick=" flag1_animation.paused = ! flag1_animation.paused; "> Flag 1: toggle paused </button> &nbsp; 
+		<button onclick=" flag2_animation.time = 0; "> Flag 2: time=0 </button> &nbsp; 
+		<button onclick=" if ( flag3_animation.duration > 300 ) { flag3_animation.duration *= 0.5; flag3_animation.time *= 0.5; } "> Flag 3: play faster </button>
+	
+		<div id="myearth"></div>
+		
+		Diamond: Multiple Animations <button onclick=" diamond.stopAllAnimations(); "> stopAllAnimations() </button> <br>
+		&nbsp; <br>
+		Cone: Chained Animations <button onclick=" cone.stopAllAnimations(true, true); "> triggerCallback jumpToEnd </button>
+		
+	</div>
+</body>
+</html>

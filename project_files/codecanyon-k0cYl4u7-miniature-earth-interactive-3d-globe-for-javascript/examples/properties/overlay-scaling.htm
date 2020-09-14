@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Overlay Scaling Properties</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+
+window.addEventListener( "earthjsload", function() {
+
+
+	/* depthScale */
+
+	myearth_depth = new Earth( "myearth_depth", {
+		location: { lat: 0, lng: 60 },
+		draggable : false
+	} );
+	myearth_depth.animate( 'location', { lat: 0, lng: -60 }, { loop: true, oscillate: true, duration: 6000 } );
+	
+	myearth_depth.addOverlay( {
+		location : { lat: 30, lng: 0 },
+		transform: '',
+		occlude: false,
+		content: "<div>depthScale: 0.0</div>",
+		depthScale: 0
+	} );
+	
+	myearth_depth.addOverlay( {
+		location : { lat: 0, lng: 0 },
+		transform: '',
+		occlude: false,
+		content: "<div>depthScale: 0.5</div>",
+		depthScale: 0.5
+	} );
+
+	myearth_depth.addOverlay( {
+		location : { lat: -30, lng: 0 },
+		transform: '',
+		occlude: false,
+		content: '<div>depthScale: 1.0</div>',
+		depthScale: 1
+	} );
+	
+	
+	
+	/* zoomScale */
+
+	myearth_zoom = new Earth( "myearth_zoom", {
+		location: { lat: 0, lng: 0 },
+		draggable : false,
+		zoom: 0.6
+	} );
+	myearth_zoom.animate( 'zoom', 1.2, { loop: true, oscillate: true, duration: 6000 } );
+	
+	myearth_zoom.addOverlay( {
+		location : { lat: 30, lng: 0 },
+		content: "<div>zoomScale: 0.0</div>",
+		zoomScale: 0
+	} );
+	
+	myearth_zoom.addOverlay( {
+		location : { lat: 0, lng: 0 },
+		content: "<div>zoomScale: 0.5</div>",
+		zoomScale: 0.5
+	} );
+
+	myearth_zoom.addOverlay( {
+		location : { lat: -30, lng: 0 },
+		content: '<div>zoomScale: 1.0</div>',
+		zoomScale: 1
+	} );
+	
+	
+
+	/* containerScale */
+
+	myearth_container = new Earth( "myearth_container", {
+		location: { lat: 0, lng: 0 },
+		draggable : false
+	} );
+	
+	myearth_container.addOverlay( {
+		location : { lat: 30, lng: 0 },
+		content: '<div>containerScale: 0.0</div>',
+		containerScale: 0
+	} );
+
+	myearth_container.addOverlay( {
+		location : { lat: 0, lng: 0 },
+		content: '<div>containerScale: 0.5</div>',
+		containerScale: 0.5
+	} );
+
+	myearth_container.addOverlay( {
+		location : { lat: -30, lng: 0 },
+		content: '<div>containerScale: 1.0</div>',
+		containerScale: 1
+	} );
+	
+} );
+
+</script>
+
+<style>
+	
+	.earth-overlay > div {
+		position: absolute;
+		top: 0;
+		left: 0;
+		background-color: RGBA(255,255,255,0.9);
+		padding: 0.25em 0.5em;
+		border-radius: 1em;
+		font-size: 1.5em;
+		font-weight: bold;
+		white-space: nowrap;
+		box-shadow: 0 2px 8px black;
+		transform: translate(-50%, -50%);
+	}
+	
+	/* containerScale demo */
+
+	.shrink-wrap-animation > div {
+		outline: 1px red dotted;
+	}
+	.shrink-wrap-animation {
+		box-sizing: border-box;
+		animation: shrink-wrap 3s ease infinite;
+	}
+	@keyframes shrink-wrap {
+		0%, 100% { padding: 0; }
+		50% { padding: 7vw; }
+	}
+</style>
+
+</head>
+<body>
+	<div id="multi-wrapper">
+		
+		<h1>Overlay Scaling Properties</h1>
+		
+
+		<p style="width:100%;" id="depthscale"><strong>depthScale</strong></p>
+
+		<div class="earth-wrap">
+			<div id="myearth_depth"></div>
+		</div>
+		
+		
+		<div style="padding: 50px;"><hr></div>
+		
+
+		<p style="width:100%;" id="zoomscale"><strong>zoomScale</strong></p>
+
+		<div class="earth-wrap">
+			<div id="myearth_zoom"></div>
+		</div>
+		
+		
+		
+		<div style="padding: 50px;"><hr></div>
+		
+		
+		<p style="width:100%;" id="containerscale"><strong>containerScale</strong></p>
+
+		<div class="earth-wrap shrink-wrap-animation">
+			<div id="myearth_container"></div>
+		</div>
+		
+
+	</div>
+</body>
+</html>

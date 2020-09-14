@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Preload &amp; Fallback</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+</head>
+<body>
+
+	<h1>Preload &amp; Fallback</h1>
+	
+	
+	<style>
+
+		/* set styles for container size before miniature.earth.js is loaded */
+		
+		.earth-container {
+			position: relative;
+		}
+		.earth-container::before {
+			content: "";
+			display: block;
+			padding-top: 100%;
+		}
+
+		
+		/* preload animation */
+		
+		#spinner {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin: -1.5em 0 0 -1.5em;
+			width: 3em;
+			height: 3em;
+			background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTIgMGMtNi42MjcgMC0xMiA1LjM3My0xMiAxMnM1LjM3MyAxMiAxMiAxMiAxMi01LjM3MyAxMi0xMi01LjM3My0xMi0xMi0xMnptOCAxMmMwIDQuNDE4LTMuNTgyIDgtOCA4cy04LTMuNTgyLTgtOCAzLjU4Mi04IDgtOCA4IDMuNTgyIDggOHptLTE5IDBjMC02LjA2NSA0LjkzNS0xMSAxMS0xMXYyYy00Ljk2MiAwLTkgNC4wMzgtOSA5IDAgMi40ODEgMS4wMDkgNC43MzEgMi42MzkgNi4zNjFsLTEuNDE0IDEuNDE0LjAxNS4wMTRjLTItMS45OTQtMy4yNC00Ljc0OS0zLjI0LTcuNzg5eiIvPjwvc3ZnPg==) center center no-repeat;
+			background-size: contain;
+			animation: spin 1s linear infinite;
+		}
+		@keyframes spin {
+			0% { transform: rotate(0deg); }
+			100% { transform: rotate(360deg); }
+		}
+		
+		
+		/* fade in after load */
+		
+		.earth-container canvas {
+			opacity: 0;
+			transition: opacity 2s ease;
+		}
+		.earth-container.earth-ready canvas {
+			opacity: 1;
+		}
+		
+		
+		/* hide fallback before it is displayed */
+
+		.earth-fallback {
+			display: none;
+		}
+		
+		
+		/* reverse the styles if unsupported */
+		
+		.earth-show-fallback .earth-fallback {
+			display: block;
+		}	
+		.earth-show-fallback #spinner {
+			display: none;
+		}
+		.earth-container.earth-show-fallback::before {
+			content: none;
+		}
+		
+	</style>
+
+	<noscript>
+		<style>
+			/* reverse the styles if noscript */
+		
+			.earth-fallback {
+				display: block;
+			}
+			#spinner {
+				display: none;
+			}
+			.earth-container::before {
+				content: none;
+			}
+		</style>
+	</noscript>
+
+	<script>
+
+	/* load earth.js after the page is loaded. */
+
+	window.addEventListener( 'load', function() {
+		var script = document.createElement( "script" );
+		script.src = "../../miniature.earth.js";
+		document.body.appendChild( script );	
+	} );
+
+
+	window.addEventListener( "earthjsload", function() {
+
+		setTimeout(	function() { // delay init for demonstration
+		
+			document.getElementById( 'spinner' ).style.display = 'none';
+
+			var myearth = new Earth( "myearth", {
+				location: { lat: 10, lng: -80 },
+				/* more earth options here */
+			} );
+			
+			if ( ! myearth ) return; // not supported
+			
+			myearth.addEventListener( 'ready', function() {
+			
+				this.addMarker( {
+					mesh : ["Pin2", "Needle"],
+					location : { lat: 40.6918636, lng: -74.0965785 },
+					/* more marker options here */
+				} );
+		
+			
+			} );
+		
+		} , 1500 );
+		
+	} );
+
+	</script>
+
+	<div style="max-width: 600px; margin: 2em auto;">	
+
+		<div id="myearth" class="earth-container">
+			
+			<div id="spinner"></div>
+			
+			<div class="earth-fallback">
+				Fallback content here...
+			</div>
+		
+		</div>		
+	
+	</div>
+	
+	
+</body>
+</html>

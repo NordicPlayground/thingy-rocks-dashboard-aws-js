@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Country Selector</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+var myearth;
+var selected_countries = [];
+
+window.addEventListener( "earthjsload", function() {
+
+
+	myearth = new Earth( "myearth", {
+		mapBorderColor: '#ccc',
+		mapHitTest : true
+	} );
+	
+	
+	myearth.addEventListener( 'click', function( event ) {
+	
+		if ( ! event.id || event.id == 'SEA' ) return; // no country hit
+		
+		
+		// toggle selection		
+		if ( selected_countries.indexOf(event.id) != -1 ) { // remove
+			selected_countries.splice(selected_countries.indexOf(event.id), 1);
+		} else { // add
+			selected_countries.push( event.id );
+		}
+		
+		
+		// build mapStyles CSS string like: #US, #CN, #RU { fill: green; }
+		if ( selected_countries.length ) {
+		
+			myearth.mapStyles = '#' + selected_countries.join(', #') + ' { fill: #44cc44; }';
+			
+			// show info
+			document.getElementById( 'info' ).innerHTML = 'Selected: ' + selected_countries.join(', ');
+			
+		} else {
+		
+			myearth.mapStyles = '';
+			
+			// show info
+			document.getElementById( 'info' ).innerHTML = 'no countries selected';
+			
+		}
+
+
+		// redraw map to apply new mapStyles
+		myearth.redrawMap();
+		
+
+	} );
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Country Selector</h1>
+	
+	<div id="wrapper">		
+		<div>This examples uses <a href="../docs/api/earth.htm#maphittest"><em>mapHitTest</em></a>, <a href="../docs/api/earth.htm#mapstyles"><em>mapStyles</em></a> and <a href="../docs/api/earth.htm#redrawmap">redrawMap()</a><br>&nbsp;</div>
+		
+		<div id="info">Click on countries!</div>
+		
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

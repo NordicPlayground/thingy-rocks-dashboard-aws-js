@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Transparent Rendering</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<style>
+
+.docs-tip {
+	transform: translate(-50%, -50%);
+}
+
+.earth-wrap {
+	max-width: 40%;
+}
+
+</style>
+
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: -140 },
+		autoRotate : true,
+		//showHotspots : true
+	} );
+	
+	myearth.addEventListener( "ready", addMyMarkers );
+	
+	
+	myearth2 = new Earth( "myearth2", {
+		location: { lat: 0, lng: -140 },
+		autoRotate : true,
+		//showHotspots : true,
+		transparent: true,
+		mapSeaColor : 'RGBA(0,150,255,0.75)'
+	} );
+	
+	myearth2.addEventListener( "ready", addMyMarkers );
+	
+	
+} );
+
+
+function addMyMarkers() {
+
+	// OPAQUE
+	
+	this.addMarker( {
+		location : { lat: 10, lng: -120 },
+		mesh: ['Pin2', 'Needle'],
+		color: 'red',
+		scale: 1.75,
+		offset: -0.4,
+	} );
+	
+	this.addLine( {
+		locations : [
+			{ lat: 10, lng: -140 },
+			{ lat: 10, lng: 140 },
+		],
+		offsetFlow : 1,
+		width: 2,
+		color: 'red'
+	} );
+
+
+
+	// TRANSPARENT
+	
+	this.addMarker( {
+		location : { lat: -10, lng: -120 },
+		mesh: ['Pin2', 'Needle'],
+		color: 'blue',
+		transparent: true, // set to transparent
+		scale: 1.75,
+		offset: -0.4,
+	} );
+	
+	this.addLine( {
+		locations : [
+			{ lat: -10, lng: -140 },
+			{ lat: -10, lng: 140 },
+		],
+		dashed : true, // dashed Lines are transparent 
+		dashSize : 0.25,
+		offsetFlow : 1,
+		width: 2,
+		color: 'blue'
+	} );
+	
+	
+	// Images are always transparent
+	
+	this.addImage( {
+		location : { lat: -12, lng: -165 },
+		color: 'blue',
+		scale: 2
+	} );
+	
+	
+	// Sprites are always transparent and on top
+	
+	this.addSprite( {
+		location : { lat: -12, lng: 165 },
+		color: 'blue',
+		scale: 2
+	} );
+	
+}
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Transparent Rendering</h1>
+	
+	<div id="intro">
+		Images, Sprites and dashed Lines are transparent objects.<br>
+		Markers and solid Lines are transparent objects if they are set to <em>transparent: true</em><br>
+		<br>
+		In this example the <span style="color:red">red objects are opaque</span> and the <span style="color:blue">blue objects are transparent</span>.<br>
+		<br>
+		<strong>Limitations With Transparent Objects</strong><br>
+		&bull; A transparent earth cannot clip or partially overlay transparent objects, they are either in front or behind the earth.<br>
+		&bull; A transparent earth cannot occlude transparent Lines.<br>
+		&bull; A transparent Line cuts out parts of underlying transparent objects (if the Line is not set to <em>alwaysBehind: true</em>).<br>
+	</div>
+	
+	<div id="multi-wrapper">	
+	
+		<div class="earth-wrap">
+			<div id="myearth"></div>
+			Opaque Earth
+		</div>
+	
+		<div class="earth-wrap">
+			<div id="myearth2"></div>
+			Transparent Earth
+		</div>
+		
+	</div>
+</body>
+</html>

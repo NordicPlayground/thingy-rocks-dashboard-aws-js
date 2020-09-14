@@ -1,0 +1,66 @@
+html,
+body {
+	margin: 0;
+	padding: 0;
+	background-color: white;
+	
+	font-family: sans-serif;
+	font-size: 16px;
+}
+
+
+#myearth {
+	width: 100vw;
+	height: 100vh;
+	max-height: 120vw;
+	overflow: hidden;
+}
+
+
+#zoom-out {
+	position: absolute;
+	right: 5.5vw;
+	top: 5vw;
+	width: 80px;
+	height: 80px;
+	background: #000 url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTMuNDI3IDMuMDIxaC03LjQyN3YtMy4wMjFsLTYgNS4zOSA2IDUuNjF2LTNoNy40MjdjMy4wNzEgMCA1LjU2MSAyLjM1NiA1LjU2MSA1LjQyNyAwIDMuMDcxLTIuNDg5IDUuNTczLTUuNTYxIDUuNTczaC03LjQyN3Y1aDcuNDI3YzUuODQgMCAxMC41NzMtNC43MzQgMTAuNTczLTEwLjU3M3MtNC43MzMtMTAuNDA2LTEwLjU3My0xMC40MDZ6Ii8+PC9zdmc+) center center no-repeat;
+	background-size: 55% 55%;
+	cursor: pointer;
+	z-index: 100;
+	
+	pointer-events: none;
+	transform: scale(0.001);
+	transition: transform 0.3s ease;
+	border-radius: 50%;
+}
+
+@media (max-width: 511px) {
+	#zoom-out {
+		right: 2.25vw;
+		top: 2vw;
+		width: 40px;
+		height: 40px;
+	}
+}
+
+
+.cluster-open #zoom-out {
+	transform: scale(1);
+	pointer-events: all;
+}
+
+
+.tooltip {
+	white-space: nowrap;
+	text-transform: uppercase;
+	letter-spacing: 0.025em;
+	font-weight: bold;
+	font-size: 1.25em;
+	padding: 0.25em 0.5em 0.25em 1.8em;
+	color: white;
+	filter: drop-shadow(0 2px 1px #003399) drop-shadow(0 1px 3px #003399);
+	background: transparent url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMjEgMTN2MTBoLTIxdi0xOWgxMnYyaC0xMHYxNWgxN3YtOGgyem0zLTEyaC0xMC45ODhsNC4wMzUgNC02Ljk3NyA3LjA3IDIuODI4IDIuODI4IDYuOTc3LTcuMDcgNC4xMjUgNC4xNzJ2LTExeiIvPjwvc3ZnPg) 0.75em center no-repeat;
+	background-size: 0.8em 0.8em;
+	line-height: 120%;
+	transform: translate(-50%, 100%);
+}

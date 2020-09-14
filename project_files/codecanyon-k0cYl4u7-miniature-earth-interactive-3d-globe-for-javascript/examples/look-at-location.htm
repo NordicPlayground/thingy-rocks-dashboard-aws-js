@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Look at Location</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+	var myearth, sign_marker, arrow_image;
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: 0 }
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+		
+		sign_marker = this.addMarker( {
+			mesh : ["Flag3", "Needle"],
+			scale: 1.5,
+			location : { lat: 52, lng: 0 },
+			hotspot : false
+		} );
+		
+				
+		arrow_image = this.addImage( {
+			image: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTcgNWgtMTd2MTRoMTdsNy03eiIvPjwvc3ZnPg',
+			imageAlphaOnly: true,
+			color: 'blue',
+			scale: 1.25,
+			location : { lat: 0, lng: 0 }
+		} );
+
+	} );
+	
+	
+	var look_animation;
+
+	myearth.addEventListener( "mousedown", function( event ) {
+	
+		// immediatly rotate the marker
+		
+		sign_marker.lookAt = event.location;
+		
+		
+		// animate the sprite
+		
+		if ( look_animation ) look_animation.stop();
+		look_animation = arrow_image.animate( 'lookAt', event.location, { duration: 0, relativeDuration: 200, complete: function(){
+			
+			// don't go completly to the location so the marker still looks in that direction
+			var to_location = Earth.lerp( this.location, event.location, 0.999 );
+			look_animation = this.animate( 'location', to_location, { duration: 0, relativeDuration: 200 } );
+			
+		} } );
+		
+	} );
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Look at Location</h1>
+	
+	<div id="wrapper">	
+	
+		<div id="info">
+			This example uses the <em><a href="../docs/api/marker.htm#lookat">lookAt</a></em> property to rotate a Marker and an Image towards the clicked location.<br>
+			<br>
+			Click on the earth!
+		</div>
+		
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

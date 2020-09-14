@@ -1,0 +1,12 @@
+
+.earth-overlay {
+	background-color: white;
+	box-shadow: 0 2px 8px black;
+	border-radius: 0px 8px 8px 8px;
+	padding: 0.25em 0.5em;
+}
+
+.earth-container {
+	margin: 0 auto;
+	max-width: 600px;
+}

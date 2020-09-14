@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>getRadius</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+document.addEventListener( "DOMContentLoaded", function() {
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: 0 },
+		zoom: 0.5,
+		zoomMin: 0.5,
+		zoomMax: 1.2
+	} );
+	
+	myearth.animate( 'zoom', 1.2, { loop: true, oscillate: true, duration: 2000 } );
+	
+	
+	myearth.addEventListener( "ready", function() {
+	
+		myearth.addEventListener( 'update', function() {
+		
+			var radius = myearth.getRadius();
+			
+			document.getElementById('radius_text').innerHTML = Math.round( radius );
+			document.getElementById('red_line').style.height = radius +'px';
+			
+		} );
+	
+	} );	
+	
+} );
+
+</script>
+
+<style>
+	/* scaling */
+
+	.shrink-wrap-animation > div {
+		outline: 1px red dotted;
+	}
+	.shrink-wrap-animation {
+		box-sizing: border-box;
+		animation: shrink-wrap 3s ease infinite;
+	}
+	@keyframes shrink-wrap {
+		0%, 100% { padding: 0; }
+		50% { padding: 7vw; }
+	}
+</style>
+
+</head>
+<body>
+
+	<h1>getRadius</h1>
+	
+	<p>
+		approx. earth radius:<br>
+		<span id="radius_text"></span>px
+	</p>
+	
+	<div style="max-width: 600px; margin: 2em auto;" class="shrink-wrap-animation">
+		<div id="myearth">
+			<div id="red_line" style="position: absolute; bottom: 50%; left: 50%; xtransform: rotate(-45deg); transform-origin: bottom left; z-index: 1000; width: 2px; background-color: red; z-index: 2000;"></div>
+		</div>		
+	</div>		
+
+</body>
+</html>

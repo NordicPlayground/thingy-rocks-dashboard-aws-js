@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Custom Map SVG</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.core.js"></script>
+
+<script>
+
+if ( location.protocol == 'file:' ) {
+	alert( 'This demo does not work with the file protocol due to browser security restrictions.' );
+}
+
+
+window.addEventListener( "earthjsload", function() {
+
+	var myearth = new Earth( "myearth", {
+		location : { lat: 23, lng: 23 },
+		mapImage: 'assets/simple-map.svg',
+		mapHitTest : true
+	} );
+	
+	myearth.addEventListener( "click", function( event ) {
+		
+		// show info
+		document.getElementById( 'info' ).innerHTML = (( event.id ) ? event.id : 'SEA') + ' @ ' + event.location.lat.toFixed(2) + ', ' + event.location.lng.toFixed(2);
+
+	} );
+		
+} );
+
+</script>
+
+</head>
+<body>
+
+	<h1 style="padding-bottom: 1em;">Custom Map SVG</h1>
+	
+	<div id="wrapper">
+		<div>This example uses a SVG as <a href="../docs/api/earth.htm#mapimage"><em>mapImage</em></a> and <a href="../docs/api/earth.htm#maphittest"><em>mapHitTest</em></a><br>&nbsp;</div>
+		<div id="info">Click on the earth!</div>
+		<div id="myearth" class="earth-container"></div>
+		
+	</div>
+	
+</body>
+</html>

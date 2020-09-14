@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Animation API</title>
+
+<link rel="stylesheet" href="../assets/docs.css">
+<script src="../assets/docs.js"></script>
+
+</head>
+<body  class="has-index">
+	<div id="wrapper">
+		
+		<h1>Animation API</h1>
+		
+		<p style="text-align:left; font-size:1.2em; max-width: 40em;">An animation changes a single object property over time.</p>
+		<p style="text-align:left; font-size:1.2em; max-width: 40em;"><a href="../../examples/properties/animatable-properties.htm"><strong>Example: Animatable Properties</strong></a><br>
+		<a href="../../examples/animations.htm"><strong>Example: Control Animations</strong></a></p>
+		
+		
+		<div id="docs">
+		
+			<h2>Start an Animation</h2>
+			
+			<p><strong>Call the <a href="marker.htm#animate"><em>animate()</em></a> method of the object you want to animate.</strong></p>
+<code><pre>
+var myanimation = myobject.animate(
+	'location',			// property to animate
+	{ lat: 40.689, lng: -74.046 },	// end value
+	{
+		duration : 200,		// animation properties
+		relativeDuration : 400,
+		easing : "out-quad",
+		complete : function () {
+			console.log( 'animation complete' );
+		}
+	}
+);
+</pre></code>
+		
+			<h2 id="prop">Animation Properties</h2>
+				
+			<h3>duration <var>(float)</var></h3>
+			<p class="default-value"><samp>400</samp></p>
+			<p>In milliseconds.</p>
+			
+			<h3 class="prop-group">relativeDuration <var>(float)</var> <mark class="init-only"></mark></h3>
+			<p class="default-value"><samp>0</samp></p>
+			<p>Adds a duration depending on the difference from start to end value. For lat/lng properties the <em>relativeDuration</em> is added as milliseconds per 1000 kilometers distance from start to end location.</p>
+			
+			<h3>easing <var>(easing)</var></h3>
+			<p class="default-value"><samp>"in-out-quad"</samp></p>
+			<p>An easing function that describes how the property changes over time.<br>
+			See <a href="#easing">Easing Functions</a></p>
+			
+			<h3>loop <var>(boolean)</var></h3>
+			<p class="default-value"><samp>false</samp></p>
+			<p>Makes the animation jump back to the start value when it completes.</p>
+			
+			<h3 class="prop-group">oscillate <var>(boolean)</var></h3>
+			<p class="default-value"><samp>false</samp></p>
+			<p>When used together with <em>loop: true</em> the animation is played back and forth.</p>
+				
+				
+			<h3>paused <var>(boolean)</var></h3>
+			<p class="default-value"><samp>false</samp></p>
+			<p>Interrupts animation playback.</p>
+			
+
+			<h3>complete <var>(function)</var></h3>
+			<p>Function to call when the animation completes.</p>
+<code><pre>
+// shrink and remove marker
+mymarker.animate( 'scale', 0.01, {
+	complete : function( ani ) {
+		this.remove();
+	}
+} );
+</pre></code>
+			<div class="hint">
+				<em>this</em> refers to the animated object.<br>
+				The first parameter refers to the <em>AnimationInstance</em>.
+			</div>
+			
+			<h3>Advanced:</h3>
+
+			<div class="advanced">
+			
+				<h3>time <var>(float)</var></h3>
+				<p class="default-value"><samp>0.0</samp></p>
+				<p class="value-range"><samp>0.0 - 1.0</samp></p>
+				<p>Current time of the animation as value from 0 to 1.</p>
+
+				
+				<h3>target <var>(Earth, Marker, Image, Sprite, Line or Overlay)</var> <mark class="read-only"></mark></h3>
+				<p>Reference to the animated object.</p>
+				
+
+				<h3>lerpLatLng <var>(boolean)</var></h3>
+				<p class="default-value"><samp>false</samp></p>
+				<p>This property only effects the animation of lat/lng properties like a object's <a href="marker.htm#location"><em>location</em></a>. If <em>lerpLatLng</em> is <em>true</em> the lat/lng number values are interpolated (avoiding the polar regions) instead of the 3d position (shortest path).<br>
+				<a href="../../examples/properties/animation-lerplatlng.htm">Example: Animation lerpLatLng</a></p>
+
+			</div><!--advanced-->
+			
+			&nbsp;
+			
+			<div class="hint">
+				The earth's <a href="earth.htm#goto"><em>goTo()</em></a> method provides two special animation properties (<em>approachAngle</em> and <em>zoom</em>).
+			</div>
+			
+			&nbsp;
+			
+			<div class="hint">
+				You can add custom properties that are copied over to the <em>AnimationInstance</em>.
+<code><pre>
+mymarker.animate( 'scale', 2, {
+	duration: 800,
+	complete : myCompletionAlert,
+	<strong>myAlertMessage</strong> : 'Animation Complete!'
+} );
+
+function myCompletionAlert( ani ) {
+	alert( <strong>ani.myAlertMessage</strong> );
+}
+</pre></code>
+			</div>
+			
+			
+			<h2>Animation Methods</h2>
+			
+				<h3 id="stop">stop( <var>triggerComplete</var>, <var>jumpToEnd</var> ) </h3>
+				<dl>
+				  <dt>triggerComplete</dt><dd>(boolean) default: false | Calls the <em>complete</em> function</dd>
+				  <dt>jumpToEnd</dt><dd>(boolean) default: false | Sets the property immediately to the end value</a></dd>
+				</dl>
+<code><pre>
+var fadeout_ani = mymarker.animate( 'opacity', 0 );
+
+// stop fadeout if clicked
+mymarker.addEventListener( 'click', function() {
+	if ( fadeout_ani ) fadeout_ani.stop();
+	this.opacity = 1;
+} );
+</pre></code>
+
+			&nbsp;
+
+			<div class="hint">
+				You can stop all animations of an object with its <a href="marker.htm#stopallanimations"><em>stopAllAnimations()</em></a> method.
+			</div>
+
+			
+			<h2 id="easing">Easing Functions</h2>
+			
+				<p>Easing functions describe how properties change over time.<br>
+				<a href="../../examples/properties/animation-easing.htm">Example: Animation Easing</a></p>
+			
+				<h3>linear</h3>
+				<p>No easing. The animation plays at constant speed.</p>
+
+				<h3 class="prop-group">in-quad, in-cubic <span style="font-weight:normal;">or</span> in-quart</h3>
+				<p>The animation starts slowly.</p>
+				
+				<h3 class="prop-group">out-quad, out-cubic <span style="font-weight:normal;">or</span> out-quart</h3>
+				<p>The animation ends slowly.</p>
+				
+				<h3 class="prop-group">in-out-quad, in-out-cubic <span style="font-weight:normal;">or</span> in-out-quart</h3>
+				<p>The animation starts and ends slowly.</p>
+				
+				<h3 class="prop-group">in-back, out-back <span style="font-weight:normal;">or</span> in-out-back</h3>
+				<p>The animation overshoots the start and/or end value.</p>
+				
+				<h3 class="prop-group">elastic</h3>
+				<p>Rubber band effect</p>
+				
+				<h3 class="prop-group">bounce</h3>
+				<p>Rubber ball effect</p>
+				
+				<h3>arc</h3>
+				<p>This special easing function reaches the end value at half time and returns to the start value.<br>
+				It is useful to draw lines as arcs with a line's <a href="line.htm#offset"><em>offsetFlow/offsetEasing</em></a> property.</p>
+				
+				&nbsp;
+				
+				<div class="hint">
+					You can add your own easing functions, with <em>time</em> as the only parameter.
+<code><pre>
+Earth.Animation.Easing['<em>my-special-easing</em>'] = function ( time ) {
+	// time is a value from 0 to 1 you need to modify here
+	return time;
+};
+</pre></code>
+				</div>
+				
+									
+		&nbsp;
+		
+		</div><!--docs-->
+		
+	</div>
+</body>
+</html>

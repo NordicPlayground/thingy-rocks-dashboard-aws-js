@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Map Styles</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+if ( location.protocol == 'file:' ) {
+	alert( 'This demo does not work with the file protocol due to browser security restrictions.' );
+}
+
+
+window.addEventListener( "load", function() {
+
+	// simple
+	
+	new Earth( "myearth", {
+		autoRotate : true
+	} );
+	
+	
+	// borders
+	
+	new Earth( "myearth2", {
+		autoRotate : true,	
+		mapBorderColor : '#0099FF',
+		mapBorderWidth : 0.8,
+	} );
+	
+	
+	// transparent
+	
+	new Earth( "myearth3", {
+		autoRotate : true,
+		mapLandColor : 'green',
+		mapSeaColor : 'transparent',
+		innerOpacity : 0.5,
+		transparent : true
+	} );
+	
+	
+	// colored countries
+	
+	new Earth( "myearth4", {
+		autoRotate : true,
+		lightAmbience: 0.9,
+		mapLandColor : '#526c4b',
+		mapSeaColor : '#02071c',
+		mapBorderColor : '#526c4b',
+		mapBorderWidth : 0.2,
+		mapStyles : '#ME, #SI, #HR, #RS, #MK, #BA, #AL, #LT, #EE, #LV, #UA, #BY, #MD, #IT, #PL, #SK, #CZ, #HU, #RO, #BG, #GB, #IE, #IS, #DK, #DE, #CH, #AT, #FR, #NL, #BE, #LU, #RU, #CY, #GE, #AM, #AZ, #LK, #NP, #BT, #BD, #KH, #MM, #VN, #TH, #LA, #BN, #PH, #PG, #MN, #CN, #TW, #KP, #KR, #NZ, #US, #CU, #JM, #HT, #DO, #TT, #PR, #CR, #BZ, #PA, #CO, #VE, #EC, #BO, #PY, #UY, #GW { fill: #425320; stroke: #425320; } \
+					#GR, #ES, #PT, #PK, #IN, #MX, #PE, #AR, #BF, #ET, #GN, #SL, #LR, #CI, #GH, #TG, #BJ, #NG, #ZM, #AO, #RW, #BI, #TZ, #MW, #MZ { fill: #4B4C25; stroke: #4B4C25; } \
+					#GL, #AQ { fill: #C1C2C4; stroke: #C1C2C4; } \
+					#SE, #NO, #FI, #MY, #ID, #JP, #CA, #GT, #HN, #SV, #NI, #GF, #SR, #GY, #SS, #CM, #GQ, #CF, #GA, #CG, #CD, #UG, #BR { fill: #26380C; stroke: #26380C; } \
+					#TR, #IR, #KZ, #TJ, #KG, #AF, #CL, #MA, #ER, #DJ, #SO, #GM, #SN, #NA, #LS, #BW, #SZ, #ZA { fill: #766642; stroke: #766642; } \
+					#SY, #JO, #LB, #IL, #KW, #SA, #AE, #QA, #YE, #OM, #IQ, #UZ, #TM, #DZ, #TN, #EG, #SD, #ML, #LY, #EH, #MR, #NE, #TD { fill: #B29A6F; stroke: #B29A6F; } \
+					#AU, #KE, #MG, #ZW { fill: #8E6543; stroke: #8E6543; }  ',
+	} );
+	
+	
+	
+	// mapImage
+	/* This example does not work with the file protocol due to browser security restrictions! */
+	
+	new Earth( "myearth5", {
+		autoRotate : true,
+		mapImage : '../demo/space-view/day-by-nasa.jpg',
+		lightAmbience: 0.9
+	} );
+	
+	
+	// custom svg
+	/* This example does not work with the file protocol due to browser security restrictions! */
+	
+	new Earth( "myearth6", {
+		autoRotate : true,
+		mapImage : 'assets/simple-map.svg'
+	} );	
+
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+
+	<div id="multi-wrapper">
+	
+		<h1>Map Styles</h1>
+		<p>Here you see an overview some map styling options.</p>
+		
+		<div class="earth-wrap">
+			<div id="myearth"></div>
+			Simple
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth2"></div>
+			Borders
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth3"></div>
+			Transparence &nbsp; <a href="properties/earth-transparency.htm">more</a>
+		</div>		
+		
+		<div class="earth-wrap">
+			<div id="myearth4"></div>
+			Colored Countries &nbsp; <a href="country-selector.htm">more</a>
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth5"></div>
+			Map Image &nbsp; <a href="map-image.htm">more</a>
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth6"></div>
+			Custom SVG &nbsp; <a href="map-custom-svg.htm">more</a>
+		</div>
+		
+	</div>
+	
+</body>
+</html>

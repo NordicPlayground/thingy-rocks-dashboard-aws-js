@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Draw Map Locations</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+if ( location.protocol == 'file:' ) {
+	alert( 'This demo does not work with the file protocol due to browser security restrictions.' );
+}
+
+
+var airports = [];
+var ajax = new XMLHttpRequest();
+
+ajax.onreadystatechange = function() {
+	if ( this.readyState == 4 ) {
+	
+		// read airports from csv file
+		var rows = this.responseText.split('\n');
+		for ( var i=0; i < rows.length; i++ ) {
+			var cols = rows[i].split(',');
+			airports.push( {
+				name : cols[0],
+				location : { lat: Number(cols[1]), lng: Number(cols[2]) }
+			} );
+		}
+		
+		
+		var myearth = new Earth( "myearth", {
+			zoomable: true
+		} );
+		
+		myearth.addEventListener( "drawtexture", drawAirports );
+		
+		var min_distance_km = 100;
+		
+		myearth.addEventListener( "mousedown", function( event ) {
+			
+			var found = [];
+			for ( var i=0; i < airports.length; i++ ) {
+				if ( Earth.getDistance( event.location, airports[i].location ) < min_distance_km ) found.push( airports[i] );
+			}
+			
+			if ( ! found.length ) {
+				var result = 'No airports near click.';
+			
+			} else {
+				var result = '';
+				for ( var i=0; i < found.length; i++ ) {
+					result += found[i].name + '<br>';
+				}
+			}
+			
+			// show info
+			document.getElementById( 'info' ).innerHTML = result;
+
+		} );
+		
+	}
+};
+
+ajax.open("GET", 'assets/airports-by-openflights.csv', true);
+ajax.send();
+
+
+
+function drawAirports() {
+
+	var dot_radius = this.mapCanvas.height * 0.001;
+	
+	this.mapContext.fillStyle = "#00cc00";
+	
+	for ( var i=0; i < airports.length; i++ ) {
+		var uv = Earth.latLngToUv( airports[i].location );
+		
+		// compensate map projection
+		var offset = Math.abs( airports[i].location.lat ) / 90;
+		var scale_x = 1 + Earth.Animation.Easing['in-quart'](offset) * 5;
+		var scale_y = 1 + Earth.Animation.Easing['in-quart'](offset) * 0.4;
+		
+		this.mapContext.beginPath();
+		this.mapContext.ellipse(
+			uv.x * this.mapCanvas.width,
+			uv.y * this.mapCanvas.height,
+			dot_radius * scale_x,
+			dot_radius * scale_y,
+			0,
+			0,
+			2 * Math.PI
+		);
+		this.mapContext.fill();
+		
+	}
+	
+	this.mapContext.setTransform(1, 0, 0, 1, 0, 0);
+	
+}
+
+
+</script>
+
+</head>
+<body>
+
+	<h1 style="padding-bottom: 1em;">Draw Map Locations</h1>
+	
+	<p id="info" style="position: absolute; bottom: 10vh; right: 5vw; z-index: 100; text-align: right; pointer-events: none; text-shadow: 0 0 2px white;"></p>
+	
+	<div id="wrapper">
+		<div>This example draws thousands of airport locations on the map.</div>
+	
+		<div id="myearth"></div>
+		
+	</div>
+	
+</body>
+</html>

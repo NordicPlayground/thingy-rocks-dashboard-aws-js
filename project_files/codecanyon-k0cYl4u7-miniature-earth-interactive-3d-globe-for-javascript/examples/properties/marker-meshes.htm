@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Builtin Marker Meshes</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+
+	var myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: 0 },
+		autoRotate : true
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+
+		this.addMarker( {
+			mesh : ["Pin", "Needle"],
+			color: '#30b81f', /* green */
+			location : { lat: 35, lng: 0 },
+			scale: 1.5
+		} );
+		
+		this.addMarker( {
+			mesh : "Pin3",
+			color: '#2549ff', /* blue */
+			location : { lat: 35, lng: -22.5 },
+			scale: 1.5
+		} );
+		
+		this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 35, lng: -45 },
+			scale: 1.5
+		} );
+		
+
+		this.addMarker( {
+			mesh : ["Flag", "Needle"],
+			color: '#30b81f', /* green */
+			location : { lat: 35, lng: -90 },
+			scale: 1.5
+		} );
+		
+		this.addMarker( {
+			mesh : ["Flag2", "Needle"],
+			color: '#2549ff', /* blue */
+			location : { lat: 35, lng: -112.5 },
+			scale: 1.5
+		} );
+		
+		this.addMarker( {
+			mesh : ["Flag3", "Needle"],
+			location : { lat: 35, lng: -135 },
+			scale: 1.5
+		} );
+		
+
+		this.addMarker( {
+			mesh : "X",
+			location : { lat: 35, lng: -180 },
+			color: '#555',
+			scale: 1.5
+		} );
+		
+		this.addMarker( {
+			mesh : "Diamond",
+			color: 'cyan',
+			opacity: 0.75,
+			location : { lat: 35, lng: 135 },
+			scale: 1.5
+		} );	
+		
+		this.addMarker( {
+			mesh : "Marker",
+			location : { lat: 35, lng: 90 },
+			scale: 1.5
+		} );	
+		
+		this.addMarker( {
+			mesh : "Cone",
+			location : { lat: 35, lng: 45 },
+			color: '#555',
+			scale: 1.5
+		} );
+
+	} );
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1>Builtin Marker Meshes</h1>
+	
+	<p>See the <a href="../../docs/api/marker.htm#mesh"><em>mesh</em></a> property.</p>
+
+	<div id="wrapper">		
+	
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

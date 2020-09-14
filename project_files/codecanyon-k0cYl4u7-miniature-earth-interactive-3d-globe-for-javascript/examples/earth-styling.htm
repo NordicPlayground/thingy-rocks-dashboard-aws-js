@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Earth Styling</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<style>
+
+
+/* BORDER */
+
+#myearth::after {
+	content: "";
+	position: absolute;
+	top: 10.5%;
+	bottom: 10.5%;
+	left: 10.5%;
+	right: 10.5%;
+	background-color: #0099FF;
+	border-radius: 50%;	
+}
+
+
+
+/* ATMOSPHERE GLOW */
+
+#myearth2::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 1200;
+	pointer-events: none;
+	background: radial-gradient(ellipse at center, rgba(0,160,255,0) 0%, rgba(0,160,255,0) 48%, rgba(0,160,255,0.05) 52%, rgba(0,160,255,0.25) 54%, rgba(0,160,255,0.05) 60%, rgba(0,160,255,0) 64%, rgba(0,160,255,0) 100%);
+}
+
+
+
+/* SHADOW */
+
+#myearth3::after {
+	content: "";
+	position: absolute;
+	height: 22%;
+	bottom: 4%;
+	left: 13%;
+	right: 13%;
+	background: radial-gradient(ellipse at center, rgba(5,57,89,0.7) 0%,rgba(5,57,89,0.55) 20%,rgba(5,57,89,0.2) 40%,rgba(5,57,89,0.1) 50%,rgba(5,57,89,0.02) 60%,rgba(5,57,89,0) 70%,rgba(5,57,89,0) 100%);
+}
+
+
+
+/* SHADOW EDGE */
+
+#myearth4::after {
+	content: "";
+	position: absolute;
+	top: 12%;
+	bottom: 12%;
+	left: 12%;
+	right: 12%;
+	z-index: 1200;
+	pointer-events: none;
+	border-radius: 50%;
+	box-shadow: 0 0 20px RGBA(0,0,0,0.4) inset;
+}
+
+
+
+/* OUTLINE */
+
+#myearth5::after {
+	content: "";
+	position: absolute;
+	top: 11%;
+	bottom: 11%;
+	left: 11%;
+	right: 11%;
+	border: 1px rgba(0,160,255,1) solid;
+	border-radius: 50%;
+	box-sizing: border-box;
+}
+
+</style>
+
+<script>
+
+window.addEventListener( "load", function() {
+	
+	new Earth( "myearth", {
+		autoRotate : true,
+		light: 'none',
+		mapLandColor : '#ffffff',
+	} );
+	
+	new Earth( "myearth2", {
+		autoRotate : true,
+		light: 'none',
+		mapLandColor : '#ffffff',
+	} );
+	
+	new Earth( "myearth3", {
+		autoRotate : true
+	} );	
+	
+	new Earth( "myearth4", {
+		autoRotate : true,
+		light: 'none',
+		mapLandColor : '#ffffff',
+	} );
+	
+	new Earth( "myearth5", {
+		autoRotate : true,
+		light: 'none',
+		mapLandColor : '#ffffff',
+	} );
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+
+	<div id="multi-wrapper">
+	
+		<h1>Earth Styling</h1>
+		<p id="intro">
+			You can achieve nice effects by styling the ::after pseudo element<br> or other elements inside the earth container.
+		</p>
+		
+		<div class="earth-wrap">
+			<div id="myearth"></div>
+			Border
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth2"></div>
+			Atmosphere
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth3"></div>
+			Shadow
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth4"></div>
+			Shadow Edge
+		</div>
+		
+		<div class="earth-wrap">
+			<div id="myearth5"></div>
+			Outline
+		</div>
+		
+	</div>
+	
+</body>
+</html>

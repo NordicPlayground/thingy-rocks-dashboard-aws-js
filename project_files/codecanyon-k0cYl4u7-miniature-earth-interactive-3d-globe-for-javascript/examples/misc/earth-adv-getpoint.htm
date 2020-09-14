@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>getPoint</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+document.addEventListener( "DOMContentLoaded", function() {
+
+	var myearth = new Earth( "myearth", {
+		location: { lat: 10, lng: -80 },
+		autoRotate: true,
+		autoRotateDelay: 500
+	} );
+	
+	myearth.addEventListener( "ready", function() {
+	
+		nyc = this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 40.6918636, lng: -74.0965785 },
+			/* more marker options here */
+		} );
+
+		myearth.addEventListener( 'change', function() {
+		
+			var point = myearth.getPoint( nyc.location );
+			document.getElementById('position_text').innerHTML = 'x: '+ Math.round(point.x) + ', y: '+ Math.round(point.y);
+			
+			var angle = Earth.getAngle( this.location, nyc.location );
+			document.getElementById('side_text').innerHTML = ( angle < 90 ) ? 'FRONT' : 'BACK';
+			
+		} );
+	
+	} );	
+	
+} );
+
+</script>
+
+</head>
+<body>
+
+	<h1>getPoint</h1>
+	
+	<p>
+		Position of New York in the container element:<br>
+		<span id="position_text"></span><br>
+		on <span id="side_text"></span>
+	</p>
+	
+	<div id="myearth" style="max-width: 600px; margin: 2em auto; border: 1px black dotted;"></div>		
+
+</body>
+</html>

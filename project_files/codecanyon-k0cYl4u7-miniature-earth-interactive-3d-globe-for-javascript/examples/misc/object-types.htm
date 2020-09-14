@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Object Types / Stacking</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<style>
+
+.docs-tip {
+	background-color: transparent;
+	transform: translate(-50%,-50%);
+}
+
+</style>
+
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 10, lng: 0 }
+	} );
+	
+	myearth.addEventListener( "ready", function() {
+
+		// image
+		
+		this.addImage( {
+			location : { lat: 45, lng: 0 },
+			color: 'green',
+			scale: 3
+		} );
+		
+		this.addOverlay( {
+			location : { lat: 45, lng: -22 },
+			className : 'docs-tip',
+			content: '<a href="../../docs/api/image.htm" style="color: green;">Image</a>'
+		} );
+		
+		
+		// marker
+			
+		this.addMarker( {
+			location : { lat: 45, lng: 0 },
+			mesh: ['Pin2', 'Needle'],
+			color: 'blue',
+			scale: 1.25
+		} );
+		
+		this.addOverlay( {
+			location : { lat: 49, lng: 0 },
+			offset: 1.75,
+			className : 'docs-tip',
+			content: '<a href="../../docs/api/marker.htm" style="color: blue;">Marker</a>'
+		} );
+		
+		
+		// line	
+		
+		this.addLine( {
+			locations : [
+				{ lat: 45, lng: 0 },
+				{ lat: 20, lng: 25 },
+			],
+			offsetFlow : 1,
+			width: 1
+		} );
+		
+		this.addOverlay( {
+			location : { lat: 18, lng: 25 },
+			className : 'docs-tip',
+			content: '<a href="../../docs/api/line.htm" style="color: red;">Line</a>'
+		} );
+		
+		
+		// sprite
+		
+		this.addSprite( {
+			location : { lat: 35, lng: 8 },
+			offset: 0.3,
+			color: 'yellow',
+			scale: 2
+		} );
+		
+		this.addOverlay( {
+			location : { lat: 35, lng: 8 },
+			offset: 0.3,
+			className : 'docs-tip',
+			content: '<a href="../../docs/api/sprite.htm" style="color: black;">Sprite</a>'
+		} );
+		
+		
+		// overlay
+		
+		this.addOverlay( {
+			location : { lat: 28, lng: -6 },
+			offset: 0.75,
+			elementScale: 0.5,
+			className : 'docs-tip',
+			content: '<a href="../../docs/api/overlay.htm" style="display:block;background-color:cyan;color:black;padding:25px;border-radius:10px;">Overlay</a>'
+		} );
+		
+		
+	} );
+	
+	
+} );
+
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Object Types / Stacking</h1>
+	
+	<div id="wrapper">
+		<div id="intro">1. Markers, Lines and Images are rendered regularly in 3D space.<br>
+		2. Sprites are rendered on top of Markers, Lines and Images.<br>
+		3. Overlays are pure HTML and not part of the 3D space, they are always on top.<br><br>
+		On the back of the earth the order is reversed.</div>
+	
+		<div id="myearth"></div>
+
+	</div>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Map Image</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.core.js"></script>
+
+<script>
+
+if ( location.protocol == 'file:' ) {
+	alert( 'This demo does not work with the file protocol due to browser security restrictions.' );
+}
+
+
+var myearth, night = false;
+
+window.addEventListener( "earthjsload", function() {
+
+	myearth = new Earth( "myearth", {
+		mapImage : '../demo/space-view/day-by-nasa.jpg',
+		lightAmbience: 1
+	} );
+	
+} );
+
+
+function toggleNight() {
+
+	night = ! night;
+
+	myearth.mapImage = (night) ? '../demo/space-view/night-by-nasa.jpg' : '../demo/space-view/day-by-nasa.jpg';
+	myearth.redrawMap();
+	
+}
+
+</script>
+
+</head>
+<body>
+
+	<h1 style="padding-bottom: 1em;">Map Image</h1>
+	
+	<div id="wrapper">
+		
+		<div>This example uses a <a href="../docs/api/earth.htm#mapimage"><em>mapImage</em></a> and <a href="../docs/api/earth.htm#redrawmap">redrawMap()</a><br>&nbsp;</div>
+		<button onclick=" toggleNight(); ">Toggle Night</button>
+	
+		<div id="myearth"></div>
+		
+	</div>
+	
+</body>
+</html>

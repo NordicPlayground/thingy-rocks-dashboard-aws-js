@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Occlusion</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 0, lng: -40 },
+		autoRotate : true,
+		autoRotateDelay : 0,
+		autoRotateSpeed : 3,
+		transparent: true,
+		mapSeaColor : 'RGBA(0,150,255,0.6)',		
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+		
+		
+		// marker
+		// change color based on occlusion
+		
+		mymarker = this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			scale: 1.5,
+			location : { lat: 30, lng: 10 },
+			hotspot : false,
+			occlude: true,
+			color: 'red'
+		} );
+		
+		mymarker.addEventListener( "occlusion", function() {
+			this.color = this.occluded ? 'green' : 'red';
+		} );
+		
+		
+		
+		// image
+		// fade color based on occlusion
+		
+		myimage = this.addImage( {
+			location : { lat: 30, lng: -50 },
+			scale: 2,
+			color: 'red'
+		} );
+		
+		myimage.addEventListener( "occlusion", function() {
+			this.stopAllAnimations();
+			this.animate( 'color', this.occluded ? 'green' : 'red', {duration: 1000} );		
+		} );
+		
+		
+		
+		// sprite 1
+		// shrink and fade-out
+		
+		mysprite = this.addSprite( {
+			location : { lat: 0, lng: -20 },
+			scale: 2,
+			occlude: false,
+			color: 'red'
+		} );
+		
+		mysprite.addEventListener( "occlusion", function() {
+		
+			this.stopAllAnimations();
+		
+			// duration fade-out / in
+			var d = this.occluded ? 200 : 600;
+			
+			this.animate( 'scale',   this.occluded ? 0.01 : 2, {duration: d} );
+			this.animate( 'opacity', this.occluded ? 0 : 1, {duration: d} );
+			
+		} );
+		
+		
+		// sprite 2
+		// shrink, fade to green, occlude: false
+		
+		mysprite2 = this.addSprite( {
+			location : { lat: 0, lng: -80 },
+			scale: 2,
+			color: 'red',
+			occlude : false
+		} );
+		
+		mysprite2.addEventListener( "occlusion", function() {
+		
+			this.stopAllAnimations();		
+			this.animate( 'color', this.occluded ? 'green' : 'red' );
+			this.animate( 'scale', this.occluded ? 1 : 2 );
+			
+		} );
+		
+		
+		// sprite 3
+		// shrink, fade to green
+		
+		mysprite3 = this.addSprite( {
+			location : { lat: 0, lng: -140 },
+			scale: 2,
+			color: 'red'
+		} );
+		
+		mysprite3.addEventListener( "occlusion", function() {
+		
+			this.stopAllAnimations();
+			this.animate( 'color', this.occluded ? 'green' : 'red' );
+			this.animate( 'scale', this.occluded ? 1 : 2 );
+			
+		} );
+		
+		
+		
+		// overlay
+		// change content based on occlusion
+		
+		myoverlay = this.addOverlay( {
+			location : { lat: -20, lng: 10 },
+			className : 'docs-tip',
+			depthScale : 0.15
+		} );
+		
+		myoverlay.addEventListener( "occlusion", function() {
+			this.content = 'Overlay occluded? <br> <span style="font-size: 2em"> ' + ( this.occluded ? '<span style="color:green">true</span>' : '<span style="color:red">false</span>' ) + ' </span>';
+		} );
+		
+		
+		
+		// overlay
+		// occlude : false		
+		
+		this.addOverlay( {
+			location : { lat: -28, lng: -50 },
+			className : 'docs-tip green-if-occluded',
+			depthScale : 0.15,
+			occlude: false, // <<<
+			content : 'This Overlay is <br> always on top <br> with occlude: false'
+		} );
+		
+
+	} );
+	
+
+} );
+
+</script>
+
+<style>
+
+.earth-overlay .green-if-occluded {
+	transition: color 0.5s ease;
+}
+.earth-occluded .green-if-occluded {
+	color: green;
+}
+
+</style>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Occlusion</h1>
+	
+	<div id="wrapper">	
+	
+		<div id="info">
+		&bull; These objects change their properties using the <em>occlusion</em> event.<br>
+		&bull; Sprites and Overlays can be set to <em>occlude: false</em> to remain always on top.<br>
+		&bull; The <em>earth-occluded</em> CSS class can be used to style Overlays based on occlusion.</div>
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

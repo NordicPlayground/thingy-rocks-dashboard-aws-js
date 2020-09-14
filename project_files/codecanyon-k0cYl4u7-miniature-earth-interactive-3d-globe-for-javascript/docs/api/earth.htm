@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Earth API</title>
+
+<link rel="stylesheet" href="../assets/docs.css">
+<script src="../assets/docs.js"></script>
+
+</head>
+<body class="has-index">
+	<div id="wrapper">
+		
+		<h1>Earth API</h1>
+		
+		<div id="docs">
+		
+			<h2>Setup an Earth</h2>
+			
+				<h3>new Earth( <var>element</var>, <var>options</var> ) <small>returns <em>EarthInstance</em></small></h3>
+				<dl>
+				  <dt>element</dt><dd>HTMLElement or ID (String) of the container element</dd>
+				  <dt>options</dt><dd>Object of <a href="#prop">properties</a></dd>
+				</dl>
+<code><pre>
+&lt;div id="myearth" class="earth-container"&gt;&lt;/div&gt;
+</pre></code>
+<code><pre>
+var myearth = new Earth( "myearth", {
+	location: { lat : 22.5, lng : 20 },
+	mapLandColor: '#333333',
+	mapSeaColor: '#DDDDDD'
+} );
+</pre></code>
+				
+				<p style="padding-bottom:0.5em;">
+					<a href="../../examples/misc/integration-minimal.htm">Minimal Example</a><br>
+					<a href="../../examples/misc/integration-asynchronous.htm">Asynchronous Integration</a><br>
+					<a href="../../examples/misc/integration-preload-fallback.htm">Preload & Fallback</a>
+				</p>
+				
+				<div class="hint">
+					You can access the <em>EarthInstance</em> by the <em>earth</em> property of the container element:
+					<code>console.log( document.getElementById('myearth').earth.location );</code>
+				</div>
+				
+				<div class="hint">
+					Wait for the <a href="#ready-event"><em>ready</em></a> event before you change properties or add objects.
+				</div>
+
+				
+		
+			<h2 id="prop">Properties</h2>
+			
+			<h3>location <var>(lat/lng object)</var> <mark class="animatable"></mark></h3>
+			<p class="default-value"><samp>{ lat: 0, lng: 0 }</samp></p>
+			<p>The geo location at the center of the earth. Also see the <a href="#goto"><em>goTo</em></a> method.</p>
+			
+			<h3 id="polarlimit" class="prop-group" id="polarLimit">polarLimit <var>(float)</var> </h3>
+			<p class="default-value"><samp>0.3</samp></p>
+			<p class="value-range"><samp>0.0 - 1.0</samp></p>
+			<p>Constrains the earth's rotation when far northern and southern locations are shown to shift the focus to the Equator.<br>
+			0 = no limits, 1 = fully constrained, the Equator is always at the center<br>
+			Also see the <a href="#dragpolarlimit"><em>dragPolarLimit</em></a> property.<br>
+			<a href="../../examples/properties/earth-polar-limit.htm">Example: Polar Limit</a></p>
+			
+			
+			<h3>mapLandColor <var>(color)</var> <mark class="init-only">*</mark> <mark class="x-only">default map</mark></h3>
+			<p class="default-value"><samp>#F4F4F4</samp></p>
+			
+			<h3 class="prop-group">mapSeaColor <var>(color)</var> <mark class="init-only">*</mark> <mark class="x-only">default map</mark></h3>
+			<p class="default-value"><samp>#0099FF</samp></p>
+			
+			<h3 class="prop-group">mapBorderColor <var>(color)</var> <mark class="init-only">*</mark> <mark class="x-only">default map</mark></h3>
+			<p class="default-value"><em>value of mapLandColor</em></p>
+			
+			<h3 class="prop-group">mapBorderWidth <var>(float)</var> <mark class="init-only">*</mark> <mark class="x-only">default map</mark></h3>
+			<p class="default-value"><samp>0.3</samp></p>
+			<p class="value-range"><samp>0.25 - 1.0</samp></p>
+			<p>In order to avoid display errors, you should not use values smaller than 0.25. If you want no borders, set <em>mapBorderColor</em> to the value of <em>mapLandColor</em>.</p>
+			
+			<h3 id="mapstyles" class="prop-group">mapStyles <var>(css string)</var> <mark class="init-only">*</mark> <mark class="x-only">default map</mark></h3>
+			<p>This CSS string is applied to the default SVG map. You can target countries by their <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">ISO code</a>.</p>
+<code><pre>
+mapStyles : "#US { fill: blue; stroke: blue; }"
+</pre></code>
+			<p><a href="../../examples/map-styles.htm">Example: Map Styles > Colored Countries</a><br>
+			<a href="../../examples/country-selector.htm">Example: Country Selector</a></p>
+
+
+			<h3 id="mapimage">mapImage <var>(URL String)</var> <mark class="init-only">*</mark> </h3>
+			<p class="default-value"><samp>"" (uses the default SVG map)</samp></p>
+			<p>You can use a SVG or any pixel image format. The image must be in 2:1 format, with <a href="https://en.wikipedia.org/wiki/Equirectangular_projection">equirectangular projection</a>.<br>
+			<a href="../../examples/map-image.htm">Example: Map Image</a><br>
+			<a href="../../examples/map-custom-svg.htm">Example: Custom SVG Map</a></p>
+			
+			<!--
+			<div class="hint">
+				Texture images are not loaded under the file protocol due to browser security restrictions.
+			</div>-->
+			
+			
+			&nbsp;
+			<div class="hint">
+				* If you need to change the <em>map*</em> properties after initialization call the <a href="#redrawmap">redrawMap()</a> method to apply the new values.
+			</div>
+
+			<h3>transparent <var>(boolean)</var> <mark class="init-only"></mark></h3>
+			<p class="default-value"><samp>false</samp></p>
+			<p>The earth surface becomes transparent if set to <em>true</em> and <em>mapSeaColor</em> has a value like <code class="inline">RGBA(0, 0, 255, 0.5)</code> or you use a <em>mapImage</em> with transparency.<br>
+			<a href="../../examples/properties/earth-transparency.htm">Example: Earth Transparency</a></p>
+			
+			<div class="advanced">
+			
+				<h3>innerOpacity <var>(float)</var> <mark class="init-only"></mark> </h3>
+				<p class="default-value"><samp>1.0</samp></p>
+				<p class="value-range"><samp>0.0 - 1.0</samp></p>
+				<p>Controls the opacity of the inside of the earth. 
+				</p> 
+			
+				<h3 class="prop-group">innerColor <var>(color)</var> <mark class="init-only"></mark> </h3>
+				<p class="default-value"><samp>#FFFFFF</samp></p>
+				<p>Multiplys a color on the inside of the earth.</p>
+
+			</div><!--advanced-->
+			
+			
+			<h3>draggable <var>(boolean)</var> </h3>
+			<p class="default-value"><samp>true</samp></p>
+			<p>The following properties are only available if <em>draggable: true</em>.</p>
+
+			<div class="advanced">
+			
+				<h3>grabCursor <var>(boolean)</var> </h3>
+				<p class="default-value"><samp>true</samp></p>
+				
+				<h3 class="prop-group">dragMomentum <var>(boolean)</var> </h3>
+				<p class="default-value"><samp>true</samp></p>
+				<p>If <em>true</em> the earth will keep spinning a while after dragging/swiping.</p> 
+				
+				<h3 class="prop-group">dragDamping <var>(float)</var> </h3>
+				<p class="default-value"><samp>0.7</samp></p>
+				<p class="value-range"><samp>0.01 - 0.99</samp></p>
+				<p>Controls how fast the earth loses momentum after dragging/swiping.</p> 
+			
+				<h3 class="prop-group" id="dragpolarlimit">dragPolarLimit <var>(float)</var> </h3>
+				<p class="default-value"><samp>0.3</samp></p>
+				<p class="value-range"><samp>0.0 - 1.0</samp></p>
+				<p>Like the <a href="#polarLimit"><em>polarLimit</em></a> property but constrains the earth's rotation during dragging/swiping.</p> 
+
+			</div><!--advanced-->
+				
+			
+			<h3 id="zoom">zoom <var>(float)</var> <mark class="animatable"></mark></h3>
+			<p class="default-value"><samp>1</samp></p>
+			<p>Also see the <em>zoom</em> option of the <a href="#goto"><em>goTo</em></a> method.</p>
+						
+			<div class="advanced">
+				
+				<h3>zoomable <var>(boolean)</var></h3>
+				<p class="default-value"><samp>false</samp></p>
+				<p>Zoomable by mouse wheel and gestures.</p>
+			
+				<h3 class="prop-group">zoomMin <var>(float)</var></h3>
+				<p class="default-value"><samp>0.5</samp></p>
+				
+				<h3 class="prop-group">zoomMax <var>(float)</var></h3>
+				<p class="default-value"><samp>1.25</samp></p>
+				
+				<h3 class="prop-group">zoomSpeed <var>(float)</var></h3>
+				<p class="default-value"><samp>1</samp></p>
+				<p>Zoom speed when zooming by mouse wheel or gestures.</p>
+				
+			</div><!--advanced-->		
+			
+			
+			<h3 id="autorotate">autoRotate <var>(boolean)</var> </h3>
+			<p class="default-value"><samp>false</samp></p>
+			<p>The following properties are only available if <em>autoRotate: true</em>.</p>
+			
+			<div class="advanced">
+			
+				<h3>autoRotateSpeed <var>(float)</var> </h3>
+				<p class="default-value"><samp>1</samp></p>
+				<p>A negative value reverses the rotation direction.</p>
+				
+				<h3 class="prop-group">autoRotateSpeedUp <var>(float)</var> </h3>
+				<p class="default-value"><samp>0</samp></p>
+				<p>Like <em>autoRotateSpeed</em> property but for up/down rotation.</p>				
+				
+				<h3 class="prop-group">autoRotateDelay <var>(float)</var> </h3>
+				<p class="default-value"><samp>1000 (ms)</samp></p>
+				<p>Time to wait before auto rotating starts.</p>	
+				
+				<h3 class="prop-group">autoRotateStart <var>(float)</var> </h3>
+				<p class="default-value"><samp>1000 (ms)</samp></p>
+				<p>Acceleration time when auto rotating starts.</p>	
+				
+				<h3 class="prop-group">autoRotateEasing <var>(easing)</var> </h3>
+				<p class="default-value"><samp>in-quad</samp></p>
+				<p>Acceleration <a href="animation.htm#easing">easing</a> when auto rotating starts.</p>
+
+			</div><!--advanced-->
+
+			
+			<h3 id="light">light <var>("none", "simple" or "sun")</var> <mark class="init-only"></mark> </h3>
+			<p class="default-value"><em>"simple"</em></p>
+			<p><a href="../../examples/properties/earth-light.htm">Example (Light Types)</a></p>
+			
+
+			<div class="advanced">
+			
+				<h3>lightAmbience <var>(float)</var> <mark class="animatable"></mark></h3>
+				<p class="default-value"><samp>if <i>light: none</i> 1 else 0.5</samp></p>
+				<p>Controls the overall brightness.</p>
+				
+				<h3 class="prop-group">lightIntensity <var>(float)</var> <mark class="animatable"></mark></h3>
+				<p class="default-value"><samp>0.5</samp></p>
+				<p>Intensity of the sun or simple light.</p>
+				
+				<h3 class="prop-group">lightColor <var>(color)</var> <mark class="animatable"></mark></h3>
+				<p class="default-value"><samp>#FFFFFF</samp></p>	
+				
+				<h3 class="prop-group">lightGroundColor <var>(color)</var> <mark class="animatable"></mark></h3>
+				<p class="default-value"><samp>#999999</samp></p>
+				<p>Only available if <em>light: simple</em>.</p>	
+				
+				<h3 class="prop-group">sunLocation <var>(lat/lng object)</var> <mark class="animatable"></mark></h3>
+				<p class="default-value"><samp>{ lat: 0, lng: 0 }</samp></p>
+				<p>Only available if <em>light: sun</em>. The sun shines on the given location.</p>
+				<code><pre> // shine from a fixed direction
+myearth.addEventListener( "change", function() {
+	this.sunLocation = { lat: this.location.lat + 30, lng: this.location.lng - 40 };	
+} );</pre></code>
+				
+				<h3 class="prop-group" id="shadows">shadows <var>(boolean)</var> <mark class="init-only"></mark></h3>
+				<p class="default-value"><samp>true</samp></p>
+				<p>Only available if <em>light: sun</em>.</p>
+				
+			</div><!--advanced-->
+			
+
+			<h3>Advanced:</h3>
+
+			<div class="advanced">
+			
+				<h3 id="maphittest">mapHitTest <var>(boolean)</var></h3>
+				<p class="default-value"><samp>false</samp></p>
+				<p>
+				Only available for the default SVG map or a custom SVG map set as <em>mapImage</em>.<br>
+				Set to <em>true</em> to determine the ID of the hit SVG path (country code) during <a href="#click">click, mousedown and mouseup</a> events.<br>
+				<a href="../../examples/get-location.htm">Example: Get Location</a></p>
+				
+				<h3 id="showhotspots">showHotspots <var>(boolean)</var> <mark class="init-only"></mark></h3>
+				<p class="default-value"><samp>false</samp></p>
+				<p>Set to <em>true</em> to display wireframes of the marker hotspots for debugging.</p>			
+
+				
+				<h3>quality <var>(integer)</var> <mark class="init-only"></mark> </h3>
+				<p class="default-value"><samp>3 or 4 depending on container size</samp></p>
+				<p class="value-range"><samp>1 - 5</samp></p>
+				<p>Controls various internal parameters like texture resolution and polygon count.<br>
+				1 = very low quality, 2 = low quality, 3 = good quality (up to 1000px), 4 = high quality, 5 = ultra high quality</p>
+		
+		
+				<h3>shininess <var>(float)</var> <mark class="animatable"></mark></h3>
+				<p class="default-value"><samp>0.1</samp></p>
+				<p class="value-range"><samp>0.0 - 1.0</samp></p>
+				<p>Only if <em>light: sun</em>. Shininess of the earth surface.</p>
+				
+
+
+				<h3 id="ie11">legacySupportIE11 <var>(boolean)</var> <mark class="init-only"></mark></h3>
+				<p class="default-value"><samp>false</samp></p>	
+				<p>Set to <em>true</em> if you need to <a href="../../examples/misc/legacy-support-ie11.htm">support IE11</a>.</p>		
+				
+				<h3 class="prop-group">fallbackMapUrlIE11 <var>(URL string)</var> <mark class="init-only"></mark></h3>
+				<p class="default-value"><samp>false</samp></p>	
+				<p>If you use <em>legacySupportIE11: true</em>, you can specify a map image that is only used by IE11.<br>
+				Don't use this property if you use <em><a href="#mapimage">mapImage</a></em> anyway.</p>
+				
+	
+				
+				<h3>mapCanvas <var>(CanvasElement)</var> <mark class="read-only"></mark></h3>
+				<p>Reference to the canvas of the map texture.</p>
+				
+				<h3 class="prop-group">mapContext <var>(CanvasRenderingContext2D)</var> <mark class="read-only"></mark></h3>
+				<p>Reference to the rendering context of the map texture. These properties are available during and after the <em>drawtexture</em> event.<br>
+				Call <a href="#updatemap">updateMap()</a> after drawing on the <em>mapCanvas</em> to update the earth's texture.</p>
+				<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D">About CanvasRenderingContext2D</a><br>
+				<a href="../../examples/draw-map-locations.htm">Example: Draw Map Locations</a></p>
+
+				
+				
+				<h3>canvas <var>(CanvasElement)</var> <mark class="read-only"></mark></h3>
+				<p>The earth is rendered to this canvas element.</p>
+				
+				<h3 class="prop-group">preserveDrawingBuffer <var>(boolean)</var> <mark class="init-only"></mark></h3>
+				<p class="default-value"><samp>false</samp></p>
+				<p>Set to <em>true</em> if you want to retrieve image data of the <em>canvas</em>.<br>
+				<a href="../../examples/misc/capture-canvas-image.htm">Example: Capture Canvas Image</a></p>
+							
+				<h3>paused <var>(boolean)</var></h3>
+				<p class="default-value"><samp>false</samp></p>	
+				<p>You can pause the earth to save performance when hiding the earth. The earth is not updated.</p>
+				
+				
+				<h3>deltaTime <var>(float)</var> <mark class="read-only"></mark></h3>
+				<p>Milliseconds since the last animation frame.</p>				
+				
+				
+				<h3>scene, camera, renderer, sphere <var>(THREE)</var></h3>
+				<p>You can access the THREE.js objects that render the earth. <a href="https://threejs.org/docs/">About THREE.js</a></p>	
+<code><pre>
+console.log( myearth.scene );
+</pre></code>
+
+			</div><!--advanced-->
+			
+			
+			
+			<h2>Methods</h2>
+			
+			
+				<h3 id="addmarker">addMarker( <var>options</var> ) <small>returns <em>MarkerInstance</em></small></h3>
+				<dl>
+				  <dt>options</dt><dd>Object of <a href="marker.htm#prop">marker properties</a></dd>
+				</dl>
+				<p></p>
+				
+				
+				<h3 class="prop-group" id="addimage">addImage( <var>options</var> ) <small>returns <em>ImageInstance</em></small></h3>
+				<dl>
+				  <dt>options</dt><dd>Object of <a href="image.htm#prop">image properties</a></dd>
+				</dl>
+			
+			
+				<h3 class="prop-group" id="addsprite">addSprite( <var>options</var> ) <small>returns <em>SpriteInstance</em></small></h3>
+				<dl>
+				  <dt>options</dt><dd>Object of <a href="sprite.htm#prop">sprite properties</a></dd>
+				</dl>
+			
+			
+				<h3 class="prop-group" id="addline">addLine( <var>options</var> ) <small>returns <em>LineInstance</em></small></h3>
+				<dl>
+				  <dt>options</dt><dd>Object of <a href="line.htm#prop">line properties</a></dd>
+				</dl>
+
+			
+				<h3 class="prop-group" id="addoverlay">addOverlay( <var>options</var> ) <small>returns <em>OverlayInstance</em></small></h3>
+				<dl>
+				  <dt>options</dt><dd>Object of <a href="overlay.htm#prop">overlay properties</a></dd>
+				</dl>
+
+
+
+				<h3 id="goto">goTo( <var>location</var>, <var>options</var> ) <small>returns <em>AnimationInstance</em> or <em>false</em> if navigation is not needed</small></h3>
+				<dl>
+					<dt>location</dt><dd>lat/lng object</a></dd>
+					<dt>options</dt><dd>Object of <a href="animation.htm#prop">animation properties</a>, <em>approachAngle</em> and <em>zoom</em></dd>
+				</dl>
+				<p>
+					You can animate the earth's <em>location</em> property for navigation, but using the goTo() method has advantages:<br>
+					- previous animations are stopped<br>
+					- you can use the special option <em>approachAngle</em> to navigate only if needed and only as much as needed.<br>
+					- you can use the special option <em>zoom</em> to start a synchronosized zoom animation<br>
+				</p>
+<code><pre>
+myearth.goTo( { lat: -25, lng: 131 }, { relativeDuration: 100, approachAngle: 20, zoom: 1.1 } );
+</pre></code>
+				<p><a href="../../examples/earth-navigation.htm">Example: Earth Navigation</a></p>
+				
+
+				<h3>Advanced:</h3>
+				<div class="advanced">
+				
+					<h3 id="redrawmap">redrawMap( )</h3>
+					<p>
+						Call <em>redrawMap()</em> if you need to change the <em>map*Color/mapStyles/mapImage</em> properties after initialization.<br>
+						<a href="../../examples/country-selector.htm">Example: Country Selector</a><br>
+						<a href="../../examples/map-image.htm">Example: Map Image</a>
+					</p>
+					
+					
+					<h3 class="prop-group" id="updatemap">updateMap( )</h3>
+					<p>
+						Call <em>updateMap()</em> after drawing on the <em>mapCanvas</em> to update the earth's texture.
+					</p>		
+				
+				
+					<h3 id="hittest">hitTest( <var>location</var> )</h3>
+					<dl>
+					  <dt>location</dt><dd>(lat/lng object) Location on the map (<em>mapSvg</em>)</dd>
+					</dl>
+					<p>
+						Only available for the default SVG map or a custom SVG map set as <em>mapImage</em>.<br>
+						Returns the ID of the SVG path element found at <em>location</em>.<br>
+						If you use the default SVG map the ID equals the <a href="https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">country ISO code</a>.<br>
+						<a href="../../examples/misc/earth-adv-getlocation.htm">Example: getLocation / hitTest</a>
+					</p>
+					
+					
+					<h3>startAutoRotate( <var>easeIn</var> )</h3>
+					<dl>
+					  <dt>easeIn</dt><dd>(boolean) default: false</dd>
+					</dl>
+					<p>
+						Skips the <em>autoRotateDelay</em>. If <em>easeIn</em> is <em>false</em> the earth immediatly rotates at full speed.
+					</p>
+				
+					<h3 class="prop-group">resetAutoRotate( )</h3>
+					<p>
+						Interrupts auto rotating. The auto rotation restarts after the <em>autoRotateDelay</em>.
+					</p>
+					
+							
+					<h3>getPoint( <var>location</var>, <var>offset</var> ) <small>returns <em>x/y object</em></small></h3>
+					<dl>
+						<dt>location</dt><dd>lat/lng object</a></dd>
+						<dt>offset</dt><dd>distance to the earth surface (number) default: 0</dd>
+					</dl>
+					<p>
+						Get a x/y point of lat/lng location relative to the container element.<br>
+					<a href="../../examples/misc/earth-adv-getpoint.htm">Example: getPoint</a></p>
+					
+
+					<h3 class="prop-group">getLocation( <var>point</var> ) <small>returns <em>lat/lng object</em> or <em>false</em> if the point is not on the earth</small></h3>
+					<dl>
+						<dt>point</dt><dd>mouse or touch position (x/y object) relative to the page</a></dd>
+					</dl>
+					<p>
+						Get a lat/lng object of a x/y point on the page.<br>
+					<a href="../../examples/misc/earth-adv-getlocation.htm">Example: getLocation / hitTest</a></p>
+
+					<h3 class="prop-group">getRadius( ) <small>returns <em>number</em></small></h3>
+					<p>
+						Get the current radius of the earth in pixels.<br>
+					<a href="../../examples/misc/earth-adv-getradius.htm">Example: getRadius</a></p>			
+					
+					
+					<h3 id="destroy">destroy( )</h3>
+					<p>
+						Removes the earth and frees memory.
+					</p>					
+
+				</div><!--advanced-->
+
+				
+			
+			<h2>Static Methods</h2>
+
+			
+				<h3 id="addmesh">Earth.addMesh( <var>objString</var> )</h3>
+				<dl>
+					<dt>objString</dt><dd>A .obj 3d file as a string</a></dd>
+				</dl>
+				<p>
+					You can add own 3d meshes for markers. <a href="../#obj">Learn more</a><br>
+					<a href="../../examples/custom-marker-meshes.htm">Example: Custom Marker Meshes</a>
+				</p>
+			
+
+				<h3 id="supported">Earth.isSupported( <var>legacySupportIE11</var> ) <small>returns <em>true/false</em></small></h3>
+				<dl>
+					<dt>legacySupportIE11</dt><dd>boolean (default: false)</a></dd>
+				</dl>
+				<p>
+					Returns <em>true</em> if WebGL is supported. For Internet Explorer 11 this method only returns <em>true</em> if <em>legacySupportIE11</em> is <em>true</em>.<br>
+					<a href="../../examples/misc/legacy-support-ie11.htm">Example: Legacy Support (IE 11)</a>
+				</p>			
+				
+				<h3>Advanced:</h3>
+				<div class="advanced">
+			
+				
+					<h3 id="getdistance">Earth.getDistance( <var>from</var>, <var>to</var> ) <small>returns <em>number</em></small></h3>
+					<dl>
+						<dt>from</dt><dd>lat/lng object</a></dd>
+						<dt>to</dt><dd>lat/lng object</a></dd>
+					</dl>
+					<p>
+						Returns the approximate distance between two locations in kilometers.<br>
+						Multiply by <em>0.621371</em> to get the distance in miles.
+					</p>	
+					
+
+					<h3 class="prop-group">Earth.getAngle( <var>from</var>, <var>to</var> ) <small>returns <em>number</em></small></h3>
+					<dl>
+						<dt>from</dt><dd>lat/lng object</a></dd>
+						<dt>to</dt><dd>lat/lng object</a></dd>
+					</dl>
+					<p>
+						Returns the approximate angle between two locations in degrees (0.0 - 180.0).
+					</p>
+					
+
+					<h3 class="prop-group">Earth.lerp( <var>from</var>, <var>to</var>, <var>time</var>, <var>lerpLatLng</var> ) <small>returns <em>lat/lng object</em></small></h3>
+					<dl>
+						<dt>from</dt><dd>lat/lng object</a></dd>
+						<dt>to</dt><dd>lat/lng object</a></dd>
+						<dt>time</dt><dd>number 0.0 - 1.0</a></dd>
+						<dt>lerpLatLng</dt><dd>boolean</a></dd>
+					</dl>
+					<p>
+						Returns a lat/lng location between <em>from</em> and <em>to</em> at <em>time</em>. If <em>lerpLatLng</em> is <em>true</em> the lat/lng values are lerped as numbers (avoiding the polar regions) instead of the 3d position (shortest path). 
+					</p>
+					
+					<p><a href="../../examples/distance-angle-lerp.htm">Example: Distance, Angle and Lerp</a></p>
+				</div><!--advanced-->
+					
+		
+			
+			<h2>Events</h2>
+			
+				<h3 id="ready-event">ready</h3>
+				<p>The <em>ready</em> event is triggered once when the earth is initialized and you can start adding objects.
+				</p>
+
+				<h3>drawtexture</h3>
+				<p>The <em>drawtexture</em> event is triggered on initialization or when the <a href="#redrawmap">redrawMap()</a> method is called. You can use this event to draw on the <em>mapCanvas</em> to modify the earth's texture.<br>
+				<a href="../../examples/draw-map-locations.htm">Example: Draw Map Locations</a></p>
+				
+				<h3 id="click">click, mousedown or mouseup</h3>
+				<dl>
+				  <dt>event.x / event.y</dt><dd>Position relative to the top left corner of the container element</a></dd>
+				  <dt>event.location</dt><dd>Location as lat/lng object</a></dd>
+				  <dt>event.id</dt><dd>Only available if <a href="#maphittest">mapHitTest</a> is true. The ID of the hit SVG path (country code).</a></dd>
+				</dl>
+				<p><a href="../../examples/get-location.htm">Example: Get Location</a></p>
+<code><pre>
+myearth.addEventListener( 'click', function( event ) {
+	console.log( event.location );
+} );
+</pre></code>
+				<div class="hint">
+					touchstart/touchend events are triggered as mousedown/mouseup
+				</div>
+
+				<h3>dragstart, dragend</h3>
+				<p>The events are triggered when the earth is dragged.</p>
+				
+
+				<h3>change</h3>
+				<p>The <em>change</em> event is triggered when the earth rotates or zooms.</p>
+			
+			
+				<h3>update</h3>
+				<p>The <em>update</em> event is triggered permanently, each animation frame.</p>
+				
+				<br>
+				
+				<div class="hint">
+					You can add native event listeners to the container or canvas element.
+				</div>
+				
+				<div class="hint">
+					The window element triggers the <em>earthjsload</em> event when the library is loaded.
+				</div>
+
+			
+			<h2>CSS Classes</h2>
+
+			
+				<h3>earth-container <small>on container element</small></h3>
+				<p>
+					The <em>earth-container</em> class is added to the container element if it is not present. You can set this class in your container elements HTML so that the earth consumes space even before the earth is initialized.
+				</p>
+					
+				<h3>earth-ready <small>on container element</small></h3>
+				<p>
+					As soon as the earth is ready, the class <em>earth-ready</em> is added.
+				</p>
+					
+				<h3>earth-show-fallback <small>on container element</small></h3>
+				<p>
+					<em>earth-show-fallback</em> is added if JavaScript is enabled but the earth is not supported. See <a href="#supported">Earth.isSupported</a>.
+				</p>
+				
+				<h3 class="prop-group">earth-fallback <small>on child elements of the container</small></h3>
+				<p>
+					Child elements with the class <em>earth-fallback</em> are set to hidden if the earth is supported.
+				</p>
+				
+				<h3>earth-clickable <small>on container element</small></h3>
+				<p>
+					<em>earth-clickable</em> is added while hovering over a clickable hotspot.
+				</p>
+				
+				<h3 class="prop-group">earth-draggable <small>on container element</small></h3>
+				<p>
+					<em>earth-draggable</em> is added while hovering over a draggable earth.
+				</p>
+				
+				<h3 class="prop-group">earth-dragging <small>on &lt;html&gt; element</small></h3>
+				<p>
+					<em>earth-dragging</em> is added to the html element as long as an earth is dragged.
+				</p>
+				
+				
+				&nbsp;
+				
+				<div class="hint">
+					To see what these classes do by default you can have a look at the file <em>src/earth.css</em>
+				</div>
+		
+		
+		</div><!--docs-->
+		
+	</div>
+</body>
+</html>

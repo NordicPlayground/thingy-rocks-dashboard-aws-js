@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Get Location</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+var mymarker
+
+window.addEventListener( "earthjsload", function() {
+
+
+	myearth = new Earth( "myearth", {
+		mapBorderColor: '#0099FF',
+		mapHitTest : true
+	} );
+	
+	
+	myearth.addEventListener( 'click', function( event ) {
+
+		if ( ! mymarker ) { // create marker on first click
+		
+			mymarker = myearth.addMarker( {
+				mesh : "Marker",
+				scale: 0.01,
+				location : event.location
+			} );
+			
+		} else { // or update the existing marker
+		
+			mymarker.scale = 0.01;
+			mymarker.location = event.location;
+		
+		}
+		
+		// animate marker size
+		mymarker.animate( 'scale', 0.8 );
+		
+		// show info
+		document.getElementById( 'info' ).innerHTML = 
+		'Click @ ' + JSON.stringify( event.location ) + ' <br> SVG Path ID: ' + (( event.id ) ? event.id : '-');
+
+	} );
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Get Location</h1>
+	
+	<div id="wrapper">		
+	
+		<div id="info">Click on the Earth!<br>&nbsp;</div>
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

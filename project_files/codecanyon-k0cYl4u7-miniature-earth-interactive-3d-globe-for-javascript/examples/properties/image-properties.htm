@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Image Properties</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<style>
+
+.docs-tip {
+	transform: translate(-50%, 2em);
+}
+
+</style>
+
+<script>
+
+var arrow_image = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTcgNWgtMTd2MTRoMTdsNy03eiIvPjwvc3ZnPg';
+var x_image = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMjQgMy43NTJsLTQuNDIzLTMuNzUyLTcuNzcxIDkuMDM5LTcuNjQ3LTkuMDA4LTQuMTU5IDQuMjc4YzIuMjg1IDIuODg1IDUuMjg0IDUuOTAzIDguMzYyIDguNzA4bC04LjE2NSA5LjQ0NyAxLjM0MyAxLjQ4N2MxLjk3OC0xLjMzNSA1Ljk4MS00LjM3MyAxMC4yMDUtNy45NTggNC4zMDQgMy42NyA4LjMwNiA2LjY2MyAxMC4yMjkgOC4wMDZsMS40NDktMS4yNzgtOC4yNTQtOS43MjRjMy4yODctMi45NzMgNi41ODQtNi4zNTQgOC44MzEtOS4yNDV6Ii8+PC9zdmc+';
+
+
+window.addEventListener( "earthjsload", function() {
+
+
+	var myearth = new Earth( "myearth", {
+		quality: 4,
+		location: { lat: 30, lng: 0 },
+		autoRotate : true,
+		showHotspots : true
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+
+		// offset
+		this.addImage( {
+			location : { lat: 35, lng: 0 },
+			offset: 1.5,
+			color: 'red'
+		} );
+		
+		this.addOverlay( {
+			content: 'offset: 1.5',
+			location : { lat: 35, lng: 0 },
+			className : 'docs-tip',
+			depthScale: 0.75
+		} );
+		
+		
+		// scale
+		scalesprite = this.addImage( {
+			location : { lat: 35, lng: -45 },
+			scale: 1.5,
+			color: 'red'
+		} );
+		
+		this.addOverlay( {
+			content: 'scale: 1.5',
+			location : { lat: 35, lng: -45 },
+			className : 'docs-tip',
+			depthScale: 0.75
+		} );
+		
+		
+		// color
+		this.addImage( {
+			location : { lat: 35, lng: -90 },
+			imageAlphaOnly: true,
+			color: '#2549ff'
+		} );
+		
+		this.addOverlay( {
+			content: 'color',
+			location : { lat: 35, lng: -90 },
+			className : 'docs-tip',
+			depthScale: 0.75
+		} );
+		
+		
+		// opacity
+		this.addImage( {
+			location : { lat: 35, lng: -135 },
+			opacity: 0.5,
+			color: 'red'
+		} );
+		
+		this.addOverlay( {
+			content: 'opacity: 0.5',
+			location : { lat: 35, lng: -135 },
+			className : 'docs-tip',
+			depthScale: 0.75
+		} );
+		
+		
+		// rotationY
+		this.addImage( {
+			location : { lat: 35, lng: 135 },
+			image: arrow_image,
+			imageAlphaOnly: true,
+			color: 'red',
+			rotationY: -20
+		} );
+		
+		this.addOverlay( {
+			content: 'rotationY: -20',
+			location : { lat: 35, lng: 135 },
+			className : 'docs-tip',
+			depthScale: 0.75
+		} );
+		
+
+		
+		// lookAt at x
+		
+		var x = this.addImage( {
+			location : { lat: 40, lng: 172 },
+			image: x_image,
+			imageAlphaOnly: true,
+			color: 'red',
+			scale: 0.3			
+		} );
+		
+		this.addImage( {
+			location : { lat: 35, lng: 180 },
+			image: arrow_image,
+			imageAlphaOnly: true,
+			color: 'red',
+			lookAt: x.location
+		} );
+		
+		this.addOverlay( {
+			content: 'lookAt',
+			location : { lat: 35, lng: 180 },
+			className : 'docs-tip',
+			depthScale: 0.75
+		} );
+		
+		
+		
+		// hotspot
+		var clickableImage = this.addImage( {
+			location : { lat: 35, lng: 90 },
+			hotspot : true,
+			hotspotRadius : 0.6,
+			color: 'red'
+		} );
+		
+		clickableImage.addEventListener( 'click', function() {
+			alert( "click" );
+		} );
+		
+		
+		this.addOverlay( {
+			content: 'hotspot: true',
+			location : { lat: 35, lng: 90 },
+			className : 'docs-tip',
+			depthScale: 0.75
+		} );
+		
+		
+		// image
+		this.addImage( {
+			location : { lat: 35, lng: 45 },
+			image: '../assets/pin.png'
+		} );
+		
+		this.addOverlay( {
+			content: 'image',
+			location : { lat: 35, lng: 45 },
+			className : 'docs-tip',
+			depthScale: 0.75
+		} );
+
+
+	} );
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1>Image Properties</h1>
+	
+	<p>See <a href="../../docs/api/image.htm">Image API</a></p>
+	
+	<div id="wrapper">	
+	
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

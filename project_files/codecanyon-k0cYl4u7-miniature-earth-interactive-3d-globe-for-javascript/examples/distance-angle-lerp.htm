@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Distance, Angle and Lerp</title>
+
+<link rel="stylesheet" href="assets/example.css">
+
+<script src="../miniature.earth.js"></script>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+	var myearth = new Earth( "myearth", {
+		location: { lat: 10, lng: -80 }
+	} );
+	
+	myearth.addEventListener( "ready", function() {
+	
+		nyc = this.addMarker( {
+			mesh : ["Cone"],
+			location : { lat: 40.6918636, lng: -74.0965785 }
+		} );
+		
+		target_marker = this.addMarker( {
+			mesh : ["Cone"],
+			location : { lat: 40.6918636, lng: -74.0965785 },
+			color: 'blue',
+			visible: false
+		} );
+		
+		
+		var mid_point_prop = {
+			mesh : ["Pin3"],
+			location : { lat: 40.6918636, lng: -74.0965785 },
+			color: 'blue',
+			scale: 0.5,
+			visible: false,
+			opacity: 0.5,
+			transparent: true
+		};
+		
+		mid_point_1 = this.addMarker( mid_point_prop );		
+		mid_point_2 = this.addMarker( mid_point_prop );
+		mid_point_3 = this.addMarker( mid_point_prop );
+
+		
+		myearth.addEventListener( "click", function( event ) {
+			
+			target_marker.visible = true;			
+			target_marker.location = event.location;
+			
+			var distance = Earth.getDistance( nyc.location, event.location );
+			document.getElementById('distance_text').innerHTML = distance.toFixed(2);
+			document.getElementById('distance_miles_text').innerHTML = (distance * 0.621371).toFixed(2);
+			
+			document.getElementById('angle_text').innerHTML = Earth.getAngle( nyc.location, event.location ).toFixed(2);
+			
+			mid_point_1.visible = true;
+			mid_point_1.location = Earth.lerp( nyc.location, event.location, 0.25, false );
+			
+			mid_point_2.visible = true;
+			mid_point_2.location = Earth.lerp( nyc.location, event.location, 0.5, false );
+			
+			mid_point_3.visible = true;
+			mid_point_3.location = Earth.lerp( nyc.location, event.location, 0.75, false );
+			
+		} );
+		
+		
+	} );	
+	
+} );
+
+</script>
+
+</head>
+<body>
+
+	<h1 style="padding-bottom:1em;">Distance, Angle and Lerp</h1>
+	
+	<div>
+		This example uses the static methods <a href="../docs/api/earth.htm#getdistance">Earth.getDistance(), Earth.getAngle() and Earth.lerp()</a> for calculations.<br>
+		<br>
+		Click on the earth!<br>
+		Distance to NY: <span id="distance_text">-</span> kilometers / <span id="distance_miles_text">-</span> miles, Angle: <span id="angle_text">-</span>deg
+	</div>
+	
+	<div id="wrapper">
+		<div id="myearth"></div>		
+	</div>
+	
+</body>
+</html>

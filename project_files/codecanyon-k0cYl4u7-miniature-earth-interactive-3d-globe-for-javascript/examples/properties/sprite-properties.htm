@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Sprite Properties</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<style>
+
+.docs-tip {
+	transform: translate(-50%, 2em);
+}
+
+</style>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+
+	myearth = new Earth( "myearth", {
+		location: { lat: 30, lng: 0 },
+		autoRotate : true,
+		showHotspots : true
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+
+		// offset
+		this.addSprite( {
+			location : { lat: 35, lng: 0 },
+			color: 'red',
+			offset: 1.5,
+		} );
+		
+		this.addOverlay( {
+			content: 'offset: 1.5',
+			location : { lat: 35, lng: 0 },
+			className : 'docs-tip',
+			depthScale: 0.5
+		} );
+		
+		
+		// scale
+		scalesprite = this.addSprite( {
+			location : { lat: 35, lng: -45 },
+			color: 'red',
+			scale: 1.5,
+		} );
+		
+		this.addOverlay( {
+			content: 'scale: 1.5',
+			location : { lat: 35, lng: -45 },
+			className : 'docs-tip',
+			depthScale: 0.5
+		} );
+		
+		
+		// color
+		this.addSprite( {
+			location : { lat: 35, lng: -90 },
+			offset: -0.05,
+			image : '../assets/pin.png',
+			anchorY: 0,
+			imageAlphaOnly: true,
+			color: 'blue'
+		} );
+		
+		this.addOverlay( {
+			content: 'imageAlphaOnly + color',
+			location : { lat: 35, lng: -90 },
+			className : 'docs-tip',
+			depthScale: 0.5
+		} );
+		
+		
+		// opacity
+		this.addSprite( {
+			location : { lat: 35, lng: -135 },
+			color: 'red',
+			opacity: 0.5
+		} );
+		
+		this.addOverlay( {
+			content: 'opacity: 0.5',
+			location : { lat: 35, lng: -135 },			
+			className : 'docs-tip',
+			depthScale: 0.5
+		} );
+		
+		
+		// rotation
+		this.addSprite( {
+			location : { lat: 35, lng: 135 },
+			offset: -0.05,
+			image : '../assets/pin.png',
+			anchorY: 0,
+			rotation: 25
+		} );
+		
+		this.addOverlay( {
+			content: 'rotation: 25',
+			location : { lat: 35, lng: 135 },			
+			className : 'docs-tip',
+			depthScale: 0.5
+		} );
+		
+		
+		// hotspot
+		var clickableSprite = this.addSprite( {
+			location : { lat: 35, lng: 180 },
+			color: 'red',
+			hotspot : true,
+			hotspotRadius: 0.75
+		} );
+		
+		clickableSprite.addEventListener( 'click', function() {
+			alert( "click" );
+		} );
+		
+		
+		this.addOverlay( {
+			content: 'hotspot: true',
+			location : { lat: 35, lng: 180 },			
+			className : 'docs-tip',
+			depthScale: 0.5
+		} );
+		
+		
+		// anchorY
+		testsprite = this.addSprite( {
+			location : { lat: 35, lng: 90 },
+			offset: -0.05,
+			image : '../assets/pin.png',
+			anchorY: 0,
+		} );
+		
+		this.addSprite( {
+			location : { lat: 35, lng: 90 },
+			color: 'black',
+			opacity: 0.15,
+			scale: 0.3,
+			offset: -0.05
+		} );
+		
+		this.addOverlay( {
+			content: 'anchorY: 0',
+			location : { lat: 35, lng: 90 },
+			className : 'docs-tip',
+			depthScale: 0.5
+		} );
+		
+		
+		// dataURI
+		this.addSprite( {
+			location : { lat: 35, lng: 45 },
+			image : 'data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjU2cHgiIGhlaWdodD0iMjU2cHgiIHZpZXdCb3g9IjAgMCAyNTYgMjU2IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAyNTYgMjU2OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBhdGggZmlsbD0icmVkIiBkPSJNMjIzLjQsMTM4LjZ2MTE3aC02My42VjE4MUg5Ni4ydjc0LjZIMzIuNnYtMTE3SDAuN0wxMjgsMS4zbDEyNy4zLDEzNy4zSDIyMy40eiBNMjEyLjgsNjZWMTJIMTgxdjIyLjJMMjEyLjgsNjZ6Ii8+PC9zdmc+',
+			anchorY: 0.2,
+		} );
+		
+		this.addOverlay( {
+			content: 'dataURI image',
+			location : { lat: 35, lng: 45 },
+			className : 'docs-tip', depthScale: 0.5
+		} );
+
+
+	} );
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1>Sprite Properties</h1>
+	
+	<p>See <a href="../../docs/api/sprite.htm">Sprite API</a></p>
+	
+	<div id="wrapper">	
+	
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

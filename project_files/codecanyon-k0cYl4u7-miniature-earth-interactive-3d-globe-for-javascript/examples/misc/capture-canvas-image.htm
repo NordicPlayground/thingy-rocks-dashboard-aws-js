@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Capture Canvas Image</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<script>
+
+var myearth;
+
+window.addEventListener( "earthjsload", function() {
+
+	myearth = new Earth( "myearth", {
+		preserveDrawingBuffer: true // important to access canvas data
+	} );
+	
+	myearth.addMarker( {
+		mesh : ["Pin2", "Needle"],
+		location : { lat: 35, lng: -45 },
+		scale: 1.5
+	} );	
+	
+} );
+
+
+
+function downloadImage( ) {
+
+	var image = myearth.canvas.toDataURL( "image/png" );
+	document.getElementById( 'download-link' ).setAttribute( "href", image );
+	document.getElementById( 'download-link' ).click();
+	
+}
+
+</script>
+
+</head>
+<body>
+	<h1 style="padding-bottom: 1em;">Capture Canvas Image</h1>
+	<div id="wrapper">
+		<div>This example uses the <em>preserveDrawingBuffer</em> property to make the <em>canvas</em> data accessable.<br>&nbsp;<br>
+	
+		<button onclick="downloadImage();">Download Image</button>
+		<a id="download-link" href="#" download="earth.png"></a>
+		
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>

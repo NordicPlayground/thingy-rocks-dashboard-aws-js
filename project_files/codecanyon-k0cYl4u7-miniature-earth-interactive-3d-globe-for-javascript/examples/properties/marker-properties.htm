@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+
+<title>Marker Properties</title>
+
+<link rel="stylesheet" href="../assets/example.css">
+
+<script src="../../miniature.earth.js"></script>
+
+<style>
+
+.docs-tip {
+	transform: translate(-50%, 2em);
+}
+
+</style>
+
+<script>
+
+window.addEventListener( "earthjsload", function() {
+
+
+	var myearth = new Earth( "myearth", {
+		location: { lat: 20, lng: 0 },
+		showHotspots: true,
+		autoRotate : true
+	} );
+	
+	
+	myearth.addEventListener( "ready", function() {
+
+		// offset
+		this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 35, lng: 0 },
+			offset: 1.5
+		} );
+		
+		this.addOverlay( {
+			content: 'offset: 1.5',
+			location : { lat: 35, lng: 0 },
+			transform: 'translate(-50%, 3em)',
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// scale
+		this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 35, lng: -45 },
+			scale: 1.5
+		} );
+		
+		this.addOverlay( {
+			content: 'scale: 1.5',
+			location : { lat: 35, lng: -45 },
+			transform: 'translate(-50%, 3em)',
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// color
+		this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 35, lng: -90 },
+			color: '#2549ff',
+			color2: 'black'
+		} );
+		
+		this.addOverlay( {
+			content: 'color / color2',
+			location : { lat: 35, lng: -90 },
+			transform: 'translate(-50%, 3em)',
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// opacity
+		this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 35, lng: -135 },
+			opacity: 0.5
+		} );
+		
+		this.addOverlay( {
+			content: 'opacity: 0.5',
+			location : { lat: 35, lng: -135 },
+			transform: 'translate(-50%, 3em)',
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// lookAt
+		this.addMarker( {
+			mesh : ["Flag3", "Needle"],
+			location : { lat: 35, lng: 135 },
+			lookAt: { lat: 90, lng: 0 }
+		} );
+		
+		this.addOverlay( {
+			content: 'lookAt: { lat: 90, lng: 0 }',
+			location : { lat: 35, lng: 135 },
+			transform: 'translate(-50%, 3em)',
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// align
+		this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 35, lng: 180 },
+			align: false
+		} );
+		
+		this.addOverlay( {
+			content: 'align: false',
+			location : { lat: 35, lng: 180 },
+			transform: 'translate(-50%, 3em)',
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// rotation Z
+		this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 35, lng: 90 },
+			rotationZ: 45
+		} );
+		
+		this.addOverlay( {
+			content: 'rotationZ: 45',
+			location : { lat: 35, lng: 90 },
+			transform: 'translate(-50%, 3em)',
+			className : 'docs-tip', depthScale: 0.75
+		} );
+		
+		
+		// hotspot
+		var mymarker = this.addMarker( {
+			mesh : ["Pin2", "Needle"],
+			location : { lat: 35, lng: 45 },
+			hotspot: true,
+		} );
+		
+		mymarker.addEventListener( 'click', function() {
+			alert('click!');
+		} );
+		
+		this.addOverlay( {
+			content: 'hotspot: true',
+			location : { lat: 35, lng: 45 },
+			transform: 'translate(-50%, 3em)',
+			className : 'docs-tip', depthScale: 0.75
+		} );
+
+
+	} );
+	
+	
+} );
+
+</script>
+
+</head>
+<body>
+	<h1>Marker Properties</h1>
+	
+	<p>See <a href="../../docs/api/marker.htm">Marker API</a></p>
+	
+	<div id="wrapper">	
+	
+		<div id="myearth"></div>
+		
+	</div>
+</body>
+</html>
