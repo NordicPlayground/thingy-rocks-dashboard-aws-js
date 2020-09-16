@@ -4,9 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
 
-    <title>Preload &amp; Fallback</title>
+    <title>Thingy World - Nordic Semiconductors</title>
     <link preload rel="stylesheet" href="./assets/css/fonts/fonts.css" />
-    <!-- <link rel="stylesheet" href="./assets/css/earth-loading.css" /> -->
     <link rel="stylesheet" href="./assets/css/styles-min.css" />
 
     
@@ -76,11 +75,13 @@
       <a href="#"><img src="assets/img/arrow-link.svg" /> Visit nrfCloud</a>
     </div>
 
-    <div id="myearth" class="earth-container">
 
-    </div>
+    <div id="cesiumContainer" class="fullSize"></div>
+    <div id="loadingOverlay"><h1>Loading...</h1></div>
+    <div id="toolbar"></div>
+ 
     
-    
+    <script src="./assets/js/lib/Cesium/Cesium.js"></script>
     <script src="./assets/js/classes/Marker-min.js"></script>
     <script src="./assets/js/classes/Sidebar-min.js"></script>
     <script src="./assets/js/scripts-min.js"></script>

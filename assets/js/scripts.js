@@ -25,11 +25,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var sidebar = new Sidebar();
 
 
-    document.querySelector('body').classList.add('loaded');
+
 
     window.setTimeout(function() {
+        document.querySelector('body').classList.add('loaded');
         document.querySelector('.sidebar').classList.add('open');
-    }, 1000);
+    }, 800);
 
 
     // hide, then remove the intro overlay
@@ -37,122 +38,61 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.add('hidden');
         window.setTimeout(function() {
             document.querySelector('.intro-container').remove();
-        }, 600);
+        }, 800);
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    var viewer = new Cesium.Viewer("cesiumContainer");
+
+    function addPoint() {
+        viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(-122.6750, 45.5051),
+            point: {
+                pixelSize: 10,
+                color: Cesium.Color.YELLOW,
+            },
+        });
+    }
+
+    function setPointProperties() {
+        viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(45.5051, 122.6750, 0),
+            point: {
+                show: true, // default
+                color: Cesium.Color.SKYBLUE, // default: WHITE
+                pixelSize: 10, // default: 1
+                outlineColor: Cesium.Color.YELLOW, // default: BLACK
+                outlineWidth: 3, // default: 0
+            },
+        });
+    }
+
+    function changePointProperties() {
+        var entity = viewer.entities.add({
+            position: Cesium.Cartesian3.fromDegrees(
+                45.5051, 122.6750, 0
+            ),
+            point: {
+                pixelSize: 2,
+            },
+        });
+
+        var point = entity.point;
+        point.pixelSize = 20.0;
+        point.color = Cesium.Color.YELLOW.withAlpha(0.33);
+    }
+
+
 });
-
-
-
-
-
-// const { Earth } = require("/assets/js/classes/miniature.earth.js");
-
-
-
-
-// class ThingyWorld {
-// constructor() {
-
-// const { default: Marker }
-// const { default: Sidebar }
-
-
-// const sidebar = document.querySelector('.sidebar');
-// const sidebarToggle = document.querySelector('.sidebar-toggle');
-
-// sidebarToggle.addEventListener('click', toggleSidebar);
-
-
-// function toggleSidebar(event) {
-//     // console.log(event);
-//     // var sidebar = document.querySelector('.sidebar');
-//     if (event.target !== '.sidebar.open') {
-//         if (sidebar.classList.contains('open')) {
-//             sidebar.classList.remove('open');
-//         } else {
-//             sidebar.classList.add('open');
-//         }
-//     }
-// }
-////////////////////////////
-
-/* load earth.js after the page is loaded. */
-
-// window.addEventListener( 'load', function() {
-//     var script = document.createElement( "script" );
-//     script.src = "./miniature.earth.js";
-//     document.body.appendChild( script );	
-// } );
-
-
-
-
-// window.addEventListener("earthjsload", function() {
-
-// document.getElementById('spinner').style.display = 'none';
-
-// var myearth = new Earth("myearth", {
-//     mapImage: 'assets/img/day-by-nasa.png',
-//     location: { lat: 45.6918636, lng: -124.0965785 },
-//     zoom: 3,
-//     zoomable: true,
-//     autoRotate: true,
-//     light: 'simple',
-//     lightIntensity: 0.5,
-//     lightAmbience: 0.5
-//         /* more earth options here */
-// });
-
-
-// if (!myearth) return; // not supported
-
-// myearth.markers = []; // create empty array for markers
-// // myearth.addEventListener('ready', function() {
-
-//     var marker = new Marker();
-//     myearth.addImage(marker.markerSettings);
-//     // var marker = myearth.addImage( {
-//     //     image: 'assets/img/map-marker.svg',
-//     //     imageAlphaOnly: true,
-//     //     color: '#FEA512',
-//     //     location : { lat: 45.6918636, lng: -124.0965785 },
-//     //     hotspot: true,
-
-//     //     /* more marker options here */
-//     // } );
-//     // marker.infobox = "heres some info";
-//     // marker.addEventListener( 'click', function(){
-//     //     markerClick( myearth, marker ) });
-
-//     // myearth.markers.push( marker);
-
-//     // console.log(myearth.markers);
-// });
-
-
-
-
-// function markerClick(myearth, marker) {
-//     // console.log(myearth);
-//     // console.log(marker);
-//     myearth.goTo(marker.location);
-//     myearth.autoRotate = false;
-
-//     var color = marker.color == '#65CDF5' ? '#FEA512' : '#65CDF5';
-//     var scale = marker.scale == '1' ? '1.25' : '1';
-//     marker.remove();
-//     var newmarker = myearth.addImage({
-//         image: 'assets/img/map-marker.svg',
-//         imageAlphaOnly: true,
-//         color: 'color',
-//         location: { lat: 45.6918636, lng: -124.0965785 },
-//         hotspot: true
-//             /* more marker options here */
-//     });
-
-//     newmarker.addEventListener('click', function() {
-//         markerClick(myearth, newmarker)
-//     });
-// }
-
-// })

@@ -1,8 +1,15 @@
-#myearth {
-  opacity: 0;
+#cesiumContainer {
+  position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
   right: 0;
-  position: fixed;
+  bottom: 0;
+  overflow: hidden;
+}
+#cesiumContainer .cesium-viewer,
+#cesiumContainer .cesium-viewer-cesiumWidgetContainer,
+#cesiumContainer .cesium-widget,
+#cesiumContainer canvas {
+  height: 100%;
+  width: 100%;
 }
