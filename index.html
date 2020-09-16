@@ -1,66 +1,80 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
 
-<title>Preload &amp; Fallback</title>
-<link preload rel="stylesheet" href="./assets/css/fonts/fonts.css">
-<link rel="stylesheet" href="./assets/css/earth-loading.css">
-<link rel="stylesheet" href="./assets/css/styles.css">
+    <title>Preload &amp; Fallback</title>
+    <link preload rel="stylesheet" href="./assets/css/fonts/fonts.css" />
+    <!-- <link rel="stylesheet" href="./assets/css/earth-loading.css" /> -->
+    <link rel="stylesheet" href="./assets/css/styles-min.css" />
+
+    
+  </head>
+  <body>
 
 
-</head>
-<body>
+    <div class="sidebar open">
+      <a class="sidebar-toggle"><div></div></a>
 
-	<noscript>
-		<style>
-			/* reverse the styles if noscript */
-		
-			.earth-fallback {
-				display: block;
-			}
-			#spinner {
-				display: none;
-			}
-			.earth-container::before {
-				content: none;
-			}
-		</style>
+      <img class="logo" src="assets/img/logo.svg" />
 
-	</noscript>
+      <div class="data-display">
+        <div class="device-info">
+        	<img class="device-img" src="assets/img/thingy-lg.png" />
+          <div class="device-location-name">
+            <img src="assets/img/nordic-logo-b.svg">
+            <span class="device-location-name-label">Atlanta, GA, USA</span>
+          </div>
+          <div class="device-location-coords">
+            <p class=sidebar-heading">Coordinates</p>
+            <p class="coordinates">45.5051° N, 122.6750° W</p>
+          </div>
+        </div>
+        <div class="device-data">
+          <div class="data-display__datum">
+            <h3 class="datum-name">Data Name</h3>
+            <p class="datum-info">71.3%</p>
+          </div>
 
-	<div class="sidebar">
-		<a class="sidebar-toggle"><div></div></a>
+          <div class="data-display__datum">
+            <h3 class="datum-name">Another Name</h3>
+            <p class="datum-info">62.4°</p>
+          </div>
+        </div>
+      </div>
 
-		<img class="logo" src="assets/img/logo.svg">
-	</div>
+      <div class="device-list-block">
+        <p class=sidebar-heading">All Devices</p>
+        <ul class="device-list">
+          <li><a href="#">Paris, France</a></li>
+          <li><a href="#">Paris, Fsdfsdfdrance</a></li>
+          <li><a href="#">Paris, France</a></li>
+          <li><a href="#">Paris, France</a></li>
+          <li><a href="#">Paris, France</a></li>
+        </ul>
+      </div>
+    </div>
 
-	<div class="top-tab">
-		<img src="assets/img/nordic-icon-y.svg">
-	</div>
+    <div class="top-tab">
+      <img src="assets/img/nordic-icon-y.svg" />
+    </div>
 
-	<div class="infobox">
-		<p>Learn more about Nordic Semiconductor’s Thingy91 and newly updated device management platform.</p>
-		<a href="#"><img src="assets/img/arrow-link.svg"> Visit nrfCloud</a>
-	</div>
-	<div>	
+    <div class="infobox">
+      <p>
+        Learn more about Nordic Semiconductor’s Thingy91 and newly updated
+        device management platform.
+      </p>
+      <a href="#"><img src="assets/img/arrow-link.svg" /> Visit nrfCloud</a>
+    </div>
 
-		<div id="myearth" class="earth-container">
-			
-			<div id="spinner"></div>
-			
-			<div class="earth-fallback">
-				Sorry, your browser does not support this content.
-			</div>
-		
-		</div>		
-	
-	</div>
-	
-	<script src="./miniature.earth.js"></script>
-	<script src="./assets/js/scripts.js"></script>
-	
-</body>
+    <div id="myearth" class="earth-container">
+
+    </div>
+    
+    
+    <script src="./assets/js/classes/Marker-min.js"></script>
+    <script src="./assets/js/classes/Sidebar-min.js"></script>
+    <script src="./assets/js/scripts-min.js"></script>
+  </body>
 </html>

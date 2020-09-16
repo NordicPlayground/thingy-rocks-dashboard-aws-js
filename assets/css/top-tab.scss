@@ -1,0 +1,14 @@
+.top-tab {
+    position: fixed;
+    top: 0;
+    right: 0px;
+    width: 140px;
+    height: 70px;
+    background-image: linear-gradient(27deg, transparent 50%, #FEA512 40%);
+    img {
+        position: absolute;
+        right: 20px;
+        top: 10px;
+        height: 20px;
+    }
+}

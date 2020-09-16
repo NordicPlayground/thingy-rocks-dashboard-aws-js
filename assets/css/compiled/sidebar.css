@@ -1,0 +1,27 @@
+.sidebar {
+  width: 210px;
+  padding: 25px 40px;
+  background-color: #fff;
+  position: fixed;
+  left: -290px;
+  top: 0;
+  bottom: 0;
+  display: inline-block;
+  z-index: 999;
+  transition: 300ms all;
+}
+.sidebar.open {
+  left: 0;
+}
+.sidebar .sidebar-toggle {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  background-color: #244567;
+  right: -30px;
+  top: 30px;
+}
+.sidebar .logo {
+  float: left;
+  height: 30px;
+}
