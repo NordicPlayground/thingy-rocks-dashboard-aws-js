@@ -17,6 +17,6 @@
     },
     "homepage": "https://github.com/alextryonpdx/thingy-world-app#readme",
     "devDependencies": {
-        "cesium": "^1.73.0"
+
     }
 }

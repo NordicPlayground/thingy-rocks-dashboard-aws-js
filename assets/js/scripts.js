@@ -20,40 +20,26 @@ const handleEvent = (eventName, {
 }
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOMContentLoaded');
-    var sidebar = new Sidebar();
+function loadScript(src, callback) {
+    var s,
+        r,
+        t;
+    r = false;
+    s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.src = src;
+    s.onload = s.onreadystatechange = function() {
+        //console.log( this.readyState ); //uncomment this line to see which ready states are called.
+        if (!r && (!this.readyState || this.readyState == 'complete')) {
+            r = true;
+            callback();
+        }
+    };
+    t = document.getElementsByTagName('script')[0];
+    t.parentNode.insertBefore(s, t);
+}
 
-
-
-
-    window.setTimeout(function() {
-        document.querySelector('body').classList.add('loaded');
-        document.querySelector('.sidebar').classList.add('open');
-    }, 800);
-
-
-    // hide, then remove the intro overlay
-    document.querySelector('.intro-container').addEventListener('click', function() {
-        this.classList.add('hidden');
-        window.setTimeout(function() {
-            document.querySelector('.intro-container').remove();
-        }, 800);
-    });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function globeBuild() {
     var viewer = new Cesium.Viewer("cesiumContainer");
 
     function addPoint() {
@@ -93,6 +79,44 @@ document.addEventListener('DOMContentLoaded', function() {
         point.pixelSize = 20.0;
         point.color = Cesium.Color.YELLOW.withAlpha(0.33);
     }
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded');
+    var sidebar = new Sidebar();
+
+    loadScript("https://cesium.com/downloads/cesiumjs/releases/1.73/Build/Cesium/Cesium.js", globeBuild);
+
+
+
+
+    window.setTimeout(function() {
+        document.querySelector('body').classList.add('loaded');
+        document.querySelector('.sidebar').classList.add('open');
+    }, 800);
+
+
+    // hide, then remove the intro overlay
+    document.querySelector('.intro-container').addEventListener('click', function() {
+        this.classList.add('hidden');
+        window.setTimeout(function() {
+            document.querySelector('.intro-container').remove();
+        }, 800);
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 });
