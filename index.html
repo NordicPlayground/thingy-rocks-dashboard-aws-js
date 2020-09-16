@@ -13,31 +13,39 @@
   </head>
   <body>
 
+    <div class="intro-container">
+        <div class="intro-inner">
+          <img src="assets/img/thingy-lg.png"/>
+          <p class="blue">Welcome to Nordic Semiconductor’s ThingyWorld.</p>
+          <p class="grey">ThingyWorld is an interactive map experience that lets you experience the Thingy91 in action.</p>
+        </div>
+        <p class="white">Select Anywhere to Begin.</p>
+</div>
 
-    <div class="sidebar open">
+    <div class="sidebar">
       <a class="sidebar-toggle"><div></div></a>
 
       <img class="logo" src="assets/img/logo.svg" />
 
       <div class="data-display">
         <div class="device-info">
-        	<img class="device-img" src="assets/img/thingy-lg.png" />
+        	<img class="device-img" src="assets/img/device-data-img.png" />
           <div class="device-location-name">
-            <img src="assets/img/nordic-logo-b.svg">
+            <img src="assets/img/nordic-icon-b.svg">
             <span class="device-location-name-label">Atlanta, GA, USA</span>
           </div>
           <div class="device-location-coords">
-            <p class=sidebar-heading">Coordinates</p>
+            <h3 class=sidebar-heading">Coordinates</p>
             <p class="coordinates">45.5051° N, 122.6750° W</p>
           </div>
         </div>
         <div class="device-data">
-          <div class="data-display__datum">
+          <div class="device-data__datum">
             <h3 class="datum-name">Data Name</h3>
             <p class="datum-info">71.3%</p>
           </div>
 
-          <div class="data-display__datum">
+          <div class="device-data__datum">
             <h3 class="datum-name">Another Name</h3>
             <p class="datum-info">62.4°</p>
           </div>
@@ -45,10 +53,10 @@
       </div>
 
       <div class="device-list-block">
-        <p class=sidebar-heading">All Devices</p>
+        <h3 class=sidebar-heading">All Devices</h3>
         <ul class="device-list">
           <li><a href="#">Paris, France</a></li>
-          <li><a href="#">Paris, Fsdfsdfdrance</a></li>
+          <li class="active"><a href="#">Paris, France</a></li>
           <li><a href="#">Paris, France</a></li>
           <li><a href="#">Paris, France</a></li>
           <li><a href="#">Paris, France</a></li>

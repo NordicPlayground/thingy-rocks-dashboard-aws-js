@@ -2,6 +2,7 @@
 @import 'compiled/infobox.css';
 @import 'compiled/top-tab.css';
 @import 'compiled/earth.css';
+@import 'compiled/intro.css';
 
 /* light blue = #65CDF5
 yellow = #FEA512 */
@@ -16,4 +17,12 @@ body {
     font-family: 'GT Eesti Display';
     background: black;
     background-image: url('../img/space.jpg');
+}
+
+h3 {
+    margin: 0;
+    font-size: 13px;
+    color: #65CDF5;
+    letter-spacing: 0.43px;
+    line-height: 14px;
 }

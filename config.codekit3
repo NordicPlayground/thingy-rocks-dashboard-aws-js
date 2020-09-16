@@ -17,6 +17,16 @@
 		"oO": 0,
 		"oS": 1
 		},
+	"/assets/css/compiled/earth.css": {
+		"aP": 1,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "/assets/css/compiled/earth-min.css",
+		"oF": 0,
+		"oS": 3
+		},
 	"/assets/css/compiled/infobox.css": {
 		"aP": 1,
 		"bl": 0,
@@ -24,6 +34,16 @@
 		"ma": 0,
 		"oA": 0,
 		"oAP": "/assets/css/compiled/infobox-min.css",
+		"oF": 0,
+		"oS": 3
+		},
+	"/assets/css/compiled/intro.css": {
+		"aP": 1,
+		"bl": 0,
+		"ft": 16,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "/assets/css/compiled/intro-min.css",
 		"oF": 0,
 		"oS": 3
 		},
@@ -689,6 +709,19 @@
 		"oS": 0,
 		"sct": 0
 		},
+	"/assets/css/intro.scss": {
+		"aP": 1,
+		"bl": 0,
+		"dP": 10,
+		"ec": 1,
+		"ft": 4,
+		"ma": 0,
+		"oA": 0,
+		"oAP": "/assets/css/compiled/intro.css",
+		"oF": 0,
+		"oS": 0,
+		"sct": 0
+		},
 	"/assets/css/sidebar.scss": {
 		"aP": 1,
 		"bl": 0,
@@ -761,6 +794,17 @@
 		"iS": 9035835,
 		"oA": 0,
 		"oAP": "/assets/img/day-by-nasa.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
+	"/assets/img/device-data-img.png": {
+		"ft": 32768,
+		"iS": 76499,
+		"oA": 0,
+		"oAP": "/assets/img/device-data-img.png",
 		"oF": 0,
 		"oIPL": 0,
 		"opt": 0,

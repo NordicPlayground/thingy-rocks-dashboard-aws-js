@@ -12,6 +12,11 @@
     &.open {
         left: 0;
     }
+    .logo {
+        float: left;
+        height: 40px;
+        width: 100%;
+    }
     .sidebar-toggle {
         width: 30px;
         height: 30px;
@@ -20,8 +25,60 @@
         right: -30px;
         top: 30px;
     }
-    .logo {
-        float: left;
-        height: 30px;
+    .data-display {
+        .device-info {
+            .device-img {
+                max-width: 100%;
+                margin-top: 50px;
+            }
+        }
+        .device-location-coords {
+            .sidebar-heading {
+                font-family: Overpass-Regular;
+                font-size: 13px;
+                color: #65CDF5;
+                letter-spacing: 0.43px;
+                line-height: 14px;
+            }
+            .coordinates {
+                font-family: Overpass-Regular;
+                font-size: 13px;
+                color: #244567;
+                letter-spacing: 0.41px;
+                line-height: 18px;
+            }
+        }
+        .device-data {
+            &__datum {
+                padding: 10px 15px;
+                margin: 12px auto;
+                background: #FBFBFB;
+                box-shadow: 0 -2px 4px 0 #FFFFFF, 0 2px 4px 0 #EAEAEA;
+                .datum-info {
+                    font-size: 35px;
+                    color: #244567;
+                    letter-spacing: 0.88px;
+                    line-height: 14px;
+                }
+            }
+        }
+    }
+    .device-list-block {
+        .device-list {
+            padding: 0;
+            margin: 0;
+            li {
+                width: 100%;
+                border-bottom: 2px solid #f3f3f3;
+                list-style: none;
+                a {
+                    text-decoration: none;
+                    font-size: 13px;
+                    color: #D1D1D1;
+                    letter-spacing: 0.41px;
+                    line-height: 18px;
+                }
+            }
+        }
     }
 }

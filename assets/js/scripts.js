@@ -23,7 +23,24 @@ const handleEvent = (eventName, {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded');
     var sidebar = new Sidebar();
-})
+
+
+    document.querySelector('body').classList.add('loaded');
+
+    window.setTimeout(function() {
+        document.querySelector('.sidebar').classList.add('open');
+    }, 1000);
+
+
+    // hide, then remove the intro overlay
+    document.querySelector('.intro-container').addEventListener('click', function() {
+        this.classList.add('hidden');
+        window.setTimeout(function() {
+            document.querySelector('.intro-container').remove();
+        }, 600);
+    });
+});
+
 
 
 

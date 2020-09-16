@@ -7,6 +7,11 @@
   bottom: 30px;
   right: 30px;
   z-index: 999;
+  opacity: 0;
+  transition: all 700ms;
+}
+.loaded .infobox {
+  opacity: 1;
 }
 .infobox:before {
   content: "";
