@@ -16,7 +16,5 @@
         "url": "https://github.com/alextryonpdx/thingy-world-app/issues"
     },
     "homepage": "https://github.com/alextryonpdx/thingy-world-app#readme",
-    "devDependencies": {
-
-    }
+    "devDependencies": {}
 }
