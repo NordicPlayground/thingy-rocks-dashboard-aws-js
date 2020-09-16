@@ -1,22 +1,22 @@
 {
-  "name": "thingy-world-app",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/alextryonpdx/thingy-world-app.git"
-  },
-  "author": "Alex Tryon",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/alextryonpdx/thingy-world-app/issues"
-  },
-  "homepage": "https://github.com/alextryonpdx/thingy-world-app#readme",
-  "devDependencies": {
-    "cesium": "^1.73.0"
-  }
+    "name": "thingy-world-app",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.html",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/alextryonpdx/thingy-world-app.git"
+    },
+    "author": "Alex Tryon",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/alextryonpdx/thingy-world-app/issues"
+    },
+    "homepage": "https://github.com/alextryonpdx/thingy-world-app#readme",
+    "devDependencies": {
+        "cesium": "^1.73.0"
+    }
 }
