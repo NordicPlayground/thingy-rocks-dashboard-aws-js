@@ -776,6 +776,19 @@
 		"oS": 0,
 		"sct": 0
 		},
+	"/assets/css/variables.scss": {
+		"aP": 1,
+		"bl": 0,
+		"dP": 10,
+		"ec": 1,
+		"ft": 4,
+		"ma": 0,
+		"oA": 1,
+		"oAP": "/assets/css/compiled/variables.css",
+		"oF": 0,
+		"oS": 0,
+		"sct": 0
+		},
 	"/assets/img/arrow-link.svg": {
 		"ft": 2097152,
 		"miP": 0,

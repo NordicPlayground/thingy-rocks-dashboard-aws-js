@@ -67,17 +67,21 @@ class Sidebar {
         this.DOM.deviceData.append(datumBlock);
     }
 
+    toggleOpen() {
+        this.isOpenTest();
+        if (this.isOpen == true) {
+            this.closeSidebar();
+        } else {
+            this.openSidebar();
+        }
+    }
+
     clickEvents() {
         //toggle sidebar 'open'
         handleEvent('click', {
             el: this.DOM.toggle,
             callback: () => {
-                this.isOpenTest();
-                if (this.isOpen == true) {
-                    this.closeSidebar();
-                } else {
-                    this.openSidebar();
-                }
+                this.toggleOpen();
             }
         });
 

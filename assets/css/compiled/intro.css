@@ -1,5 +1,5 @@
 .intro-container {
-  transition: opacity 500ms;
+  transition: opacity 600ms;
   position: fixed;
   top: 0;
   left: 0;
@@ -46,7 +46,7 @@
   font-size: 16px;
 }
 .intro-container p.white {
-  color: #FFFFFF;
+  color: #fff;
   letter-spacing: 0.5px;
   text-align: center;
   line-height: 21px;

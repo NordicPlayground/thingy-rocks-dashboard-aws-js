@@ -39,14 +39,34 @@ function loadScript(src, callback) {
     t.parentNode.insertBefore(s, t);
 }
 
+
+
+
 function globeBuild() {
-    var globe = new Globe();
+    //replace this array with real data coming in from API
+    let dataPoints = [{
+            'position': Cesium.Cartesian3.fromDegrees(-122.6750, 45.5051),
+            'properties': {
+                'coords': '45.5051° N, 122.6750° W',
+                'name': 'Portland Or'
+            }
+        },
+        {
+            'position': Cesium.Cartesian3.fromDegrees(-122.6750, 48.5051),
+            'properties': {
+                'coords': '48.5051° N, 122.6750° W',
+                'name': 'Paris France'
+            }
+        }
+    ];
+
+    var globe = new Globe(dataPoints);
 }
 
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded');
-    var sidebar = new Sidebar();
+
 
     loadScript("https://cesium.com/downloads/cesiumjs/releases/1.73/Build/Cesium/Cesium.js", globeBuild);
 

@@ -1,10 +1,11 @@
+@import 'variables.scss';
 .top-tab {
     position: fixed;
     top: 0;
     right: 0px;
     width: 140px;
     height: 70px;
-    background-image: linear-gradient(27deg, transparent 50%, #FEA512 40%);
+    background-image: linear-gradient(27deg, transparent 50%, $orange 40%);
     z-index: 999;
     opacity: 0;
     transition: 600ms all;

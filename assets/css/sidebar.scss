@@ -1,3 +1,4 @@
+@import 'variables.scss';
 .sidebar {
     width: 210px;
     padding: 25px 40px;
@@ -69,14 +70,17 @@
             margin: 0;
             li {
                 width: 100%;
-                border-bottom: 2px solid #f3f3f3;
+                border-bottom: 2px solid $darkGrey;
                 list-style: none;
                 a {
                     text-decoration: none;
                     font-size: 13px;
-                    color: #D1D1D1;
+                    color: $darkGrey;
                     letter-spacing: 0.41px;
                     line-height: 18px;
+                }
+                &.active a {
+                    color: $lightBlue;
                 }
             }
         }

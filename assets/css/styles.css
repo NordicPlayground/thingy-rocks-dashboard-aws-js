@@ -1,11 +1,14 @@
+/* 
+imports 
+*/
+
 @import 'compiled/sidebar.css';
 @import 'compiled/infobox.css';
 @import 'compiled/top-tab.css';
 @import 'compiled/earth.css';
 @import 'compiled/intro.css';
 
-/* light blue = #65CDF5
-yellow = #FEA512 */
+/* globals */
 
 body {
     height: 100vh;
@@ -21,7 +24,7 @@ body {
 h3 {
     margin: 0;
     font-size: 13px;
-    color: #65CDF5;
+    color: $lightBlue;
     letter-spacing: 0.43px;
     line-height: 14px;
 }

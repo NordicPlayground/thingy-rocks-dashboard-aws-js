@@ -62,13 +62,16 @@
 }
 .sidebar .device-list-block .device-list li {
   width: 100%;
-  border-bottom: 2px solid #f3f3f3;
+  border-bottom: 2px solid #B8C5CB;
   list-style: none;
 }
 .sidebar .device-list-block .device-list li a {
   text-decoration: none;
   font-size: 13px;
-  color: #D1D1D1;
+  color: #B8C5CB;
   letter-spacing: 0.41px;
   line-height: 18px;
+}
+.sidebar .device-list-block .device-list li.active a {
+  color: #65CDF5;
 }
