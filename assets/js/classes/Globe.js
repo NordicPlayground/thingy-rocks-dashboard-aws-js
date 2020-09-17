@@ -5,8 +5,8 @@ class Globe {
 
 
         var viewer = this.initViewer();
-        viewer.scene.screenSpaceCameraController.minimumZoomDistance = 200000;
-        viewer.scene.screenSpaceCameraController.maximumZoomDistance = 200000;
+        viewer.scene.screenSpaceCameraController.minimumZoomDistance = 2000000;
+        viewer.scene.screenSpaceCameraController.maximumZoomDistance = 20000000;
         viewer.scene.screenSpaceCameraController._minimumZoomRate = 300;
         var controls = this.initControls();
 
