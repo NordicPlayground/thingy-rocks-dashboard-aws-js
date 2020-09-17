@@ -5,13 +5,22 @@ class Globe {
 
 
         var viewer = this.initViewer();
-        viewer.scene.screenSpaceCameraController.minimumZoomDistance = 2000000;
-        viewer.scene.screenSpaceCameraController.maximumZoomDistance = 20000000;
-        viewer.scene.screenSpaceCameraController._minimumZoomRate = 300;
+        var scene = this.configScene(viewer);
         var controls = this.initControls();
 
         this.addPoints(viewer, data);
         this.clickAction(viewer, sidebar);
+    }
+
+    configScene(viewer) {
+        //TODO the camera isn't right... need to control it more striclty and stop it from going off tilt or losing the globe
+
+        viewer.scene.screenSpaceCameraController.minimumZoomDistance = 50000;
+        viewer.scene.screenSpaceCameraController.maximumZoomDistance = 10000000;
+        // viewer.scene.screenSpaceCameraController._minimumZoomRate = 300;
+        // viewer.scene.screenSpaceCameraController.enableTilt = false;
+
+
     }
 
     initViewer() {
@@ -52,6 +61,7 @@ class Globe {
                 list_entry: listEntry,
                 data: data.properties.data
             },
+            // TODO: fix the icons and the sizing and clickable space
             billboard: {
                 image: 'assets/img/nordic-icon-b.svg'
             }
