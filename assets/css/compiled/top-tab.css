@@ -5,8 +5,9 @@
   width: 140px;
   height: 70px;
   background-image: linear-gradient(27deg, transparent 50%, #FEA512 40%);
+  z-index: 999;
   opacity: 0;
-  transition: 700ms all;
+  transition: 600ms all;
 }
 .loaded .top-tab {
   opacity: 1;
