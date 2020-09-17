@@ -52,7 +52,7 @@ function globeBuild() {
 
                 'data': {
                     'first number': 48.5051,
-                    'string thing': 'string value'
+                    'string thing': '45°'
                 }
             }
         },
@@ -64,7 +64,7 @@ function globeBuild() {
 
                 'data': {
                     'first thing': 2138.5555,
-                    'second thing': 'string example'
+                    'second thing': '72%'
                 }
             }
         }
