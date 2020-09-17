@@ -39,7 +39,7 @@ class Globe {
 
     addPoint(viewer, data, deviceList) {
         var listEntry = this.createListEntry(viewer, data, deviceList);
-        viewer.entities.add({
+        var entity = viewer.entities.add({
             position: data.position,
             properties: {
                 name: data.properties.name,
@@ -50,6 +50,9 @@ class Globe {
                 image: 'assets/img/nordic-icon-b.svg'
             }
         });
+        listEntry.addEventListener('click', function() {
+            viewer.selectedEntity = entity;
+        })
     }
 
     createListEntry(viewer, data, deviceList) {
