@@ -5,6 +5,9 @@ class Globe {
 
 
         var viewer = this.initViewer();
+        viewer.scene.screenSpaceCameraController.minimumZoomDistance = 200000;
+        viewer.scene.screenSpaceCameraController.maximumZoomDistance = 200000;
+        viewer.scene.screenSpaceCameraController._minimumZoomRate = 300;
         var controls = this.initControls();
 
         this.addPoints(viewer, data);
@@ -26,6 +29,8 @@ class Globe {
         })
     }
 
+
+
     addPoints(viewer, dataPoints) {
         var deviceList = document.querySelector('.device-list');
 
@@ -44,7 +49,8 @@ class Globe {
             properties: {
                 name: data.properties.name,
                 coords: data.properties.coords,
-                list_entry: listEntry
+                list_entry: listEntry,
+                data: data.properties.data
             },
             billboard: {
                 image: 'assets/img/nordic-icon-b.svg'
@@ -82,7 +88,7 @@ class Globe {
 
                     listEntry.classList.add('active');
                 }
-                // viewer.zoomTo(viewer.selectedEntity);
+                viewer.flyTo(viewer.selectedEntity);
                 sidebar.openSidebar();
             } else {
                 sidebar.closeSidebar();
@@ -95,17 +101,32 @@ class Globe {
         var deviceData = document.querySelector('.data-display');
         var name = deviceData.querySelector('.device-location-name-label');
         var coords = deviceData.querySelector('.coordinates');
+        var datumContainer = deviceData.querySelector('.device-data');
 
         name.innerHTML = props._name;
         coords.innerHTML = props._coords;
+        // create datum blocks
+        if (undefined !== props._data._value) {
+            // clear out the data blocks in the sidebar
+            while (document.querySelector('.device-data').firstChild) {
+                datumContainer.removeChild(document.querySelector('.device-data').firstChild);
+            }
+            console.log(props._data._value);
+            for (const name in props._data._value) {
+                var dataBlock = new DeviceDatum(name, props._data._value[name]).returnNode();
+                datumContainer.appendChild(dataBlock);
+            }
+        }
     }
     static resetIcons(viewer) {
         console.log('resetIcons running');
         var entriesArray = viewer.entities._entities._array;
         console.log(entriesArray);
-        for (let i = 0; i < entriesArray.length; i++) {
-            if (undefined !== entriesArray[i]._billboard._image) {
-                entriesArray[i].billboard.image = 'assets/img/nordic-icon-b.svg';
+        if (undefined !== viewer.selectedEntity) {
+            for (let i = 0; i < entriesArray.length; i++) {
+                if (undefined !== entriesArray[i]._billboard._image) {
+                    entriesArray[i].billboard.image = 'assets/img/nordic-icon-b.svg';
+                }
             }
         }
     }

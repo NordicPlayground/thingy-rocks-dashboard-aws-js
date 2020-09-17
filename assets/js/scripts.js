@@ -48,14 +48,24 @@ function globeBuild() {
             'position': Cesium.Cartesian3.fromDegrees(-122.6750, 45.5051),
             'properties': {
                 'coords': '45.5051° N, 122.6750° W',
-                'name': 'Portland Or'
+                'name': 'Portland Or',
+
+                'data': {
+                    'first number': 48.5051,
+                    'string thing': 'string value'
+                }
             }
         },
         {
             'position': Cesium.Cartesian3.fromDegrees(-122.6750, 48.5051),
             'properties': {
                 'coords': '48.5051° N, 122.6750° W',
-                'name': 'Paris France'
+                'name': 'Paris France',
+
+                'data': {
+                    'first thing': 2138.5555,
+                    'second thing': 'string example'
+                }
             }
         }
     ];
