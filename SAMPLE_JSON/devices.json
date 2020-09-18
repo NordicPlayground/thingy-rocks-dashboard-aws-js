@@ -1,0 +1,457 @@
+curl - X GET "https://api.nrfcloud.com/v1/devices?includeState=true&includeStateMeta=true&pageLimit=100&pageSort=desc" - H "accept: application/json" - H "Authorization: Bearer 63798b60090e62e4514012c80eb435ccd758b76d"
+
+{
+    "items": [{
+            "id": "nrf-352656101077413",
+            "name": "nrf-352656101077413",
+            "tags": [],
+            "type": "Generic",
+            "state": {
+                "desired": {
+                    "pairing": {
+                        "state": "paired",
+                        "topics": {
+                            "d2c": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+                            "c2d": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/c2d"
+                        }
+                    },
+                    "nrfcloud_mqtt_topic_prefix": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/"
+                },
+                "reported": {
+                    "connected": false,
+                    "sessionIdentifier": "1eb57acf-b415-46ca-98ba-d0146d261ff5",
+                    "pairing": {
+                        "state": "paired",
+                        "topics": {
+                            "d2c": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+                            "c2d": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/c2d"
+                        }
+                    },
+                    "nrfcloud_mqtt_topic_prefix": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/",
+                    "config": {
+                        "GPS": {
+                            "enable": false
+                        }
+                    },
+                    "device": {
+                        "networkInfo": {
+                            "currentBand": 12,
+                            "supportedBands": "(2,3,4,8,12,13,20,28)\r\n",
+                            "areaCode": 36879,
+                            "mccmnc": "310410",
+                            "ipAddress": "10.165.11.4",
+                            "ueMode": 2,
+                            "cellID": 84486415,
+                            "networkMode": "LTE-M GPS"
+                        },
+                        "simInfo": {
+                            "uiccMode": 1,
+                            "iccid": "8931089318104321375",
+                            "imsi": "204080813517727"
+                        },
+                        "deviceInfo": {
+                            "modemFirmware": "mfw_nrf9160_1.2.1",
+                            "batteryVoltage": 4250,
+                            "imei": "352656101077413",
+                            "board": "thingy91_nrf9160",
+                            "appVersion": "v1.3.0-522-gb2c7626abaf0",
+                            "appName": "asset_tracker"
+                        },
+                        "serviceInfo": {
+                            "ui": [
+                                "GPS",
+                                "FLIP",
+                                "TEMP",
+                                "HUMID",
+                                "AIR_PRESS",
+                                "BUTTON",
+                                "LIGHT",
+                                "RSRP"
+                            ],
+                            "fota_v1": [
+                                "APP",
+                                "MODEM"
+                            ]
+                        }
+                    }
+                },
+                "version": 739,
+                "metadata": {
+                    "desired": {
+                        "pairing": {
+                            "state": {
+                                "timestamp": 1599615541
+                            },
+                            "topics": {
+                                "d2c": {
+                                    "timestamp": 1599615541
+                                },
+                                "c2d": {
+                                    "timestamp": 1599615541
+                                }
+                            }
+                        },
+                        "nrfcloud_mqtt_topic_prefix": {
+                            "timestamp": 1599615541
+                        }
+                    },
+                    "reported": {
+                        "connected": {
+                            "timestamp": 1600206161
+                        },
+                        "sessionIdentifier": {
+                            "timestamp": 1600206161
+                        },
+                        "pairing": {
+                            "state": {
+                                "timestamp": 1600205824
+                            },
+                            "topics": {
+                                "d2c": {
+                                    "timestamp": 1600205824
+                                },
+                                "c2d": {
+                                    "timestamp": 1600205824
+                                }
+                            }
+                        },
+                        "nrfcloud_mqtt_topic_prefix": {
+                            "timestamp": 1600205824
+                        },
+                        "config": {
+                            "GPS": {
+                                "enable": {
+                                    "timestamp": 1600203006
+                                }
+                            }
+                        },
+                        "device": {
+                            "networkInfo": {
+                                "currentBand": {
+                                    "timestamp": 1600205825
+                                },
+                                "supportedBands": {
+                                    "timestamp": 1600205825
+                                },
+                                "areaCode": {
+                                    "timestamp": 1600205825
+                                },
+                                "mccmnc": {
+                                    "timestamp": 1600205825
+                                },
+                                "ipAddress": {
+                                    "timestamp": 1600205825
+                                },
+                                "ueMode": {
+                                    "timestamp": 1600205825
+                                },
+                                "cellID": {
+                                    "timestamp": 1600205825
+                                },
+                                "networkMode": {
+                                    "timestamp": 1600205825
+                                }
+                            },
+                            "simInfo": {
+                                "uiccMode": {
+                                    "timestamp": 1600205825
+                                },
+                                "iccid": {
+                                    "timestamp": 1600205825
+                                },
+                                "imsi": {
+                                    "timestamp": 1600205825
+                                }
+                            },
+                            "deviceInfo": {
+                                "modemFirmware": {
+                                    "timestamp": 1600205825
+                                },
+                                "batteryVoltage": {
+                                    "timestamp": 1600205825
+                                },
+                                "imei": {
+                                    "timestamp": 1600205825
+                                },
+                                "board": {
+                                    "timestamp": 1600205825
+                                },
+                                "appVersion": {
+                                    "timestamp": 1600205825
+                                },
+                                "appName": {
+                                    "timestamp": 1600205825
+                                }
+                            },
+                            "serviceInfo": {
+                                "ui": [{
+                                        "timestamp": 1600205825
+                                    },
+                                    {
+                                        "timestamp": 1600205825
+                                    },
+                                    {
+                                        "timestamp": 1600205825
+                                    },
+                                    {
+                                        "timestamp": 1600205825
+                                    },
+                                    {
+                                        "timestamp": 1600205825
+                                    },
+                                    {
+                                        "timestamp": 1600205825
+                                    },
+                                    {
+                                        "timestamp": 1600205825
+                                    },
+                                    {
+                                        "timestamp": 1600205825
+                                    }
+                                ],
+                                "fota_v1": [{
+                                        "timestamp": 1600205825
+                                    },
+                                    {
+                                        "timestamp": 1600205825
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            "$meta": {
+                "createdAt": "2020-09-09T01:39:04.227Z",
+                "version": "1.739"
+            }
+        },
+        {
+            "id": "nrf-352656100441776",
+            "name": "Chris-Weaver-Thingy91",
+            "tags": [],
+            "type": "Generic",
+            "state": {
+                "desired": {
+                    "pairing": {
+                        "state": "paired",
+                        "topics": {
+                            "d2c": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656100441776/d2c",
+                            "c2d": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656100441776/c2d"
+                        }
+                    },
+                    "nrfcloud_mqtt_topic_prefix": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/"
+                },
+                "reported": {
+                    "connected": false,
+                    "sessionIdentifier": "c1adfa07-ccc3-47c5-a864-8d59991ab7b5",
+                    "pairing": {
+                        "state": "paired",
+                        "topics": {
+                            "d2c": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656100441776/d2c",
+                            "c2d": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656100441776/c2d"
+                        }
+                    },
+                    "nrfcloud_mqtt_topic_prefix": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/",
+                    "device": {
+                        "networkInfo": {
+                            "currentBand": 13,
+                            "supportedBands": "(2,3,4,8,12,13,20,28)\r\n",
+                            "areaCode": 1285,
+                            "mccmnc": "311480",
+                            "ipAddress": "10.165.81.39",
+                            "ueMode": 2,
+                            "cellID": 1438210,
+                            "networkMode": "LTE-M GPS"
+                        },
+                        "simInfo": {
+                            "uiccMode": 1,
+                            "iccid": "8931089318104311285F",
+                            "imsi": "204080813516718"
+                        },
+                        "deviceInfo": {
+                            "modemFirmware": "mfw_nrf9160_1.1.0",
+                            "batteryVoltage": 3820,
+                            "imei": "352656100441776",
+                            "board": "nrf9160_pca20035",
+                            "appVersion": "v1.2.0-288-g235a319e823a",
+                            "appName": "asset_tracker"
+                        },
+                        "serviceInfo": {
+                            "ui": [
+                                "GPS",
+                                "FLIP",
+                                "TEMP",
+                                "HUMID",
+                                "AIR_PRESS",
+                                "BUTTON",
+                                "LIGHT",
+                                "RSRP"
+                            ],
+                            "fota_v1": [
+                                "APP",
+                                "MODEM"
+                            ]
+                        }
+                    },
+                    "config": {
+                        "GPS": {
+                            "enable": false
+                        }
+                    }
+                },
+                "version": 428,
+                "metadata": {
+                    "desired": {
+                        "pairing": {
+                            "state": {
+                                "timestamp": 1599082734
+                            },
+                            "topics": {
+                                "d2c": {
+                                    "timestamp": 1599082734
+                                },
+                                "c2d": {
+                                    "timestamp": 1599082734
+                                }
+                            }
+                        },
+                        "nrfcloud_mqtt_topic_prefix": {
+                            "timestamp": 1599082734
+                        }
+                    },
+                    "reported": {
+                        "connected": {
+                            "timestamp": 1599151904
+                        },
+                        "sessionIdentifier": {
+                            "timestamp": 1599151904
+                        },
+                        "pairing": {
+                            "state": {
+                                "timestamp": 1599082741
+                            },
+                            "topics": {
+                                "d2c": {
+                                    "timestamp": 1599082741
+                                },
+                                "c2d": {
+                                    "timestamp": 1599082741
+                                }
+                            }
+                        },
+                        "nrfcloud_mqtt_topic_prefix": {
+                            "timestamp": 1599082741
+                        },
+                        "device": {
+                            "networkInfo": {
+                                "currentBand": {
+                                    "timestamp": 1599082742
+                                },
+                                "supportedBands": {
+                                    "timestamp": 1599082742
+                                },
+                                "areaCode": {
+                                    "timestamp": 1599082742
+                                },
+                                "mccmnc": {
+                                    "timestamp": 1599082742
+                                },
+                                "ipAddress": {
+                                    "timestamp": 1599082742
+                                },
+                                "ueMode": {
+                                    "timestamp": 1599082742
+                                },
+                                "cellID": {
+                                    "timestamp": 1599082742
+                                },
+                                "networkMode": {
+                                    "timestamp": 1599082742
+                                }
+                            },
+                            "simInfo": {
+                                "uiccMode": {
+                                    "timestamp": 1599082742
+                                },
+                                "iccid": {
+                                    "timestamp": 1599082742
+                                },
+                                "imsi": {
+                                    "timestamp": 1599082742
+                                }
+                            },
+                            "deviceInfo": {
+                                "modemFirmware": {
+                                    "timestamp": 1599082742
+                                },
+                                "batteryVoltage": {
+                                    "timestamp": 1599082742
+                                },
+                                "imei": {
+                                    "timestamp": 1599082742
+                                },
+                                "board": {
+                                    "timestamp": 1599082742
+                                },
+                                "appVersion": {
+                                    "timestamp": 1599082742
+                                },
+                                "appName": {
+                                    "timestamp": 1599082742
+                                }
+                            },
+                            "serviceInfo": {
+                                "ui": [{
+                                        "timestamp": 1599082742
+                                    },
+                                    {
+                                        "timestamp": 1599082742
+                                    },
+                                    {
+                                        "timestamp": 1599082742
+                                    },
+                                    {
+                                        "timestamp": 1599082742
+                                    },
+                                    {
+                                        "timestamp": 1599082742
+                                    },
+                                    {
+                                        "timestamp": 1599082742
+                                    },
+                                    {
+                                        "timestamp": 1599082742
+                                    },
+                                    {
+                                        "timestamp": 1599082742
+                                    }
+                                ],
+                                "fota_v1": [{
+                                        "timestamp": 1599082742
+                                    },
+                                    {
+                                        "timestamp": 1599082742
+                                    }
+                                ]
+                            }
+                        },
+                        "config": {
+                            "GPS": {
+                                "enable": {
+                                    "timestamp": 1599083564
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "$meta": {
+                "createdAt": "2020-09-02T21:38:56.451Z",
+                "version": "2.428",
+                "updatedAt": "2020-09-02T21:44:45.138Z"
+            }
+        }
+    ],
+    "total": 2
+}

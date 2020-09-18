@@ -925,6 +925,17 @@
 		"oT": 1,
 		"q": 100
 		},
+	"/assets/js/classes/DeviceDatum-min.js": {
+		"bF": 0,
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "/assets/js/classes/DeviceDatum-min-min.js",
+		"oF": 0,
+		"sC": 3,
+		"tS": 0
+		},
 	"/assets/js/classes/DeviceDatum.js": {
 		"bF": 0,
 		"ft": 64,
@@ -1002,6 +1013,28 @@
 		"sC": 3,
 		"tS": 0
 		},
+	"/assets/js/getDevices-min.js": {
+		"bF": 0,
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "/assets/js/getDevices-min-min.js",
+		"oF": 0,
+		"sC": 3,
+		"tS": 0
+		},
+	"/assets/js/getDevices.js": {
+		"bF": 0,
+		"ft": 64,
+		"ma": 0,
+		"mi": 1,
+		"oA": 0,
+		"oAP": "/assets/js/getDevices-min.js",
+		"oF": 0,
+		"sC": 3,
+		"tS": 0
+		},
 	"/assets/js/scripts-min.js": {
 		"bF": 0,
 		"ft": 64,
@@ -1024,6 +1057,14 @@
 		"sC": 3,
 		"tS": 0
 		},
+	"/getDeviceData.php": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/getDeviceData.php",
+		"oF": 0
+		},
 	"/index.html": {
 		"cB": 0,
 		"ft": 8192,
@@ -1044,6 +1085,30 @@
 		"ft": 524288,
 		"oA": 1,
 		"oAP": "/package-min.json",
+		"oF": 0,
+		"oO": 0,
+		"oS": 1
+		},
+	"/SAMPLE_JSON/api-rest.yaml": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/SAMPLE_JSON/api-rest.yaml",
+		"oF": 0
+		},
+	"/SAMPLE_JSON/devices.json": {
+		"ft": 524288,
+		"oA": 1,
+		"oAP": "/SAMPLE_JSON/devices-min.json",
+		"oF": 0,
+		"oO": 0,
+		"oS": 1
+		},
+	"/SAMPLE_JSON/messages.json": {
+		"ft": 524288,
+		"oA": 1,
+		"oAP": "/SAMPLE_JSON/messages-min.json",
 		"oF": 0,
 		"oO": 0,
 		"oS": 1

@@ -69,13 +69,26 @@ function globeBuild() {
             }
         }
     ];
+    var realData = testGetData(); // this will become the data source for the globe markers
 
     var globe = new Globe(dataPoints);
 }
-
+// this is getting real data
+function testGetData() {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var realData = this.responseText;
+            console.log(realData);
+        }
+    };
+    xmlhttp.open("GET", "getDeviceData.php", true);
+    xmlhttp.send();
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded');
+
 
 
     loadScript("https://cesium.com/downloads/cesiumjs/releases/1.73/Build/Cesium/Cesium.js", globeBuild);

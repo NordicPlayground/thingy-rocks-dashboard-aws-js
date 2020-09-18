@@ -1,0 +1,2660 @@
+openapi: 3.0.0
+info:
+  title: nRF Cloud Device REST API
+  description: REST API definition for the nRF Cloud Device API.
+  version: 1.11.0
+  contact:
+    name: API Support
+    url: 'https://devzone.nordicsemi.com/'
+    email: admin@nrfcloud.com
+components:
+  securitySchemes:
+    Token:
+      type: http
+      description: >-
+        All requests to the REST API must provide an authentication token in the
+        `Authorization` header.
+      scheme: bearer
+  responses:
+    '400':
+      description: The supplied request data was invalid.
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpProblem'
+    '401':
+      description: Access was denied.
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpProblem'
+    '403':
+      description: Forbidden.
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpProblem'
+    '404':
+      description: Not found.
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpProblem'
+    '409':
+      description: Conflict
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpProblem'
+    '412':
+      description: Precondition Failed.
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpProblem'
+    '500':
+      description: An internal error occurred.
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpProblem'
+    '502':
+      description: >-
+        Bad Gateway. In the case of the Device API, it signifies an error in the
+        handling of the request.
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpProblem'
+    '504':
+      description: Gateway Timeout.
+      headers:
+        Content-Type:
+          $ref: '#/components/headers/Content-Type'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/HttpProblem'
+  headers:
+    Content-Type:
+      description: The content-type of the response
+      schema:
+        type: string
+    ETag:
+      description: >-
+        The version of the entity. Use this as If-Match value when updating the
+        entity to protect against lost updates.
+      schema:
+        type: string
+  parameters:
+    AlertId:
+      name: alertId
+      description: An alert id.
+      required: true
+      in: path
+      schema:
+        type: string
+        pattern: >-
+          ^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}$
+        example: 1a6d9def-f399-4136-a719-193404e9fc3e
+    AlertIds:
+      name: alertIds
+      description: An array of alert ids.
+      required: false
+      in: query
+      schema:
+        type: string
+    CertificateId:
+      name: certificateId
+      description: A certificate id.
+      required: true
+      in: path
+      schema:
+        type: string
+    CharacteristicId:
+      name: characteristicId
+      description: A BLE characteristic id.
+      required: true
+      in: path
+      schema:
+        type: string
+    DescriptorId:
+      name: descriptorId
+      description: The id of a BLE descriptor of a characteristic.
+      required: true
+      in: path
+      schema:
+        type: string
+    DeviceIdentifier:
+      name: deviceIdentifier
+      description: >-
+        A device identifier, whether a MAC address (BLE devices), UUID (any
+        device type), or a user-defined name.
+      required: true
+      in: path
+      schema:
+        type: string
+        pattern: '^[^\\/\\s_]{1,128}$|^[a-z0-9:_-]{1,128}$'
+    DeviceIdentifiers:
+      name: deviceIdentifiers
+      description: A comma-delimited list of device identifiers.
+      required: false
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+      example:
+        - MyThing52-1
+        - c61cbf5e-391a-4fc0-a3c2-4bb1f9ab35bd
+    DeviceTags:
+      name: deviceTags
+      description: >-
+        A comma-delimited list of string values serving as metadata for
+        tagging/categorizing a device. Only alphanumeric characters and
+        `_.,@/:#-` are allowed.
+      required: false
+      in: query
+      schema:
+        type: array
+        items:
+          type: string
+          pattern: '^[a-zA-Z0-9_.@:#-]+$'
+          example:
+            - warehouse1
+            - coldzone
+    ExclusiveEnd:
+      name: exclusiveEnd
+      description: >-
+        HTML-encoded ISO-8601 timestamp denoting the end of the date range,
+        exclusive of that date/time.
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date-time
+        example: '2018-06-20T19:19:45.902Z'
+    IdForIPBasedDevice:
+      name: deviceId
+      description: The id of an IP-based device.
+      required: true
+      in: path
+      schema:
+        type: string
+        pattern: '^[a-z0-9:_-]{1,128}$'
+    If-Match:
+      name: If-Match
+      description: >-
+        Protects against lost updates. Set this to the version of the previously
+        retrieved resource's Etag (if present) or (for devices only) the $meta
+        property.
+      in: header
+      schema:
+        type: string
+        example: 42
+    IncludeState:
+      name: includeState
+      description: >-
+        If false (the default), the device’s state is not returned, but only the
+        device metadata. This allows you to keep the response size small if
+        needed.
+      in: query
+      required: false
+      schema:
+        type: boolean
+    IncludeStateMeta:
+      name: includeStateMeta
+      description: >-
+        If false (the default), the metadata for an IP-based device's state
+        (i.e., timestamps reflecting each property's last updated time) are not
+        returned.
+      in: query
+      required: false
+      schema:
+        type: boolean
+    InclusiveStart:
+      name: inclusiveStart
+      description: >-
+        HTML-encoded ISO-8601 timestamp denoting the start of the date range,
+        inclusive of that date/time.
+      in: query
+      required: true
+      schema:
+        type: string
+        format: date-time
+        example: '2018-06-18T19:19:45.902Z'
+    DFUJobId:
+      name: DFUJobId
+      description: The unique id of a device firmware udpate (DFU) job.
+      required: true
+      in: path
+      schema:
+        type: string
+        pattern: '^[^\\/\\s_]{1,128}$|^[a-z0-9:_-]{1,128}$'
+    DFUJobExecutionId:
+      name: DFUJobExecutionId
+      description: The unique id of a device firmware udpate (DFU) job execution.
+      required: true
+      in: path
+      schema:
+        type: string
+        pattern: '^[^\\/\\s_]{1,128}$|^[a-z0-9:_-]{1,128}$'
+    PageLimit:
+      name: pageLimit
+      description: >-
+        Maximum number of items you want returned in the response (<=100;
+        default=10).
+      in: query
+      required: false
+      schema:
+        type: integer
+        maximum: 100
+        example: 100
+    PageSort:
+      name: pageSort
+      description: >-
+        Sort order for the paginated results => asc (ascending; default) or desc
+        (descending).
+      in: query
+      required: false
+      schema:
+        type: string
+        example: desc
+    PageNextToken:
+      name: pageNextToken
+      description: >-
+        Unique `id` for the page of results being requested, as returned in a
+        `Paging` object.
+      in: query
+      required: false
+      schema:
+        type: string
+        example: 4bb1f9ab35bd
+    Topics:
+      name: topics
+      description: >-
+        A comma-delimited list of MQTT topics to which a device has published
+        messages.
+      in: query
+      required: false
+      schema:
+        type: string
+        example: >-
+          dev/d68a4e5d-f424-4d24-ac7c-d00f74a042aa/m/d/mydevice1/gps,dev/d68a4e5d-f424-4d24-ac7c-d00f74a042aa/m/d/mydevice1/accel
+  schemas:
+    Aggregate:
+      title: Aggregate
+      description: An aggregate is an entity which has multiple versions
+      type: object
+      allOf:
+        - properties:
+            $meta:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/EntityMeta'
+                - $ref: '#/components/schemas/AggregateMeta'
+          additionalProperties: false
+          required:
+            - $meta
+    AggregateMeta:
+      title: AggregateMeta
+      description: Meta data for an aggregate
+      type: object
+      properties:
+        version:
+          description: Version of the aggregate
+          example: 2
+          type: number
+          minimum: 1
+      additionalProperties: false
+      required:
+        - version
+    Alert:
+      title: Alert
+      description: Describes for which messages an alert should be created.
+      type: object
+      properties:
+        topics:
+          $ref: '#/components/schemas/Topics'
+        condition:
+          description: >-
+            a [JSONata expression](http://try.jsonata.org/S1qE0_vCf) that
+            determines when a message triggers an "alert state".
+          type: string
+        transform:
+          description: >-
+            a [JSONata expression](http://try.jsonata.org/B1lwqEd-Q) that
+            specifies how the payload of a message that triggers an alert state
+            is transformed for use in an alert notification.
+          type: object
+          properties:
+            syntax:
+              type: string
+              pattern: >-
+                ^https?:\/\/(((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9])|((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)))(:(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0))?(\/[-a-zA-Z0-9@:%_+.,~?&/=()]*)*(#(?:[^#^[\]{}\\"<>%\s]|%[0-9a-f]{2})*)*$
+            expression:
+              type: string
+          required:
+            - syntax
+            - expression
+          additionalProperties: false
+        endpoints:
+          description: >-
+            one or more endpoints (Webhook, sms, etc.) that are called when an
+            alert notification is sent.
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/Webhook'
+              - $ref: '#/components/schemas/Sms'
+      required:
+        - topics
+      example:
+        topics:
+          - gateways
+        condition:
+          syntax: 'https://nrfcloud.github.io/docs/jsonata'
+          expression: >-
+            event.characteristic.parsedValues[0].value > 25 and
+            event.characteristic.path =
+            "EF6802009B3549339B1052FFA9740042/EF6802019B3549339B1052FFA9740042"
+        endpoints:
+          - type: 'https://nrfcloud.github.io/docs/webhook'
+            url: SLACK-URL
+        transform:
+          syntax: 'https://nrfcloud.github.io/docs/jsonata'
+          expression: >-
+            {"text": "Temperature is now " &
+            payload.message.message.event.characteristic.parsedValues[0].value &
+            "°C"}
+    DeviceCertificate:
+      title: DeviceCertificate
+      description: Describes a certificate for a JITP device or an "account device".
+      type: object
+      properties:
+        clientId:
+          description: >-
+            The ID for the device associated with this certificate. Use this
+            when setting the `clientId` for your MQTT client.
+          example: nrf-123456789123456
+          type: string
+        caCert:
+          description: >-
+            The AmazonRootCA1.pem used for establishing TLS communications with
+            AWS IoT.
+          example: >-
+            -----BEGIN
+            CERTIFICATE-----\nMIIDQTCCAimgAwIBAgITBmyfz5m/jAo54vB4ikPmljZbyjANBgkqhkiG9w0BAQsF\nADA5MQswCQYDVQQGEwJVUzEPMA0GA1UEChMGQW1hem9uMRkwFwYDVQQDExBBbWF6\nb24gUm9vdCBDQSAxMB4XDTE1MDUyNjAwMDAwMFoXDTM4MDExNzAwMDAwMFowOTEL\nMAkGA1UEBhMCVVMxDzANBgNVBAoTBkFtYXpvbjEZMBcGA1UEAxMQQW1hem9uIFJv\nb3QgQ0EgMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALJ4gHHKeNXj\nca9HgFB0fW7Y14h29Jlo91ghYPl0hAEvrAIthtOgQ3pOsqTQNroBvo3bSMgHFzZM\n9O6II8c+6zf1tRn4SWiw3te5djgdYZ6k/oI2peVKVuRF4fn9tBb6dNqcmzU5L/qw\nIFAGbHrQgLKm+a/sRxmPUDgH3KKHOVj4utWp+UhnMJbulHheb4mjUcAwhmahRWa6\nVOujw5H5SNz/0egwLX0tdHA114gk957EWW67c4cX8jJGKLhD+rcdqsq08p8kDi1L\n93FcXmn/6pUCyziKrlA4b9v7LWIbxcceVOF34GfID5yHI9Y/QCB/IIDEgEw+OyQm\njgSubJrIqg0CAwEAAaNCMEAwDwYDVR0TAQH/BAUwAwEB/zAOBgNVHQ8BAf8EBAMC\nAYYwHQYDVR0OBBYEFIQYzIU07LwMlJQuCFmcx7IQTgoIMA0GCSqGSIb3DQEBCwUA\nA4IBAQCY8jdaQZChGsV2USggNiMOruYou6r4lK5IpDB/G/wkjUu0yKGX9rbxenDI\nU5PMCCjjmCXPI6T53iHTfIUJrU6adTrCC2qJeHZERxhlbI1Bjjt/msv0tadQ1wUs\nN+gDS63pYaACbvXy8MWy7Vu33PqUXHeeE6V/Uq2V8viTO96LXFvKWlJbYK8U90vv\no/ufQJVtMVT8QtPHRh8jrdkPSHCa2XV4cdFyQzR1bldZwgJcJmApzyMZFo6IQ6XU\n5MsI+yMRQ+hDKXJioaldXgjUkK642M4UwtBV8ob2xJNDd2ZhwLnoQdeXeGADbkpy\nrqXRfboQnoZsG4q5WTP468SQvvG5\n-----END
+            CERTIFICATE-----\n
+          type: string
+        clientCert:
+          description: >-
+            The x.509 certificate. If this is for an "account device" this
+            string contains only one certificate. JITP device certificates,
+            which are generated using an intermediate CA cert, contain a bundled
+            certificate consisting of the device certificate and the
+            intermediate CA pem.
+          example: >-
+            -----BEGIN
+            CERTIFICATE-----\nMIIDbzCCAlcCCQCZUh/yGc2RGTANBgkqhkiG9w0BAQsFADBwMQswCQYDVQQGEwJO\nTzEPMA0GA1UECAwGTm9yd2F5MRIwEAYDVQQHDAlUcm9uZGhlaW0xHTAbBgNVBAoM\nFE5vcmRpYyBTZW1pY29uZHVjdG9yMR0wGwYDVQQLDBRucmZjbG91ZC5jb20tR2Vu\nZXJpYzAeFw0xOTA5MjYyMjM1MDFaFw00OTA5MTgyMjM1MDFaMIGCMQswCQYDVQQG\nEwJOTzESMBAGA1UECAwJVHJvbmRlbGFnMRIwEAYDVQQHDAlUcm9uZGhlaW0xITAf\nBgNVBAoMGE5vcmRpYyBTZW1pY29uZHVjdG9yIEFTQTEXMBUGA1UEAwwObnJmLTQ2\nMjI1MzE4MTYxDzANBgNVBC4TBjEyMzQ1NjCCASIwDQYJKoZIhvcNAQEBBQADggEP\nADCCAQoCggEBAOSwm2rn2yRFSdRNKeSvoS1gqxyF6wrngAjvXm7Nee00PFkj0rjG\nkjVwx5pT9/3e67AS4oFp17LAVJ03I4ioK6AC8OtUocGjaCNm/8FjxclyOZ3s2Aeq\nlB/qNhiippoJ0X8Il2VZstZC8YMsFsZqUMg3BUEuvBwAIoHSRszw6VLFy/pO6Wv2\nA6YoXOJkuU3emAwK+Net8+I8VF8NnNYO7g1GfrQp39VONKD08y+Xjcmk6PcuX4wx\nLeqJ+ZCdvc+V752jKmKN56dSdQ1/qew9+rIk0Qre11m8bjzy0GyDbkk9V9HiWpQO\nd0da+e85Ztqq6jtucnTPjVz6BJf/UnbllzcCAwEAATANBgkqhkiG9w0BAQsFAAOC\nAQEADUY61jvpAw+tL7Fy/sG76MDeqYjKyOSgDoafQp49VhwX5MopXooo/Fm9kkXi\nkZ16B+bk+SpOnO3aHpz7I1styiLUXOJ2zz3EFCF8GIhNOdbnO+jEYgxCpfnNyHkX\nBLCTnkYeDgzdtQ3GtSdTjDPSy8Ze76CC4qI8aaM/6uracGsFS7PeQqOUKEkHhfu+\n0Om10P7CUA1hBgHfrXq/FV1i+5F1KhAZN4jShVsnCytBcKlkcjJeb47nNsIME1Bv\nXemi9INcZKz3JDn3st51rKjwXQUJydEvPBJX6AcGCVjsBjQkvx6AjZsm6xRoetDI\nfTDeJRPdSWtwWHWnpFdoYJnw3w==\n-----END
+            CERTIFICATE-----\n-----BEGIN
+            CERTIFICATE-----\nMIIDszCCApugAwIBAgIJAIt6VMjGN2CzMA0GCSqGSIb3DQEBCwUAMHAxCzAJBgNV\nBAYTAk5PMQ8wDQYDVQQIDAZOb3J3YXkxEjAQBgNVBAcMCVRyb25kaGVpbTEdMBsG\nA1UECgwUTm9yZGljIFNlbWljb25kdWN0b3IxHTAbBgNVBAsMFG5yZmNsb3VkLmNv\nbS1HZW5lcmljMB4XDTE5MDkxMTE4NTUyOVoXDTIyMDcwMTE4NTUyOVowcDELMAkG\nA1UEBhMCTk8xDzANBgNVBAgMBk5vcndheTESMBAGA1UEBwwJVHJvbmRoZWltMR0w\nGwYDVQQKDBROb3JkaWMgU2VtaWNvbmR1Y3RvcjEdMBsGA1UECwwUbnJmY2xvdWQu\nY29tLUdlbmVyaWMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDPgb/l\n/0me0+ySVzZeSRQ5vkYfYjNwJYv3UVbN1QaP00YNKCathNlKMPZOv39PUmld9eaN\nGoQJw7Tc8oXFGZrllc7fdJD2YBmp9uot4hwXWUMKX+xkquC7XQFvLeOkJHaNUU4k\ny03vMqC/RDsA+xtexvbwp6+Vu6hr7Uil57mFceV456iXBiDLnmhsww9HtF7iP1ne\n56pijtGRi0mM9OfWIrO+yKoRp+KUUszDCIXBhFSdtzoeUlp//NIWBT96tE1oQnv2\nI9NwU0b96A7BccWdMzDAiJEbSzBFpQQlhDAUcu5KlDMrF/V4YcyQ5tZRI1FEalOV\n9FX1P+st+E07gEyJAgMBAAGjUDBOMB0GA1UdDgQWBBQeOm/kNx7xB/1VOMGIur0S\n+jTe2TAfBgNVHSMEGDAWgBQeOm/kNx7xB/1VOMGIur0S+jTe2TAMBgNVHRMEBTAD\nAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQBp4VP939aKCocGmVrAcaEwemrce37gR9Fr\ncAZMQ9G0Uq4Rketah72D5oqIZFI7pQ/KLbxetzfziH74jv3hxYofraJCvyEOgJfs\n708vSZdLJHRHXIghpvFOSXrrsyU/oRfxp+iZNGCk7AdMYHRUom+gjYfb5/2eiZXW\nDsDwHnLFSA8nIk9D3YH/5hM8uny94LijW41r5RO33Sk3gM9X3afYUp0rdpg0sRBq\nme25iMVsFwCmWfMbmfjOTDHVWnoU6ZPa+4QyekzDdJW4gLLJRDR0mVWD8lEoIyhV\njzV+sF0OhtHgMgnAkUUU05UCqi8gWuC+qtimwx80X+ETCq4jpGqj\n-----END
+            CERTIFICATE-----\n
+          type: string
+        privateKey:
+          description: The private key associated with the device certificate.
+          example: >-
+            -----BEGIN RSA PRIVATE
+            KEY-----\nMIIEowIBAAKCAQEAvtGJmUM7FmoAiVaxJG0bOKWEdJXTGUdzrjoiMsKaYRwDm63P\nlN/qQejzRGm7X6sCIgsdEK01DkCHzNaD8JHoGqDKbe07e59e/KWSaVWWtL12fj/U\nrjWaFK0T7Q+d1z4WrQprzxJltkqldQzeM8brjMaTm1L7WsEvnw4hu+SYKbqFSq5A\nKrAzbTS3kgFB6k/1BKwIiWPNFTUup7ltKRhJPZdGgwmWO6iaECeuKh6TIC7MhTcF\nbKlxrUs+Tv66sGBGuMqY63Ldgj1vmflzSZCOidtBrSpMzqtfMgvJdVdBa7B9ozsJ\nqcjWHQ+XKjyJxkTz5Cs+LOBvVNiKkp7+7hUpbwIDAQABAoIBAQChYFJPVKVnClTT\n0YZUeRV5bbm8Y205Rs1VfoKnjR7Em82NXoxcqpXSEfGSXR0DBnvyUJXPIbzqBbcT\njCPfU3YI9wzbtLMGlLzfTCOrg5/F0SmiEdeLUXeynsFoTjm97Bt/Un3kjPmKFk0h\n1bUh8swIrXPt+1rp4NGmYWw0HFp3hnoO3RScFudziqxGrElz4VsCzANwZE5Lk8ll\nNElb/zuC1IE8unRhblqe6f6U/FwDb5BpuIfdnfBPi4luiCYrTClvM1SEhPgo2wSN\nlJmqq0EDNj+HT/DHr/oIJurSgJ19NXbomsSMrU3+YOJOoP/ofBMKsjMojjyHdojo\nrUkISZVBAoGBAN/Zgxz5koM0KzPAKlXJ5qyZNY3TTTDl05SVTzvC6hkbcRDuhHYX\n2ysXZVuNq8cOcazpey7ywg/XBZHst7ugw+EUOxQRIbnndR6SpFiJi6R7OgF0cjmw\n3Fclb70/fG98YqKfUelNGCGBbT4HQbpNtGzic/ppvJDCQN4zZlAhitxhAoGBANo5\nidOP4O3xRy/L6AVSWeg/+eczoUUBNyZrpLAqunlg/3h84KXL0bN5AzhNXonyXDdK\n4YZic0Aq/eyYSsov2ClhAs6OekyWqWHVec8z7gGY6G7oBoaGXLreG2+RuMUYXa8N\nfdyvP5KjQq3nc1UUDJQAJ1GbKX/ZvbLZ6m+m6FfPAoGAIT9nT/hpoH8xI4CZSSCx\n2FTxNV17C5Y3NMxwdknfB1eiFYe3uOqWLPJOpaiHKQumKq6LE1APLtcbBq+IIqAg\nN+APXk2lGr2cEaxqKJRVX1rGJM0s4hC4yWDQFeXGD7ED3W+YdPR0bxWQKjRduNQt\nxjZkT39A+KdBhz9PJPu2akECgYArDC6kDT3RskbYpuCeLCCQMA6cDRNDCXpXmeRi\n3Ars5rV+jyPBkPNM9BIuiRSdIbIPNjZGzCTwA4sToPcf61A42Wo0VObLNO0032en\n+BZ7Oi6fsiWXY+nm8ul2mMhaGPRiE8dAQVHJG2uL4pxdrBbPGzimYHVPQySoo1Qb\nslEjAQKBgHH4yOSinw8C+QDJSron5t6hYGZ5yHEKSp6nLMZLf98dUevDJvgNhh9s\n0PExGvlw+lrEegCLc1QIL7cv145SdBE7ikn6ADBykv9ZK6j30TfwXkWE1bAsCBq7\nbJEXuZu4uSThOOzNYYHfaAMAZn5duYHRjUp9MKWrfVy4u8SynQxd\n-----END
+            RSA PRIVATE KEY-----\n
+          type: string
+      additionalProperties: false
+      required:
+        - id
+        - clientId
+    DeviceCertificatesList:
+      title: DeviceCertificatesList
+      description: >-
+        A paginated list of certificates and their associated JITP devices
+        (clients)
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceCertificate'
+        total:
+          description: >-
+            Reflects the total results, not just the total returned by a
+            singular page of results.
+          type: number
+          example: 1
+        pageNextToken:
+          $ref: '#/components/schemas/PageNextToken'
+      required:
+        - items
+        - total
+    Device:
+      title: Device
+      description: >-
+        Describes a device, which is anything that can send data and/or has
+        state (BLE gateway, BLE device, cellular IoT device, etc.).
+      type: object
+      properties:
+        id:
+          description: The unique ID (thing name) of the device.
+          example: 582a9b34-1a7e-4594-b1da-eeb24e3af5c4
+          type: string
+        tags:
+          description: >-
+            Device tags. This is an array of values that act as metadata for
+            categorizing your devices.
+          type: array
+          items:
+            type: string
+            pattern: '^[a-zA-Z0-9_.,@/:#-]*$'
+          example:
+            - warehouse1
+            - coldzone
+        state:
+          description: Device state
+          example:
+            desired:
+              topic: warehouse1
+          type: object
+      additionalProperties: false
+      required:
+        - id
+        - tags
+    DeviceIdentifiers:
+      description: An array of device identifiers.
+      type: array
+      items:
+        type: string
+        example:
+          - MyThing52-1
+          - c61cbf5e-391a-4fc0-a3c2-4bb1f9ab35bd
+    DevicesList:
+      title: DevicesList
+      description: A paginated list of devices
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Device'
+        total:
+          description: >-
+            Reflects the total results, not just the total returned by a
+            singular page of results.
+          type: number
+          example: 1
+        pageNextToken:
+          $ref: '#/components/schemas/PageNextToken'
+      required:
+        - items
+        - total
+    DeviceMessage:
+      title: DeviceMessage
+      description: Describes a message sent to or received from a device.
+      type: object
+      properties:
+        deviceId:
+          description: id of the device
+          type: string
+          pattern: '^[A-Za-z0-9:_-]{1,128}$'
+          minimum: 1
+          maximum: 128
+          example: 366551fb-f0a4-4fe6-866a-ceb6879edd7a
+        deviceName:
+          description: name of the device
+          type: string
+          pattern: '^[A-Za-z0-9:_-]{1,128}$'
+          example: 'My-Thingy:52'
+        topic:
+          description: Name of the topic
+          type: string
+          pattern: '^[a-z-0-9]+(/[a-z-0-9]+)*$'
+          example: tenant/1f146547-e82c-4d7b-b223-d32f5ecd70ed/gateways
+        message:
+          description: The message payload.
+          type: object
+          example:
+            led: 'on'
+      additionalProperties: false
+      required:
+        - message
+    DeviceMessagesList:
+      title: DeviceMessagesList
+      description: A paginated list of device messages.
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeviceMessage'
+        total:
+          description: >-
+            Reflects the total results, not just the total returned by a
+            singular page of results.
+          type: number
+          example: 1
+        pageNextToken:
+          $ref: '#/components/schemas/PageNextToken'
+      required:
+        - items
+        - total
+    DeviceOwnershipCode:
+      title: DeviceOwnershipCode
+      description: >-
+        The device "ownership code". This is printed on the label. For a
+        Thingy-91 it is the PIN, and for an nRF9160-DK it is the HWID.
+      type: string
+      example: 123456
+    DFUJob:
+      title: DFUJob
+      description: Describes a device firmware update (DFU) job.
+      type: object
+      properties:
+        jobId:
+          type: string
+          description: the UUID of the DFU job.
+          example: c61cbf5e-391a-4fc0-a3c2-4bb1f9ab35bd
+        deviceIds:
+          type: array
+          items:
+            type: string
+          description: An array of device ids that are targets for this DFU job.
+          example:
+            - 582a9b34-1a7e-4594-b1da-eeb24e3af5c4
+            - 1f146547-e82c-4d7b-b223-d32f5ecd70ed
+        description:
+          type: string
+          description: A description of the job.
+          example: Update 1 device(s) to firmware bundle id BOOT*29451e76*1.2.
+        status:
+          type: string
+          description: >-
+            The job status, e.g., IN_PROGRESS, CANCELED, COMPLETED, or
+            DELETION_IN_PROGRESS
+        createdAt:
+          type: string
+          description: Time when the job was created.
+          format: date-time
+          example: '2018-01-01T00:00:00.000Z'
+        lastUpdatedAt:
+          type: string
+          description: Time when the job was last updated.
+          format: date-time
+          example: '2018-01-01T00:00:00.000Z'
+        completedAt:
+          type: string
+          description: Time when the job was completed.
+          format: date-time
+          example: '2018-01-01T00:00:00.000Z'
+        firmware:
+          type: object
+          description: info about the firmware file
+          properties:
+            operation:
+              type: string
+              example: boot_fw_update_v1
+            uris:
+              description: >-
+                A list of uris for uploaded files in a firmware bundle, minus
+                the manifest.json.
+              type: array
+              items:
+                type: string
+              example:
+                - >-
+                  https://firmwares.nrfcloud.com/beb3c20a-e6e1-4d77-bfbb-c2e40490216f/BOOT*29451e76*1.2/signed_by_mcuboot_and_b0_s0_image_update.bin
+                - >-
+                  https://firmwares.nrfcloud.com/beb3c20a-e6e1-4d77-bfbb-c2e40490216f/BOOT*29451e76*1.2/signed_by_mcuboot_and_b0_s1_image_update.bin
+        version:
+          type: string
+          example: 1.2
+      additionalProperties: false
+      required:
+        - deviceIds
+        - description
+        - status
+        - createdAt
+        - lastUpdatedAt
+        - completedAt
+        - firmware
+    DFUJobsList:
+      title: DFUJobsList
+      description: A paginated list of DFU jobs.
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DFUJob'
+        total:
+          description: >-
+            Reflects the total results, not just the total returned by a
+            singular page of results.
+          type: number
+          example: 1
+        pageNextToken:
+          $ref: '#/components/schemas/PageNextToken'
+      required:
+        - items
+        - total
+    DFUJobExecution:
+      title: DFUJobExecution
+      description: Describes a device firmware update (DFU) job execution for a device.
+      type: object
+      properties:
+        jobId:
+          type: string
+          description: the UUID for the job.
+        summary:
+          type: object
+          description: additional info about the job execution
+          properties:
+            status:
+              type: string
+              description: >-
+                The job status, e.g., QUEUED, IN_PROGRESS, SUCCEEDED, FAILED,
+                TIMED_OUT, REJECTED, REMOVED, CANCELED.
+            queuedAt:
+              type: string
+              description: Time when the job execution was queued.
+              format: date-time
+              example: '2018-01-01T00:00:00.000Z'
+            startedAt:
+              type: string
+              description: Time when the job execution was started.
+              format: date-time
+              example: '2018-01-01T00:00:00.000Z'
+            lastUpdatedAt:
+              type: string
+              description: Time when the job execution was updated.
+              format: date-time
+              example: '2018-01-01T00:00:00.000Z'
+            executionNumber:
+              type: string
+              description: the number of times this job has been executed for this device
+              example: 1
+      additionalProperties: false
+      required:
+        - jobId
+        - summary
+    DFUJobExecutionsList:
+      title: DFUJobExecutionsList
+      description: A paginated list of DFU job executions.
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DFUJobExecution'
+        total:
+          description: >-
+            Reflects the total results, not just the total returned by a
+            singular page of results.
+          type: number
+          example: 1
+        pageNextToken:
+          $ref: '#/components/schemas/PageNextToken'
+      required:
+        - items
+        - total
+    DFUJobExecutionStatus:
+      title: DFUJobExecutionStatus
+      description: Describes firmware update (DFU) job execution statuses for a job.
+      type: object
+      properties:
+        jobId:
+          type: string
+          description: the UUID for the job.
+          example: c61cbf5e-391a-4fc0-a3c2-4bb1f9ab35bd
+        summary:
+          type: object
+          description: the job execution status for each related device
+          properties:
+            deviceId:
+              description: >-
+                id of the device from which the message originated that
+                triggered the alert
+              example: 366551fb-f0a4-4fe6-866a-ceb6879edd7a
+              type: string
+            status:
+              type: string
+              description: >-
+                The job status, e.g., QUEUED, IN_PROGRESS, SUCCEEDED, FAILED,
+                TIMED_OUT, REJECTED, REMOVED, CANCELED.
+              example: SUCCEEDED
+            lastUpdatedAt:
+              type: string
+              description: Time when the job execution was updated.
+              format: date-time
+              example: '2018-01-01T00:00:00.000Z'
+      additionalProperties: false
+      required:
+        - deviceId
+        - status
+        - lastUpdatedAt
+    DFUJobExecutionStatusesList:
+      title: DFUJobExecutionStatusesList
+      description: A paginated list of DFU job execution statuses.
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/DFUJobExecutionStatus'
+        total:
+          description: >-
+            Reflects the total results, not just the total returned by a
+            singular page of results.
+          type: number
+          example: 1
+        pageNextToken:
+          $ref: '#/components/schemas/PageNextToken'
+      required:
+        - items
+        - total
+    Entity:
+      title: Entity
+      description: >-
+        An entity is a thing that can be persisted, thus it has an id and a
+        creation, updated and deletion date.
+      type: object
+      properties:
+        $meta:
+          $ref: '#/components/schemas/EntityMeta'
+      additionalProperties: false
+      required:
+        - $meta
+    EntityId:
+      title: EntityId
+      description: >-
+        The unique identifier for an Entity, such as a Device, Certificate or
+        Alert.
+      type: object
+      properties:
+        id:
+          description: UUID of the entity
+          example: 1f146547-e82c-4d7b-b223-d32f5ecd70ed
+          type: string
+          pattern: >-
+            ^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}$
+      additionalProperties: false
+      required:
+        - uuid
+    EntityIdsList:
+      description: A paginated list of Entity ids.
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntityId'
+          example:
+            - 1f146547-e82c-4d7b-b223-d32f5ecd70ed
+            - 0e94e10b-90ca-45bd-b301-86ce28e8d27c
+            - 2712dadb-d856-4066-8219-353440cd6b79
+            - 091aff83-2865-45bf-8c7d-75c783f3d022
+            - 78a56415-2bd0-4630-b6cc-6bfbe2f2bf32
+        total:
+          description: >-
+            Reflects the total results, not just the total returned by a
+            singular page of results.
+          type: number
+          example: 5
+        pageNextToken:
+          $ref: '#/components/schemas/PageNextToken'
+      required:
+        - items
+        - total
+    EntityMeta:
+      title: EntityMeta
+      description: Meta data for an entity
+      type: object
+      properties:
+        id:
+          description: ID of the entity
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/EntityId'
+        createdAt:
+          description: Time when the entity was created
+          type: string
+          format: date-time
+          example: '2018-01-01T00:00:00.000Z'
+        updatedAt:
+          description: Time when the entity was updated
+          type: string
+          format: date-time
+          example: '2018-01-01T00:00:00.000Z'
+        deletedAt:
+          description: Time when the entity was deleted
+          type: string
+          format: date-time
+          example: '2018-01-01T00:00:00.000Z'
+      additionalProperties: false
+      required:
+        - id
+        - createdAt
+    Firmware:
+      title: Firmware
+      description: Firmware filename and metadata.
+      type: object
+      properties:
+        filename:
+          type: string
+          example: my-firmware.hex
+        size:
+          type: number
+          description: Size of the file in bytes.
+          example: 421
+        lastModified:
+          description: Time when the file was uploaded.
+          type: string
+          format: date-time
+          example: '2018-01-01T00:00:00.000Z'
+      additionalProperties: false
+      required:
+        - filename
+        - size
+        - lastModified
+    FirmwaresList:
+      title: FirmwaresList
+      description: A list of Firmwares
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Firmware'
+        pageNextToken:
+          $ref: '#/components/schemas/PageNextToken'
+      required:
+        - items
+        - paging
+    HttpProblem:
+      title: HttpProblem
+      description: 'See https://tools.ietf.org/html/rfc7807'
+      type: object
+      properties:
+        type:
+          type: string
+          description: >-
+            A URI reference [RFC3986] that identifies the problem type.  This
+            specification encourages that, when dereferenced, it provide
+            human-readable documentation for the problem type (e.g., using HTML
+            [W3C.REC-html5-20141028]).  When this member is not present, its
+            value is assumed to be "about:blank".
+          pattern: >-
+            ^https?:\/\/(((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9])|((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)))(:(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0))?(\/[-a-zA-Z0-9@:%_+.,~?&/=()]*)*(#(?:[^#^[\]{}\\<>%\s]|%[0-9a-f]{2})*)*$
+        title:
+          type: string
+          description: >-
+            A short, human-readable summary of the problem type.  It SHOULD NOT
+            change from occurrence to occurrence of the problem, except for
+            purposes of localization (e.g., using proactive content negotiation;
+            see [RFC7231], Section 3.4).
+        status:
+          type: integer
+          description: >-
+            The HTTP status code ([RFC7231], Section 6) generated by the origin
+            server for this occurrence of the problem.
+          minimum: 100
+          maximum: 599
+          format: int32
+        detail:
+          type: string
+          description: >-
+            A human-readable explanation specific to this occurrence of the
+            problem.
+      additionalProperties: true
+      required:
+        - type
+        - title
+        - status
+    Info:
+      title: Info
+      description: Contains account information
+      type: object
+      properties:
+        mqttEndpoint:
+          description: The mqtt endpoint to connect to
+          example: iot.example.com
+          type: string
+          minLength: 1
+        mqttTopicPrefix:
+          description: The global prefix for all topics
+          example: /tenant/foo/m/
+          type: string
+          minLength: 1
+      additionalProperties: false
+      required:
+        - mqttEndpoint
+        - mqttTopicPrefix
+    PageNextToken:
+      title: Paging
+      description: >-
+        Token used to retrieve the next page of items in the list. Present in a
+        response only if the total available results exceeds the specified limit
+        per page.
+      type: string
+      example: 4bb1f9ab35bd
+    Sms:
+      title: SMS
+      description: Describes an SMS endpoint.
+      type: object
+      allOf:
+        - properties:
+            number:
+              description: the SMS number
+              example: '+19173348879'
+              type: string
+              pattern: '^\+?[1-9]\d{1,14}$'
+          additionalProperties: false
+          required:
+            - number
+    Topics:
+      description: An array of MQTT topics associated with the Entity.
+      type: array
+      minItems: 1
+      items:
+        type: string
+        pattern: '^[a-z-0-9]+(/[a-z-0-9]+)*$'
+    Webhook:
+      title: Webhook
+      description: Describes a webhook endpoint.
+      type: object
+      allOf:
+        - properties:
+            url:
+              description: URL of the webhook
+              example: 'https://api.example.com/webhooks'
+              type: string
+              pattern: >-
+                ^https?:\\/\\/(((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9])|((?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)))(:(6553[0-5]|655[0-2]\\d|65[0-4]\\d\\d|6[0-4]\\d{3}|[1-5]\\d{4}|[1-9]\\d{0,3}|0))?(\\/[-a-zA-Z0-9@:%_+.,~?&/=()]*)*(#(?:[^#^[\\]{}\\\\\<>%\\s]|%[0-9a-f]{2})*)*$
+          additionalProperties: false
+          required:
+            - url
+security:
+  - Token: []
+servers:
+  - url: 'https://api.nrfcloud.com/v1'
+tags:
+  - name: Account
+    description: Endpoints for account management
+  - name: Alerts
+    description: 'Endpoints for defining alerts (e.g., "notify me when temp. is > 25 deg")'
+  - name: Devices (All Types)
+    description: >-
+      Endpoints for devices that can send data to the platform, whether directly
+      or through a gateway.
+  - name: Devices (Gateways)
+    description: Endpoints for BLE gateways.
+  - name: Devices (BLE - Bluetooth Low Energy)
+    description: Endpoints for Bluetooth Low Energy devices.
+  - name: Devices (IP-based)
+    description: >-
+      Endpoints for device that have an IP address and can send messages
+      directly to the platform.
+  - name: Device Firmware Update (DFU)
+    description: Endpoints for device firmware update (DFU).
+  - name: Messages
+    description: Endpoints for sending and retrieving messages sent to or from a device.
+paths:
+  /account:
+    get:
+      operationId: fetchAccount
+      summary: Fetch general account information
+      tags:
+        - Account
+      responses:
+        '200':
+          description: Contains account information
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mqttEndpoint:
+                    description: The mqtt endpoint to connect to
+                    example: iot.example.com
+                    type: string
+                  mqttTopicPrefix:
+                    description: The global prefix for all topics
+                    example: prod/a5592ec1-18ae-4d9d-bc44-1d9bd927bbe9/
+                    type: string
+                  topics:
+                    type: object
+                    properties:
+                      connections:
+                        description: >-
+                          This topic receives connection events from your
+                          devices.
+                        example: >-
+                          prod/a5592ec1-18ae-4d9d-bc44-1d9bd927bbe9/a/connections
+                        type: string
+                      gateways:
+                        description: This topic receives alert messages.
+                        example: prod/a5592ec1-18ae-4d9d-bc44-1d9bd927bbe9/a/gateways
+                        type: string
+                      messagePrefix:
+                        description: >-
+                          All topics below this prefix are intended to be used
+                          as your main application topics.
+                        example: prod/a5592ec1-18ae-4d9d-bc44-1d9bd927bbe9/m/
+                        type: string
+                      notifications:
+                        description: This topic receives notification messages for alerts.
+                        example: >-
+                          prod/a5592ec1-18ae-4d9d-bc44-1d9bd927bbe9/alerts/notifications
+                        type: string
+                      alerts:
+                        description: >-
+                          This topic receives the parsed messages from your BLE
+                          gateways.
+                        example: prod/a5592ec1-18ae-4d9d-bc44-1d9bd927bbe9/alerts
+                        type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  /account/certificates:
+    post:
+      operationId: createAccountDeviceAndCertificate
+      summary: >-
+        Provisions a device and attaches an IoT policy with permissions that
+        grant access to MQTT topics for any device in your account.
+      description: >-
+        This type of device can be useful in apps that need an MQTT client to
+        monitor the messages on other devices, or for debugging and testing
+        purposes. For more information see the [DeviceCertificate
+        schema](#tocsdevicecertificate).
+      tags:
+        - Account
+      responses:
+        '201':
+          description: Successfully created an account device and certficate
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCertificate'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      operationId: listAccountDeviceCertificates
+      summary: List account certificates.
+      description: >-
+        For more information see the [DeviceCertificate
+        schema](#tocsdevicecertificate).
+      tags:
+        - Account
+      responses:
+        '200':
+          description: >-
+            A paginated list of certificates. Note that 'pageNextToken', as
+            returned in a Paging object, does not change between requests. Also
+            note that 'total' reflects the total results, not just the total
+            returned by a singular page of results.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCertificatesList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/account/certificates/{certificateId}':
+    delete:
+      operationId: deleteAccountDeviceAndCertificate
+      summary: Delete an account device and its certificate.
+      tags:
+        - Account
+      responses:
+        '202':
+          description: An empty response
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+        - $ref: '#/components/parameters/CertificateId'
+  '/association/{deviceId}':
+    put:
+      operationId: associateDevice
+      summary: 'Associate a generic, IP-based device with a tenant.'
+      tags:
+        - Devices (IP-based)
+      parameters:
+        - $ref: '#/components/parameters/IdForIPBasedDevice'
+      requestBody:
+        description: 'The device ownership code (PIN, HWID, etc.) as a simple string.'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceOwnershipCode'
+      responses:
+        '202':
+          description: An empty response
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      summary: Disassociate a device from a tenant.
+      tags:
+        - Devices (IP-based)
+      operationId: disassociateDevice
+      parameters:
+        - $ref: '#/components/parameters/IdForIPBasedDevice'
+      responses:
+        '204':
+          description: Device successfully disassociated.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  /devices:
+    get:
+      operationId: fetchDevices
+      summary: Fetch devices
+      tags:
+        - Devices (All Types)
+      parameters:
+        - $ref: '#/components/parameters/IncludeState'
+        - $ref: '#/components/parameters/IncludeStateMeta'
+        - name: transform
+          description: A JSONata expression
+          in: query
+          schema:
+            type: string
+          example: >-
+            type = 'BLE' ? { 'id': id, 'characteristics':
+            $map(state.*.characteristics.*, function($c) { {'uuid': $c.uuid,
+            'value': $c.value } })} : { 'id': id, 'reportedName':
+            state.reported.name, 'connectedBLEDevices':
+            $keys(state.reported.statusConnections) }
+        - $ref: '#/components/parameters/PageLimit'
+        - $ref: '#/components/parameters/PageSort'
+        - $ref: '#/components/parameters/PageNextToken'
+      responses:
+        '200':
+          description: >-
+            A paginated list of devices. Note that 'pageNextToken', as returned
+            in a Paging object, does not change between requests. Also note that
+            'total' reflects the total results, not just the total returned by a
+            singular page of results.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DevicesList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceIdentifier}/discover':
+    post:
+      operationId: postBLEDeviceDiscover
+      summary: >-
+        Trigger the gateway to (re)discover the Bluetooth Low Energy (BLE)
+        device and store the updated state in our database.
+      description: >-
+        Use this endpoint to retrieve the latest BLE device state, which is
+        especially useful if wanting to invoke the fetchCharacteristicValue or
+        fetchCharacteristicDescriptorValue endpoints.
+      tags:
+        - Devices (BLE - Bluetooth Low Energy)
+      responses:
+        '202':
+          description: Empty response
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+  '/devices/{deviceIdentifier}/scan':
+    post:
+      operationId: postBLEDeviceScan
+      summary: Initiate a scan for BLE devices.
+      description: The scan results will be published over the `/c2g` topic.
+      tags:
+        - Devices (Gateways)
+      parameters:
+        - name: deviceIdentifier
+          description: The id of the gateway.
+          required: true
+          in: path
+          schema:
+            type: string
+            pattern: '^[a-z0-9:_-]{1,128}$/i'
+      requestBody:
+        description: JSON object representing the scan parameters you want to send.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                scanType:
+                  type: number
+                  description: Use `0` for Regular and `1` for Beacon. Default = `0`.
+                  example: 0
+                scanTimeout:
+                  type: number
+                  description: >-
+                    Scan timeout between `1` and `65535` seconds, `0` disables
+                    timeout. Default = `3`.
+                  example: 3
+                scanReporting:
+                  type: string
+                  description: >-
+                    Use `batch` to send one message for all advertisements
+                    received on scan timeout. Use `instant` if every
+                    advertisement received shall be sent instantly. Default =
+                    `instant`.
+                  example: instant
+                filter:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Match start of advertisement name. Case sensitive.
+                    rssi:
+                      type: number
+                      description: >-
+                        Lowest accepted RSSI value for scan report. 0 disables
+                        filter.
+                      example: 20
+              required:
+                - type
+                - scanType
+                - scanTimeout
+                - scanReporting
+              additionalProperties: false
+            example:
+              type: scan
+              scanType: 0
+              scanTimeout: 3
+              scanReporting: instant
+              filter:
+                name: Light
+                rssi: 20
+        required: true
+      responses:
+        '202':
+          description: Empty response
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceIdentifier}/characteristics/{characteristicId}':
+    get:
+      operationId: fetchCharacteristicValue
+      summary: Fetch a characteristic value.
+      description: >-
+        This will get the latest characteristic value that is cached as part of
+        the device state in our database. It may not fetch the latest
+        characteristic value that is on the device (which can take a quite long
+        to retrieve directly via a REST). Therefore, this value can be stale. If
+        you want the latest it is best to first call the postBLEDeviceDiscover
+        endpoint to force a rediscovery of the BLE device state.
+      tags:
+        - Devices (BLE - Bluetooth Low Energy)
+      responses:
+        '200':
+          description: Successfully fetched a characteristic value.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                title: CharacteristicValue
+                type: array
+                items:
+                  type: integer
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/CharacteristicId'
+    put:
+      operationId: putCharacteristicValue
+      summary: Update a characteristic value
+      tags:
+        - Devices (BLE - Bluetooth Low Energy)
+      requestBody:
+        description: An array of integers representing the characteristic value.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+        required: true
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/CharacteristicId'
+      responses:
+        '202':
+          description: Request to update characteristic value successfully fulfilled.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceIdentifier}/characteristics/{characteristicId}/descriptors/{descriptorId}':
+    get:
+      operationId: fetchCharacteristicDescriptorValue
+      summary: Fetch a characteristic's descriptor value.
+      description: >-
+        This will get the latest descriptor value for a characteristic that is
+        cached as part of the device state in our database. It may not fetch the
+        latest descriptor value that is on the device (which can take a quite
+        long to retrieve directly via a REST). Therefore, this value can be
+        stale. If you want the latest it is best to first call the
+        postBLEDeviceDiscover endpoint to force a rediscovery of the BLE device
+        state.
+      tags:
+        - Devices (BLE - Bluetooth Low Energy)
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/CharacteristicId'
+        - $ref: '#/components/parameters/DescriptorId'
+      responses:
+        '200':
+          description: Successfully fetched a characteristic value.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                title: DescriptorValue
+                type: array
+                items:
+                  type: integer
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      operationId: putCharacteristicDescriptorValue
+      summary: Update a descriptor value for a characteristic.
+      tags:
+        - Devices (BLE - Bluetooth Low Energy)
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/CharacteristicId'
+        - $ref: '#/components/parameters/DescriptorId'
+      requestBody:
+        description: An array of integers representing the descriptor value.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: integer
+        required: true
+      responses:
+        '202':
+          description: >-
+            Request to update characteristic descriptor value successfully
+            fulfilled.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceIdentifier}':
+    get:
+      operationId: fetchDevice
+      summary: Fetch a device
+      tags:
+        - Devices (All Types)
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - name: transform
+          description: A JSONata expression
+          in: query
+          schema:
+            type: string
+          example: >-
+            { 'id': id, 'characteristics': $map(state.*.characteristics.*,
+            function($c) { {'uuid': $c.uuid, 'value': $c.value } })}
+      responses:
+        '200':
+          description: Successfully fetched a Device object.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Etag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      summary: Delete a device from your account.
+      description: >-
+        If you are attempting to delete a provisioned but unassociated device,
+        you must also pass the ownership code (PIN or HWID) in the request body.
+      tags:
+        - Devices (IP-based)
+      operationId: deleteDevice
+      parameters:
+        - name: deviceIdentifier
+          description: >-
+            The device id, not a friendly name you may have assigned to the
+            device using `updateDeviceName`.
+          required: true
+          in: path
+          schema:
+            type: string
+            pattern: '^[a-z0-9:_-]{1,128}$'
+      requestBody:
+        description: 'The device ownership code (PIN, HWID, etc.) as a simple string.'
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceOwnershipCode'
+      responses:
+        '204':
+          description: Device successfully deleted.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceIdentifier}/image':
+    put:
+      operationId: putDeviceImage
+      summary: Update the image associated with a device
+      tags:
+        - Devices (All Types)
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/If-Match'
+      requestBody:
+        description: >-
+          The image to be shown for the device in front-end web services such as
+          nrfCloud.com. The request body can be either a Web URL, a
+          Base64-encoded JPEG or PNG image, or a binary JPEG or PNG image.
+        content:
+          text/plain:
+            schema:
+              type: string
+            example: >-
+              https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png,
+              or a Base64-encoded image as plain text such as
+              iVBORw0KGgoAAAANS...
+          image/jpeg:
+            schema:
+              type: string
+            example: The binary contents of an image file in JPEG format
+          image/png:
+            schema:
+              type: string
+            example: The binary contents of an image file in PNG format
+        required: true
+      responses:
+        '200':
+          description: >-
+            Device image successfully set to the given Web URL, or set to an
+            object in an S3 bucket containing the given binary image (converted
+            from Base64 if given as Base64-encoded text).
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '502':
+          $ref: '#/components/responses/502'
+    delete:
+      operationId: deleteDeviceImage
+      summary: >-
+        For a Web URL of an image associated with a device, dissociate the URL
+        from the device. For an image file stored for a device, delete the image
+        file.
+      tags:
+        - Devices (All Types)
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/If-Match'
+      responses:
+        '202':
+          description: >-
+            Device image successfully dissociated or deleted. If no image is
+            associated or stored for the device, a 202 is returned and no action
+            is taken.
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '502':
+          $ref: '#/components/responses/502'
+  '/devices/{deviceIdentifier}/name':
+    put:
+      operationId: putDeviceName
+      summary: Update the name of a device
+      tags:
+        - Devices (All Types)
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/If-Match'
+      requestBody:
+        description: The new device name as a simple string.
+        content:
+          application/json:
+            schema:
+              type: string
+            example: MyThingy52-1
+        required: true
+      responses:
+        '202':
+          description: Request to update device name successfully fulfilled.
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceIdentifier}/tags':
+    put:
+      operationId: putDeviceTags
+      summary: Update the tags of a device
+      tags:
+        - Devices (All Types)
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/If-Match'
+      requestBody:
+        description: The new device tags as a string array.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                pattern: '^[a-zA-Z0-9_.@:#-]+$'
+            example:
+              - warehouse1
+              - coldzone
+        required: true
+      responses:
+        '202':
+          description: Request to update device tags successfully fulfilled.
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceId}/certificates':
+    post:
+      operationId: createDeviceCertificate
+      summary: Creates a just-in-time-provisioning (JITP) certificate for a device.
+      description: >-
+        For it to work properly the device must not yet be provisioned (created)
+        on our platform. If you are creating a certificate for a device that you
+        have already connected to our platform, please delete the device using
+        the [deleteDevice](#deletedevice) endpoint before using this
+        certificate. For a Nordic Semiconductor product such as an nRF9160-DK or
+        a Thingy-91, the `deviceId` is `nrf-[IMEI]`, e.g.,
+        `nrf-111222333444555`. The IMEI can be found on your product's label. If
+        you want to create a certificate for a non-Nordic device, any `deviceId`
+        is sufficient that does not start with `nrf-` (we recommend using a
+        GUID). Refer to the [device-simulator-v2
+        project](https://github.com/nRFCloud/device-simulator-v2/blob/saga/src/mqttClient.ts)
+        for MQTT client configuration. For more information about the
+        certificate see the [DeviceCertificate schema](#tocsdevicecertificate).
+      tags:
+        - Devices (IP-based)
+      parameters:
+        - $ref: '#/components/parameters/IdForIPBasedDevice'
+      requestBody:
+        description: 'The device ownership code (PIN, HWID, etc.) as a simple string.'
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceOwnershipCode'
+      responses:
+        '201':
+          description: The device certificate.
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCertificate'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      operationId: listDeviceCertificates
+      summary: List all certificates that are attached to one or more of your devices.
+      description: >-
+        This will not list certificates created by the `createDeviceCertificate`
+        endpoint that have not been used to connect and provision a device.
+      tags:
+        - Devices (IP-based)
+      parameters:
+        - $ref: '#/components/parameters/IdForIPBasedDevice'
+      responses:
+        '200':
+          description: >-
+            A paginated list of device certificates. Note that 'pageNextToken',
+            as returned in a Paging object, does not change between requests.
+            Also note that 'total' reflects the total results, not just the
+            total returned by a singular page of results.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceCertificatesList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceId}/certificates/{certificateId}':
+    delete:
+      operationId: deleteDeviceCertificate
+      summary: Delete a device certificate
+      tags:
+        - Devices (IP-based)
+      parameters:
+        - $ref: '#/components/parameters/IdForIPBasedDevice'
+        - $ref: '#/components/parameters/CertificateId'
+      responses:
+        '202':
+          description: An empty response
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceIdentifier}/state':
+    patch:
+      operationId: patchDeviceState
+      summary: Update the state of a non-BLE device
+      tags:
+        - Devices (IP-based)
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/If-Match'
+      requestBody:
+        description: JSON object to patch the device state.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reported:
+                  type: object
+                  example:
+                    thermometer: 1
+                    topic: warehouse1
+        required: true
+      responses:
+        '202':
+          description: Request to update device tags successfully fulfilled.
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/devices/{deviceIdentifier}/messages':
+    post:
+      operationId: postDeviceMessage
+      summary: Send a message to a device.
+      description: >-
+        If the device is a gateway or BLE device, the `topic` parameter is
+        ignored and the message will be published via MQTT on the
+        `/gateways/[gatewayId]/c2g` topic. Otherwise, the message will be
+        published on the `/m/{topic}` topic (e.g., if you pass
+        `d/[deviceId]/c2d` as a `topic`, the message will be published on the
+        `[mqttTopicPrefix]/m/d/[deviceId]/c2d` topic). If no `topic` parameter
+        is passed, a "catch-all" topic called `messages` is used, e.g.,
+        `[mqttTopicPrefix]/m/messages`.
+      tags:
+        - Devices (All Types)
+        - Messages
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+      requestBody:
+        description: JSON object representing the device message you want to send.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: object
+                  additionalProperties: true
+                  example:
+                    temperature: '5'
+                    units: Celsius
+                topic:
+                  type: string
+                  description: >-
+                    An optional topic appended to the `/m` topic. If none is
+                    supplied, `messages` is used as a "catch-all" topic,
+                    resulting in `[mqttTopicPrefix]/m/messages`. This parameter
+                    is ignored if sending a message to a gateway or BLE device.
+                  pattern: '^[a-z-0-9]+(/[a-z-0-9]+)*$'
+                  example: warehouse1
+              required:
+                - message
+              additionalProperties: false
+            example:
+              uuid: 086011118277EF8E1523785788778193
+              path: >-
+                086011118277EF8E1523785788778193/086022228277EF8E1523785788778193
+              value:
+                - 1
+        required: true
+      responses:
+        '202':
+          description: Empty response
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  /firmwares:
+    post:
+      operationId: uploadFirmware
+      summary: >-
+        Upload a firmware bundle as a .zip file, whether binary or
+        base64-encoded.
+      description: >
+        The bundle must contain a manifest.json file that conforms to the
+        TypeScript FirmwareManifest interface provided in the Code samples.
+
+        ```
+
+        export interface FirmwareManifest {
+          name?: string;
+          description?: string;
+          fwversion: string;
+          'format-version': number;
+          files: {
+            file: string;
+            type: 'application' | 'mcuboot' | 'modem';
+            size: number;
+          }[];
+        }
+
+        ```
+
+        You may upload your firmware bundle as a base64 string (no Content-Type
+        header required) or a binary file (use a Content-Type header of
+        "application/zip" or "application/octet-stream"). See curl examples in
+        the Code samples.
+
+
+        ```sh
+
+        export FILE=$(base64 path-to-my-file.zip)
+
+
+        curl -X POST $API_HOST/v1/firmwares \
+          -H "Authorization: Bearer $API_KEY" -d $FILE
+        ```
+
+
+        ```sh
+
+        export
+        FILE=@/Users/patrickbarnes/Downloads/dfu_application/dfu_mcuboot.zip
+
+
+        curl -X POST $API_HOST/v1/firmwares -H "Authorization: Bearer $API_KEY"
+        \
+          -H "Content-Type: application/octet-stream" \
+          --data-binary "'$FILE'"
+        ```
+      tags:
+        - Device Firmware Update (DFU)
+      requestBody:
+        description: >-
+          Firmware bundle either as a base64-encoded string or a binary zip
+          file.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+          application/zip:
+            schema:
+              type: string
+              format: binary
+          text/plain:
+            schema:
+              type: string
+              description: If sending as base64 this header is optional.
+              format: base64
+        required: true
+      responses:
+        '200':
+          description: >-
+            An object containing the URIs of the uploaded and unzipped firmware
+            files.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                description: A list of uris.
+                type: object
+                properties:
+                  uris:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - >-
+                        https://firmwares.nrfcloud.com/beb3c20a-e6e1-4d77-bfbb-c2e40490216f/BOOT*29451e76*1.2/manifest.json
+                      - >-
+                        https://firmwares.nrfcloud.com/beb3c20a-e6e1-4d77-bfbb-c2e40490216f/BOOT*29451e76*1.2/signed_by_mcuboot_and_b0_s0_image_update.bin
+                      - >-
+                        https://firmwares.nrfcloud.com/beb3c20a-e6e1-4d77-bfbb-c2e40490216f/BOOT*29451e76*1.2/signed_by_mcuboot_and_b0_s1_image_update.bin
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      operationId: fetchFirmwares
+      summary: Fetch firmwares
+      tags:
+        - Device Firmware Update (DFU)
+      parameters:
+        - $ref: '#/components/parameters/PageNextToken'
+      responses:
+        '200':
+          description: >-
+            The successful response object containing a paginated list of
+            firmware files and their metadata. Note that 'pageNextToken', as
+            returned in a Paging object, does not change between requests. Also
+            note that 'total' reflects the total results, not just the total
+            returned by a singular page of results.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FirmwaresList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/firmwares/{bundleId}':
+    delete:
+      operationId: deleteFirmware
+      summary: Delete a firmware bundle
+      tags:
+        - Device Firmware Update (DFU)
+      parameters:
+        - name: bundleId
+          description: The firmware bundleId.
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '202':
+          description: An empty response
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  /dfu-jobs:
+    post:
+      operationId: createDFUJob
+      summary: Create a device firmware update (DFU) job.
+      tags:
+        - Device Firmware Update (DFU)
+      requestBody:
+        description: JSON object representing the DFU job.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deviceIdentifiers:
+                  $ref: '#/components/parameters/DeviceIdentifiers'
+                bundleId:
+                  type: string
+                  description: >-
+                    the bundleId created by the server when the firmware was
+                    uploaded.
+                  example: BOOT*ea9e67a8*1.2
+              required:
+                - deviceIdentifiers
+                - bundleId
+              additionalProperties: false
+        required: true
+      responses:
+        '200':
+          description: >-
+            The successful response object containing the id of the created DFU
+            job.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jobId:
+                    type: string
+                    example: d622bff1-2112-4668-a595-910eefd01447
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/dfu-jobs/{DFUJobId}':
+    get:
+      summary: Fetch a device firmware update (DFU) job.
+      tags:
+        - Device Firmware Update (DFU)
+      operationId: fetchDFUJob
+      parameters:
+        - $ref: '#/components/parameters/DFUJobId'
+      responses:
+        '200':
+          description: The successful response object containing a DFU job.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DFUJob'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      summary: Cancel a device firmware update (DFU) job.
+      tags:
+        - Device Firmware Update (DFU)
+      operationId: cancelDFUJob
+      parameters:
+        - $ref: '#/components/parameters/DFUJobId'
+      responses:
+        '202':
+          description: Empty response
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/dfu-job-executions/{deviceIdentifier}':
+    get:
+      summary: Fetch the device firmware update (DFU) job executions for a device.
+      tags:
+        - Device Firmware Update (DFU)
+      operationId: fetchDFUJobExecutions
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+      responses:
+        '200':
+          description: >-
+            The successful response object containing a list of DFU job
+            executions. Note that 'pageNextToken', as returned in a Paging
+            object, does not change between requests. Also note that 'total'
+            reflects the total results, not just the total returned by a
+            singular page of results.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DFUJobExecutionsList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/dfu-job-executions/{deviceIdentifier}/{DFUJobExecutionId}':
+    get:
+      summary: Fetch a device firmware update (DFU) job execution.
+      tags:
+        - Device Firmware Update (DFU)
+      operationId: fetchDFUJobExecution
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/DFUJobExecutionId'
+      responses:
+        '200':
+          description: The successful response object containing a DFU job execution.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DFUJobExecution'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      summary: Cancel a device firmware update (DFU) job execution.
+      tags:
+        - Device Firmware Update (DFU)
+      operationId: cancelDFUJobExecution
+      parameters:
+        - $ref: '#/components/parameters/DeviceIdentifier'
+        - $ref: '#/components/parameters/DFUJobExecutionId'
+      responses:
+        '202':
+          description: Empty response
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/dfu-job-execution-statuses/{DFUJobExecutionId}':
+    get:
+      summary: >-
+        Fetch a list of device firmware update (DFU) job execution statuses for
+        a job.
+      tags:
+        - Device Firmware Update (DFU)
+      operationId: fetchDFUJobExecutionStatuses
+      parameters:
+        - $ref: '#/components/parameters/DFUJobExecutionId'
+      responses:
+        '200':
+          description: >-
+            The successful response object containing the DFU job execution
+            statuses.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DFUJobExecutionStatusesList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  /messages:
+    get:
+      operationId: fetchMessages
+      summary: Fetch stored device messages
+      tags:
+        - Messages
+      parameters:
+        - $ref: '#/components/parameters/InclusiveStart'
+        - $ref: '#/components/parameters/ExclusiveEnd'
+        - $ref: '#/components/parameters/DeviceIdentifiers'
+        - $ref: '#/components/parameters/Topics'
+        - $ref: '#/components/parameters/PageLimit'
+        - $ref: '#/components/parameters/PageSort'
+        - $ref: '#/components/parameters/PageNextToken'
+      responses:
+        '200':
+          description: >-
+            A paginated list of messages. Note that 'pageNextToken', as returned
+            in a Paging object, does not change between requests. Also note that
+            'total' reflects the total results, not just the total returned by a
+            singular page of results.
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceMessagesList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      operationId: deleteMessages
+      summary: Delete stored device messages
+      tags:
+        - Messages
+      parameters:
+        - $ref: '#/components/parameters/InclusiveStart'
+        - $ref: '#/components/parameters/ExclusiveEnd'
+        - $ref: '#/components/parameters/DeviceIdentifiers'
+        - $ref: '#/components/parameters/Topics'
+      responses:
+        '202':
+          description: An empty response
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  /alerts:
+    post:
+      operationId: createAlert
+      summary: Create an Alert
+      tags:
+        - Alerts
+      requestBody:
+        description: JSON object to representing the alert.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Alert'
+        required: true
+      responses:
+        '202':
+          description: Empty response
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      operationId: fetchAlerts
+      summary: List alerts
+      tags:
+        - Alerts
+      parameters:
+        - $ref: '#/components/parameters/PageLimit'
+        - $ref: '#/components/parameters/PageSort'
+        - $ref: '#/components/parameters/PageNextToken'
+      responses:
+        '200':
+          description: >-
+            A paginated list of alerts. Note that 'pageNextToken', as returned
+            in a Paging object, does not change between requests. Also note that
+            'total' reflects the total results, not just the total returned by a
+            singular page of results.
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EntityIdsList'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+  '/alerts/{alertId}':
+    delete:
+      operationId: deleteAlert
+      summary: Delete an alert
+      tags:
+        - Alerts
+      parameters:
+        - $ref: '#/components/parameters/AlertId'
+        - $ref: '#/components/parameters/If-Match'
+      responses:
+        '202':
+          description: An empty response
+          headers:
+            Content-Type:
+              description: The content-type of the response
+              schema:
+                type: string
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
+    get:
+      operationId: fetchAlert
+      summary: Fetch an alert
+      tags:
+        - Alerts
+      parameters:
+        - $ref: '#/components/parameters/AlertId'
+      responses:
+        '200':
+          description: An alert
+          headers:
+            Content-Type:
+              $ref: '#/components/headers/Content-Type'
+            Etag:
+              $ref: '#/components/headers/ETag'
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/Aggregate'
+                  - $ref: '#/components/schemas/Alert'
+        '400':
+          $ref: '#/components/responses/400'
+        '401':
+          $ref: '#/components/responses/401'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '412':
+          $ref: '#/components/responses/412'
+        '500':
+          $ref: '#/components/responses/500'
