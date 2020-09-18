@@ -78,7 +78,7 @@ function testGetData() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-            var realData = this.responseText;
+            var realData = JSON.parse(this.responseText);
             console.log(realData);
         }
     };
