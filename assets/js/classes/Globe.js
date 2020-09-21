@@ -7,7 +7,7 @@ class Globe {
         var viewer = this.initViewer();
         var scene = this.configScene(viewer);
         var controls = this.initControls();
-
+        // console.log(data);
         this.addPoints(viewer, data);
         this.clickAction(viewer, sidebar);
     }
@@ -41,20 +41,27 @@ class Globe {
 
 
     addPoints(viewer, dataPoints) {
+        // console.log(dataPoints);
+        // console.log(typeof(dataPoints));
         var deviceList = document.querySelector('.device-list');
 
-        if (dataPoints.length > 1) {
-            for (let i = 0; i < dataPoints.length; i++) {
-                this.addPoint(viewer, dataPoints[i], deviceList);
+        if (Object.keys(dataPoints).length > 1) {
+            for (const device in dataPoints) {
+                console.log(typeof(dataPoints[device]))
+                this.addPoint(viewer, dataPoints[device], deviceList);
             }
             //populate sidebar and auto-click first of last thingy?
         }
     }
 
+
     addPoint(viewer, data, deviceList) {
+        console.log(data);
+        console.log(viewer);
+        console.log(deviceList);
         var listEntry = this.createListEntry(viewer, data, deviceList);
         var entity = viewer.entities.add({
-            position: data.position,
+            position: Cesium.Cartesian3.fromDegrees(data.position),
             properties: {
                 name: data.properties.name,
                 coords: data.properties.coords,

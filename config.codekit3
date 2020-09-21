@@ -1097,6 +1097,22 @@
 		"oAP": "/SAMPLE_JSON/api-rest.yaml",
 		"oF": 0
 		},
+	"/SAMPLE_JSON/appId-GPS": {
+		"cB": 0,
+		"ft": 8192,
+		"hM": 0,
+		"oA": 0,
+		"oAP": "/SAMPLE_JSON/appId-GPS",
+		"oF": 0
+		},
+	"/SAMPLE_JSON/blank_devices_list.json": {
+		"ft": 524288,
+		"oA": 1,
+		"oAP": "/SAMPLE_JSON/blank_devices_list-min.json",
+		"oF": 0,
+		"oO": 0,
+		"oS": 1
+		},
 	"/SAMPLE_JSON/devices.json": {
 		"ft": 524288,
 		"oA": 1,

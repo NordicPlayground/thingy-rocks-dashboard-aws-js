@@ -1,0 +1,126 @@
+{
+    "items": [
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:39:40.893Z",
+            "message": {
+                "data": "101.4",
+                "messageType": "DATA",
+                "appId": "AIR_PRESS",
+                "ts": 1600205979587
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        },
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:39:40.892Z",
+            "message": {
+                "data": "28.4",
+                "messageType": "DATA",
+                "appId": "TEMP",
+                "ts": 1600205979587
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        },
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:39:40.889Z",
+            "message": {
+                "data": "38.1",
+                "messageType": "DATA",
+                "appId": "HUMID",
+                "ts": 1600205979587
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        },
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:39:20.568Z",
+            "message": {
+                "data": "-108",
+                "messageType": "DATA",
+                "appId": "RSRP",
+                "ts": 1600205813069
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        },
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:39:11.557Z",
+            "message": {
+                "data": "101.4",
+                "messageType": "DATA",
+                "appId": "AIR_PRESS",
+                "ts": 1600205949539
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        },
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:39:11.461Z",
+            "message": {
+                "data": "38.1",
+                "messageType": "DATA",
+                "appId": "HUMID",
+                "ts": 1600205949539
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        },
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:39:11.399Z",
+            "message": {
+                "data": "16 275 947 8",
+                "messageType": "DATA",
+                "appId": "LIGHT",
+                "ts": 1600205949464
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        },
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:39:11.398Z",
+            "message": {
+                "data": "28.6",
+                "messageType": "DATA",
+                "appId": "TEMP",
+                "ts": 1600205949539
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        },
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:38:40.796Z",
+            "message": {
+                "data": "101.4",
+                "messageType": "DATA",
+                "appId": "AIR_PRESS",
+                "ts": 1600205919504
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        },
+        {
+            "topic": "prod/7474d5d2-31fd-4892-9d70-7bbe74452b25/m/d/nrf-352656101077413/d2c",
+            "deviceId": "nrf-352656101077413",
+            "receivedAt": "2020-09-15T21:38:40.795Z",
+            "message": {
+                "data": "28.6",
+                "messageType": "DATA",
+                "appId": "TEMP",
+                "ts": 1600205919504
+            },
+            "tenantId": "7474d5d2-31fd-4892-9d70-7bbe74452b25"
+        }
+    ],
+    "total": 80835,
+    "pageNextToken": "DnF1ZXJ5VGhlbkZldGNoBQAAAAADMVdMFi13ZjY1eFBxUU1henJ4RkNER1Zjc2cAAAAAAuSfLBZYTFF2cTdYMFNnZWdNaUF6Rjc4ZS1nAAAAAANW9F0WMGNyTTVZbmVSMWVHZjdaV2JqWDBwdwAAAAADVvRfFjBjck01WW5lUjFlR2Y3WldialgwcHcAAAAAA1b0XhYwY3JNNVluZVIxZUdmN1pXYmpYMHB3"
+}
