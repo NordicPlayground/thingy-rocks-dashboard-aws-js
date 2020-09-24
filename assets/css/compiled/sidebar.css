@@ -26,9 +26,60 @@
   right: -30px;
   top: 30px;
 }
+.sidebar .sidebar-toggle div {
+  width: 16px;
+  height: 1px;
+  margin: 14px 6px;
+  background-color: #fff;
+  border: 0px solid #fff;
+  position: relative;
+  display: inline-block;
+  transition: 400ms all;
+}
+.sidebar .sidebar-toggle div:before, .sidebar .sidebar-toggle div:after {
+  transition: 400ms all;
+  content: "";
+  width: 16px;
+  height: 1px;
+  background-color: #FFF;
+  display: inline-block;
+  position: absolute;
+}
+.sidebar .sidebar-toggle div:before {
+  margin-top: -5px;
+}
+.sidebar .sidebar-toggle div:after {
+  margin-top: 5px;
+}
+.sidebar.open .sidebar-toggle div {
+  background-color: transparent;
+  border: 1px solid #fff;
+  border-radius: 100px;
+  height: 16px;
+  margin: 6px 6px;
+}
+.sidebar.open .sidebar-toggle div:before {
+  transform: rotate(-45deg) translate3d(-7px, 7px, 0px);
+  margin-top: -3px;
+  margin-left: 3px;
+  width: 10px;
+}
+.sidebar.open .sidebar-toggle div:after {
+  transform: rotate(45deg);
+  margin-top: 7px;
+  margin-left: 3px;
+  width: 10px;
+}
 .sidebar .data-display .device-info .device-img {
   max-width: 100%;
   margin-top: 50px;
+}
+.sidebar .data-display .device-info .device-location-name {
+  border-bottom: 2px solid #65CDF5;
+  margin-bottom: 20px;
+}
+.sidebar .data-display .device-info .device-location-name img {
+  width: 20px;
 }
 .sidebar .data-display .device-location-coords .sidebar-heading {
   font-family: Overpass-Regular;

@@ -25,6 +25,59 @@
         background-color: #244567;
         right: -30px;
         top: 30px;
+        div {
+            width: 16px;
+            height: 1px;
+            margin: 14px 6px;
+            background-color: #fff;
+            border: 0px solid #fff;
+            position: relative;
+            display: inline-block;
+            transition: 400ms all;
+            &:before,
+            &:after {
+                transition: 400ms all;
+                content: "";
+                width: 16px;
+                height: 1px;
+                background-color: #FFF;
+                display: inline-block;
+                position: absolute;
+            }
+            &:before {
+                margin-top: -5px;
+            }
+            &:after {
+                margin-top: 5px;
+            }
+        }
+    }
+    &.open .sidebar-toggle div {
+        background-color: transparent;
+        border: 1px solid #fff;
+        border-radius: 100px;
+        height: 16px;
+        margin: 6px 6px;
+        &:before {
+            transform: rotate(-45deg) translate3d(-7px, 7px, 0px);
+            margin-top: -3px;
+            margin-left: 3px;
+            width: 10px;
+        }
+        &:after {
+            transform: rotate(45deg);
+            margin-top: 7px;
+            margin-left: 3px;
+            width: 10px;
+        }
+    }
+    .sidebar-heading {
+        font-family: Overpass-Regular;
+        font-size: 16px;
+        color: #65CDF5;
+        letter-spacing: 0.43px;
+        line-height: 20px;
+        font-weight: 300;
     }
     .data-display {
         .device-info {
@@ -32,15 +85,20 @@
                 max-width: 100%;
                 margin-top: 50px;
             }
+            .device-location-name {
+                border-bottom: 2px solid $lightBlue;
+                margin-bottom: 20px;
+                img {
+                    width: 20px;
+                }
+                .device-location-name-label {
+                    font-size: 16px;
+                    line-height: 27px;
+                    color: $darkblue;
+                }
+            }
         }
         .device-location-coords {
-            .sidebar-heading {
-                font-family: Overpass-Regular;
-                font-size: 13px;
-                color: #65CDF5;
-                letter-spacing: 0.43px;
-                line-height: 14px;
-            }
             .coordinates {
                 font-family: Overpass-Regular;
                 font-size: 13px;

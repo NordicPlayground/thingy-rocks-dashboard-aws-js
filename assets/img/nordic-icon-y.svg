@@ -1,6 +1,19 @@
-<svg width="10" height="9" viewBox="0 0 10 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M3.18381 7.9569L5.24348 6.82309L3.18381 5.48203L2.81384 6.82309L3.18381 7.9569Z" fill="white" fill-opacity="0.49593" stroke="#FEA512" stroke-width="0.6" stroke-linejoin="round"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M7.18141 0.666656L4.9884 1.92166L7.40161 3.46785L7.18141 0.666656Z" fill="white" fill-opacity="0.49593" stroke="#FEA512" stroke-width="0.6" stroke-linejoin="round"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M3.18379 7.95688V5.74955L7.19639 7.95688L9.25027 6.72182L1.03918 1.97543L1 6.72182L3.18379 7.95688Z" fill="white" fill-opacity="0.49593" stroke="#FEA512" stroke-width="0.6" stroke-linejoin="round"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M9.25027 6.72183V2.00425L7.18143 0.666656V3.08997L3.15642 0.719342L1.03918 1.97545L9.25027 6.72183Z" fill="white" fill-opacity="0.49593" stroke="#FEA512" stroke-width="0.6" stroke-linejoin="round"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="36px" height="36px" viewBox="0 0 36 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group Copy</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Devices-Copy" transform="translate(-445.000000, -320.000000)">
+            <g id="Group-3-Copy-2" transform="translate(445.000000, 320.000000)">
+                <rect id="Rectangle-Copy-28" fill="#FEA512" x="0" y="0" width="36" height="36" rx="1"></rect>
+                <g id="Group-Copy-2" transform="translate(6.000000, 8.000000)" fill="#FFFFFF" fill-opacity="0.495929851" stroke="#FEA512" stroke-linejoin="round" stroke-width="0.6">
+                    <g id="Group-2" transform="translate(-0.000000, -0.000000)">
+                        <polygon id="Path-3" points="6.55136719 21.8707031 12.7303711 18.4692627 6.55136719 14.4460693 5.44145508 18.4692627"></polygon>
+                        <polygon id="Path-5" points="18.5442993 0 11.9652832 3.76501465 19.2049072 8.40358887"></polygon>
+                        <polygon id="Path" points="6.55136719 21.8707031 6.55136719 15.2487305 18.5891602 21.8707031 24.7508057 18.1655273 0.117553711 3.92636719 -3.62376795e-14 18.1655273"></polygon>
+                        <polygon id="Path-4" points="24.7508057 18.1655273 24.7508057 4.01279297 18.5442993 -2.66453526e-14 18.5442993 7.26994629 6.4692627 0.158056641 0.117553711 3.92636719"></polygon>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
 </svg>
