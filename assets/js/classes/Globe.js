@@ -83,7 +83,7 @@ class Globe {
                 list_entry: listEntry,
                 data: data.properties.data
             },
-            viewFrom: Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0], 500000),
+            viewFrom: new Cesium.Cartesian3(0, 0, 500000), // THIS DOESNT WORK...
             // TODO: fix the icons and the sizing and clickable space
             billboard: {
                 rotation: 0,
