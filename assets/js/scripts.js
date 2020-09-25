@@ -52,7 +52,7 @@ function getData() {
             return globe
         }
     };
-    xmlhttp.open("GET", "getDeviceData.php", true);
+    xmlhttp.open("POST", "getDeviceData.php", true);
     xmlhttp.send();
 }
 
