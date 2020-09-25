@@ -137,7 +137,7 @@ class Globe {
                 //         roll: 0.0
                 //     }
                 // });
-                if (window.width > 740) {
+                if (window.innerWidth > 740) {
                     sidebar.openSidebar();
                 } else {
                     document.querySelector('.mobile-sidebar').classList.add('reveal');
