@@ -2,29 +2,10 @@
 imports 
 */
 
+@import 'compiled/globals.css';
 @import 'compiled/sidebar.css';
 @import 'compiled/infobox.css';
 @import 'compiled/top-tab.css';
 @import 'compiled/earth.css';
 @import 'compiled/intro.css';
-
-/* globals */
-
-body {
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 22px;
-    font-family: 'GT Eesti Display';
-    background: black;
-}
-
-h3 {
-    margin: 0;
-    font-size: 13px;
-    color: $lightBlue;
-    letter-spacing: 0.43px;
-    line-height: 14px;
-}
+@import 'compiled/responsive.css';

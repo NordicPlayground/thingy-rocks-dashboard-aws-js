@@ -8,8 +8,8 @@
     top: 0;
     bottom: 0;
     display: inline-block;
-    z-index: 999;
-    transition: 600ms all;
+    z-index: 9999;
+    transition: $transitionTime all;
     &.open {
         left: 0;
     }
@@ -22,7 +22,7 @@
         width: 30px;
         height: 30px;
         position: absolute;
-        background-color: #244567;
+        background-color: $darkBlue;
         right: -30px;
         top: 30px;
         div {
@@ -33,10 +33,10 @@
             border: 0px solid #fff;
             position: relative;
             display: inline-block;
-            transition: 400ms all;
+            transition: $transitionTime all;
             &:before,
             &:after {
-                transition: 400ms all;
+                transition: $transitionTime all;
                 content: "";
                 width: 16px;
                 height: 1px;
@@ -94,7 +94,7 @@
                 .device-location-name-label {
                     font-size: 16px;
                     line-height: 27px;
-                    color: $darkblue;
+                    color: $darkBlue;
                 }
             }
         }
@@ -140,6 +140,41 @@
                 &.active a {
                     color: $lightBlue;
                 }
+            }
+        }
+    }
+}
+
+.mobile-sidebar {
+    display: none;
+    width: 100%;
+    top: auto;
+    bottom: -500px;
+    left: 0;
+    right: 0;
+    transition: bottom $transitionTime;
+    &.reveal {
+        bottom: 0;
+    }
+    .device-info {
+        box-sizing: border-box;
+        width: 50%;
+        padding-right: 10px;
+        float: left;
+    }
+    .device-data {
+        box-sizing: border-box;
+        width: 50%;
+        padding-left: 10px;
+        float: left;
+        .device-data__datum {
+            padding: 0 0;
+            margin: 0 0 10px;
+            box-shadow: none;
+            background-color: transparent;
+            .datum-info {
+                line-height: 1;
+                margin: 0 0;
             }
         }
     }

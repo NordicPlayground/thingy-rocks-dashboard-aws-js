@@ -9,7 +9,7 @@
     right: 30px;
     z-index: 999;
     opacity: 0;
-    transition: all 600ms;
+    transition: all $transitionTime;
     .loaded & {
         opacity: 1;
         ;

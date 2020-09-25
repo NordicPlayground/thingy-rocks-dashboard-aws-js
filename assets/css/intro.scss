@@ -1,6 +1,6 @@
 @import 'variables.scss';
 .intro-container {
-    transition: opacity 600ms;
+    transition: opacity $transitionTime;
     position: fixed;
     top: 0;
     left: 0;
@@ -8,7 +8,7 @@
     bottom: 0;
     display: flex;
     background-color: rgba(0, 0, 0, .7);
-    z-index: 9999;
+    z-index: 99999;
     align-content: center;
     justify-content: center;
     flex-wrap: wrap;

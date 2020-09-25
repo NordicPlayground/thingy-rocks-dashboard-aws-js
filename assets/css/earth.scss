@@ -3,7 +3,11 @@
     position: fixed;
     top: 0;
     left: 0;
-    right: -300px; //offset to center globe when sidebar open - need to adjust for mobile
+    right: 0;
+    transition: right $transitionTime;
+    .open-sidebar & {
+        right: -300px; //offset to center globe when sidebar open - need to adjust for mobile
+    }
     bottom: 0;
     overflow: hidden;
     .cesium-viewer,

@@ -41,7 +41,8 @@ class Globe {
         return new Cesium.Viewer("cesiumContainer", {
             animation: true,
             timeline: false,
-            selectionIndicator: true
+            selectionIndicator: true,
+            requestRenderMode: true
         });
     }
 
@@ -83,7 +84,9 @@ class Globe {
                 list_entry: listEntry,
                 data: data.properties.data
             },
-            viewFrom: new Cesium.Cartesian3(0, 0, 500000), // THIS DOESNT WORK...
+            box: {
+                dimensions: new Cesium.Cartesian3(10000.0, 10000.0, 0.0),
+            },
             // TODO: fix the icons and the sizing and clickable space
             billboard: {
                 rotation: 0,
@@ -115,6 +118,7 @@ class Globe {
             if (undefined !== viewer.selectedEntity) {
                 console.log(viewer.selectedEntity);
                 Globe.populateSidebar(viewer.selectedEntity);
+                Globe.populateMobileData(viewer.selectedEntity);
                 viewer.selectedEntity.billboard.image = 'assets/img/nordic-icon-y.svg';
                 var listEntry = viewer.selectedEntity._properties._list_entry._value;
                 if (undefined !== listEntry) {
@@ -133,7 +137,11 @@ class Globe {
                 //         roll: 0.0
                 //     }
                 // });
-                sidebar.openSidebar();
+                if (window.width > 740) {
+                    sidebar.openSidebar();
+                } else {
+                    document.querySelector('.mobile-sidebar').classList.add('reveal');
+                }
             } else {
                 sidebar.closeSidebar();
             }
@@ -154,6 +162,29 @@ class Globe {
             // clear out the data blocks in the sidebar
             while (document.querySelector('.device-data').firstChild) {
                 datumContainer.removeChild(document.querySelector('.device-data').firstChild);
+            }
+            console.log(props._data._value);
+            for (const name in props._data._value) {
+                var dataBlock = new DeviceDatum(name, props._data._value[name]).returnNode();
+                datumContainer.appendChild(dataBlock);
+            }
+        }
+    }
+    static populateMobileData(entity) {
+        var props = entity._properties;
+
+        var deviceData = document.querySelector('.mobile-sidebar .data-display');
+        var name = deviceData.querySelector('.device-location-name-label');
+        var coords = deviceData.querySelector('.coordinates');
+        var datumContainer = deviceData.querySelector('.mobile-sidebar .device-data');
+
+        name.innerHTML = props._name;
+        coords.innerHTML = props._coords._value == null ? 'No GPS Data Available' : props._coords;
+        // create datum blocks
+        if (undefined !== props._data._value) {
+            // clear out the data blocks in the sidebar
+            while (document.querySelector('.mobile-sidebar .device-data').firstChild) {
+                datumContainer.removeChild(document.querySelector('.mobile-sidebar .device-data').firstChild);
             }
             console.log(props._data._value);
             for (const name in props._data._value) {

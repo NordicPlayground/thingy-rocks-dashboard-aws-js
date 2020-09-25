@@ -1,0 +1,51 @@
+@import 'variables.scss';
+@media #{$midbreak} {
+    // intro
+    // sidebar
+    .infobox {
+        max-width: 275px;
+        width: calc(70% - 100px);
+        bottom: auto;
+        top: 60px;
+        right: 60px;
+        &:not(.reveal) {
+            display: none;
+        }
+    }
+    @media #{$mobilebreak} {
+        // intro
+        .intro-inner {
+            margin-left: 25px;
+            margin-right: 25px;
+        }
+        // sidebar
+        .sidebar:not(.mobile-sidebar) {
+            &.open {
+                right: 0;
+                width: calc(100% - 50px);
+                max-width: 300px;
+                padding: 25px;
+                &.open {
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                }
+                .sidebar-toggle {
+                    right: 30px;
+                }
+            }
+            .logo {
+                float: left;
+                width: auto;
+            }
+            .logo,
+            .data-display,
+            .device-list-block {
+                max-width: 300px;
+            }
+        }
+        // need to structure and fix
+        .mobile-sidebar {
+            display: inline-block;
+        }
+    }
+}

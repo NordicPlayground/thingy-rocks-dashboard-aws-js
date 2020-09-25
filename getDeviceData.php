@@ -110,9 +110,9 @@ function getMessagesForDevice($device){
     if($item->message->appId == 'TEMP' && $device['properties']['data']['temp'] == false ){
       $device['properties']['data']['temp'] = $item->message->data;
     }
-    if($item->message->appId == 'AIR_PRESS' && $device['properties']['data']['air_pressure'] == false ){
-      $device['properties']['data']['air_pressure'] = $item->message->data;
-    }
+    // if($item->message->appId == 'AIR_PRESS' && $device['properties']['data']['air_pressure'] == false ){
+    //   $device['properties']['data']['air_pressure'] = $item->message->data;
+    // }
     if($item->message->appId == 'HUMID' && $device['properties']['data']['humidity'] == false ){
       $device['properties']['data']['humidity'] = $item->message->data;
     }

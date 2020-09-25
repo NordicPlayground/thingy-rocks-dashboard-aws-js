@@ -1,0 +1,27 @@
+@import 'variables.scss';
+
+/* globals */
+
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 22px;
+    font-family: 'GT Eesti Display';
+    background: black;
+}
+
+h3 {
+    margin: 0;
+    // font-size: 13px;
+    color: $lightBlue;
+    // letter-spacing: 0.43px;
+    // line-height: 14px;
+    font-family: Overpass-Regular;
+    font-size: 16px;
+    letter-spacing: 0.43px;
+    line-height: 20px;
+    font-weight: 300;
+}

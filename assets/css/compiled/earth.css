@@ -2,9 +2,13 @@
   position: fixed;
   top: 0;
   left: 0;
-  right: -300px;
+  right: 0;
+  transition: right 500ms;
   bottom: 0;
   overflow: hidden;
+}
+.open-sidebar #cesiumContainer {
+  right: -300px;
 }
 #cesiumContainer .cesium-viewer,
 #cesiumContainer .cesium-viewer-cesiumWidgetContainer,

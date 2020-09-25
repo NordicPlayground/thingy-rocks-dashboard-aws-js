@@ -3,6 +3,7 @@ class Sidebar {
 
         this.isOpen = true;
         this.DOM = {};
+        this.DOM.body = document.querySelector('body');
         this.DOM.sidebar = document.querySelector('.sidebar');
         this.DOM.toggle = document.querySelector('.sidebar-toggle');
         this.DOM.data = this.DOM.sidebar.querySelector('.sidebar-data');
@@ -26,9 +27,12 @@ class Sidebar {
 
     openSidebar() {
         this.DOM.sidebar.classList.add('open');
+        this.DOM.body.classList.add('open-sidebar');
     }
     closeSidebar() {
         this.DOM.sidebar.classList.remove('open');
+        this.DOM.body.classList.remove('open-sidebar');
+
     }
 
     isOpenTest() {

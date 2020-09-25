@@ -39,41 +39,6 @@ function loadScript(src, callback) {
     t.parentNode.insertBefore(s, t);
 }
 
-
-
-
-function globeBuild() {
-    //replace this array with real data coming in from API
-    let dataPoints = [{
-            'position': Cesium.Cartesian3.fromDegrees(-122.6750, 45.5051),
-            'properties': {
-                'coords': '45.5051° N, 122.6750° W',
-                'name': 'Portland Or',
-
-                'data': {
-                    'first number': 48.5051,
-                    'string thing': '45°'
-                }
-            }
-        },
-        {
-            'position': Cesium.Cartesian3.fromDegrees(-122.6750, 48.5051),
-            'properties': {
-                'coords': '48.5051° N, 122.6750° W',
-                'name': 'Paris France',
-
-                'data': {
-                    'first thing': 2138.5555,
-                    'second thing': '72%'
-                }
-            }
-        }
-    ];
-    // getData();
-    // var realData = getData(); // this will become the data source for the globe markers
-
-    // var globe = new Globe(getData());
-}
 // this is getting real data
 function getData() {
     var xmlhttp = new XMLHttpRequest();
@@ -103,7 +68,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     window.setTimeout(function() {
         document.querySelector('body').classList.add('loaded');
-        document.querySelector('.sidebar').classList.add('open');
+        if (window.innerWidth > 770) {
+            document.querySelector('.sidebar').classList.add('open');
+            document.querySelector('body').classList.add('open-sidebar');
+        }
     }, 800);
 
 
@@ -120,13 +88,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
-
-
-
-
-
-
-
+    document.querySelector('.top-tab').addEventListener('click', function() {
+        if (document.querySelector('.infobox').classList.contains('reveal')) {
+            document.querySelector('.infobox').classList.remove('reveal');
+        } else {
+            document.querySelector('.infobox').classList.add('reveal');
+        }
+    })
 
 });
