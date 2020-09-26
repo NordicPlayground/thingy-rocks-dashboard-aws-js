@@ -23,7 +23,7 @@
             &.open {
                 right: 0;
                 width: calc(100% - 50px);
-                max-width: 300px;
+                // max-width: 300px;
                 padding: 25px;
                 &.open {
                     overflow-y: auto;

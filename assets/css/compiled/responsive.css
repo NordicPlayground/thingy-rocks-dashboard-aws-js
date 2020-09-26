@@ -19,7 +19,6 @@
   .sidebar:not(.mobile-sidebar).open {
     right: 0;
     width: calc(100% - 50px);
-    max-width: 300px;
     padding: 25px;
   }
   .sidebar:not(.mobile-sidebar).open.open {

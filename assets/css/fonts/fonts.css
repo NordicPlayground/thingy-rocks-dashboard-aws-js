@@ -1,11 +1,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-MediumItalic.eot');
-    src: url('GTEestiDisplay-MediumItalic.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-MediumItalic.woff2') format('woff2'),
-        url('GTEestiDisplay-MediumItalic.woff') format('woff'),
-        url('GTEestiDisplay-MediumItalic.ttf') format('truetype'),
-        url('GTEestiDisplay-MediumItalic.svg#GTEestiDisplay-MediumItalic') format('svg');
+    src: url('GTEestiDisplay-MediumItalic.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-MediumItalic.woff2') format('woff2'), url('GTEestiDisplay-MediumItalic.woff') format('woff'), url('GTEestiDisplay-MediumItalic.ttf') format('truetype'), url('GTEestiDisplay-MediumItalic.svg#GTEestiDisplay-MediumItalic') format('svg');
     font-weight: 500;
     font-style: italic;
     font-display: swap;
@@ -14,11 +10,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-Bold.eot');
-    src: url('GTEestiDisplay-Bold.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-Bold.woff2') format('woff2'),
-        url('GTEestiDisplay-Bold.woff') format('woff'),
-        url('GTEestiDisplay-Bold.ttf') format('truetype'),
-        url('GTEestiDisplay-Bold.svg#GTEestiDisplay-Bold') format('svg');
+    src: url('GTEestiDisplay-Bold.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-Bold.woff2') format('woff2'), url('GTEestiDisplay-Bold.woff') format('woff'), url('GTEestiDisplay-Bold.ttf') format('truetype'), url('GTEestiDisplay-Bold.svg#GTEestiDisplay-Bold') format('svg');
     font-weight: bold;
     font-style: normal;
     font-display: swap;
@@ -27,11 +19,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-Light.eot');
-    src: url('GTEestiDisplay-Light.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-Light.woff2') format('woff2'),
-        url('GTEestiDisplay-Light.woff') format('woff'),
-        url('GTEestiDisplay-Light.ttf') format('truetype'),
-        url('GTEestiDisplay-Light.svg#GTEestiDisplay-Light') format('svg');
+    src: url('GTEestiDisplay-Light.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-Light.woff2') format('woff2'), url('GTEestiDisplay-Light.woff') format('woff'), url('GTEestiDisplay-Light.ttf') format('truetype'), url('GTEestiDisplay-Light.svg#GTEestiDisplay-Light') format('svg');
     font-weight: 300;
     font-style: normal;
     font-display: swap;
@@ -40,11 +28,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-LightItalic.eot');
-    src: url('GTEestiDisplay-LightItalic.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-LightItalic.woff2') format('woff2'),
-        url('GTEestiDisplay-LightItalic.woff') format('woff'),
-        url('GTEestiDisplay-LightItalic.ttf') format('truetype'),
-        url('GTEestiDisplay-LightItalic.svg#GTEestiDisplay-LightItalic') format('svg');
+    src: url('GTEestiDisplay-LightItalic.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-LightItalic.woff2') format('woff2'), url('GTEestiDisplay-LightItalic.woff') format('woff'), url('GTEestiDisplay-LightItalic.ttf') format('truetype'), url('GTEestiDisplay-LightItalic.svg#GTEestiDisplay-LightItalic') format('svg');
     font-weight: 300;
     font-style: italic;
     font-display: swap;
@@ -53,11 +37,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-BoldItalic.eot');
-    src: url('GTEestiDisplay-BoldItalic.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-BoldItalic.woff2') format('woff2'),
-        url('GTEestiDisplay-BoldItalic.woff') format('woff'),
-        url('GTEestiDisplay-BoldItalic.ttf') format('truetype'),
-        url('GTEestiDisplay-BoldItalic.svg#GTEestiDisplay-BoldItalic') format('svg');
+    src: url('GTEestiDisplay-BoldItalic.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-BoldItalic.woff2') format('woff2'), url('GTEestiDisplay-BoldItalic.woff') format('woff'), url('GTEestiDisplay-BoldItalic.ttf') format('truetype'), url('GTEestiDisplay-BoldItalic.svg#GTEestiDisplay-BoldItalic') format('svg');
     font-weight: bold;
     font-style: italic;
     font-display: swap;
@@ -66,11 +46,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-Medium.eot');
-    src: url('GTEestiDisplay-Medium.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-Medium.woff2') format('woff2'),
-        url('GTEestiDisplay-Medium.woff') format('woff'),
-        url('GTEestiDisplay-Medium.ttf') format('truetype'),
-        url('GTEestiDisplay-Medium.svg#GTEestiDisplay-Medium') format('svg');
+    src: url('GTEestiDisplay-Medium.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-Medium.woff2') format('woff2'), url('GTEestiDisplay-Medium.woff') format('woff'), url('GTEestiDisplay-Medium.ttf') format('truetype'), url('GTEestiDisplay-Medium.svg#GTEestiDisplay-Medium') format('svg');
     font-weight: 500;
     font-style: normal;
     font-display: swap;
@@ -79,11 +55,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-RegularItalic.eot');
-    src: url('GTEestiDisplay-RegularItalic.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-RegularItalic.woff2') format('woff2'),
-        url('GTEestiDisplay-RegularItalic.woff') format('woff'),
-        url('GTEestiDisplay-RegularItalic.ttf') format('truetype'),
-        url('GTEestiDisplay-RegularItalic.svg#GTEestiDisplay-RegularItalic') format('svg');
+    src: url('GTEestiDisplay-RegularItalic.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-RegularItalic.woff2') format('woff2'), url('GTEestiDisplay-RegularItalic.woff') format('woff'), url('GTEestiDisplay-RegularItalic.ttf') format('truetype'), url('GTEestiDisplay-RegularItalic.svg#GTEestiDisplay-RegularItalic') format('svg');
     font-weight: normal;
     font-style: italic;
     font-display: swap;
@@ -92,11 +64,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-Regular.eot');
-    src: url('GTEestiDisplay-Regular.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-Regular.woff2') format('woff2'),
-        url('GTEestiDisplay-Regular.woff') format('woff'),
-        url('GTEestiDisplay-Regular.ttf') format('truetype'),
-        url('GTEestiDisplay-Regular.svg#GTEestiDisplay-Regular') format('svg');
+    src: url('GTEestiDisplay-Regular.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-Regular.woff2') format('woff2'), url('GTEestiDisplay-Regular.woff') format('woff'), url('GTEestiDisplay-Regular.ttf') format('truetype'), url('GTEestiDisplay-Regular.svg#GTEestiDisplay-Regular') format('svg');
     font-weight: normal;
     font-style: normal;
     font-display: swap;
@@ -105,11 +73,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-ThinItalic.eot');
-    src: url('GTEestiDisplay-ThinItalic.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-ThinItalic.woff2') format('woff2'),
-        url('GTEestiDisplay-ThinItalic.woff') format('woff'),
-        url('GTEestiDisplay-ThinItalic.ttf') format('truetype'),
-        url('GTEestiDisplay-ThinItalic.svg#GTEestiDisplay-ThinItalic') format('svg');
+    src: url('GTEestiDisplay-ThinItalic.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-ThinItalic.woff2') format('woff2'), url('GTEestiDisplay-ThinItalic.woff') format('woff'), url('GTEestiDisplay-ThinItalic.ttf') format('truetype'), url('GTEestiDisplay-ThinItalic.svg#GTEestiDisplay-ThinItalic') format('svg');
     font-weight: 100;
     font-style: italic;
     font-display: swap;
@@ -118,11 +82,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-UltraBoldItalic.eot');
-    src: url('GTEestiDisplay-UltraBoldItalic.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-UltraBoldItalic.woff2') format('woff2'),
-        url('GTEestiDisplay-UltraBoldItalic.woff') format('woff'),
-        url('GTEestiDisplay-UltraBoldItalic.ttf') format('truetype'),
-        url('GTEestiDisplay-UltraBoldItalic.svg#GTEestiDisplay-UltraBoldItalic') format('svg');
+    src: url('GTEestiDisplay-UltraBoldItalic.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-UltraBoldItalic.woff2') format('woff2'), url('GTEestiDisplay-UltraBoldItalic.woff') format('woff'), url('GTEestiDisplay-UltraBoldItalic.ttf') format('truetype'), url('GTEestiDisplay-UltraBoldItalic.svg#GTEestiDisplay-UltraBoldItalic') format('svg');
     font-weight: 800;
     font-style: italic;
     font-display: swap;
@@ -131,11 +91,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-UltraBold.eot');
-    src: url('GTEestiDisplay-UltraBold.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-UltraBold.woff2') format('woff2'),
-        url('GTEestiDisplay-UltraBold.woff') format('woff'),
-        url('GTEestiDisplay-UltraBold.ttf') format('truetype'),
-        url('GTEestiDisplay-UltraBold.svg#GTEestiDisplay-UltraBold') format('svg');
+    src: url('GTEestiDisplay-UltraBold.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-UltraBold.woff2') format('woff2'), url('GTEestiDisplay-UltraBold.woff') format('woff'), url('GTEestiDisplay-UltraBold.ttf') format('truetype'), url('GTEestiDisplay-UltraBold.svg#GTEestiDisplay-UltraBold') format('svg');
     font-weight: 800;
     font-style: normal;
     font-display: swap;
@@ -144,11 +100,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-Thin.eot');
-    src: url('GTEestiDisplay-Thin.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-Thin.woff2') format('woff2'),
-        url('GTEestiDisplay-Thin.woff') format('woff'),
-        url('GTEestiDisplay-Thin.ttf') format('truetype'),
-        url('GTEestiDisplay-Thin.svg#GTEestiDisplay-Thin') format('svg');
+    src: url('GTEestiDisplay-Thin.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-Thin.woff2') format('woff2'), url('GTEestiDisplay-Thin.woff') format('woff'), url('GTEestiDisplay-Thin.ttf') format('truetype'), url('GTEestiDisplay-Thin.svg#GTEestiDisplay-Thin') format('svg');
     font-weight: 100;
     font-style: normal;
     font-display: swap;
@@ -157,11 +109,7 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-UltraLight.eot');
-    src: url('GTEestiDisplay-UltraLight.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-UltraLight.woff2') format('woff2'),
-        url('GTEestiDisplay-UltraLight.woff') format('woff'),
-        url('GTEestiDisplay-UltraLight.ttf') format('truetype'),
-        url('GTEestiDisplay-UltraLight.svg#GTEestiDisplay-UltraLight') format('svg');
+    src: url('GTEestiDisplay-UltraLight.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-UltraLight.woff2') format('woff2'), url('GTEestiDisplay-UltraLight.woff') format('woff'), url('GTEestiDisplay-UltraLight.ttf') format('truetype'), url('GTEestiDisplay-UltraLight.svg#GTEestiDisplay-UltraLight') format('svg');
     font-weight: 200;
     font-style: normal;
     font-display: swap;
@@ -170,13 +118,152 @@
 @font-face {
     font-family: 'GT Eesti Display';
     src: url('GTEestiDisplay-UltraLightItalic.eot');
-    src: url('GTEestiDisplay-UltraLightItalic.eot?#iefix') format('embedded-opentype'),
-        url('GTEestiDisplay-UltraLightItalic.woff2') format('woff2'),
-        url('GTEestiDisplay-UltraLightItalic.woff') format('woff'),
-        url('GTEestiDisplay-UltraLightItalic.ttf') format('truetype'),
-        url('GTEestiDisplay-UltraLightItalic.svg#GTEestiDisplay-UltraLightItalic') format('svg');
+    src: url('GTEestiDisplay-UltraLightItalic.eot?#iefix') format('embedded-opentype'), url('GTEestiDisplay-UltraLightItalic.woff2') format('woff2'), url('GTEestiDisplay-UltraLightItalic.woff') format('woff'), url('GTEestiDisplay-UltraLightItalic.ttf') format('truetype'), url('GTEestiDisplay-UltraLightItalic.svg#GTEestiDisplay-UltraLightItalic') format('svg');
     font-weight: 200;
     font-style: italic;
     font-display: swap;
 }
 
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-Bold.eot');
+    src: url('Overpass-Bold.eot?#iefix') format('embedded-opentype'), url('Overpass-Bold.woff2') format('woff2'), url('Overpass-Bold.woff') format('woff'), url('Overpass-Bold.svg#Overpass-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-Black.eot');
+    src: url('Overpass-Black.eot?#iefix') format('embedded-opentype'), url('Overpass-Black.woff2') format('woff2'), url('Overpass-Black.woff') format('woff'), url('Overpass-Black.svg#Overpass-Black') format('svg');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-ExtraBold.eot');
+    src: url('Overpass-ExtraBold.eot?#iefix') format('embedded-opentype'), url('Overpass-ExtraBold.woff2') format('woff2'), url('Overpass-ExtraBold.woff') format('woff'), url('Overpass-ExtraBold.svg#Overpass-ExtraBold') format('svg');
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-ExtraBoldItalic.eot');
+    src: url('Overpass-ExtraBoldItalic.eot?#iefix') format('embedded-opentype'), url('Overpass-ExtraBoldItalic.woff2') format('woff2'), url('Overpass-ExtraBoldItalic.woff') format('woff'), url('Overpass-ExtraBoldItalic.svg#Overpass-ExtraBoldItalic') format('svg');
+    font-weight: 800;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-BoldItalic.eot');
+    src: url('Overpass-BoldItalic.eot?#iefix') format('embedded-opentype'), url('Overpass-BoldItalic.woff2') format('woff2'), url('Overpass-BoldItalic.woff') format('woff'), url('Overpass-BoldItalic.svg#Overpass-BoldItalic') format('svg');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-BlackItalic.eot');
+    src: url('Overpass-BlackItalic.eot?#iefix') format('embedded-opentype'), url('Overpass-BlackItalic.woff2') format('woff2'), url('Overpass-BlackItalic.woff') format('woff'), url('Overpass-BlackItalic.svg#Overpass-BlackItalic') format('svg');
+    font-weight: 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-Regular.eot');
+    src: url('Overpass-Regular.eot?#iefix') format('embedded-opentype'), url('Overpass-Regular.woff2') format('woff2'), url('Overpass-Regular.woff') format('woff'), url('Overpass-Regular.svg#Overpass-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-ExtraLightItalic.eot');
+    src: url('Overpass-ExtraLightItalic.eot?#iefix') format('embedded-opentype'), url('Overpass-ExtraLightItalic.woff2') format('woff2'), url('Overpass-ExtraLightItalic.woff') format('woff'), url('Overpass-ExtraLightItalic.svg#Overpass-ExtraLightItalic') format('svg');
+    font-weight: 200;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-LightItalic.eot');
+    src: url('Overpass-LightItalic.eot?#iefix') format('embedded-opentype'), url('Overpass-LightItalic.woff2') format('woff2'), url('Overpass-LightItalic.woff') format('woff'), url('Overpass-LightItalic.svg#Overpass-LightItalic') format('svg');
+    font-weight: 300;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-Light.eot');
+    src: url('Overpass-Light.eot?#iefix') format('embedded-opentype'), url('Overpass-Light.woff2') format('woff2'), url('Overpass-Light.woff') format('woff'), url('Overpass-Light.svg#Overpass-Light') format('svg');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-ExtraLight.eot');
+    src: url('Overpass-ExtraLight.eot?#iefix') format('embedded-opentype'), url('Overpass-ExtraLight.woff2') format('woff2'), url('Overpass-ExtraLight.woff') format('woff'), url('Overpass-ExtraLight.svg#Overpass-ExtraLight') format('svg');
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-Italic.eot');
+    src: url('Overpass-Italic.eot?#iefix') format('embedded-opentype'), url('Overpass-Italic.woff2') format('woff2'), url('Overpass-Italic.woff') format('woff'), url('Overpass-Italic.svg#Overpass-Italic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-SemiBoldItalic.eot');
+    src: url('Overpass-SemiBoldItalic.eot?#iefix') format('embedded-opentype'), url('Overpass-SemiBoldItalic.woff2') format('woff2'), url('Overpass-SemiBoldItalic.woff') format('woff'), url('Overpass-SemiBoldItalic.svg#Overpass-SemiBoldItalic') format('svg');
+    font-weight: 600;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-SemiBold.eot');
+    src: url('Overpass-SemiBold.eot?#iefix') format('embedded-opentype'), url('Overpass-SemiBold.woff2') format('woff2'), url('Overpass-SemiBold.woff') format('woff'), url('Overpass-SemiBold.svg#Overpass-SemiBold') format('svg');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-ThinItalic.eot');
+    src: url('Overpass-ThinItalic.eot?#iefix') format('embedded-opentype'), url('Overpass-ThinItalic.woff2') format('woff2'), url('Overpass-ThinItalic.woff') format('woff'), url('Overpass-ThinItalic.svg#Overpass-ThinItalic') format('svg');
+    font-weight: 100;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Overpass';
+    src: url('Overpass-Thin.eot');
+    src: url('Overpass-Thin.eot?#iefix') format('embedded-opentype'), url('Overpass-Thin.woff2') format('woff2'), url('Overpass-Thin.woff') format('woff'), url('Overpass-Thin.svg#Overpass-Thin') format('svg');
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}

@@ -8,7 +8,7 @@ class Globe {
         var scene = this.configScene(viewer);
         var controls = this.initControls();
         // console.log(data);
-        this.addPoints(viewer, data);
+        this.addPoints(viewer, data, sidebar);
         this.clickAction(viewer, sidebar);
     }
 
@@ -55,7 +55,7 @@ class Globe {
 
 
 
-    addPoints(viewer, dataPoints) {
+    addPoints(viewer, dataPoints, sidebar) {
         // console.log(dataPoints);
         // console.log(typeof(dataPoints));
         var deviceList = document.querySelector('.device-list');
@@ -63,14 +63,14 @@ class Globe {
         if (Object.keys(dataPoints).length > 1) {
             for (const device in dataPoints) {
                 console.log(typeof(dataPoints[device]))
-                this.addPoint(viewer, dataPoints[device], deviceList);
+                this.addPoint(viewer, dataPoints[device], deviceList, sidebar);
             }
             //populate sidebar and auto-click first of last thingy?
         }
     }
 
 
-    addPoint(viewer, data, deviceList) {
+    addPoint(viewer, data, deviceList, sidebar) {
         console.log(data.position);
 
         // console.log(viewer);
@@ -95,16 +95,19 @@ class Globe {
         });
         listEntry.addEventListener('click', function() {
             viewer.selectedEntity = entity;
+            if (window.innerWidth < 771) {
+                sidebar.closeSidebar();
+            }
         })
     }
 
     createListEntry(viewer, data, deviceList) {
         let listEntry = document.createElement('li');
         listEntry.innerHTML = '<a href="#">' + data.properties.name + '</a>';
-        listEntry.addEventListener('click', function() {
+        // listEntry.addEventListener('click', function() {
 
-            })
-            // new Cesium.ScreenSpaceEventHandler(viewer.canvas)
+        //     })
+        // new Cesium.ScreenSpaceEventHandler(viewer.canvas)
         deviceList.appendChild(listEntry);
 
         return listEntry;
@@ -137,7 +140,7 @@ class Globe {
                 //         roll: 0.0
                 //     }
                 // });
-                if (window.innerWidth > 740) {
+                if (window.innerWidth > 770) {
                     sidebar.openSidebar();
                 } else {
                     document.querySelector('.mobile-sidebar').classList.add('reveal');

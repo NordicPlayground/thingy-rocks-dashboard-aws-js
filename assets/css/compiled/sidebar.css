@@ -71,7 +71,7 @@
   width: 10px;
 }
 .sidebar .sidebar-heading {
-  font-family: Overpass-Regular;
+  font-family: "Overpass";
   font-size: 16px;
   color: #65CDF5;
   letter-spacing: 0.43px;
@@ -95,7 +95,7 @@
   color: #244567;
 }
 .sidebar .data-display .device-location-coords .coordinates {
-  font-family: Overpass-Regular;
+  font-family: "Overpass";
   font-size: 13px;
   color: #244567;
   letter-spacing: 0.41px;
@@ -140,6 +140,7 @@
   bottom: -500px;
   left: 0;
   right: 0;
+  z-index: 9998;
   transition: bottom 500ms;
 }
 .mobile-sidebar.reveal {
