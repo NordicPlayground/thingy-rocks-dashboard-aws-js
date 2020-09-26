@@ -61,9 +61,14 @@ function getGPSforDevice($deviceID){
       $lng_multiplier = $gps_array[5] == 'E' ? 0.01 : -0.01;
       $lng = floatval($gps_array[4]) * $lng_multiplier;
 
+      $lat_raw = floatval($gps_array[2]) * .01;
+      $lat_readable = number_format($lat_raw, 3, ".", "");
+
+      $lng_raw = floatval($gps_array[4]) * .01;
+      $lng_readable = number_format($lat_raw, 3, ".", "");
       // echo 'lng = ' . $lng;
       // echo 'lat = ' . $lat;
-      $gps_readout = (floatval($gps_array[2]) * .01) . '° ' . $gps_array[3] . ', ' . (floatval($gps_array[4]) * .01) . '° ' . $gps_array[5];
+      $gps_readout = $lat_readable . '° ' . $gps_array[3] . ', ' . $lng_readable . '° ' . $gps_array[5];
       $coords = array(
         'lat' => $lat,
         'lng' => $lng,
