@@ -13,26 +13,47 @@ class Globe {
     }
 
     configScene(viewer) {
+
+        // viewer.scene.screenSpaceCameraController.enableTilt = false;
         //TODO the camera isn't right... need to control it more striclty and stop it from going off tilt or losing the globe
 
-        // viewer.scene.screenSpaceCameraController.minimumZoomDistance = 500000;
+        // viewer.scene.screenSpaceCameraController.minimumZoomDistance = 50;
         // viewer.scene.screenSpaceCameraController.maximumZoomDistance = 90000000;
         // viewer.scene.screenSpaceCameraController._minimumZoomRate = 300;
         // viewer.scene.screenSpaceCameraController.enableTilt = false;
-
-        // var canvas = viewer.canvas;
-        // canvas.setAttribute('tabindex', '0'); // needed to put focus on the canvas
-        // canvas.onclick = function() {
-        //     canvas.focus();
-        // };
-        // var ellipsoid = viewer.scene.globe.ellipsoid;
-
         // // disable the default event handlers
         // viewer.scene.screenSpaceCameraController.enableRotate = false;
-        // viewer.scene.screenSpaceCameraController.enableTranslate = false;
+        viewer.scene.screenSpaceCameraController.enableTranslate = false;
         // viewer.scene.screenSpaceCameraController.enableZoom = true;
-        // viewer.scene.screenSpaceCameraController.enableTilt = false;
+        viewer.scene.screenSpaceCameraController.enableTilt = false;
         // viewer.scene.screenSpaceCameraController.enableLook = true;
+
+        var canvas = viewer.canvas;
+        canvas.setAttribute('tabindex', '0'); // needed to put focus on the canvas
+        canvas.onclick = function() {
+            canvas.focus();
+        };
+        // var ellipsoid = viewer.scene.globe.ellipsoid;
+        // var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position)
+        //     .height;
+        // var moveRate = cameraHeight / 100.0;
+
+
+
+        document.querySelector('#zoom-out').addEventListener('click', function() {
+            var ellipsoid = viewer.scene.globe.ellipsoid;
+            var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position).height;
+            var moveRate = cameraHeight < 500000 ? cameraHeight / 100.0 : cameraHeight / 30.0;
+            console.log(cameraHeight);
+            viewer.camera.moveBackward(moveRate);
+        });
+        document.querySelector('#zoom-in').addEventListener('click', function() {
+            var ellipsoid = viewer.scene.globe.ellipsoid;
+            var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position).height;
+            var moveRate = cameraHeight < 500000 ? cameraHeight / 100.0 : cameraHeight / 30.0;
+            console.log(cameraHeight);
+            viewer.camera.moveForward(moveRate);
+        });
 
 
     }
@@ -47,10 +68,11 @@ class Globe {
     }
 
     initControls() {
-        return new Cesium.CesiumWidget('toolbar', {
-            scene3DOnly: true,
-            requestRenderMode: true
-        })
+
+        // return new Cesium.CesiumWidget('toolbar', {
+        //     scene3DOnly: true,
+        //     requestRenderMode: true
+        // })
     }
 
 
@@ -86,6 +108,9 @@ class Globe {
             },
             box: {
                 dimensions: new Cesium.Cartesian3(10000.0, 10000.0, 0.0),
+                // distanceDisplayCondition: (0.0, 1.0),
+                show: false
+
             },
             // TODO: fix the icons and the sizing and clickable space
             billboard: {
@@ -116,7 +141,7 @@ class Globe {
     clickAction(viewer, sidebar) {
 
         viewer.selectedEntityChanged.addEventListener(function() {
-            console.log(viewer.entities);
+            console.log(viewer);
             Globe.resetIcons(viewer);
             if (undefined !== viewer.selectedEntity) {
                 console.log(viewer.selectedEntity);
@@ -131,6 +156,7 @@ class Globe {
                 }
                 console.log(viewer.selectedEntity._position._value);
                 viewer.flyTo(viewer.selectedEntity);
+                // viewer.toWorldCoordinates(viewer.selectedEntity._position._value)
                 // viewer.camera.setView({
                 //     // destination: { x: viewer.selectedEntity._position._value.x, y: viewer.selectedEntity._position._value.y, z: (viewer.selectedEntity._position._value.z + 500000) },
                 //     destination: Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0])

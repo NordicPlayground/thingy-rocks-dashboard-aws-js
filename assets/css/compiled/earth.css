@@ -17,3 +17,6 @@
   height: 100%;
   width: 100%;
 }
+#cesiumContainer .cesium-viewer-animationContainer {
+  display: none;
+}

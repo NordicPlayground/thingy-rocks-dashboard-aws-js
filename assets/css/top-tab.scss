@@ -14,8 +14,14 @@
     }
     img {
         position: absolute;
-        right: 20px;
-        top: 10px;
-        height: 20px;
+        a right: 12px;
+        top: 6px;
+        height: 30px;
+        transition: $transitionTime;
+    }
+    &:hover img {
+        right: 10px;
+        top: 4px;
+        height: 34px;
     }
 }

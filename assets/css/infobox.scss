@@ -2,6 +2,7 @@
 .infobox {
     width: 275px;
     background: $white;
+    color: $darkBlue;
     padding: 15px 30px;
     text-align: left;
     position: fixed;
@@ -10,6 +11,14 @@
     z-index: 999;
     opacity: 0;
     transition: all $transitionTime;
+    a {
+        color: $darkBlue;
+        text-decoration: none;
+        &:visited {
+            color: $darkBlue;
+            opacity: 0.6;
+        }
+    }
     .loaded & {
         opacity: 1;
         ;

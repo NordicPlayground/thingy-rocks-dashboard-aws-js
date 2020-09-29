@@ -16,7 +16,7 @@
     .logo {
         float: left;
         height: 40px;
-        width: 100%;
+        clear: both;
     }
     .sidebar-toggle {
         width: 30px;
@@ -25,6 +25,10 @@
         background-color: $darkBlue;
         right: -30px;
         top: 30px;
+        cursor: pointer;
+        &:hover {
+            background-color: $orange;
+        }
         div {
             width: 16px;
             height: 1px;
@@ -73,26 +77,29 @@
     }
     .sidebar-heading {
         font-family: 'Overpass';
-        font-size: 16px;
+        font-size: 18px;
         color: #65CDF5;
         letter-spacing: 0.43px;
         line-height: 20px;
-        font-weight: 300;
+        font-weight: 500;
     }
     .data-display {
+        margin-bottom: 60px;
         .device-info {
             .device-img {
-                max-width: 100%;
+                max-width: 80%;
+                width: 147px;
                 margin-top: 50px;
             }
             .device-location-name {
-                border-bottom: 2px solid $lightBlue;
-                margin-bottom: 20px;
+                border-bottom: 1px solid $lightBlue;
+                margin-bottom: 30px;
                 img {
                     width: 20px;
+                    margin: 0 5px -3px 0;
                 }
                 .device-location-name-label {
-                    font-size: 16px;
+                    font-size: 18px;
                     line-height: 27px;
                     color: $darkBlue;
                 }
@@ -101,23 +108,25 @@
         .device-location-coords {
             .coordinates {
                 font-family: 'Overpass';
-                font-size: 13px;
+                font-size: 16px;
                 color: #244567;
                 letter-spacing: 0.41px;
                 line-height: 18px;
+                margin-top: 7px;
             }
         }
         .device-data {
             &__datum {
                 padding: 10px 15px;
-                margin: 12px auto;
+                margin: 12px auto 20px;
                 background: #FBFBFB;
                 box-shadow: 0 -2px 4px 0 #FFFFFF, 0 2px 4px 0 #EAEAEA;
                 .datum-info {
                     font-size: 35px;
                     color: #244567;
                     letter-spacing: 0.88px;
-                    line-height: 14px;
+                    line-height: 35px;
+                    margin: 5px 0;
                 }
             }
         }
@@ -125,20 +134,23 @@
     .device-list-block {
         .device-list {
             padding: 0;
-            margin: 0;
+            margin: 15px 0 0;
+            border-top: 1px solid $grey;
             li {
                 width: 100%;
-                border-bottom: 2px solid $darkGrey;
+                border-bottom: 2px solid $grey;
                 list-style: none;
+                margin: 2px 0 4px;
                 a {
                     text-decoration: none;
-                    font-size: 13px;
+                    font-size: 16px;
                     color: $darkGrey;
                     letter-spacing: 0.41px;
                     line-height: 18px;
                 }
-                &.active a {
-                    color: $lightBlue;
+                &.active a,
+                &:hover a {
+                    color: $darkBlue;
                 }
             }
         }
@@ -177,6 +189,28 @@
                 line-height: 1;
                 margin: 0 0;
             }
+        }
+    }
+}
+
+#camera-nav {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    width: 56px;
+    cursor: pointer;
+    transition: left $transitionTime;
+    .open-sidebar & {
+        left: 320px;
+    }
+    img {
+        width: 28px;
+        /* height: 28px; */
+        float: left;
+        margin-right: 0;
+        transition: opaity $transitionTime;
+        &:hover {
+            opacity: .6;
         }
     }
 }

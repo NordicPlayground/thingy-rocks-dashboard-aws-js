@@ -1,6 +1,7 @@
 .infobox {
   width: 275px;
   background: #fff;
+  color: #244567;
   padding: 15px 30px;
   text-align: left;
   position: fixed;
@@ -9,6 +10,14 @@
   z-index: 999;
   opacity: 0;
   transition: all 500ms;
+}
+.infobox a {
+  color: #244567;
+  text-decoration: none;
+}
+.infobox a:visited {
+  color: #244567;
+  opacity: 0.6;
 }
 .loaded .infobox {
   opacity: 1;

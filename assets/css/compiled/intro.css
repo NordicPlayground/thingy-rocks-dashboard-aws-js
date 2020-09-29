@@ -27,23 +27,22 @@
   text-align: center;
 }
 .intro-container .intro-inner img {
-  height: 230px;
-  margin: 0 auto 45px;
+  height: 229xpx;
+  margin: 0 auto;
 }
 .intro-container .intro-inner .blue {
-  font-size: 16px;
+  font-size: 18px;
   color: #244567;
   letter-spacing: 0.5px;
   text-align: center;
   line-height: 21px;
 }
 .intro-container .intro-inner .grey {
-  font-size: 16px;
+  font-size: 18px;
   color: #B8C5CB;
   letter-spacing: 0.5px;
   text-align: center;
   line-height: 21px;
-  font-size: 16px;
 }
 .intro-container p.white {
   color: #fff;

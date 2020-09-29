@@ -16,7 +16,7 @@
 .sidebar .logo {
   float: left;
   height: 40px;
-  width: 100%;
+  clear: both;
 }
 .sidebar .sidebar-toggle {
   width: 30px;
@@ -25,6 +25,10 @@
   background-color: #244567;
   right: -30px;
   top: 30px;
+  cursor: pointer;
+}
+.sidebar .sidebar-toggle:hover {
+  background-color: #FEA512;
 }
 .sidebar .sidebar-toggle div {
   width: 16px;
@@ -72,38 +76,44 @@
 }
 .sidebar .sidebar-heading {
   font-family: "Overpass";
-  font-size: 16px;
+  font-size: 18px;
   color: #65CDF5;
   letter-spacing: 0.43px;
   line-height: 20px;
-  font-weight: 300;
+  font-weight: 500;
+}
+.sidebar .data-display {
+  margin-bottom: 60px;
 }
 .sidebar .data-display .device-info .device-img {
-  max-width: 100%;
+  max-width: 80%;
+  width: 147px;
   margin-top: 50px;
 }
 .sidebar .data-display .device-info .device-location-name {
-  border-bottom: 2px solid #65CDF5;
-  margin-bottom: 20px;
+  border-bottom: 1px solid #65CDF5;
+  margin-bottom: 30px;
 }
 .sidebar .data-display .device-info .device-location-name img {
   width: 20px;
+  margin: 0 5px -3px 0;
 }
 .sidebar .data-display .device-info .device-location-name .device-location-name-label {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 27px;
   color: #244567;
 }
 .sidebar .data-display .device-location-coords .coordinates {
   font-family: "Overpass";
-  font-size: 13px;
+  font-size: 16px;
   color: #244567;
   letter-spacing: 0.41px;
   line-height: 18px;
+  margin-top: 7px;
 }
 .sidebar .data-display .device-data__datum {
   padding: 10px 15px;
-  margin: 12px auto;
+  margin: 12px auto 20px;
   background: #FBFBFB;
   box-shadow: 0 -2px 4px 0 #FFFFFF, 0 2px 4px 0 #EAEAEA;
 }
@@ -111,26 +121,29 @@
   font-size: 35px;
   color: #244567;
   letter-spacing: 0.88px;
-  line-height: 14px;
+  line-height: 35px;
+  margin: 5px 0;
 }
 .sidebar .device-list-block .device-list {
   padding: 0;
-  margin: 0;
+  margin: 15px 0 0;
+  border-top: 1px solid #fbfbfb;
 }
 .sidebar .device-list-block .device-list li {
   width: 100%;
-  border-bottom: 2px solid #B8C5CB;
+  border-bottom: 2px solid #fbfbfb;
   list-style: none;
+  margin: 2px 0 4px;
 }
 .sidebar .device-list-block .device-list li a {
   text-decoration: none;
-  font-size: 13px;
+  font-size: 16px;
   color: #B8C5CB;
   letter-spacing: 0.41px;
   line-height: 18px;
 }
-.sidebar .device-list-block .device-list li.active a {
-  color: #65CDF5;
+.sidebar .device-list-block .device-list li.active a, .sidebar .device-list-block .device-list li:hover a {
+  color: #244567;
 }
 
 .mobile-sidebar {
@@ -167,4 +180,26 @@
 .mobile-sidebar .device-data .device-data__datum .datum-info {
   line-height: 1;
   margin: 0 0;
+}
+
+#camera-nav {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  width: 56px;
+  cursor: pointer;
+  transition: left 500ms;
+}
+.open-sidebar #camera-nav {
+  left: 320px;
+}
+#camera-nav img {
+  width: 28px;
+  /* height: 28px; */
+  float: left;
+  margin-right: 0;
+  transition: opaity 500ms;
+}
+#camera-nav img:hover {
+  opacity: 0.6;
 }

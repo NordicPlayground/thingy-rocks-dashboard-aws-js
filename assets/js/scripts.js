@@ -88,12 +88,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    document.querySelector('.top-tab').addEventListener('click', function() {
-        if (document.querySelector('.infobox').classList.contains('reveal')) {
-            document.querySelector('.infobox').classList.remove('reveal');
-        } else {
-            document.querySelector('.infobox').classList.add('reveal');
-        }
-    })
+    // document.querySelector('.top-tab').addEventListener('click', function() {
+    //     if (document.querySelector('.infobox').classList.contains('reveal')) {
+    //         document.querySelector('.infobox').classList.remove('reveal');
+    //     } else {
+    //         document.querySelector('.infobox').classList.add('reveal');
+    //     }
+    // })
 
 });

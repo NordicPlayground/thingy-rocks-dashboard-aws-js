@@ -7,7 +7,7 @@ body {
     width: 100vw;
     overflow: hidden;
     font-weight: 400;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 22px;
     font-family: 'GT Eesti Display';
     background: black;
@@ -15,13 +15,10 @@ body {
 
 h3 {
     margin: 0;
-    // font-size: 13px;
     color: $lightBlue;
-    // letter-spacing: 0.43px;
-    // line-height: 14px;
     font-family: 'Overpass';
-    font-size: 16px;
+    font-size: 18px;
     letter-spacing: 0.43px;
     line-height: 20px;
-    font-weight: 300;
+    font-weight: 500;
 }

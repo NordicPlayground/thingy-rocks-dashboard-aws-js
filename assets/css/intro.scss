@@ -26,23 +26,22 @@
         position: relative;
         text-align: center;
         img {
-            height: 230px;
-            margin: 0 auto 45px;
+            height: 229px;
+            margin: 0 auto;
         }
         .blue {
-            font-size: 16px;
+            font-size: 18px;
             color: $darkBlue;
             letter-spacing: 0.5px;
             text-align: center;
             line-height: 21px;
         }
         .grey {
-            font-size: 16px;
+            font-size: 18px;
             color: $darkGrey;
             letter-spacing: 0.5px;
             text-align: center;
             line-height: 21px;
-            font-size: 16px;
         }
     }
     p.white {

@@ -16,7 +16,7 @@
 
     <div class="intro-container">
         <div class="intro-inner">
-          <img src="assets/img/thingy-lg.png"/>
+          <img src="assets/img/thingy-intro.svg"/>
           <p class="blue">Welcome to Nordic Semiconductor’s ThingyWorld.</p>
           <p class="grey">ThingyWorld is an interactive map experience that lets you experience the Thingy91 in action.</p>
         </div>
@@ -30,7 +30,7 @@
 
       <div class="data-display">
         <div class="device-info">
-        	<img class="device-img" src="assets/img/device-data-img.png" />
+        	<img class="device-img" src="assets/img/thingy.svg" />
           <div class="device-location-name">
             <img src="assets/img/nordic-icon-b.svg">
             <span class="device-location-name-label"><!-- populated on thingy click --></span>
@@ -53,9 +53,9 @@
       </div>
     </div>
 
-    <div class="top-tab">
+    <a href="http://nordicsemiconductor.com/" target="_blank" class="top-tab">
       <img src="assets/img/nordic-icon-y.svg" />
-    </div>
+    </a>
 
     <div class="infobox">
       <p>
@@ -74,26 +74,29 @@
       
 
       
-    <!-- need to make this dynamic-->
     <div class="mobile-sidebar sidebar">
       <div class="data-display">
         <div class="device-info">
         	
           <div class="device-location-name">
             <img src="assets/img/nordic-icon-b.svg">
-            <span class="device-location-name-label">nrf-352656101077413</span>
+            <span class="device-location-name-label"></span>
           </div>
           <div class="device-location-coords">
-            <h3 class="sidebar-heading">Coordinates<p></p>
-            <p class="coordinates">45.3172254° N, 122.4199957° W</p>
-          </h3></div>
+            <h3 class="sidebar-heading">Coordinates</h3>
+            <p class="coordinates"></p>
+          </div>
         </div>
         <div class="device-data">
 
         </div>
       </div>
     </div>
- 
+  
+    <div id="camera-nav">
+    <img src="assets/img/zoom-out.svg" id="zoom-out" />
+    <img src="assets/img/zoom-in.svg" id="zoom-in" />
+    </div>
     <!-- change to use minified scripts in production -->
     <script src="./assets/js/classes/Sidebar.js"></script>
     <script src="./assets/js/classes/DeviceDatum.js"></script>
