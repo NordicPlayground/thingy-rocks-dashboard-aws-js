@@ -113,13 +113,13 @@ function getMessagesForDevice($device){
 
   foreach($messages->items as $item){
     if($item->message->appId == 'TEMP' && $device['properties']['data']['temp'] == false ){
-      $device['properties']['data']['Temperature'] = $item->message->data;
+      $device['properties']['data']['Temperature'] = $item->message->data . '°';
     }
     // if($item->message->appId == 'AIR_PRESS' && $device['properties']['data']['air_pressure'] == false ){
     //   $device['properties']['data']['air_pressure'] = $item->message->data;
     // }
     if($item->message->appId == 'HUMID' && $device['properties']['data']['humidity'] == false ){
-      $device['properties']['data']['Humidity'] = $item->message->data;
+      $device['properties']['data']['Humidity'] = $item->message->data . '%';
     }
     // if($item->message->appId == 'GPS' && $device['gps'] == false ){
     //   $device['properties']['coords'] = $item->message->data;

@@ -214,3 +214,9 @@
         }
     }
 }
+
+.mobile-sidebar.sidebar.reveal+#camera-nav {
+    bottom: auto;
+    top: 30px;
+    left: calc(50% - 55px);
+}

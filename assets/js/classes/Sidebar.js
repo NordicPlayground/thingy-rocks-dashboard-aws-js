@@ -32,7 +32,9 @@ class Sidebar {
     closeSidebar() {
         this.DOM.sidebar.classList.remove('open');
         this.DOM.body.classList.remove('open-sidebar');
-
+    }
+    closeMobileSidebar() {
+        document.querySelector('.mobile-sidebar').classList.remove('reveal');
     }
 
     isOpenTest() {

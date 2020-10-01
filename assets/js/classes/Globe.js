@@ -20,19 +20,19 @@ class Globe {
         // viewer.scene.screenSpaceCameraController.minimumZoomDistance = 50;
         // viewer.scene.screenSpaceCameraController.maximumZoomDistance = 90000000;
         // viewer.scene.screenSpaceCameraController._minimumZoomRate = 300;
-        // viewer.scene.screenSpaceCameraController.enableTilt = false;
+        viewer.scene.screenSpaceCameraController.enableTilt = false;
         // // disable the default event handlers
         // viewer.scene.screenSpaceCameraController.enableRotate = false;
-        viewer.scene.screenSpaceCameraController.enableTranslate = false;
+        // viewer.scene.screenSpaceCameraController.enableTranslate = false;
         // viewer.scene.screenSpaceCameraController.enableZoom = true;
-        viewer.scene.screenSpaceCameraController.enableTilt = false;
+        // viewer.scene.screenSpaceCameraController.enableTilt = false;
         // viewer.scene.screenSpaceCameraController.enableLook = true;
 
-        var canvas = viewer.canvas;
-        canvas.setAttribute('tabindex', '0'); // needed to put focus on the canvas
-        canvas.onclick = function() {
-            canvas.focus();
-        };
+        // var canvas = viewer.canvas;
+        // canvas.setAttribute('tabindex', '0'); // needed to put focus on the canvas
+        // canvas.onclick = function() {
+        //     canvas.focus();
+        // };
         // var ellipsoid = viewer.scene.globe.ellipsoid;
         // var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position)
         //     .height;
@@ -43,14 +43,14 @@ class Globe {
         document.querySelector('#zoom-out').addEventListener('click', function() {
             var ellipsoid = viewer.scene.globe.ellipsoid;
             var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position).height;
-            var moveRate = cameraHeight < 500000 ? cameraHeight / 100.0 : cameraHeight / 30.0;
+            var moveRate = cameraHeight < 300000 ? cameraHeight / 15.0 : cameraHeight / 5.0;
             console.log(cameraHeight);
             viewer.camera.moveBackward(moveRate);
         });
         document.querySelector('#zoom-in').addEventListener('click', function() {
             var ellipsoid = viewer.scene.globe.ellipsoid;
             var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position).height;
-            var moveRate = cameraHeight < 500000 ? cameraHeight / 100.0 : cameraHeight / 30.0;
+            var moveRate = cameraHeight < 300000 ? cameraHeight / 15.0 : cameraHeight / 5.0;
             console.log(cameraHeight);
             viewer.camera.moveForward(moveRate);
         });
@@ -60,10 +60,10 @@ class Globe {
 
     initViewer() {
         return new Cesium.Viewer("cesiumContainer", {
-            animation: true,
-            timeline: false,
-            selectionIndicator: true,
-            requestRenderMode: true
+            //     // animation: true,
+            //     // timeline: false,
+            //     // selectionIndicator: true,
+            //     // requestRenderMode: true
         });
     }
 
@@ -106,12 +106,14 @@ class Globe {
                 list_entry: listEntry,
                 data: data.properties.data
             },
-            box: {
-                dimensions: new Cesium.Cartesian3(10000.0, 10000.0, 0.0),
-                // distanceDisplayCondition: (0.0, 1.0),
-                show: false
+            // box: {
+            //     dimensions: new Cesium.Cartesian3(10000.0, 10000.0, 0.0),
+            //     // distanceDisplayCondition: (0.0, 1.0),
+            //     show: true,
+            //     fill: false,
+            //     outline: false
 
-            },
+            // },
             // TODO: fix the icons and the sizing and clickable space
             billboard: {
                 rotation: 0,
@@ -155,17 +157,10 @@ class Globe {
                     listEntry.classList.add('active');
                 }
                 console.log(viewer.selectedEntity._position._value);
-                viewer.flyTo(viewer.selectedEntity);
-                // viewer.toWorldCoordinates(viewer.selectedEntity._position._value)
-                // viewer.camera.setView({
-                //     // destination: { x: viewer.selectedEntity._position._value.x, y: viewer.selectedEntity._position._value.y, z: (viewer.selectedEntity._position._value.z + 500000) },
-                //     destination: Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0])
-                //     orientation: {
-                //         heading: 0.0,
-                //         pitch: -Cesium.Math.PI_OVER_TWO,
-                //         roll: 0.0
-                //     }
-                // });
+                viewer.flyTo(viewer.selectedEntity, {
+                    offset: new Cesium.HeadingPitchRange(0, -90, 5000)
+                });
+
                 if (window.innerWidth > 770) {
                     sidebar.openSidebar();
                 } else {
@@ -173,6 +168,7 @@ class Globe {
                 }
             } else {
                 sidebar.closeSidebar();
+                sidebar.closeMobileSidebar();
             }
         });
     }
