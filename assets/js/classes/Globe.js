@@ -13,7 +13,11 @@ class Globe {
     }
 
     configScene(viewer) {
-
+        // var bing = new Cesium.BingMapsImageryProvider({
+        //     url: 'https://dev.virtualearth.net',
+        //     key: 'AncGAKHDhrVquDHQz-3yG6AMNOXxNCVOl-V-aQIUyZIT6DDKLB6ltBZqOZN4XC-1',
+        //     mapStyle: Cesium.BingMapsStyle.AERIAL_WITH_LABELS_ON_DEMAND
+        // });
         // viewer.scene.screenSpaceCameraController.enableTilt = false;
         //TODO the camera isn't right... need to control it more striclty and stop it from going off tilt or losing the globe
 
@@ -59,11 +63,14 @@ class Globe {
     }
 
     initViewer() {
+        var imagery = Cesium.createDefaultImageryProviderViewModels();
         return new Cesium.Viewer("cesiumContainer", {
-            //     // animation: true,
-            //     // timeline: false,
-            //     // selectionIndicator: true,
-            //     // requestRenderMode: true
+            imageryProviderViewModels: imagery,
+            selectedImageryProviderViewModel: imagery[1]
+                //     // animation: true,
+                //     // timeline: false,
+                //     // selectionIndicator: true,
+                //     // requestRenderMode: true
         });
     }
 
@@ -94,7 +101,8 @@ class Globe {
 
     addPoint(viewer, data, deviceList, sidebar) {
         console.log(data.position);
-
+        let showEntity = data.properties.coords == null ? false : true;
+        console.log('DDDDD:' + data.properties.coords);
         // console.log(viewer);
         // console.log(deviceList);
         let listEntry = this.createListEntry(viewer, data, deviceList);
@@ -118,6 +126,7 @@ class Globe {
             billboard: {
                 rotation: 0,
                 image: 'assets/img/nordic-icon-b.svg',
+                show: showEntity,
             }
         });
         listEntry.addEventListener('click', function() {
