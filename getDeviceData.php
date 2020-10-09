@@ -58,16 +58,19 @@ function getGPSforDevice($deviceID){
       
       $gps_array = explode(',', $gps);
       // var_dump($gps_array);
-      $lat_multiplier = $gps_array[3] == 'N' ? 0.01 : -0.01;
-      $lat = floatval($gps_array[2]) * $lat_multiplier;
-      $lng_multiplier = $gps_array[5] == 'E' ? 0.01 : -0.01;
-      $lng = floatval($gps_array[4]) * $lng_multiplier;
 
-      $lat_raw = floatval($gps_array[2]) * .01;
-      $lat_readable = number_format($lat_raw, 3, ".", "");
+      $lat_degrees = floatval(substr($gps_array[2], (strpos($gps_array[2], '.') - 2)))/60 + floatval(substr($gps_array[2],0,(strpos($gps_array[2], '.') - 2)));
+      $lat_multiplier = $gps_array[3] == 'N' ? 1 : -1;
+      $lat = floatval($lat_degrees) * $lat_multiplier;
+      // $lat_raw = floatval($gps_array[2]) * .01;
+      $lat_readable = number_format($lat_degrees, 3, ".", "");
 
-      $lng_raw = floatval($gps_array[4]) * .01;
-      $lng_readable = number_format($lat_raw, 3, ".", "");
+      $lng_degrees = floatval(substr($gps_array[4], (strpos($gps_array[4], '.') - 2)))/60 + floatval(substr($gps_array[4],0,(strpos($gps_array[4], '.') - 2)));
+      $lng_multiplier = $gps_array[5] == 'E' ? 1 : -1;
+      $lng = floatval($lng_degrees) * $lng_multiplier;
+
+      // $lng_raw = floatval($gps_array[4]) * .01;
+      $lng_readable = number_format($lng_degrees, 3, ".", "");
       // echo 'lng = ' . $lng;
       // echo 'lat = ' . $lat;
       $gps_readout = $lat_readable . '° ' . $gps_array[3] . ', ' . $lng_readable . '° ' . $gps_array[5];
@@ -107,6 +110,10 @@ function getMessagesForDevice($device){
       'data' => array(
         'Temperature' => false,
         'Humidity' => false,
+      ),
+      'timestamp' => array(
+        'Temperature' => false,
+        'Humidity' => false,
       )
     ),
     'id' => $deviceID,
@@ -117,16 +124,15 @@ function getMessagesForDevice($device){
   foreach($messages->items as $item){
     if($item->message->appId == 'TEMP' && $device['properties']['data']['temp'] == false ){
       $device['properties']['data']['Temperature'] = $item->message->data . '°';
+      $device['properties']['timestamp']['Temperature'] = $item->receivedAt;
     }
     // if($item->message->appId == 'AIR_PRESS' && $device['properties']['data']['air_pressure'] == false ){
     //   $device['properties']['data']['air_pressure'] = $item->message->data;
     // }
     if($item->message->appId == 'HUMID' && $device['properties']['data']['humidity'] == false ){
       $device['properties']['data']['Humidity'] = $item->message->data . '%';
+      $device['properties']['timestamp']['Humidity'] = $item->receivedAt;
     }
-    // if($item->message->appId == 'GPS' && $device['gps'] == false ){
-    //   $device['properties']['coords'] = $item->message->data;
-    // }
   }
   
   return $device;

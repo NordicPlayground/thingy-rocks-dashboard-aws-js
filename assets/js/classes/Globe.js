@@ -102,7 +102,7 @@ class Globe {
     addPoint(viewer, data, deviceList, sidebar) {
         console.log(data.position);
         let showEntity = data.properties.coords == null ? false : true;
-        console.log('DDDDD:' + data.properties.coords);
+        // console.log('DDDDD:' + data.properties.coords);
         // console.log(viewer);
         // console.log(deviceList);
         let listEntry = this.createListEntry(viewer, data, deviceList);
@@ -112,7 +112,8 @@ class Globe {
                 name: data.properties.name,
                 coords: data.properties.coords,
                 list_entry: listEntry,
-                data: data.properties.data
+                data: data.properties.data,
+                timestamps: data.properties.timestamp
             },
             // box: {
             //     dimensions: new Cesium.Cartesian3(10000.0, 10000.0, 0.0),
@@ -203,7 +204,7 @@ class Globe {
             }
             console.log(props._data._value);
             for (const name in props._data._value) {
-                var dataBlock = new DeviceDatum(name, props._data._value[name]).returnNode();
+                var dataBlock = new DeviceDatum(name, props._data._value[name], props._timestamps._value[name]).returnNode();
                 datumContainer.appendChild(dataBlock);
             }
         }
