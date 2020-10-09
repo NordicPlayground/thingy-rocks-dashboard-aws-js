@@ -8,6 +8,8 @@
     top: 0;
     bottom: 0;
     display: inline-block;
+    overflow-y: auto;
+    overflow-x: hidden;
     z-index: 9999;
     transition: $transitionTime all;
     &.open {
@@ -147,6 +149,18 @@
                     color: $darkGrey;
                     letter-spacing: 0.41px;
                     line-height: 18px;
+                    &:after {
+                        content: '';
+                        float: right;
+                        width: 10px;
+                        height: 10px;
+                        border-radius: 600px;
+                        background-color: red;
+                        margin: 3px 0;
+                    }
+                    &.connected:after {
+                        background-color: #7fe57f;
+                    }
                 }
                 &.active a,
                 &:hover a {

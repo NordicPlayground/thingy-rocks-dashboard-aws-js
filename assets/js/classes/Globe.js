@@ -131,6 +131,7 @@ class Globe {
         });
         listEntry.addEventListener('click', function() {
             viewer.selectedEntity = entity;
+
             if (window.innerWidth < 771) {
                 sidebar.closeSidebar();
             }
@@ -139,7 +140,7 @@ class Globe {
 
     createListEntry(viewer, data, deviceList) {
         let listEntry = document.createElement('li');
-        listEntry.innerHTML = '<a href="#">' + data.properties.name + '</a>';
+        listEntry.innerHTML = '<a href="#" class="' + data.properties.connected + '">' + data.properties.name + '</a>';
         // listEntry.addEventListener('click', function() {
 
         //     })
@@ -152,6 +153,9 @@ class Globe {
     clickAction(viewer, sidebar) {
 
         viewer.selectedEntityChanged.addEventListener(function() {
+            if (document.querySelector('.infobox')) {
+                document.querySelector('.infobox').remove();
+            }
             console.log(viewer);
             Globe.resetIcons(viewer);
             if (undefined !== viewer.selectedEntity) {

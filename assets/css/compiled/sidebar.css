@@ -7,6 +7,8 @@
   top: 0;
   bottom: 0;
   display: inline-block;
+  overflow-y: auto;
+  overflow-x: hidden;
   z-index: 9999;
   transition: 500ms all;
 }
@@ -141,6 +143,18 @@
   color: #B8C5CB;
   letter-spacing: 0.41px;
   line-height: 18px;
+}
+.sidebar .device-list-block .device-list li a:after {
+  content: "";
+  float: right;
+  width: 10px;
+  height: 10px;
+  border-radius: 600px;
+  background-color: red;
+  margin: 3px 0;
+}
+.sidebar .device-list-block .device-list li a.connected:after {
+  background-color: #7fe57f;
 }
 .sidebar .device-list-block .device-list li.active a, .sidebar .device-list-block .device-list li:hover a {
   color: #244567;

@@ -41,6 +41,8 @@ function getDevices(){
   foreach ($devices->items as  $device) {
     
     $deviceArray[$device->id] = getMessagesForDevice($device);
+
+$deviceArray[$device->id]['properties']['connected'] = $device->state->reported->connected == true ? 'connected' : 'disconnected';
     // print_r(getGPSforDevice($device->id));
   }
   echo json_encode($deviceArray);
@@ -95,6 +97,7 @@ function getMessagesForDevice($device){
   $curlURL = "https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=".$deviceID."&pageLimit=100&pageSort=desc";
 
   $messages = sendCurl($curlURL);
+
   $gps_data = getGPSforDevice($deviceID);
   $device = array(
     'position' => array($gps_data['lat'], $gps_data['lng']),
@@ -103,14 +106,14 @@ function getMessagesForDevice($device){
       'name' => $name,
       'data' => array(
         'Temperature' => false,
-        // 'air_pressure' => false,
-        'Humidity' => false
+        'Humidity' => false,
       )
     ),
     'id' => $deviceID,
     'gps' => $gps_data,
   );
-
+  
+  
   foreach($messages->items as $item){
     if($item->message->appId == 'TEMP' && $device['properties']['data']['temp'] == false ){
       $device['properties']['data']['Temperature'] = $item->message->data . '°';

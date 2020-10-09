@@ -1688,6 +1688,17 @@
 		"sC": 3,
 		"tS": 0
 		},
+	"/favicon.png": {
+		"ft": 32768,
+		"iS": 4560,
+		"oA": 0,
+		"oAP": "/favicon.png",
+		"oF": 0,
+		"oIPL": 0,
+		"opt": 0,
+		"oT": 1,
+		"q": 100
+		},
 	"/getDeviceData.php": {
 		"cB": 0,
 		"ft": 8192,
