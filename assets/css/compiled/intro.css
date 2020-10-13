@@ -12,6 +12,9 @@
   justify-content: center;
   flex-wrap: wrap;
 }
+.intro-container:not(.globe-rendered) {
+  pointer-events: none;
+}
 .intro-container.hidden {
   opacity: 0;
 }

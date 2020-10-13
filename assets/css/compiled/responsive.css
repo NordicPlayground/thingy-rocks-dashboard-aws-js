@@ -16,7 +16,24 @@
     margin-right: 25px;
   }
 
+  .sidebar:not(.mobile-sidebar) {
+    padding: 25px 40px;
+    width: 210px;
+  }
+  .sidebar:not(.mobile-sidebar) .logo {
+    margin-left: 0;
+  }
+  .sidebar:not(.mobile-sidebar) .scrollable {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    width: 100%;
+    height: auto;
+    padding: 0px 0px 0 0;
+    margin-top: 0px;
+  }
   .sidebar:not(.mobile-sidebar).open {
+    overflow-y: auto;
+    overflow-x: hidden;
     right: 0;
     width: calc(100% - 50px);
     padding: 25px;

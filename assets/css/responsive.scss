@@ -20,7 +20,22 @@
         }
         // sidebar
         .sidebar:not(.mobile-sidebar) {
+            padding: 25px 40px;
+            width: 210px;
+            .logo {
+                margin-left: 0;
+            }
+            .scrollable {
+                overflow-y: hidden;
+                overflow-x: hidden;
+                width: 100%;
+                height: auto;
+                padding: 0px 0px 0 0;
+                margin-top: 0px;
+            }
             &.open {
+                overflow-y: auto;
+                overflow-x: hidden;
                 right: 0;
                 width: calc(100% - 50px);
                 // max-width: 300px;

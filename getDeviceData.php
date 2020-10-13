@@ -124,14 +124,14 @@ function getMessagesForDevice($device){
   foreach($messages->items as $item){
     if($item->message->appId == 'TEMP' && $device['properties']['data']['temp'] == false ){
       $device['properties']['data']['Temperature'] = $item->message->data . '°';
-      $device['properties']['timestamp']['Temperature'] = $item->receivedAt;
+      $device['properties']['timestamp']['Temperature'] = date('D M d Y G:i:s T', strtotime($item->receivedAt));
     }
     // if($item->message->appId == 'AIR_PRESS' && $device['properties']['data']['air_pressure'] == false ){
     //   $device['properties']['data']['air_pressure'] = $item->message->data;
     // }
     if($item->message->appId == 'HUMID' && $device['properties']['data']['humidity'] == false ){
       $device['properties']['data']['Humidity'] = $item->message->data . '%';
-      $device['properties']['timestamp']['Humidity'] = $item->receivedAt;
+      $device['properties']['timestamp']['Humidity'] = date('D M d Y G:i:s T', strtotime($item->receivedAt));
     }
   }
   

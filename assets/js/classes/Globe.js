@@ -10,37 +10,19 @@ class Globe {
         // console.log(data);
         this.addPoints(viewer, data, sidebar);
         this.clickAction(viewer, sidebar);
+
+        viewer.scene.postRender.addEventListener(function(rendered) {
+            if (viewer.scene.globe.tilesLoaded == true && document.querySelector('.intro-container') && !document.querySelector('.intro-container').classList.contains('globe-rendered')) {
+                document.querySelector('.intro-container').classList.add('globe-rendered');
+                document.querySelector('.message').innerHTML = 'Click Anywhere to Begin.';
+            }
+
+        });
     }
 
     configScene(viewer) {
-        // var bing = new Cesium.BingMapsImageryProvider({
-        //     url: 'https://dev.virtualearth.net',
-        //     key: 'AncGAKHDhrVquDHQz-3yG6AMNOXxNCVOl-V-aQIUyZIT6DDKLB6ltBZqOZN4XC-1',
-        //     mapStyle: Cesium.BingMapsStyle.AERIAL_WITH_LABELS_ON_DEMAND
-        // });
-        // viewer.scene.screenSpaceCameraController.enableTilt = false;
-        //TODO the camera isn't right... need to control it more striclty and stop it from going off tilt or losing the globe
 
-        // viewer.scene.screenSpaceCameraController.minimumZoomDistance = 50;
-        // viewer.scene.screenSpaceCameraController.maximumZoomDistance = 90000000;
-        // viewer.scene.screenSpaceCameraController._minimumZoomRate = 300;
         viewer.scene.screenSpaceCameraController.enableTilt = false;
-        // // disable the default event handlers
-        // viewer.scene.screenSpaceCameraController.enableRotate = false;
-        // viewer.scene.screenSpaceCameraController.enableTranslate = false;
-        // viewer.scene.screenSpaceCameraController.enableZoom = true;
-        // viewer.scene.screenSpaceCameraController.enableTilt = false;
-        // viewer.scene.screenSpaceCameraController.enableLook = true;
-
-        // var canvas = viewer.canvas;
-        // canvas.setAttribute('tabindex', '0'); // needed to put focus on the canvas
-        // canvas.onclick = function() {
-        //     canvas.focus();
-        // };
-        // var ellipsoid = viewer.scene.globe.ellipsoid;
-        // var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position)
-        //     .height;
-        // var moveRate = cameraHeight / 100.0;
 
 
 
@@ -125,8 +107,9 @@ class Globe {
             // },
             // TODO: fix the icons and the sizing and clickable space
             billboard: {
-                rotation: 0,
-                image: 'assets/img/nordic-icon-b.svg',
+                height: 32,
+                width: 32,
+                image: 'assets/img/nordic-icon-g.svg',
                 show: showEntity,
             }
         });
@@ -203,6 +186,7 @@ class Globe {
                 datumContainer.removeChild(document.querySelector('.device-data').firstChild);
             }
             console.log(props._data._value);
+            console.log(props._timestamps._value);
             for (const name in props._data._value) {
                 var dataBlock = new DeviceDatum(name, props._data._value[name], props._timestamps._value[name]).returnNode();
                 datumContainer.appendChild(dataBlock);
@@ -227,7 +211,7 @@ class Globe {
             }
             console.log(props._data._value);
             for (const name in props._data._value) {
-                var dataBlock = new DeviceDatum(name, props._data._value[name]).returnNode();
+                var dataBlock = new DeviceDatum(name, props._data._value[name], props._timestamps._value[name]).returnNode();
                 datumContainer.appendChild(dataBlock);
             }
         }
@@ -239,7 +223,7 @@ class Globe {
         if (undefined !== viewer.selectedEntity) {
             for (let i = 0; i < entriesArray.length; i++) {
                 if (undefined !== entriesArray[i]._billboard._image) {
-                    entriesArray[i].billboard.image = 'assets/img/nordic-icon-b.svg';
+                    entriesArray[i].billboard.image = 'assets/img/nordic-icon-g.svg';
                 }
             }
         }

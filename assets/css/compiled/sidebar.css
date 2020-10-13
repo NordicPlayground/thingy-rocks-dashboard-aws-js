@@ -1,14 +1,12 @@
 .sidebar {
-  width: 210px;
-  padding: 25px 40px;
+  width: 300px;
+  padding: 25px 0px;
   background-color: #fff;
   position: fixed;
   left: -290px;
   top: 0;
   bottom: 0;
   display: inline-block;
-  overflow-y: auto;
-  overflow-x: hidden;
   z-index: 9999;
   transition: 500ms all;
 }
@@ -18,6 +16,7 @@
 .sidebar .logo {
   float: left;
   height: 40px;
+  margin-left: 40px;
   clear: both;
 }
 .sidebar .sidebar-toggle {
@@ -56,6 +55,16 @@
 }
 .sidebar .sidebar-toggle div:after {
   margin-top: 5px;
+}
+.sidebar .scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  height: calc(100vh - 120px);
+  padding: 0px 40px;
+  margin-top: 30px;
+  display: inline-block;
+  box-sizing: border-box;
 }
 .sidebar.open .sidebar-toggle div {
   background-color: transparent;
@@ -126,6 +135,15 @@
   line-height: 35px;
   margin: 5px 0;
 }
+.sidebar .data-display .device-data__datum .datum-timestamp {
+  font-size: 14px;
+  margin: 5px 0;
+  color: lightgrey;
+  line-height: 1.125;
+}
+.sidebar .device-list-block .sidebar-heading {
+  font-size: 24px;
+}
 .sidebar .device-list-block .device-list {
   padding: 0;
   margin: 15px 0 0;
@@ -169,6 +187,8 @@
   right: 0;
   z-index: 9998;
   transition: bottom 500ms;
+  padding: 25px 40px;
+  box-sizing: border-box;
 }
 .mobile-sidebar.reveal {
   bottom: 0;

@@ -49,6 +49,8 @@ function getData() {
             var realData = JSON.parse(this.responseText);
             console.log(realData);
             var globe = new Globe(realData);
+            console.log(globe);
+            console.log(globe.tilesLoaded);
             return globe
         }
     };
@@ -62,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
     loadScript("https://cesium.com/downloads/cesiumjs/releases/1.73/Build/Cesium/Cesium.js", getData);
+
 
 
 

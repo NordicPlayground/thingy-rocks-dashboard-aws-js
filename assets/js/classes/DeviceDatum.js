@@ -1,6 +1,6 @@
 class DeviceDatum {
     constructor(name, info, timestamp) {
-        console.log('name + info = ' + name + info);
+        console.log('name + info + timestamp = ' + name + info + timestamp);
         this.deviceDatum = document.createElement('div');
         this.deviceDatum.classList.add('device-data__datum');
 
@@ -14,10 +14,11 @@ class DeviceDatum {
 
         this.deviceDatumTimestamp = document.createElement('p');
         this.deviceDatumTimestamp.classList.add('datum-timestamp');
-        this.deviceDatumTimestamp.innerHTML = timestamp;
+        this.deviceDatumTimestamp.innerHTML = 'updated ' + timestamp;
 
         this.deviceDatum.appendChild(this.deviceDatumName);
         this.deviceDatum.appendChild(this.deviceDatumInfo);
+        this.deviceDatum.appendChild(this.deviceDatumTimestamp);
     }
 
     returnNode() {
