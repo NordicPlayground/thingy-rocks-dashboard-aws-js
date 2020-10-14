@@ -1,20 +1,16 @@
 class Sidebar {
     constructor() {
-
         this.isOpen = true;
         this.DOM = {};
         this.DOM.body = document.querySelector('body');
         this.DOM.sidebar = document.querySelector('.sidebar');
         this.DOM.toggle = document.querySelector('.sidebar-toggle');
         this.DOM.data = this.DOM.sidebar.querySelector('.sidebar-data');
-
         this.DOM.deviceInfo = this.DOM.sidebar.querySelector('.device-info');
         this.DOM.locationName = this.DOM.deviceInfo.querySelector('.device-location-name');
-
         this.DOM.coordinates = this.DOM.deviceInfo.querySelector('.device-location-coords .coordinates');
         this.DOM.deviceData = this.DOM.deviceInfo.querySelector('.device-data');
         this.DOM.deviceList = this.DOM.sidebar.querySelector('.device-list');
-
         this.init();
     }
 
@@ -44,7 +40,6 @@ class Sidebar {
 
     populateData(data = null) {
         if (null !== data) {
-
             this.DOM.locationName = data.locationName;
             this.DOM.coordinates = data.coordinates;
 
@@ -102,5 +97,4 @@ class Sidebar {
             });
         }
     }
-
 }

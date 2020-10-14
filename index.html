@@ -7,8 +7,6 @@
     <title>Thingy World - Nordic Semiconductors</title>
     <link preload rel="stylesheet" href="./assets/css/fonts/fonts.css" />
     <link rel="stylesheet" href="./assets/css/styles-min.css" />
-
-    
   </head>
 
 
@@ -23,37 +21,37 @@
         <p class="grey">Thingy91 devices are displayed on the left panel. Click on one to display its last location, temperature, and humidity.</p>
         </div>
         <p class="white message">Please wait while the data is loading...</p>
-</div>
+    </div>
 
     <div class="sidebar">
       <a class="sidebar-toggle"><div></div></a>
 
       <img class="logo" src="assets/img/logo.svg" />
       <div class="scrollable">
-      <div class="data-display">
-        <div class="device-info">
-        	<img class="device-img" src="assets/img/thingy.svg" />
-          <div class="device-location-name">
-            <img src="assets/img/nordic-icon-y.svg">
-            <span class="device-location-name-label"><!-- populated on thingy click --></span>
+        <div class="data-display">
+          <div class="device-info">
+            <img class="device-img" src="assets/img/thingy.svg" />
+            <div class="device-location-name">
+              <img src="assets/img/nordic-icon-y.svg">
+              <span class="device-location-name-label"><!-- populated on thingy click --></span>
+            </div>
+            <div class="device-location-coords">
+              <h3 class="sidebar-heading">Coordinates</p>
+              <p class="coordinates"><!-- populated on thingy click --></p>
+            </div>
           </div>
-          <div class="device-location-coords">
-            <h3 class="sidebar-heading">Coordinates</p>
-            <p class="coordinates"><!-- populated on thingy click --></p>
+          <div class="device-data">
+            <!-- populated on thingy click -->
           </div>
         </div>
-        <div class="device-data">
-          <!-- populated on thingy click -->
-        </div>
-      </div>
 
-      <div class="device-list-block">
-        <h3 class="sidebar-heading">All Devices</h3>
-        <ul class="device-list">
-          <!-- populated on globe creation -->
-        </ul>
+        <div class="device-list-block">
+          <h3 class="sidebar-heading">All Devices</h3>
+          <ul class="device-list">
+            <!-- populated on globe creation -->
+          </ul>
+        </div>
       </div>
-    </div>
     </div>
 
     <a href="http://nordicsemiconductor.com/" target="_blank" class="top-tab">
@@ -65,12 +63,11 @@
         Learn more about Nordic Semiconductor’s Thingy91 and newly updated
         device management platform.
       </p>
-      <a href="#"><img src="assets/img/arrow-link.svg" /> Visit nrfCloud</a>
+      <a href="https://nrfcloud.com/"><img src="assets/img/arrow-link.svg" /> Visit nrfCloud</a>
     </div>
 
 
     <div id="cesiumContainer" class="fullSize"></div>
-    <div id="loadingOverlay"><h1>Loading...</h1></div>
     <div id="toolbar"></div>
 
     
@@ -97,11 +94,10 @@
     </div>
   
     <div id="camera-nav">
-    <img src="assets/img/zoom-out.svg" id="zoom-out" />
-    <img src="assets/img/zoom-in.svg" id="zoom-in" />
-    
+      <img src="assets/img/zoom-out.svg" id="zoom-out" />
+      <img src="assets/img/zoom-in.svg" id="zoom-in" />  
     </div>
-    <!-- change to use minified scripts in production -->
+
     <script src="./assets/js/classes/Sidebar-min.js"></script>
     <script src="./assets/js/classes/DeviceDatum-min.js"></script>
     <script src="./assets/js/classes/Marker-min.js"></script>

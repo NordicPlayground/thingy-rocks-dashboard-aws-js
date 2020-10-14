@@ -39,13 +39,12 @@ function loadScript(src, callback) {
     t.parentNode.insertBefore(s, t);
 }
 
-// this is getting real data
 function getData() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         // console.log(this.readyState);
         if (this.readyState == 4 && this.status == 200) {
-
+            // create globe after data is retrieved
             var realData = JSON.parse(this.responseText);
             console.log(realData);
             var globe = new Globe(realData);
@@ -60,14 +59,7 @@ function getData() {
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded');
-
-
-
     loadScript("https://cesium.com/downloads/cesiumjs/releases/1.73/Build/Cesium/Cesium.js", getData);
-
-
-
-
 
     window.setTimeout(function() {
         document.querySelector('body').classList.add('loaded');
@@ -77,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }, 800);
 
-
     // hide, then remove the intro overlay
     document.querySelector('.intro-container').addEventListener('click', function() {
         this.classList.add('hidden');
@@ -85,18 +76,4 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelector('.intro-container').remove();
         }, 800);
     });
-
-
-
-
-
-
-    // document.querySelector('.top-tab').addEventListener('click', function() {
-    //     if (document.querySelector('.infobox').classList.contains('reveal')) {
-    //         document.querySelector('.infobox').classList.remove('reveal');
-    //     } else {
-    //         document.querySelector('.infobox').classList.add('reveal');
-    //     }
-    // })
-
 });

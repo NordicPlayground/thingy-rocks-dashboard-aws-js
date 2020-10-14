@@ -3,10 +3,8 @@ class Globe {
 
         var sidebar = new Sidebar();
 
-
         var viewer = this.initViewer();
         var scene = this.configScene(viewer);
-        var controls = this.initControls();
         // console.log(data);
         this.addPoints(viewer, data, sidebar);
         this.clickAction(viewer, sidebar);
@@ -21,11 +19,10 @@ class Globe {
     }
 
     configScene(viewer) {
-
+        // scene settings
         viewer.scene.screenSpaceCameraController.enableTilt = false;
 
-
-
+        // zoom control buttons
         document.querySelector('#zoom-out').addEventListener('click', function() {
             var ellipsoid = viewer.scene.globe.ellipsoid;
             var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position).height;
@@ -40,8 +37,6 @@ class Globe {
             console.log(cameraHeight);
             viewer.camera.moveForward(moveRate);
         });
-
-
     }
 
     initViewer() {
@@ -49,34 +44,17 @@ class Globe {
         return new Cesium.Viewer("cesiumContainer", {
             imageryProviderViewModels: imagery,
             selectedImageryProviderViewModel: imagery[1]
-                //     // animation: true,
-                //     // timeline: false,
-                //     // selectionIndicator: true,
-                //     // requestRenderMode: true
+
         });
     }
 
-    initControls() {
-
-        // return new Cesium.CesiumWidget('toolbar', {
-        //     scene3DOnly: true,
-        //     requestRenderMode: true
-        // })
-    }
-
-
-
     addPoints(viewer, dataPoints, sidebar) {
-        // console.log(dataPoints);
-        // console.log(typeof(dataPoints));
         var deviceList = document.querySelector('.device-list');
-        //// The globe stopped rendering after changing to real data, and this specific loop...
         if (Object.keys(dataPoints).length > 1) {
             for (const device in dataPoints) {
                 console.log(typeof(dataPoints[device]))
                 this.addPoint(viewer, dataPoints[device], deviceList, sidebar);
             }
-            //populate sidebar and auto-click first of last thingy?
         }
     }
 
@@ -84,9 +62,6 @@ class Globe {
     addPoint(viewer, data, deviceList, sidebar) {
         console.log(data.position);
         let showEntity = data.properties.coords == null ? false : true;
-        // console.log('DDDDD:' + data.properties.coords);
-        // console.log(viewer);
-        // console.log(deviceList);
         let listEntry = this.createListEntry(viewer, data, deviceList);
         let entity = viewer.entities.add({
             position: Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0]),
@@ -97,15 +72,6 @@ class Globe {
                 data: data.properties.data,
                 timestamps: data.properties.timestamp
             },
-            // box: {
-            //     dimensions: new Cesium.Cartesian3(10000.0, 10000.0, 0.0),
-            //     // distanceDisplayCondition: (0.0, 1.0),
-            //     show: true,
-            //     fill: false,
-            //     outline: false
-
-            // },
-            // TODO: fix the icons and the sizing and clickable space
             billboard: {
                 height: 32,
                 width: 32,
@@ -115,7 +81,6 @@ class Globe {
         });
         listEntry.addEventListener('click', function() {
             viewer.selectedEntity = entity;
-
             if (window.innerWidth < 771) {
                 sidebar.closeSidebar();
             }
@@ -125,17 +90,12 @@ class Globe {
     createListEntry(viewer, data, deviceList) {
         let listEntry = document.createElement('li');
         listEntry.innerHTML = '<a href="#" class="' + data.properties.connected + '">' + data.properties.name + '</a>';
-        // listEntry.addEventListener('click', function() {
-
-        //     })
-        // new Cesium.ScreenSpaceEventHandler(viewer.canvas)
         deviceList.appendChild(listEntry);
 
         return listEntry;
     }
 
     clickAction(viewer, sidebar) {
-
         viewer.selectedEntityChanged.addEventListener(function() {
             if (document.querySelector('.infobox')) {
                 document.querySelector('.infobox').remove();
@@ -150,7 +110,6 @@ class Globe {
                 var listEntry = viewer.selectedEntity._properties._list_entry._value;
                 if (undefined !== listEntry) {
                     null !== document.querySelector('.device-list li.active') ? document.querySelector('.device-list li.active').classList.remove('active') : false;
-
                     listEntry.classList.add('active');
                 }
                 console.log(viewer.selectedEntity._position._value);
@@ -169,9 +128,9 @@ class Globe {
             }
         });
     }
+
     static populateSidebar(entity) {
         var props = entity._properties;
-
         var deviceData = document.querySelector('.data-display');
         var name = deviceData.querySelector('.device-location-name-label');
         var coords = deviceData.querySelector('.coordinates');
@@ -179,7 +138,7 @@ class Globe {
 
         name.innerHTML = props._name;
         coords.innerHTML = props._coords._value == null ? 'No GPS Data Available' : props._coords;
-        // create datum blocks
+        // create data blocks
         if (undefined !== props._data._value) {
             // clear out the data blocks in the sidebar
             while (document.querySelector('.device-data').firstChild) {
@@ -195,7 +154,6 @@ class Globe {
     }
     static populateMobileData(entity) {
         var props = entity._properties;
-
         var deviceData = document.querySelector('.mobile-sidebar .data-display');
         var name = deviceData.querySelector('.device-location-name-label');
         var coords = deviceData.querySelector('.coordinates');
@@ -203,7 +161,7 @@ class Globe {
 
         name.innerHTML = props._name;
         coords.innerHTML = props._coords._value == null ? 'No GPS Data Available' : props._coords;
-        // create datum blocks
+        // create data blocks
         if (undefined !== props._data._value) {
             // clear out the data blocks in the sidebar
             while (document.querySelector('.mobile-sidebar .device-data').firstChild) {
@@ -216,6 +174,7 @@ class Globe {
             }
         }
     }
+
     static resetIcons(viewer) {
         console.log('resetIcons running');
         var entriesArray = viewer.entities._entities._array;
