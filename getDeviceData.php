@@ -92,6 +92,8 @@ function getMessagesForDevice($device){
   $curlURL = "https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=".$deviceID."&pageLimit=100&pageSort=desc";
 
   $messages = sendCurl($curlURL);
+  $device_temp = 0;
+  $device_humid = 0;
 
   $gps_data = getGPSforDevice($deviceID);
   $device = array(
@@ -114,11 +116,13 @@ function getMessagesForDevice($device){
   
   
   foreach($messages->items as $item){
-    if($item->message->appId == 'TEMP' && $device['properties']['data']['temp'] == false ){
+    if($item->message->appId == 'TEMP' && $device_temp == 0 ){
+      $device_temp = 1;
       $device['properties']['data']['Temperature'] = $item->message->data . '°';
       $device['properties']['timestamp']['Temperature'] = date('D M d Y G:i:s T', strtotime($item->receivedAt));
     }
-    if($item->message->appId == 'HUMID' && $device['properties']['data']['humidity'] == false ){
+    if($item->message->appId == 'HUMID'  && $device_humid == 0 ){
+      $device_humid = 1;
       $device['properties']['data']['Humidity'] = $item->message->data . '%';
       $device['properties']['timestamp']['Humidity'] = date('D M d Y G:i:s T', strtotime($item->receivedAt));
     }
