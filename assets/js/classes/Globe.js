@@ -104,8 +104,8 @@ class Globe {
             Globe.resetIcons(viewer);
             if (undefined !== viewer.selectedEntity) {
                 console.log(viewer.selectedEntity);
-                Globe.populateSidebar(viewer.selectedEntity);
-                Globe.populateMobileData(viewer.selectedEntity);
+                // Globe.populateSidebar(viewer.selectedEntity);
+                // Globe.populateMobileData(viewer.selectedEntity);
                 viewer.selectedEntity.billboard.image = 'assets/img/nordic-icon-y.svg';
                 var listEntry = viewer.selectedEntity._properties._list_entry._value;
                 if (undefined !== listEntry) {

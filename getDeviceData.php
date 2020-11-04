@@ -13,7 +13,7 @@ function sendCurl($url){
     CURLOPT_HTTPHEADER => array(
       "Accept: application/json",
       "Accept-Encoding: gzip, deflate",
-      "Authorization: Bearer 63798b60090e62e4514012c80eb435ccd758b76d",
+      "Authorization: Bearer 12af85ea3af2d76df38e56a9bc1484fd70389d1d",
       "Cache-Control: no-cache",
       "Connection: keep-alive",
       "Host: api.nrfcloud.com",
@@ -41,8 +41,9 @@ function getDevices(){
   $deviceArray = array();
   foreach ($devices->items as  $device) {
     $deviceArray[$device->id] = getMessagesForDevice($device);
-    $deviceArray[$device->id]['properties']['connected'] = $device->state->reported->connected == true ? 'connected' : 'disconnected';
+    if(isset($device->state->reported->connected)){$deviceArray[$device->id]['properties']['connected'] = $device->state->reported->connected == true ? 'connected' : 'disconnected';
   }
+}
   echo json_encode($deviceArray);
 }
 

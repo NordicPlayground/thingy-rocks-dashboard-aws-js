@@ -59,7 +59,7 @@ function getData() {
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded');
-    loadScript("https://cesium.com/downloads/cesiumjs/releases/1.73/Build/Cesium/Cesium.js", getData);
+    loadScript("/assets/js/Cesium-1.75/Build/Cesium/Cesium.js", getData);
 
     window.setTimeout(function() {
         document.querySelector('body').classList.add('loaded');
