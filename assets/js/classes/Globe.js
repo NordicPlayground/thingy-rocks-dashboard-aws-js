@@ -1,21 +1,16 @@
 class Globe {
     constructor(data) {
 
-        var sidebar = new Sidebar();
+        this.sidebar = new Sidebar();
 
-        var viewer = this.initViewer();
-        var scene = this.configScene(viewer);
+        this.viewer = this.initViewer();
+        this.configScene(this.viewer);
         // console.log(data);
-        this.addPoints(viewer, data, sidebar);
-        this.clickAction(viewer, sidebar);
+        // this.addPoints();
+        this.getDevices();
+        this.clickAction(this.viewer, this.sidebar);
 
-        viewer.scene.postRender.addEventListener(function(rendered) {
-            if (viewer.scene.globe.tilesLoaded == true && document.querySelector('.intro-container') && !document.querySelector('.intro-container').classList.contains('globe-rendered')) {
-                document.querySelector('.intro-container').classList.add('globe-rendered');
-                document.querySelector('.message').innerHTML = 'Click Anywhere to Begin.';
-            }
 
-        });
     }
 
     configScene(viewer) {
@@ -37,40 +32,85 @@ class Globe {
             console.log(cameraHeight);
             viewer.camera.moveForward(moveRate);
         });
+        return viewer;
     }
 
     initViewer() {
         var imagery = Cesium.createDefaultImageryProviderViewModels();
-        return new Cesium.Viewer("cesiumContainer", {
+        var viewer = new Cesium.Viewer("cesiumContainer", {
             imageryProviderViewModels: imagery,
             selectedImageryProviderViewModel: imagery[1]
 
         });
+        viewer.scene.postRender.addEventListener(function(rendered) {
+            if (viewer.scene.globe.tilesLoaded == true && document.querySelector('.intro-container') && !document.querySelector('.intro-container').classList.contains('globe-rendered')) {
+                document.querySelector('.intro-container').classList.add('globe-rendered');
+                document.querySelector('.message').innerHTML = 'Click Anywhere to Begin.';
+            }
+
+        });
+        return viewer;
     }
 
-    addPoints(viewer, dataPoints, sidebar) {
+    getDevices() {
         var deviceList = document.querySelector('.device-list');
+        var viewer = this.viewer;
+        var sidebar = this.sidebar;
+        var globe = this;
+        var call = getAjaxSettings("https://api.nrfcloud.com/v1/devices?includeState=true&includeStateMeta=true&pageSort=desc");
+
+        $.ajax(call).done(function(response) {
+            var devices = response.items;
+            // console.log(devices);
+            var deviceArray = [];
+
+            for (let i = 0; i < devices.length; i++) {
+
+                deviceArray[devices[i].id] = new Device(devices[i]);
+                // deviceArray[devices[i].id].getGPSData();
+                // console.log(deviceArray[devices[i].id])
+            }
+            // deviceArray.forEach(function() {
+            //     this.getGPSData();
+            // });
+            // console.log(deviceArray);
+
+            // console.log(response);
+            globe.addPoints(deviceArray);
+        });
+    }
+
+    addPoints(dataPoints) {
+        var deviceList = document.querySelector('.device-list');
+        var viewer = this.viewer;
+        var sidebar = this.sidebar;
+        var globe = this;
+        // var dataPoints = getDevices();
+
         if (Object.keys(dataPoints).length > 1) {
+            console.log(dataPoints);
             for (const device in dataPoints) {
-                console.log(typeof(dataPoints[device]))
-                this.addPoint(viewer, dataPoints[device], deviceList, sidebar);
+                console.log(dataPoints[device]);
+                globe.addPoint(viewer, dataPoints[device], deviceList, sidebar);
             }
         }
     }
 
 
     addPoint(viewer, data, deviceList, sidebar) {
-        console.log(data.position);
-        let showEntity = data.properties.coords == null ? false : true;
+        console.log(data);
+        let showEntity = data.position == undefined ? false : true;
+        let position = showEntity == true ? Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0]) : null;
         let listEntry = this.createListEntry(viewer, data, deviceList);
         let entity = viewer.entities.add({
-            position: Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0]),
+            position: position,
             properties: {
+                id: data.id,
                 name: data.properties.name,
-                coords: data.properties.coords,
+                coords: data.gps.readable,
                 list_entry: listEntry,
                 data: data.properties.data,
-                timestamps: data.properties.timestamp
+                // timestamps: data.properties.timestamp
             },
             billboard: {
                 height: 32,
@@ -100,12 +140,13 @@ class Globe {
             if (document.querySelector('.infobox')) {
                 document.querySelector('.infobox').remove();
             }
-            console.log(viewer);
+            console.log(viewer.selectedEntity._properties.id._value);
             Globe.resetIcons(viewer);
             if (undefined !== viewer.selectedEntity) {
                 console.log(viewer.selectedEntity);
-                // Globe.populateSidebar(viewer.selectedEntity);
-                // Globe.populateMobileData(viewer.selectedEntity);
+                Globe.getMessagesForDevice(viewer.selectedEntity._properties._id._value);
+                Globe.populateSidebar(viewer.selectedEntity);
+                Globe.populateMobileData(viewer.selectedEntity);
                 viewer.selectedEntity.billboard.image = 'assets/img/nordic-icon-y.svg';
                 var listEntry = viewer.selectedEntity._properties._list_entry._value;
                 if (undefined !== listEntry) {
@@ -129,28 +170,83 @@ class Globe {
         });
     }
 
+    static getMessagesForDevice(deviceID) {
+
+        var call = getAjaxSettings("https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" + deviceID + "&pageLimit=100&pageSort=desc");
+
+        $('.device-data__datum.temp .datum-info').html('Loading...');
+        $('.device-data__datum.humidity .datum-info').html('Loading...');
+        $('.device-data__datum').show();
+        // console.log('sdfsdfsdf');
+        $.ajax(call).done(function(response) {
+            // console.log(response);
+            var device_temp = 0;
+            var device_humid = 0;
+            var messages = response.items;
+            var messageResponse = {
+
+                    'Temperature': {
+                        'data': null,
+                        'timestamp': null
+                    },
+                    'Humidity': {
+                        'data': null,
+                        'timestamp': null
+                    },
+
+                }
+                // Fri Oct 09 2020 11:52:58  PDT
+                // Wed Oct 07 2020 14:12:28  CEST
+            for (let i = 0; i < messages.length; i++) {
+                if (messages[i].message.appId == 'TEMP' && device_temp == 0) {
+                    device_temp = 1;
+                    messageResponse.Temperature.data = messages[i].message.data;
+                    messageResponse.Temperature.timestamp = moment(new Date(Date.parse(messages[i].receivedAt))).format('ddd MMM DD YYYY, kk:mm:ss');
+                }
+                if (messages[i].message.appId == 'HUMID' && device_temp == 0) {
+                    device_humid = 1;
+                    messageResponse.Humidity.data = messages[i].message.data;
+                    messageResponse.Humidity.timestamp = moment(new Date(Date.parse(messages[i].receivedAt))).format('ddd MMM DD YYYY, kk:mm:ss');
+                }
+            }
+            console.log(messageResponse);
+            $('.device-data__datum.temp .datum-info').html(messageResponse['Temperature']['data'] + '°');
+            $('.device-data__datum.temp .datum-timestamp').html('updated ' + messageResponse['Temperature']['timestamp']);
+            $('.device-data__datum.humidity .datum-info').html(messageResponse['Humidity']['data'] + '%');
+            $('.device-data__datum.humidity .datum-timestamp').html('updated ' + messageResponse['Humidity']['timestamp']);
+
+
+
+
+            // return messageResponse;
+
+
+        })
+    }
+
     static populateSidebar(entity) {
+        // console.log(data);
         var props = entity._properties;
         var deviceData = document.querySelector('.data-display');
         var name = deviceData.querySelector('.device-location-name-label');
         var coords = deviceData.querySelector('.coordinates');
-        var datumContainer = deviceData.querySelector('.device-data');
+
 
         name.innerHTML = props._name;
         coords.innerHTML = props._coords._value == null ? 'No GPS Data Available' : props._coords;
         // create data blocks
-        if (undefined !== props._data._value) {
-            // clear out the data blocks in the sidebar
-            while (document.querySelector('.device-data').firstChild) {
-                datumContainer.removeChild(document.querySelector('.device-data').firstChild);
-            }
-            console.log(props._data._value);
-            console.log(props._timestamps._value);
-            for (const name in props._data._value) {
-                var dataBlock = new DeviceDatum(name, props._data._value[name], props._timestamps._value[name]).returnNode();
-                datumContainer.appendChild(dataBlock);
-            }
-        }
+        // if (undefined !== props._data._value) {
+        //     // clear out the data blocks in the sidebar
+        //     while (document.querySelector('.device-data').firstChild) {
+        //         datumContainer.removeChild(document.querySelector('.device-data').firstChild);
+        //     }
+        //     console.log(props._data._value);
+        //     console.log(props._timestamps._value);
+        //     for (const name in props._data._value) {
+        //         var dataBlock = new DeviceDatum(name, props._data._value[name], props._timestamps._value[name]).returnNode();
+        //         datumContainer.appendChild(dataBlock);
+        //     }
+        // }
     }
     static populateMobileData(entity) {
         var props = entity._properties;
@@ -162,17 +258,17 @@ class Globe {
         name.innerHTML = props._name;
         coords.innerHTML = props._coords._value == null ? 'No GPS Data Available' : props._coords;
         // create data blocks
-        if (undefined !== props._data._value) {
-            // clear out the data blocks in the sidebar
-            while (document.querySelector('.mobile-sidebar .device-data').firstChild) {
-                datumContainer.removeChild(document.querySelector('.mobile-sidebar .device-data').firstChild);
-            }
-            console.log(props._data._value);
-            for (const name in props._data._value) {
-                var dataBlock = new DeviceDatum(name, props._data._value[name], props._timestamps._value[name]).returnNode();
-                datumContainer.appendChild(dataBlock);
-            }
-        }
+        // if (undefined !== props._data._value) {
+        //     // clear out the data blocks in the sidebar
+        //     while (document.querySelector('.mobile-sidebar .device-data').firstChild) {
+        //         datumContainer.removeChild(document.querySelector('.mobile-sidebar .device-data').firstChild);
+        //     }
+        //     console.log(props._data._value);
+        //     for (const name in props._data._value) {
+        //         var dataBlock = new DeviceDatum(name, props._data._value[name], props._timestamps._value[name]).returnNode();
+        //         datumContainer.appendChild(dataBlock);
+        //     }
+        // }
     }
 
     static resetIcons(viewer) {
