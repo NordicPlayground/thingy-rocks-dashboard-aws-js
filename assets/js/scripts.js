@@ -19,49 +19,6 @@ const handleEvent = (eventName, {
     return handler;
 }
 
-
-// function loadScript(src, callback) {
-//     var s,
-//         r,
-//         t;
-//     r = false;
-//     s = document.createElement('script');
-//     s.type = 'text/javascript';
-//     s.src = src;
-//     s.onload = s.onreadystatechange = function() {
-//         //console.log( this.readyState ); //uncomment this line to see which ready states are called.
-//         if (!r && (!this.readyState || this.readyState == 'complete')) {
-//             r = true;
-//             callback();
-//         }
-//     };
-//     t = document.getElementsByTagName('script')[0];
-//     t.parentNode.insertBefore(s, t);
-// }
-
-// function getData() {
-//     var xmlhttp = new XMLHttpRequest();
-//     xmlhttp.onreadystatechange = function() {
-//         // console.log(this.readyState);
-//         if (this.readyState == 4 && this.status == 200) {
-//             // create globe after data is retrieved
-//             var realData = JSON.parse(this.responseText);
-//             console.log(realData);
-//             var globe = new Globe(realData);
-//             console.log(globe);
-//             console.log(globe.tilesLoaded);
-//             return globe
-//         }
-//     };
-//     xmlhttp.open("POST", "getDeviceData.php", true);
-//     xmlhttp.send();
-// }
-
-
-
-
-
-
 function getAjaxSettings(url, async = true) {
     var settings = {
         "crossDomain": true,
@@ -81,9 +38,7 @@ function getMessagesForDevice(deviceID) {
     var call = getAjaxSettings("https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" + deviceID + "&pageLimit=100&pageSort=desc");
 
 
-    // console.log('sdfsdfsdf');
     $.ajax(call).done(function(response) {
-        // console.log(response);
         var device_temp = 0;
         var device_humid = 0;
         var messages = response.items;
@@ -120,10 +75,7 @@ function getMessagesForDevice(deviceID) {
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOMContentLoaded');
-    // loadScript("/assets/js/Cesium-1.75/Build/Cesium/Cesium.js");
     var globe = new Globe();
-    // globe.addPoints()
-    // return globe;
 
     window.setTimeout(function() {
         document.querySelector('body').classList.add('loaded');

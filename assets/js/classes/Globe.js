@@ -5,8 +5,6 @@ class Globe {
 
         this.viewer = this.initViewer();
         this.configScene(this.viewer);
-        // console.log(data);
-        // this.addPoints();
         this.getDevices();
         this.clickAction(this.viewer, this.sidebar);
 
@@ -61,21 +59,12 @@ class Globe {
 
         $.ajax(call).done(function(response) {
             var devices = response.items;
-            // console.log(devices);
             var deviceArray = [];
 
             for (let i = 0; i < devices.length; i++) {
 
                 deviceArray[devices[i].id] = new Device(devices[i]);
-                // deviceArray[devices[i].id].getGPSData();
-                // console.log(deviceArray[devices[i].id])
             }
-            // deviceArray.forEach(function() {
-            //     this.getGPSData();
-            // });
-            // console.log(deviceArray);
-
-            // console.log(response);
             globe.addPoints(deviceArray);
         });
     }
@@ -85,7 +74,6 @@ class Globe {
         var viewer = this.viewer;
         var sidebar = this.sidebar;
         var globe = this;
-        // var dataPoints = getDevices();
 
         if (Object.keys(dataPoints).length > 1) {
             console.log(dataPoints);
@@ -110,7 +98,6 @@ class Globe {
                 coords: data.gps.readable,
                 list_entry: listEntry,
                 data: data.properties.data,
-                // timestamps: data.properties.timestamp
             },
             billboard: {
                 height: 32,
@@ -143,7 +130,6 @@ class Globe {
             console.log(viewer.selectedEntity._properties.id._value);
             Globe.resetIcons(viewer);
             if (undefined !== viewer.selectedEntity) {
-                console.log(viewer.selectedEntity);
                 Globe.getMessagesForDevice(viewer.selectedEntity._properties._id._value);
                 Globe.populateSidebar(viewer.selectedEntity);
                 Globe.populateMobileData(viewer.selectedEntity);
@@ -153,7 +139,6 @@ class Globe {
                     null !== document.querySelector('.device-list li.active') ? document.querySelector('.device-list li.active').classList.remove('active') : false;
                     listEntry.classList.add('active');
                 }
-                console.log(viewer.selectedEntity._position._value);
                 viewer.flyTo(viewer.selectedEntity, {
                     offset: new Cesium.HeadingPitchRange(0, -90, 5000)
                 });
@@ -177,26 +162,22 @@ class Globe {
         $('.device-data__datum.temp .datum-info').html('Loading...');
         $('.device-data__datum.humidity .datum-info').html('Loading...');
         $('.device-data__datum').show();
-        // console.log('sdfsdfsdf');
         $.ajax(call).done(function(response) {
-            // console.log(response);
             var device_temp = 0;
             var device_humid = 0;
             var messages = response.items;
             var messageResponse = {
 
-                    'Temperature': {
-                        'data': null,
-                        'timestamp': null
-                    },
-                    'Humidity': {
-                        'data': null,
-                        'timestamp': null
-                    },
+                'Temperature': {
+                    'data': null,
+                    'timestamp': null
+                },
+                'Humidity': {
+                    'data': null,
+                    'timestamp': null
+                },
 
-                }
-                // Fri Oct 09 2020 11:52:58  PDT
-                // Wed Oct 07 2020 14:12:28  CEST
+            }
             for (let i = 0; i < messages.length; i++) {
                 if (messages[i].message.appId == 'TEMP' && device_temp == 0) {
                     device_temp = 1;
@@ -214,18 +195,10 @@ class Globe {
             $('.device-data__datum.temp .datum-timestamp').html('updated ' + messageResponse['Temperature']['timestamp']);
             $('.device-data__datum.humidity .datum-info').html(messageResponse['Humidity']['data'] + '%');
             $('.device-data__datum.humidity .datum-timestamp').html('updated ' + messageResponse['Humidity']['timestamp']);
-
-
-
-
-            // return messageResponse;
-
-
-        })
+        });
     }
 
     static populateSidebar(entity) {
-        // console.log(data);
         var props = entity._properties;
         var deviceData = document.querySelector('.data-display');
         var name = deviceData.querySelector('.device-location-name-label');
@@ -234,20 +207,8 @@ class Globe {
 
         name.innerHTML = props._name;
         coords.innerHTML = props._coords._value == null ? 'No GPS Data Available' : props._coords;
-        // create data blocks
-        // if (undefined !== props._data._value) {
-        //     // clear out the data blocks in the sidebar
-        //     while (document.querySelector('.device-data').firstChild) {
-        //         datumContainer.removeChild(document.querySelector('.device-data').firstChild);
-        //     }
-        //     console.log(props._data._value);
-        //     console.log(props._timestamps._value);
-        //     for (const name in props._data._value) {
-        //         var dataBlock = new DeviceDatum(name, props._data._value[name], props._timestamps._value[name]).returnNode();
-        //         datumContainer.appendChild(dataBlock);
-        //     }
-        // }
     }
+
     static populateMobileData(entity) {
         var props = entity._properties;
         var deviceData = document.querySelector('.mobile-sidebar .data-display');
@@ -257,18 +218,6 @@ class Globe {
 
         name.innerHTML = props._name;
         coords.innerHTML = props._coords._value == null ? 'No GPS Data Available' : props._coords;
-        // create data blocks
-        // if (undefined !== props._data._value) {
-        //     // clear out the data blocks in the sidebar
-        //     while (document.querySelector('.mobile-sidebar .device-data').firstChild) {
-        //         datumContainer.removeChild(document.querySelector('.mobile-sidebar .device-data').firstChild);
-        //     }
-        //     console.log(props._data._value);
-        //     for (const name in props._data._value) {
-        //         var dataBlock = new DeviceDatum(name, props._data._value[name], props._timestamps._value[name]).returnNode();
-        //         datumContainer.appendChild(dataBlock);
-        //     }
-        // }
     }
 
     static resetIcons(viewer) {
