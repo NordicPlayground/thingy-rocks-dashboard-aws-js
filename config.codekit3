@@ -17,14 +17,6 @@
 		"oAP": "/.gitignore",
 		"oF": 0
 		},
-	"/.vscode/settings.json": {
-		"ft": 524288,
-		"oA": 1,
-		"oAP": "/.vscode/settings-min.json",
-		"oF": 0,
-		"oO": 0,
-		"oS": 1
-		},
 	"/assets/css/compiled/earth.css": {
 		"aP": 1,
 		"bl": 0,
@@ -69451,62 +69443,6 @@
 		"oA": 0,
 		"oAP": "/index.html",
 		"oF": 0
-		},
-	"/package-lock.json": {
-		"ft": 524288,
-		"oA": 1,
-		"oAP": "/package-lock-min.json",
-		"oF": 0,
-		"oO": 0,
-		"oS": 1
-		},
-	"/package.json": {
-		"ft": 524288,
-		"oA": 1,
-		"oAP": "/package-min.json",
-		"oF": 0,
-		"oO": 0,
-		"oS": 1
-		},
-	"/SAMPLE_JSON/api-rest.yaml": {
-		"cB": 0,
-		"ft": 8192,
-		"hM": 0,
-		"oA": 0,
-		"oAP": "/SAMPLE_JSON/api-rest.yaml",
-		"oF": 0
-		},
-	"/SAMPLE_JSON/appId-GPS": {
-		"cB": 0,
-		"ft": 8192,
-		"hM": 0,
-		"oA": 0,
-		"oAP": "/SAMPLE_JSON/appId-GPS",
-		"oF": 0
-		},
-	"/SAMPLE_JSON/blank_devices_list.json": {
-		"ft": 524288,
-		"oA": 1,
-		"oAP": "/SAMPLE_JSON/blank_devices_list-min.json",
-		"oF": 0,
-		"oO": 0,
-		"oS": 1
-		},
-	"/SAMPLE_JSON/devices.json": {
-		"ft": 524288,
-		"oA": 1,
-		"oAP": "/SAMPLE_JSON/devices-min.json",
-		"oF": 0,
-		"oO": 0,
-		"oS": 1
-		},
-	"/SAMPLE_JSON/messages.json": {
-		"ft": 524288,
-		"oA": 1,
-		"oAP": "/SAMPLE_JSON/messages-min.json",
-		"oF": 0,
-		"oO": 0,
-		"oS": 1
 		}
 	},
 "hooks": [
