@@ -69444,14 +69444,6 @@
 		"oT": 1,
 		"q": 100
 		},
-	"/getDeviceData.php": {
-		"cB": 0,
-		"ft": 8192,
-		"hM": 0,
-		"oA": 0,
-		"oAP": "/getDeviceData.php",
-		"oF": 0
-		},
 	"/index.html": {
 		"cB": 0,
 		"ft": 8192,
