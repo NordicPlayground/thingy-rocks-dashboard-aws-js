@@ -43,7 +43,7 @@ class Device {
                 var lng_multiplier = gpsArray[5] == 'E' ? 1 : -1;
 
                 var lng = lng_degrees * lng_multiplier;
-                var lng_readable = lng_degrees.toFixed(3);
+                var lng_readable = lng.toFixed(3);
 
                 var gps_readout = lat_readable + '° ' + gpsArray[3] + ', ' + lng_readable + '° ' + gpsArray[5];
                 var coords = {

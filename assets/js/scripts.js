@@ -39,23 +39,23 @@ const handleEvent = (eventName, {
 //     t.parentNode.insertBefore(s, t);
 // }
 
-function getData() {
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.onreadystatechange = function() {
-        // console.log(this.readyState);
-        if (this.readyState == 4 && this.status == 200) {
-            // create globe after data is retrieved
-            var realData = JSON.parse(this.responseText);
-            console.log(realData);
-            var globe = new Globe(realData);
-            console.log(globe);
-            console.log(globe.tilesLoaded);
-            return globe
-        }
-    };
-    xmlhttp.open("POST", "getDeviceData.php", true);
-    xmlhttp.send();
-}
+// function getData() {
+//     var xmlhttp = new XMLHttpRequest();
+//     xmlhttp.onreadystatechange = function() {
+//         // console.log(this.readyState);
+//         if (this.readyState == 4 && this.status == 200) {
+//             // create globe after data is retrieved
+//             var realData = JSON.parse(this.responseText);
+//             console.log(realData);
+//             var globe = new Globe(realData);
+//             console.log(globe);
+//             console.log(globe.tilesLoaded);
+//             return globe
+//         }
+//     };
+//     xmlhttp.open("POST", "getDeviceData.php", true);
+//     xmlhttp.send();
+// }
 
 
 
@@ -69,7 +69,7 @@ function getAjaxSettings(url, async = true) {
         "url": url,
         "method": "GET",
         "headers": {
-            "Authorization": "Bearer 12af85ea3af2d76df38e56a9bc1484fd70389d1d",
+            "Authorization": "Bearer 12af85ea3af2d76df38e56a9bc1484fd70389d1d", // access token 
         }
     }
     return settings;
