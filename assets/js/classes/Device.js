@@ -13,7 +13,7 @@ class Device {
 
         // old firmware uses connected field
         // new firmware uses connection field with a status key value pair
-        var isConnected_LEGACY_FIRMWARE = data.state.reported.connected;
+        var isConnected_LEGACY_FIRMWARE = !!data.state.reported.connected;
         var isConnected_UPDATED_FIRMWARE = data.state.reported.connection && data.state.reported.connection.status === 'connected';
 
         if (isConnected_LEGACY_FIRMWARE || isConnected_UPDATED_FIRMWARE) {
