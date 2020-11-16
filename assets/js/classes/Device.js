@@ -1,37 +1,35 @@
 class Device {
     constructor(data) {
         this.id = data.id;
-
-        this.properties = {
-            'connected': undefined !== data.state.reported.connected && data.state.reported.connected == true ? 'connected' : 'disconnected',
-            'name': data.name,
-            // 'data': {
-            //     'Temperature': 'Loading',
-            //     'Humidity': 'Loading',
-            // }
-        };
-        // this.timestamp = {
-        //     'Temperature': false,
-        //     'Humidity': false,
-        // }
+        this.properties = this.getProperties(data);
         this.getGPSData();
-        // this.getMessagesForDevice();
     }
 
+    getProperties(data) {
+        var deviceProperties = {
+            'connected': 'disconnected',
+            'name': data.name
+        };
 
+        // old firmware uses connected field
+        // new firmware uses connection field with a status key value pair
+        var isConnected_LEGACY_FIRMWARE = data.state.reported.connected;
+        var isConnected_UPDATED_FIRMWARE = data.state.reported.connection && data.state.reported.connection.status === 'connected';
 
+        if (isConnected_LEGACY_FIRMWARE || isConnected_UPDATED_FIRMWARE) {
+            deviceProperties.connected = 'connected';
+        }
 
-
+        return deviceProperties;
+    }
 
     getGPSData() {
         var call = getAjaxSettings("https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" + this.id + "&pageLimit=1&pageSort=desc&appId=GPS", false);
         var device = this;
         $.ajax(call).done(function(response) {
-            // console.log(device);
             if (undefined !== response.items[0].message.data) {
                 var gpsData = response.items[0].message.data;
                 var gpsArray = gpsData.split(',');
-                console.log(gpsArray);
                 // process latitude
                 var lat_degrees = parseFloat(gpsArray[2].substr(gpsArray[2].indexOf('.') - 2)) / 60 + parseFloat(gpsArray[2].substr(0, gpsArray[2].indexOf('.') - 2));
                 var lat_multiplier = gpsArray[3] == 'N' ? 1 : -1;
@@ -56,7 +54,7 @@ class Device {
                     coords.lng
                 ];
                 device.gps = coords;
-                // console.log(this);
+
                 return device;
 
             } else {
@@ -70,7 +68,7 @@ class Device {
                     gpsData.lng
                 ];
                 device.gps = coords;
-                // console.log(this);
+
                 return device;
             }
         })

@@ -67,7 +67,7 @@ function getMessagesForDevice(deviceID) {
                 messageResponse.Humidity.timestamp = new Date(Date.parse(messages[i].receivedAt));
             }
         }
-        console.log(messageResponse);
+
         return messageResponse;
     })
 }

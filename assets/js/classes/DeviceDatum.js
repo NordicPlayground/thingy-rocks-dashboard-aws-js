@@ -1,6 +1,5 @@
 class DeviceDatum {
     constructor(name, info, timestamp) {
-        console.log('name + info + timestamp = ' + name + info + timestamp);
         this.deviceDatum = document.createElement('div');
         this.deviceDatum.classList.add('device-data__datum');
 

@@ -35,7 +35,6 @@ class Sidebar {
 
     isOpenTest() {
         this.isOpen = this.DOM.sidebar.classList.contains('open') ? true : false;
-        console.log('open test');
     }
 
     populateData(data = null) {

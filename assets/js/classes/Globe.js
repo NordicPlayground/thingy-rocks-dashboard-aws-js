@@ -20,14 +20,12 @@ class Globe {
             var ellipsoid = viewer.scene.globe.ellipsoid;
             var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position).height;
             var moveRate = cameraHeight < 300000 ? cameraHeight / 15.0 : cameraHeight / 5.0;
-            console.log(cameraHeight);
             viewer.camera.moveBackward(moveRate);
         });
         document.querySelector('#zoom-in').addEventListener('click', function() {
             var ellipsoid = viewer.scene.globe.ellipsoid;
             var cameraHeight = ellipsoid.cartesianToCartographic(viewer.camera.position).height;
             var moveRate = cameraHeight < 300000 ? cameraHeight / 15.0 : cameraHeight / 5.0;
-            console.log(cameraHeight);
             viewer.camera.moveForward(moveRate);
         });
         return viewer;
@@ -76,9 +74,7 @@ class Globe {
         var globe = this;
 
         if (Object.keys(dataPoints).length > 1) {
-            console.log(dataPoints);
             for (const device in dataPoints) {
-                console.log(dataPoints[device]);
                 globe.addPoint(viewer, dataPoints[device], deviceList, sidebar);
             }
         }
@@ -86,7 +82,6 @@ class Globe {
 
 
     addPoint(viewer, data, deviceList, sidebar) {
-        console.log(data);
         let showEntity = data.position == undefined ? false : true;
         let position = showEntity == true ? Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0]) : null;
         let listEntry = this.createListEntry(viewer, data, deviceList);
@@ -127,7 +122,6 @@ class Globe {
             if (document.querySelector('.infobox')) {
                 document.querySelector('.infobox').remove();
             }
-            console.log(viewer.selectedEntity._properties.id._value);
             Globe.resetIcons(viewer);
             if (undefined !== viewer.selectedEntity) {
                 Globe.getMessagesForDevice(viewer.selectedEntity._properties._id._value);
@@ -190,8 +184,8 @@ class Globe {
                     messageResponse.Humidity.timestamp = moment(new Date(Date.parse(messages[i].receivedAt))).format('ddd MMM DD YYYY, kk:mm:ss');
                 }
             }
-            console.log(messageResponse);
-            $('.device-data__datum.temp .datum-info').html(messageResponse['Temperature']['data'] + '°');
+
+            $('.device-data__datum.temp .datum-info').html(messageResponse['Temperature']['data'] + '°C');
             $('.device-data__datum.temp .datum-timestamp').html('updated ' + messageResponse['Temperature']['timestamp']);
             $('.device-data__datum.humidity .datum-info').html(messageResponse['Humidity']['data'] + '%');
             $('.device-data__datum.humidity .datum-timestamp').html('updated ' + messageResponse['Humidity']['timestamp']);
@@ -221,9 +215,7 @@ class Globe {
     }
 
     static resetIcons(viewer) {
-        console.log('resetIcons running');
         var entriesArray = viewer.entities._entities._array;
-        console.log(entriesArray);
         if (undefined !== viewer.selectedEntity) {
             for (let i = 0; i < entriesArray.length; i++) {
                 if (undefined !== entriesArray[i]._billboard._image) {

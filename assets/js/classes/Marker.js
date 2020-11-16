@@ -10,12 +10,6 @@ class Marker {
 
     init() {
         this.markerSettings();
-
-        // this.addEventListener('click', function() {
-        //     console.log(this);
-        //     // markerClick(myearth, marker)
-        // });
-
     }
 
     markerSettings() {
