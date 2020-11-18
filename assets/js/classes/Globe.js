@@ -7,8 +7,6 @@ class Globe {
         this.configScene(this.viewer);
         this.getDevices();
         this.clickAction(this.viewer, this.sidebar);
-
-
     }
 
     configScene(viewer) {
@@ -58,7 +56,6 @@ class Globe {
         $.ajax(call).done(function(response) {
             var devices = response.items;
             var deviceArray = [];
-
             for (let i = 0; i < devices.length; i++) {
 
                 deviceArray[devices[i].id] = new Device(devices[i]);
@@ -84,13 +81,13 @@ class Globe {
     addPoint(viewer, data, deviceList, sidebar) {
         let showEntity = data.position == undefined ? false : true;
         let position = showEntity == true ? Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0]) : null;
-        let listEntry = this.createListEntry(viewer, data, deviceList);
+        let listEntry = this.createListEntry(data, deviceList);
         let entity = viewer.entities.add({
             position: position,
             properties: {
                 id: data.id,
                 name: data.properties.name,
-                coords: data.gps.readable,
+                ...(data.gps && data.gps.readable ? {coords: data.gps.readable} : {}),
                 list_entry: listEntry,
                 data: data.properties.data,
             },
@@ -106,10 +103,10 @@ class Globe {
             if (window.innerWidth < 771) {
                 sidebar.closeSidebar();
             }
-        })
+        });
     }
 
-    createListEntry(viewer, data, deviceList) {
+    createListEntry(data, deviceList) {
         let listEntry = document.createElement('li');
         listEntry.innerHTML = '<a href="#" class="' + data.properties.connected + '">' + data.properties.name + '</a>';
         deviceList.appendChild(listEntry);
@@ -122,6 +119,7 @@ class Globe {
             if (document.querySelector('.infobox')) {
                 document.querySelector('.infobox').remove();
             }
+
             Globe.resetIcons(viewer);
             if (undefined !== viewer.selectedEntity) {
                 Globe.getMessagesForDevice(viewer.selectedEntity._properties._id._value);
@@ -133,9 +131,12 @@ class Globe {
                     null !== document.querySelector('.device-list li.active') ? document.querySelector('.device-list li.active').classList.remove('active') : false;
                     listEntry.classList.add('active');
                 }
-                viewer.flyTo(viewer.selectedEntity, {
-                    offset: new Cesium.HeadingPitchRange(0, -90, 5000)
-                });
+
+                if (viewer.selectedEntity._properties._coords) {
+                    viewer.flyTo(viewer.selectedEntity, {
+                        offset: new Cesium.HeadingPitchRange(0, -90, 5000)
+                    });
+                }
 
                 if (window.innerWidth > 770) {
                     sidebar.openSidebar();
@@ -198,9 +199,8 @@ class Globe {
         var name = deviceData.querySelector('.device-location-name-label');
         var coords = deviceData.querySelector('.coordinates');
 
-
         name.innerHTML = props._name;
-        coords.innerHTML = props._coords._value == null ? 'No GPS Data Available' : props._coords;
+        coords.innerHTML = props._coords && props._coords._value ? props._coords : 'No GPS Data Available';
     }
 
     static populateMobileData(entity) {
@@ -211,7 +211,7 @@ class Globe {
         var datumContainer = deviceData.querySelector('.mobile-sidebar .device-data');
 
         name.innerHTML = props._name;
-        coords.innerHTML = props._coords._value == null ? 'No GPS Data Available' : props._coords;
+        coords.innerHTML = props._coords && props._coords._value ? props._coords : 'No GPS Data Available';
     }
 
     static resetIcons(viewer) {
