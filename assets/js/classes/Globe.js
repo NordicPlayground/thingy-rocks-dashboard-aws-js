@@ -152,16 +152,18 @@ class Globe {
 
     static getMessagesForDevice(deviceID) {
 
-        var call = getAjaxSettings("https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" + deviceID + "&pageLimit=100&pageSort=desc");
+        var getTempData = getAjaxSettings("https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" + deviceID + "&pageLimit=1&pageSort=desc&appId=TEMP");
+        var getHumidityData = getAjaxSettings("https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" + deviceID + "&pageLimit=1&pageSort=desc&appId=HUMID");
 
         $('.device-data__datum.temp .datum-info').html('Loading...');
         $('.device-data__datum.humidity .datum-info').html('Loading...');
         $('.device-data__datum').show();
-        $.ajax(call).done(function(response) {
-            var device_temp = 0;
-            var device_humid = 0;
-            var messages = response.items;
-            var messageResponse = {
+
+        $.when(
+          $.ajax(getTempData),
+          $.ajax(getHumidityData)
+        ).done(function(tempResponse, humidityResponse) {
+            var data = {
 
                 'Temperature': {
                     'data': null,
@@ -173,24 +175,33 @@ class Globe {
                 },
 
             }
-            for (let i = 0; i < messages.length; i++) {
-                if (messages[i].message.appId == 'TEMP' && device_temp == 0) {
-                    device_temp = 1;
-                    messageResponse.Temperature.data = messages[i].message.data;
-                    messageResponse.Temperature.timestamp = moment(new Date(Date.parse(messages[i].receivedAt))).format('ddd MMM DD YYYY, kk:mm:ss');
-                }
-                if (messages[i].message.appId == 'HUMID' && device_temp == 0) {
-                    device_humid = 1;
-                    messageResponse.Humidity.data = messages[i].message.data;
-                    messageResponse.Humidity.timestamp = moment(new Date(Date.parse(messages[i].receivedAt))).format('ddd MMM DD YYYY, kk:mm:ss');
-                }
+
+            var tempData = tempResponse[0].items && tempResponse[0].items[0];
+            var humidData = humidityResponse[0].items && humidityResponse[0].items[0];
+
+            if (tempData) {
+                data.Temperature.data = tempData.message.data;
+                data.Temperature.timestamp = moment(new Date(Date.parse(tempData.receivedAt))).format('ddd MMM DD YYYY, kk:mm:ss');
             }
 
-            $('.device-data__datum.temp .datum-info').html(messageResponse['Temperature']['data'] + '°C');
-            $('.device-data__datum.temp .datum-timestamp').html('updated ' + messageResponse['Temperature']['timestamp']);
-            $('.device-data__datum.humidity .datum-info').html(messageResponse['Humidity']['data'] + '%');
-            $('.device-data__datum.humidity .datum-timestamp').html('updated ' + messageResponse['Humidity']['timestamp']);
+            if(humidData) {
+                data.Humidity.data = humidData.message.data;
+                data.Humidity.timestamp = moment(new Date(Date.parse(humidData.receivedAt))).format('ddd MMM DD YYYY, kk:mm:ss');
+            }
+
+            $('.device-data__datum.temp .datum-info').html(Globe.formatDataString(data, 'Temperature'));
+            $('.device-data__datum.temp .datum-timestamp').html(Globe.formatTimestamp(data,'Temperature'));
+            $('.device-data__datum.humidity .datum-info').html(Globe.formatDataString(data, 'Humidity'));
+            $('.device-data__datum.humidity .datum-timestamp').html(Globe.formatTimestamp(data,'Humidity'));
         });
+    }
+
+    static formatDataString(message, dataKey) {
+        return message[dataKey].data ? `${message[dataKey].data}${Device.dataMap[dataKey].unit}`: '--';
+    }
+
+    static formatTimestamp(message, dataKey) {
+        return message[dataKey].timestamp ? `updated ${message[dataKey].timestamp}` : 'No update';
     }
 
     static populateSidebar(entity) {

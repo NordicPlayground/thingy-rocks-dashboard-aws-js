@@ -1,4 +1,5 @@
 class Device {
+
     constructor(data) {
         this.id = data.id;
         this.position = [];
@@ -11,6 +12,19 @@ class Device {
         };
         this.properties = this.getProperties(data);
         this.getGPSData();
+    }
+
+    static get dataMap () {
+        return {
+            Humidity: {
+                appId: 'HUMID',
+                unit: '%'
+            },
+            Temperature: {
+                appId: 'TEMP',
+                unit: '°C'
+            }
+        }
     }
 
     getProperties(data) {
