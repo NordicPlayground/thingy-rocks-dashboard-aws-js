@@ -125,7 +125,11 @@ class Globe {
                 Globe.getMessagesForDevice(viewer.selectedEntity._properties._id._value);
                 Globe.populateSidebar(viewer.selectedEntity);
                 Globe.populateMobileData(viewer.selectedEntity);
-                viewer.selectedEntity.billboard.image = 'assets/img/nordic-icon-y.svg';
+                viewer.selectedEntity.billboard = {
+                    height: 64,
+                    width: 64,
+                    image: 'assets/img/nordic-icon-y.svg'
+                };
                 var listEntry = viewer.selectedEntity._properties._list_entry._value;
                 if (undefined !== listEntry) {
                     null !== document.querySelector('.device-list li.active') ? document.querySelector('.device-list li.active').classList.remove('active') : false;
@@ -230,7 +234,11 @@ class Globe {
         if (undefined !== viewer.selectedEntity) {
             for (let i = 0; i < entriesArray.length; i++) {
                 if (undefined !== entriesArray[i]._billboard._image) {
-                    entriesArray[i].billboard.image = 'assets/img/nordic-icon-g.svg';
+                    entriesArray[i].billboard = {
+                        height: 32,
+                        width: 32,
+                        image: 'assets/img/nordic-icon-g.svg'
+                    };
                 }
             }
         }
