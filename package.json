@@ -4,6 +4,7 @@
   "description": "[thingyworld.nrfcloud.com](http://thingyworld.nrfcloud.com)",
   "main": "assets/index.html",
   "scripts": {
+    "build": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
