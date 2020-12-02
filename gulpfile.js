@@ -2,12 +2,7 @@ const { src, dest, series } = require('gulp');
 const rename = require("gulp-rename");
 const uglify = require('gulp-uglify-es').default;
 
-function lint(cb) {
-
-}
-
-
-function buildClasses(cb) {
+function build(cb) {
 	src(['assets/favicon.png', 'assets/index.html'])
 		.pipe(dest('dist/'));
 
@@ -30,5 +25,5 @@ function buildClasses(cb) {
 	cb();
 }
 
-// exports.default = series(lint, uglify, build);
-exports.default = series(buildClasses);
+//TODO: include linter
+exports.default = series(build);
