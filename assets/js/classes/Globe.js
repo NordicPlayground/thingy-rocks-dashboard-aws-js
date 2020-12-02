@@ -94,7 +94,7 @@ class Globe {
             billboard: {
                 height: 32,
                 width: 32,
-                image: 'assets/img/nordic-icon-g.svg',
+                image: 'img/nordic-icon-g.svg',
                 show: showEntity,
             }
         });
@@ -128,7 +128,7 @@ class Globe {
                 viewer.selectedEntity.billboard = {
                     height: 64,
                     width: 64,
-                    image: 'assets/img/nordic-icon-y.svg'
+                    image: 'img/nordic-icon-y.svg'
                 };
                 var listEntry = viewer.selectedEntity._properties._list_entry._value;
                 if (undefined !== listEntry) {
@@ -237,7 +237,7 @@ class Globe {
                     entriesArray[i].billboard = {
                         height: 32,
                         width: 32,
-                        image: 'assets/img/nordic-icon-g.svg'
+                        image: 'img/nordic-icon-g.svg'
                     };
                 }
             }

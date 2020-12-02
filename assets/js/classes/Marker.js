@@ -1,6 +1,6 @@
 class Marker {
     constructor() {
-        this.image = 'assets/img/map-marker.svg';
+        this.image = 'img/map-marker.svg';
         this.imageAlphaOnly = true;
         this.color = '#FEA512';
         this.location = { lat: 45.6918636, lng: -124.0965785 };

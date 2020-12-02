@@ -885,9 +885,9 @@ gulp.task("coverage", function (done) {
       var html = "<!doctype html><html><body><ul>";
       folders.forEach(function (folder) {
         html +=
-          '<li><a href="' +
+          '<li><a href=' +
           encodeURIComponent(folder) +
-          '/index.html">' +
+          '"/assets/index.html">' +
           folder +
           "</a></li>";
       });
