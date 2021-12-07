@@ -102,6 +102,9 @@ class Globe {
         list_entry: listEntry,
         coords: data.position,
         data: data.properties.data,
+        serviceType: data.serviceType,
+        uncertainty: data.uncertainty,
+        locationUpdate: data.locationUpdate,
       },
       billboard: {
         height: 32,
@@ -256,18 +259,44 @@ class Globe {
       : "No update";
   }
 
+  static formatUncertainty(message) {
+    return message && message !== "NA" ? `${message} m` : "N/A";
+  }
+
   static populateSidebar(entity) {
     var props = entity._properties;
     var deviceData = document.querySelector(".data-display");
     var name = deviceData.querySelector(".device-location-name-label");
     var coords = deviceData.querySelector(".coordinates");
+    var lastLocationServiceUpdate = moment(
+      new Date(props.locationUpdate)
+    ).format("ddd MMM DD YYYY, kk:mm:ss");
+    var uncertainty = props.uncertainty.getValue();
+
+    $(".device-data__datum.location_method .datum-info").html(
+      props.serviceType.getValue() || "N/A"
+    );
+
+    $(".device-data__datum.location_method .datum-timestamp").html(
+      lastLocationServiceUpdate != "Invalid date"
+        ? `updated ${lastLocationServiceUpdate}`
+        : "No update"
+    );
+
+    $(".device-data__datum.uncertainty .datum-info").html(
+      Globe.formatUncertainty(uncertainty)
+    );
+
+    $(".device-data__datum.uncertainty .datum-timestamp").html(
+      uncertainty ? `updated ${lastLocationServiceUpdate}` : "No update"
+    );
 
     name.innerHTML = props._name;
     coords.innerHTML =
       props._coords && props._coords._value.length > 0
         ? `${props._coords._value[0].toFixed(
-            2
-          )}, ${props._coords._value[1].toFixed(2)}`
+            4
+          )}, ${props._coords._value[1].toFixed(4)}`
         : "No GPS Data Available";
   }
 

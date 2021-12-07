@@ -64,8 +64,9 @@ class Device {
         device.coords.lat = deviceLat;
         device.coords.lng = deviceLon;
         device.serviceType = deviceLocationHistoryResult.serviceType || "N/A";
-        device.uncertainty = deviceLocationHistoryResult.uncertainty || "N/A";
+        device.uncertainty = +deviceLocationHistoryResult.uncertainty;
         device.position = [deviceLat, deviceLon];
+        device.locationUpdate = deviceLocationHistoryResult.insertedAt || "N/A";
         device.gps = device.coords;
       }
       return device;
