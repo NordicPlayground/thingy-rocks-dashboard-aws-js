@@ -142,9 +142,9 @@ class Globe {
 
       Globe.resetIcons(viewer);
       if (undefined !== viewer.selectedEntity) {
-        Globe.getMessagesForDevice(
-          viewer.selectedEntity._properties._id._value
-        );
+        var deviceId = viewer.selectedEntity._properties._id._value;
+        Globe.getLocationInfoForDevice(deviceId);
+        Globe.getMessagesForDevice(deviceId);
         Globe.populateSidebar(viewer.selectedEntity);
         Globe.populateMobileData(viewer.selectedEntity);
         viewer.selectedEntity.billboard = {
@@ -180,6 +180,45 @@ class Globe {
       } else {
         sidebar.closeSidebar();
         sidebar.closeMobileSidebar();
+      }
+    });
+  }
+
+  static getLocationInfoForDevice(deviceID) {
+    var locationData = getAjaxSettings(
+      "https://api.dev.nrfcloud.com/v1/location/history?deviceId=" +
+        deviceID +
+        "&pageLimit=1"
+    );
+
+    $(".device-data__datum.location_method .datum-info").html("Loading...");
+    $(".device-data__datum.uncertainty .datum-info").html("Loading...");
+    $(".device-data__datum").show();
+
+    $.ajax(locationData).done(function (response) {
+      const deviceLocationHistoryResult =
+        response && response.items && response.items[0];
+      if (deviceLocationHistoryResult) {
+        var lastLocationServiceUpdate = moment(
+          new Date(deviceLocationHistoryResult.insertedAt)
+        ).format("ddd MMM DD YYYY, kk:mm:ss");
+        const deviceLat = +deviceLocationHistoryResult.lat || undefined;
+        const deviceLon = +deviceLocationHistoryResult.lon || undefined;
+        const serviceType = deviceLocationHistoryResult.serviceType || "N/A";
+        const uncertainty = +deviceLocationHistoryResult.uncertainty;
+
+        $(".device-data__datum.location_method .datum-info").html(serviceType);
+        $(".device-data__datum.location_method .datum-timestamp").html(
+          lastLocationServiceUpdate != "Invalid date"
+            ? `updated ${lastLocationServiceUpdate}`
+            : "No update"
+        );
+        $(".device-data__datum.uncertainty .datum-info").html(
+          Globe.formatUncertainty(uncertainty)
+        );
+        $(".device-data__datum.uncertainty .datum-timestamp").html(
+          uncertainty ? `updated ${lastLocationServiceUpdate}` : "No update"
+        );
       }
     });
   }
