@@ -116,7 +116,7 @@ class Globe {
 
     listEntry.addEventListener("click", function () {
       viewer.selectedEntity = entity;
-      Globe.clickAction(viewer, sidebar);
+      Globe.clickAction(viewer, sidebar, data);
       if (window.innerWidth < 771) {
         sidebar.closeSidebar();
       }
@@ -136,12 +136,13 @@ class Globe {
     return listEntry;
   }
 
-  static clickAction(viewer, sidebar) {
+  static clickAction(viewer, sidebar, data) {
     if (document.querySelector(".infobox")) {
       document.querySelector(".infobox").remove();
     }
 
     Globe.resetIcons(viewer);
+    Globe.resetHPE(viewer);
     if (viewer.selectedEntity !== undefined) {
       var deviceId = viewer.selectedEntity.properties.id.getValue();
       Globe.getLocationInfoForDevice(deviceId, viewer);
@@ -228,6 +229,31 @@ class Globe {
         viewer.entities
           .getById(deviceID)
           .properties.coords.setValue([deviceLat, deviceLon]);
+
+        if (
+          uncertainty !== undefined &&
+          serviceType !== undefined &&
+          deviceLat !== undefined &&
+          deviceLon !== undefined
+        ) {
+          let fillColor = Cesium.Color.PURPLE.withAlpha(0.2);
+
+          if (serviceType === "SCELL") {
+            fillColor = Cesium.Color.BLUE.withAlpha(0.2);
+          } else if (serviceType === "MCELL") {
+            fillColor = Cesium.Color.ORANGE.withAlpha(0.2);
+          }
+
+          viewer.entities.add({
+            id: `${deviceID}-HPE`,
+            position: Cesium.Cartesian3.fromDegrees(deviceLon, deviceLat),
+            ellipse: {
+              semiMinorAxis: uncertainty,
+              semiMajorAxis: uncertainty,
+              material: fillColor,
+            },
+          });
+        }
       }
     });
   }
@@ -368,12 +394,27 @@ class Globe {
     var entriesArray = viewer.entities.values;
     if (undefined !== viewer.selectedEntity) {
       for (let i = 0; i < entriesArray.length; i++) {
-        if (undefined !== entriesArray[i].billboard.image.getValue()) {
+        if (
+          entriesArray[i].billboard &&
+          entriesArray[i].billboard.image &&
+          entriesArray[i].billboard.image.getValue() !== undefined
+        ) {
           entriesArray[i].billboard = {
             height: 32,
             width: 32,
             image: "img/nordic-icon-g.svg",
           };
+        }
+      }
+    }
+  }
+
+  static resetHPE(viewer) {
+    var entriesArray = viewer.entities.values;
+    if (undefined !== viewer.selectedEntity) {
+      for (let i = 0; i < entriesArray.length; i++) {
+        if (entriesArray[i].id.includes("HPE")) {
+          viewer.entities.removeById(entriesArray[i].id);
         }
       }
     }
