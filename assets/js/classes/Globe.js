@@ -1,11 +1,10 @@
 class Globe {
-  constructor(data) {
+  constructor() {
     this.sidebar = new Sidebar();
 
     this.viewer = this.initViewer();
     this.configScene(this.viewer);
-    this.getDevices();
-    this.clickAction(this.viewer, this.sidebar);
+    this.loadDeviceMarkers();
   }
 
   configScene(viewer) {
@@ -58,7 +57,7 @@ class Globe {
     return viewer;
   }
 
-  getDevices() {
+  loadDeviceMarkers() {
     var globe = this;
     var call = getAjaxSettings(
       "https://api.dev.nrfcloud.com/v1/devices?includeState=true&includeStateMeta=true&pageSort=desc"
@@ -70,11 +69,11 @@ class Globe {
       for (let i = 0; i < devices.length; i++) {
         deviceArray[devices[i].id] = new Device(devices[i]);
       }
-      globe.addPoints(deviceArray);
+      globe.addDeviceMarkers(deviceArray);
     });
   }
 
-  addPoints(deviceArray) {
+  addDeviceMarkers(deviceArray) {
     var deviceList = document.querySelector(".device-list");
     var viewer = this.viewer;
     var sidebar = this.sidebar;
@@ -82,12 +81,12 @@ class Globe {
 
     if (Object.keys(deviceArray).length > 1) {
       for (const device in deviceArray) {
-        globe.addPoint(viewer, deviceArray[device], deviceList, sidebar);
+        globe.addDeviceMarker(viewer, deviceArray[device], deviceList, sidebar);
       }
     }
   }
 
-  addPoint(viewer, data, deviceList, sidebar) {
+  addDeviceMarker(viewer, data, deviceList, sidebar) {
     let showEntity = data.position == undefined ? false : true;
     let position =
       showEntity == true
@@ -95,6 +94,7 @@ class Globe {
         : null;
     let listEntry = this.createListEntry(data, deviceList);
     let entity = viewer.entities.add({
+      id: data.id,
       position: position,
       properties: {
         id: data.id,
@@ -113,8 +113,10 @@ class Globe {
         show: showEntity,
       },
     });
+
     listEntry.addEventListener("click", function () {
       viewer.selectedEntity = entity;
+      Globe.clickAction(viewer, sidebar);
       if (window.innerWidth < 771) {
         sidebar.closeSidebar();
       }
@@ -134,57 +136,55 @@ class Globe {
     return listEntry;
   }
 
-  clickAction(viewer, sidebar) {
-    viewer.selectedEntityChanged.addEventListener(function () {
-      if (document.querySelector(".infobox")) {
-        document.querySelector(".infobox").remove();
+  static clickAction(viewer, sidebar) {
+    if (document.querySelector(".infobox")) {
+      document.querySelector(".infobox").remove();
+    }
+
+    Globe.resetIcons(viewer);
+    if (viewer.selectedEntity !== undefined) {
+      var deviceId = viewer.selectedEntity.properties.id.getValue();
+      Globe.getLocationInfoForDevice(deviceId, viewer);
+      Globe.getMessagesForDevice(deviceId);
+      Globe.populateSidebar(viewer.selectedEntity);
+      Globe.populateMobileData(viewer.selectedEntity);
+      viewer.selectedEntity.billboard = {
+        height: 64,
+        width: 64,
+        image: "img/nordic-icon-y.svg",
+      };
+      var listEntry = viewer.selectedEntity.properties.list_entry.getValue();
+      if (listEntry !== undefined) {
+        document.querySelector(".device-list li.active") !== null
+          ? document
+              .querySelector(".device-list li.active")
+              .classList.remove("active")
+          : false;
+        listEntry.classList.add("active");
       }
 
-      Globe.resetIcons(viewer);
-      if (undefined !== viewer.selectedEntity) {
-        var deviceId = viewer.selectedEntity._properties._id._value;
-        Globe.getLocationInfoForDevice(deviceId);
-        Globe.getMessagesForDevice(deviceId);
-        Globe.populateSidebar(viewer.selectedEntity);
-        Globe.populateMobileData(viewer.selectedEntity);
-        viewer.selectedEntity.billboard = {
-          height: 64,
-          width: 64,
-          image: "img/nordic-icon-y.svg",
-        };
-        var listEntry = viewer.selectedEntity._properties._list_entry._value;
-        if (undefined !== listEntry) {
-          null !== document.querySelector(".device-list li.active")
-            ? document
-                .querySelector(".device-list li.active")
-                .classList.remove("active")
-            : false;
-          listEntry.classList.add("active");
-        }
+      if (
+        viewer.selectedEntity.properties.coords &&
+        viewer.selectedEntity.properties.coords.getValue() &&
+        viewer.selectedEntity.properties.coords.getValue().length > 0
+      ) {
+        viewer.flyTo(viewer.selectedEntity, {
+          offset: new Cesium.HeadingPitchRange(0, -90, 5000),
+        });
+      }
 
-        if (
-          viewer.selectedEntity._properties._coords &&
-          viewer.selectedEntity._properties._coords._value &&
-          viewer.selectedEntity._properties._coords._value.length > 0
-        ) {
-          viewer.flyTo(viewer.selectedEntity, {
-            offset: new Cesium.HeadingPitchRange(0, -90, 5000),
-          });
-        }
-
-        if (window.innerWidth > 770) {
-          sidebar.openSidebar();
-        } else {
-          document.querySelector(".mobile-sidebar").classList.add("reveal");
-        }
+      if (window.innerWidth > 770) {
+        sidebar.openSidebar();
       } else {
-        sidebar.closeSidebar();
-        sidebar.closeMobileSidebar();
+        document.querySelector(".mobile-sidebar").classList.add("reveal");
       }
-    });
+    } else {
+      sidebar.closeSidebar();
+      sidebar.closeMobileSidebar();
+    }
   }
 
-  static getLocationInfoForDevice(deviceID) {
+  static getLocationInfoForDevice(deviceID, viewer) {
     var locationData = getAjaxSettings(
       "https://api.dev.nrfcloud.com/v1/location/history?deviceId=" +
         deviceID +
@@ -219,6 +219,15 @@ class Globe {
         $(".device-data__datum.uncertainty .datum-timestamp").html(
           uncertainty ? `updated ${lastLocationServiceUpdate}` : "No update"
         );
+        console.log("This is viewer", viewer);
+        viewer.entities
+          .getById(deviceID)
+          .position.setValue(
+            Cesium.Cartesian3.fromDegrees(deviceLon, deviceLat)
+          );
+        viewer.entities
+          .getById(deviceID)
+          .properties.coords.setValue([deviceLat, deviceLon]);
       }
     });
   }
@@ -303,7 +312,7 @@ class Globe {
   }
 
   static populateSidebar(entity) {
-    var props = entity._properties;
+    var props = entity.properties;
     var deviceData = document.querySelector(".data-display");
     var name = deviceData.querySelector(".device-location-name-label");
     var coords = deviceData.querySelector(".coordinates");
@@ -330,17 +339,17 @@ class Globe {
       uncertainty ? `updated ${lastLocationServiceUpdate}` : "No update"
     );
 
-    name.innerHTML = props._name;
+    name.innerHTML = props.name;
     coords.innerHTML =
-      props._coords && props._coords._value.length > 0
-        ? `${props._coords._value[0].toFixed(
-            4
-          )}, ${props._coords._value[1].toFixed(4)}`
+      props.coords && props.coords.getValue().length > 0
+        ? `${props.coords
+            .getValue()[0]
+            .toFixed(4)}, ${props.coords.getValue()[1].toFixed(4)}`
         : "No GPS Data Available";
   }
 
   static populateMobileData(entity) {
-    var props = entity._properties;
+    var props = entity.properties;
     var deviceData = document.querySelector(".mobile-sidebar .data-display");
     var name = deviceData.querySelector(".device-location-name-label");
     var coords = deviceData.querySelector(".coordinates");
@@ -348,18 +357,18 @@ class Globe {
       ".mobile-sidebar .device-data"
     );
 
-    name.innerHTML = props._name;
+    name.innerHTML = props.name;
     coords.innerHTML =
-      props._coords && props._coords._value
-        ? props._coords
+      props.coords && props.coords.getValue()
+        ? props.coords
         : "No GPS Data Available";
   }
 
   static resetIcons(viewer) {
-    var entriesArray = viewer.entities._entities._array;
+    var entriesArray = viewer.entities.values;
     if (undefined !== viewer.selectedEntity) {
       for (let i = 0; i < entriesArray.length; i++) {
-        if (undefined !== entriesArray[i]._billboard._image) {
+        if (undefined !== entriesArray[i].billboard.image.getValue()) {
           entriesArray[i].billboard = {
             height: 32,
             width: 32,
