@@ -49,7 +49,7 @@ class Device {
 
   getLocationData() {
     var call = getAjaxSettings(
-      "https://api.dev.nrfcloud.com/v1/location/history?deviceId=" +
+      "https://api.nrfcloud.com/v1/location/history?deviceId=" +
         this.id +
         "&pageLimit=1",
       false

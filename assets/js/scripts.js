@@ -26,7 +26,7 @@ function getAjaxSettings(url, async = true) {
     url: url,
     method: "GET",
     headers: {
-      Authorization: "Bearer fdbdb678a236cb39572916336629348920b084f8", // viewer access token
+      Authorization: "Bearer 63798b60090e62e4514012c80eb435ccd758b76d", // viewer access token
     },
   };
   return settings;
@@ -34,7 +34,7 @@ function getAjaxSettings(url, async = true) {
 
 function getMessagesForDevice(deviceID) {
   var call = getAjaxSettings(
-    "https://api.dev.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" +
+    "https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" +
       deviceID +
       "&pageLimit=100&pageSort=desc"
   );

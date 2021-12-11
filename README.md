@@ -2,7 +2,7 @@
 
 [thingyworld.nrfcloud.com](http://thingyworld.nrfcloud.com)
 
-A web application that shows Thingy91s around the world displaying their location, humidity, temperature, and connection status. The application does this by consuming the [Device API](https://api.dev.nrfcloud.com/v1) from nRFCloud. Details can be found here https://projecttools.nordicsemi.no/confluence/display/IRIS/ThingyWorld. This is a static site that uses an apiKey that is restricted to viewing only.
+A web application that shows Thingy91s around the world displaying their location, humidity, temperature, and connection status. The application does this by consuming the [Device API](https://api.nrfcloud.com/v1) from nRFCloud. Details can be found here https://projecttools.nordicsemi.no/confluence/display/IRIS/ThingyWorld. This is a static site that uses an apiKey that is restricted to viewing only.
 
 ## Development
 

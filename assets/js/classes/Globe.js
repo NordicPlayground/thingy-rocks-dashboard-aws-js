@@ -60,7 +60,7 @@ class Globe {
   loadDeviceMarkers() {
     var globe = this;
     var call = getAjaxSettings(
-      "https://api.dev.nrfcloud.com/v1/devices?includeState=true&includeStateMeta=true&pageSort=desc"
+      "https://api.nrfcloud.com/v1/devices?includeState=true&includeStateMeta=true&pageSort=desc"
     );
 
     $.ajax(call).done(function (response) {
@@ -87,7 +87,7 @@ class Globe {
   }
 
   addDeviceMarker(viewer, data, deviceList, sidebar) {
-    let showEntity = data.position == undefined ? false : true;
+    let showEntity = data && data.position && data.position.length > 0;
     let position =
       showEntity == true
         ? Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0])
@@ -95,7 +95,7 @@ class Globe {
     let listEntry = this.createListEntry(data, deviceList);
     let entity = viewer.entities.add({
       id: data.id,
-      position: position,
+      ...(position ? { position } : {}),
       properties: {
         id: data.id,
         name: data.properties.name,
@@ -116,7 +116,7 @@ class Globe {
 
     listEntry.addEventListener("click", function () {
       viewer.selectedEntity = entity;
-      Globe.clickAction(viewer, sidebar, data);
+      Globe.clickAction(viewer, sidebar);
       if (window.innerWidth < 771) {
         sidebar.closeSidebar();
       }
@@ -125,18 +125,13 @@ class Globe {
 
   createListEntry(data, deviceList) {
     let listEntry = document.createElement("li");
-    listEntry.innerHTML =
-      '<a href="#" class="' +
-      data.properties.connected +
-      '">' +
-      data.properties.name +
-      "</a>";
+    listEntry.innerHTML = `<a href="#" class=${data.properties.connected} id=${data.id}>${data.properties.name}</a>`;
     deviceList.appendChild(listEntry);
 
     return listEntry;
   }
 
-  static clickAction(viewer, sidebar, data) {
+  static clickAction(viewer, sidebar) {
     if (document.querySelector(".infobox")) {
       document.querySelector(".infobox").remove();
     }
@@ -187,7 +182,7 @@ class Globe {
 
   static getLocationInfoForDevice(deviceID, viewer) {
     var locationData = getAjaxSettings(
-      "https://api.dev.nrfcloud.com/v1/location/history?deviceId=" +
+      "https://api.nrfcloud.com/v1/location/history?deviceId=" +
         deviceID +
         "&pageLimit=1"
     );
@@ -220,7 +215,7 @@ class Globe {
         $(".device-data__datum.uncertainty .datum-timestamp").html(
           uncertainty ? `updated ${lastLocationServiceUpdate}` : "No update"
         );
-        console.log("This is viewer", viewer);
+
         viewer.entities
           .getById(deviceID)
           .position.setValue(
@@ -239,7 +234,7 @@ class Globe {
           let fillColor = Cesium.Color.PURPLE.withAlpha(0.2);
 
           if (serviceType === "SCELL") {
-            fillColor = Cesium.Color.BLUE.withAlpha(0.2);
+            fillColor = Cesium.Color.CORNFLOWERBLUE.withAlpha(0.2);
           } else if (serviceType === "MCELL") {
             fillColor = Cesium.Color.ORANGE.withAlpha(0.2);
           }
@@ -260,12 +255,12 @@ class Globe {
 
   static getMessagesForDevice(deviceID) {
     var getTempData = getAjaxSettings(
-      "https://api.dev.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" +
+      "https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" +
         deviceID +
         "&pageLimit=1&pageSort=desc&appId=TEMP"
     );
     var getHumidityData = getAjaxSettings(
-      "https://api.dev.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" +
+      "https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" +
         deviceID +
         "&pageLimit=1&pageSort=desc&appId=HUMID"
     );
@@ -323,7 +318,9 @@ class Globe {
 
   static formatDataString(message, dataKey) {
     return message[dataKey].data
-      ? `${message[dataKey].data}${Device.dataMap[dataKey].unit}`
+      ? `${Number.parseFloat(+message[dataKey].data).toFixed(2)}${
+          Device.dataMap[dataKey].unit
+        }`
       : "--";
   }
 
@@ -371,7 +368,34 @@ class Globe {
         ? `${props.coords
             .getValue()[0]
             .toFixed(4)}, ${props.coords.getValue()[1].toFixed(4)}`
-        : "No GPS Data Available";
+        : "No Location Data Available";
+
+    const deviceId = entity.properties.id.getValue();
+    const call = getAjaxSettings(
+      `https://api.nrfcloud.com/v1/devices?deviceIds=${deviceId}&includeState=true`
+    );
+
+    $.ajax(call).done(function (response) {
+      const deviceData =
+        response && response.items && response && response.items[0];
+      if (deviceData) {
+        const deviceHTMLElement = document.getElementById(deviceId);
+        let connectionStatus = "disconnected";
+        if (deviceData.state && deviceData.state.reported) {
+          const isConnected_LEGACY_FIRMWARE = !!deviceData.state.reported
+            .connected;
+          const isConnected_UPDATED_FIRMWARE =
+            deviceData.state.reported.connection &&
+            deviceData.state.reported.connection.status === "connected";
+
+          if (isConnected_LEGACY_FIRMWARE || isConnected_UPDATED_FIRMWARE) {
+            connectionStatus = "connected";
+          }
+        }
+
+        deviceHTMLElement.className = connectionStatus;
+      }
+    });
   }
 
   static populateMobileData(entity) {
@@ -387,7 +411,7 @@ class Globe {
     coords.innerHTML =
       props.coords && props.coords.getValue()
         ? props.coords
-        : "No GPS Data Available";
+        : "No Location Data Available";
   }
 
   static resetIcons(viewer) {
