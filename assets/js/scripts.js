@@ -26,58 +26,108 @@ function getAjaxSettings(url, async = true) {
     url: url,
     method: "GET",
     headers: {
-      Authorization: "Bearer 63798b60090e62e4514012c80eb435ccd758b76d", // viewer access token
+      Authorization: "Bearer 12af85ea3af2d76df38e56a9bc1484fd70389d1d", // viewer access token
     },
   };
   return settings;
 }
 
-function getMessagesForDevice(deviceID) {
-  var call = getAjaxSettings(
-    "https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" +
-      deviceID +
-      "&pageLimit=100&pageSort=desc"
+function getLocationDataForDevice(deviceId, callback) {
+  const device = {};
+  var locationHistory = getAjaxSettings(
+    "https://api.nrfcloud.com/v1/location/history?deviceId=" +
+      deviceId +
+      "&pageLimit=1",
+    false
   );
 
-  $.ajax(call).done(function (response) {
-    var device_temp = 0;
-    var device_humid = 0;
-    var messages = response.items;
-    var messageResponse = {
-      Temperature: {
-        data: null,
-        timestamp: null,
-      },
-      Humidity: {
-        data: null,
-        timestamp: null,
-      },
-    };
+  var legacyLocationHistory = getAjaxSettings(
+    "https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceId=" +
+      deviceId +
+      "&pageLimit=1&pageSort=desc&appId=GPS",
+    false
+  );
 
-    for (let i = 0; i < messages.length; i++) {
-      if (messages[i].message.appId == "TEMP" && device_temp == 0) {
-        device_temp = 1;
-        messageResponse.Temperature.data = messages[i].message.data;
-        messageResponse.Temperature.timestamp = new Date(
-          Date.parse(messages[i].receivedAt)
-        );
-      }
-      if (messages[i].message.appId == "HUMID" && device_temp == 0) {
-        device_humid = 1;
-        messageResponse.Humidity.data = messages[i].message.data;
-        messageResponse.Humidity.timestamp = new Date(
-          Date.parse(messages[i].receivedAt)
-        );
-      }
+  $.when($.ajax(locationHistory), $.ajax(legacyLocationHistory)).done(function (
+    locationHistoryResponse,
+    legacyLocationHistoryResponse
+  ) {
+    const deviceLocationHistoryResult =
+      locationHistoryResponse[0] &&
+      locationHistoryResponse[0].items &&
+      locationHistoryResponse[0].items[0];
+
+    const legacyDeviceLocationHistoryResult =
+      legacyLocationHistoryResponse[0] &&
+      legacyLocationHistoryResponse[0].items &&
+      legacyLocationHistoryResponse[0].items[0] &&
+      legacyLocationHistoryResponse[0].items[0].message &&
+      legacyLocationHistoryResponse[0].items[0].message.data;
+
+    if (deviceLocationHistoryResult) {
+      const deviceLat = +deviceLocationHistoryResult.lat || undefined;
+      const deviceLon = +deviceLocationHistoryResult.lon || undefined;
+      device.coords = {
+        lat: null,
+        lng: null,
+      };
+      device.coords.lat = deviceLat;
+      device.coords.lng = deviceLon;
+      device.serviceType = deviceLocationHistoryResult.serviceType || "N/A";
+      device.uncertainty = +deviceLocationHistoryResult.uncertainty;
+      device.position = [deviceLat, deviceLon];
+      device.locationUpdate = deviceLocationHistoryResult.insertedAt || "N/A";
+      device.gps = device.coords;
+    } else if (legacyDeviceLocationHistoryResult) {
+      var gpsArray = legacyDeviceLocationHistoryResult.split(",");
+      // process latitude
+      var lat_degrees =
+        parseFloat(gpsArray[2].substr(gpsArray[2].indexOf(".") - 2)) / 60 +
+        parseFloat(gpsArray[2].substr(0, gpsArray[2].indexOf(".") - 2));
+      var lat_multiplier = gpsArray[3] == "N" ? 1 : -1;
+
+      var lat = lat_degrees * lat_multiplier;
+      var lat_readable = lat_degrees.toFixed(3);
+      // process longitude
+      var lng_degrees =
+        parseFloat(gpsArray[4].substr(gpsArray[4].indexOf(".") - 2)) / 60 +
+        parseFloat(gpsArray[4].substr(0, gpsArray[4].indexOf(".") - 2));
+      var lng_multiplier = gpsArray[5] == "E" ? 1 : -1;
+
+      var lng = lng_degrees * lng_multiplier;
+      var lng_readable = lng.toFixed(3);
+
+      var gps_readout =
+        lat_readable +
+        "° " +
+        gpsArray[3] +
+        ", " +
+        lng_readable +
+        "° " +
+        gpsArray[5];
+
+      device.coords = {
+        lat: null,
+        lng: null,
+      };
+
+      device.coords.readable = gps_readout;
+      device.coords.lat = lat;
+      device.coords.lng = lng;
+      device.locationUpdate =
+        legacyLocationHistoryResponse[0].items[0].receivedAt || "N/A";
+
+      device.position = [lat, lng];
+      device.gps = device.coords;
     }
 
-    return messageResponse;
+    callback(device);
   });
 }
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("DOMContentLoaded");
-  var globe = new Globe();
+  new Globe();
 
   window.setTimeout(function () {
     document.querySelector("body").classList.add("loaded");

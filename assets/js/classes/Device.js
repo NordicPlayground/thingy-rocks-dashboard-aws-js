@@ -1,17 +1,30 @@
 class Device {
-  constructor(data) {
-    this.id = data.id;
-    this.position = [];
-    this.name = data.name;
+  constructor(deviceJSON, locationDataJSON) {
+    this.id = deviceJSON.id;
+    this.name = deviceJSON.name;
     this.connected = "disconnected";
     this.coords = {
       lat: null,
       lng: null,
     };
-    this.serviceType = "";
-    this.uncertainty = null;
-    this.properties = this.getProperties(data);
-    this.getLocationData();
+    this.properties = this.getProperties(deviceJSON);
+
+    const deviceLat = +locationDataJSON.lat || undefined;
+    const deviceLon = +locationDataJSON.lon || undefined;
+
+    this.coords.lat = deviceLat;
+    this.coords.lng = deviceLon;
+    this.serviceType = locationDataJSON.serviceType || "GPS";
+    this.uncertainty = +locationDataJSON.uncertainty;
+
+    if (deviceLat && deviceLon) {
+      this.position = [deviceLat, deviceLon];
+    } else {
+      this.position = [];
+    }
+
+    this.locationUpdate = locationDataJSON.insertedAt || "N/A";
+    this.gps = this.coords;
   }
 
   static get dataMap() {
@@ -45,31 +58,5 @@ class Device {
       name: this.name,
       connected: this.connected,
     };
-  }
-
-  getLocationData() {
-    var call = getAjaxSettings(
-      "https://api.nrfcloud.com/v1/location/history?deviceId=" +
-        this.id +
-        "&pageLimit=1",
-      false
-    );
-    var device = this;
-    $.ajax(call).done(function (response) {
-      const deviceLocationHistoryResult =
-        response && response.items && response.items[0];
-      if (deviceLocationHistoryResult) {
-        const deviceLat = +deviceLocationHistoryResult.lat || undefined;
-        const deviceLon = +deviceLocationHistoryResult.lon || undefined;
-        device.coords.lat = deviceLat;
-        device.coords.lng = deviceLon;
-        device.serviceType = deviceLocationHistoryResult.serviceType || "N/A";
-        device.uncertainty = +deviceLocationHistoryResult.uncertainty;
-        device.position = [deviceLat, deviceLon];
-        device.locationUpdate = deviceLocationHistoryResult.insertedAt || "N/A";
-        device.gps = device.coords;
-      }
-      return device;
-    });
   }
 }

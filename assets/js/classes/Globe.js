@@ -39,7 +39,7 @@ class Globe {
       imageryProviderViewModels: imagery,
       selectedImageryProviderViewModel: imagery[1],
     });
-    viewer.scene.postRender.addEventListener(function (rendered) {
+    viewer.scene.postRender.addEventListener(function () {
       if (
         viewer.scene.globe.tilesLoaded == true &&
         document.querySelector(".intro-container") &&
@@ -60,51 +60,110 @@ class Globe {
   loadDeviceMarkers() {
     var globe = this;
     var call = getAjaxSettings(
-      "https://api.nrfcloud.com/v1/devices?includeState=true&includeStateMeta=true&pageSort=desc"
+      "https://api.nrfcloud.com/v1/devices?includeState=true&includeStateMeta=true&pageSort=desc&pageLimit=100",
+      false
     );
 
     $.ajax(call).done(function (response) {
       var devices = response.items;
-      var deviceArray = [];
       for (let i = 0; i < devices.length; i++) {
-        deviceArray[devices[i].id] = new Device(devices[i]);
+        const deviceId = devices[i].id;
+        $.ajax({
+          ...getAjaxSettings(
+            "https://api.nrfcloud.com/v1/location/history?deviceId=" +
+              deviceId +
+              "&pageLimit=1"
+          ),
+          dataType: "json",
+          success: function (result) {
+            const locationResult = result && result.items[0];
+            if (locationResult === undefined) {
+              $.ajax({
+                ...getAjaxSettings(
+                  "https://api.nrfcloud.com/v1/messages?deviceId=" +
+                    deviceId +
+                    "&pageLimit=1&pageSort=desc&appId=GPS"
+                ),
+                success: function (legacyLocationHistoryResponse) {
+                  const legacyDeviceLocationHistoryResult =
+                    legacyLocationHistoryResponse &&
+                    legacyLocationHistoryResponse.items &&
+                    legacyLocationHistoryResponse.items[0] &&
+                    legacyLocationHistoryResponse.items[0].message &&
+                    legacyLocationHistoryResponse.items[0].message.data;
+
+                  if (legacyDeviceLocationHistoryResult === undefined) {
+                    globe.addDeviceMarker(new Device(devices[i], {}));
+                    return;
+                  }
+
+                  var gpsArray = legacyDeviceLocationHistoryResult.split(",");
+                  // process latitude
+                  var lat_degrees =
+                    parseFloat(
+                      gpsArray[2].substr(gpsArray[2].indexOf(".") - 2)
+                    ) /
+                      60 +
+                    parseFloat(
+                      gpsArray[2].substr(0, gpsArray[2].indexOf(".") - 2)
+                    );
+                  var lat_multiplier = gpsArray[3] == "N" ? 1 : -1;
+                  var lat = lat_degrees * lat_multiplier;
+                  var lng_degrees =
+                    parseFloat(
+                      gpsArray[4].substr(gpsArray[4].indexOf(".") - 2)
+                    ) /
+                      60 +
+                    parseFloat(
+                      gpsArray[4].substr(0, gpsArray[4].indexOf(".") - 2)
+                    );
+                  var lng_multiplier = gpsArray[5] == "E" ? 1 : -1;
+
+                  var lng = lng_degrees * lng_multiplier;
+
+                  globe.addDeviceMarker(
+                    new Device(devices[i], {
+                      lat,
+                      lon: lng,
+                      locationUpdate:
+                        legacyLocationHistoryResponse.items[0].receivedAt ||
+                        "N/A",
+                    })
+                  );
+                },
+              });
+            } else {
+              globe.addDeviceMarker(new Device(devices[i], locationResult));
+            }
+          },
+        });
       }
-      globe.addDeviceMarkers(deviceArray);
     });
   }
 
-  addDeviceMarkers(deviceArray) {
+  addDeviceMarker(device) {
     var deviceList = document.querySelector(".device-list");
     var viewer = this.viewer;
     var sidebar = this.sidebar;
-    var globe = this;
 
-    if (Object.keys(deviceArray).length > 1) {
-      for (const device in deviceArray) {
-        globe.addDeviceMarker(viewer, deviceArray[device], deviceList, sidebar);
-      }
-    }
-  }
-
-  addDeviceMarker(viewer, data, deviceList, sidebar) {
-    let showEntity = data && data.position && data.position.length > 0;
+    let showEntity = device && device.position && device.position.length > 0;
     let position =
       showEntity == true
-        ? Cesium.Cartesian3.fromDegrees(data.position[1], data.position[0])
+        ? Cesium.Cartesian3.fromDegrees(device.position[1], device.position[0])
         : null;
-    let listEntry = this.createListEntry(data, deviceList);
+    let listEntry = this.createListEntry(device, deviceList);
     let entity = viewer.entities.add({
-      id: data.id,
+      id: device.id,
       ...(position ? { position } : {}),
       properties: {
-        id: data.id,
-        name: data.properties.name,
+        id: device.id,
+        name: device.properties.name,
         list_entry: listEntry,
-        coords: data.position,
-        data: data.properties.data,
-        serviceType: data.serviceType,
-        uncertainty: data.uncertainty,
-        locationUpdate: data.locationUpdate,
+        coords: device.position,
+        data: device.properties.data,
+        serviceType: device.serviceType,
+        uncertainty: device.uncertainty,
+        locationUpdate: device.locationUpdate,
       },
       billboard: {
         height: 32,
@@ -255,12 +314,12 @@ class Globe {
 
   static getMessagesForDevice(deviceID) {
     var getTempData = getAjaxSettings(
-      "https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" +
+      "https://api.nrfcloud.com/v1/messages?deviceId=" +
         deviceID +
         "&pageLimit=1&pageSort=desc&appId=TEMP"
     );
     var getHumidityData = getAjaxSettings(
-      "https://api.nrfcloud.com/v1/messages?inclusiveStart=2018-06-18T19%3A19%3A45.902Z&exclusiveEnd=3000-06-20T19%3A19%3A45.902Z&deviceIdentifiers=" +
+      "https://api.nrfcloud.com/v1/messages?deviceId=" +
         deviceID +
         "&pageLimit=1&pageSort=desc&appId=HUMID"
     );
@@ -317,8 +376,10 @@ class Globe {
   }
 
   static formatDataString(message, dataKey) {
-    return message[dataKey].data
-      ? `${Number.parseFloat(+message[dataKey].data).toFixed(2)}${
+    const isFormatable =
+      !isNaN(message[dataKey].data) && message[dataKey].data !== null;
+    return isFormatable
+      ? `${Number.parseFloat(message[dataKey].data).toFixed(2)}${
           Device.dataMap[dataKey].unit
         }`
       : "--";
