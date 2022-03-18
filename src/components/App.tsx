@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 
+import "./App.scss";
 export interface HelloWorldProps {
   userName: string;
   lang: string;
