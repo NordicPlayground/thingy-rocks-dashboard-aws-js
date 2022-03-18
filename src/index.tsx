@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import { HelloWorld } from "./App";
+import { HelloWorld } from "./components/App";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 

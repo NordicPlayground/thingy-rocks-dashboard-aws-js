@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = (env) => ({
-  entry: "./src/components/index.tsx",
+  entry: "./src/index.tsx",
   target: "web",
   mode: env.mode === "development" ? "development" : "production",
   output: {
@@ -14,6 +14,10 @@ module.exports = (env) => ({
   },
   module: {
     rules: [
+      {
+        test: /\.(jpg|png|svg)$/,
+        type: "asset/resource",
+      },
       { test: /\.tsx?$/, loader: "ts-loader" },
       {
         enforce: "pre",
@@ -28,7 +32,7 @@ module.exports = (env) => ({
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src", "components", "index.html"),
+      template: path.resolve(__dirname, "src", "index.html"),
     }),
   ],
 });
