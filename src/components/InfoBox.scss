@@ -1,0 +1,47 @@
+@import "../variables.scss";
+.infobox {
+  width: 275px;
+  background: $white;
+  color: $darkBlue;
+  padding: 15px 30px;
+  text-align: left;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 999;
+  // opacity: 0;
+  transition: all $transitionTime;
+  a {
+    color: $darkBlue;
+    text-decoration: none;
+    &:visited {
+      color: $darkBlue;
+      opacity: 0.6;
+    }
+  }
+  // .loaded & {
+  //     opacity: 1;
+  //     ;
+  // }
+  &:before {
+    content: "";
+    width: 100%;
+    height: 10px;
+    display: inline-block;
+    background-color: $lightBlue;
+    position: absolute;
+    top: -10px;
+    right: 0;
+  }
+}
+
+.infobox:after {
+  content: "";
+  height: 100%;
+  width: 10px;
+  display: inline-block;
+  background-color: $orange;
+  position: absolute;
+  top: 0;
+  left: -10px;
+}
