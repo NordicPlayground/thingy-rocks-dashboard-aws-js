@@ -9,5 +9,5 @@
     "sourceMap": true,
     "target": "es5"
   },
-  "include": ["src/index.tsx", "./src/asset/index.d.ts"]
+  "include": ["src/index.tsx", "src/assets/index.d.ts"]
 }

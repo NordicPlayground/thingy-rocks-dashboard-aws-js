@@ -1,8 +1,8 @@
 import * as React from "react";
 
-import * as NordicLogo from "../asset/nordicLogo.svg";
-import * as ThingyImage from "../asset/thingy.svg";
-import * as NordicYImage from "../asset/nordic-marker-orange.svg";
+import * as NordicLogo from "../assets/nordicLogo.svg";
+import * as ThingyImage from "../assets/thingy.svg";
+import * as NordicYImage from "../assets/nordic-marker-orange.svg";
 
 import "./SideBar.scss";
 

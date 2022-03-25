@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import * as ArrowLink from "../asset/arrow-link.svg";
+import * as ArrowLink from "../assets/arrow-link.svg";
 import "./InfoBox.scss";
 
 const InfoBox = () => (

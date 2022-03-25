@@ -1,5 +1,35 @@
 @import "variables.scss";
 
+@font-face {
+  font-family: "GT Eesti Display";
+  src: url("./assets/fonts/GTEestiDisplay-RegularItalic.eot");
+  src: url("./assets/fonts/GTEestiDisplay-RegularItalic.eot?#iefix")
+      format("embedded-opentype"),
+    url("./assets/fonts/GTEestiDisplay-RegularItalic.woff2") format("woff2"),
+    url("./assets/fonts/GTEestiDisplay-RegularItalic.woff") format("woff"),
+    url("./assets/fonts/GTEestiDisplay-RegularItalic.ttf") format("truetype"),
+    url("./assets/fonts/GTEestiDisplay-RegularItalic.svg#GTEestiDisplay-RegularItalic")
+      format("svg");
+  font-weight: normal;
+  font-style: italic;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "GT Eesti Display";
+  src: url("./assets/fonts/GTEestiDisplay-Regular.eot");
+  src: url("./assets/fonts/GTEestiDisplay-Regular.eot?#iefix")
+      format("embedded-opentype"),
+    url("./assets/fonts/GTEestiDisplay-Regular.woff2") format("woff2"),
+    url("./assets/fonts/GTEestiDisplay-Regular.woff") format("woff"),
+    url("./assets/fonts/GTEestiDisplay-Regular.ttf") format("truetype"),
+    url("./assets/fonts/GTEestiDisplay-Regular.svg#GTEestiDisplay-Regular")
+      format("svg");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
 /* globals */
 
 body {

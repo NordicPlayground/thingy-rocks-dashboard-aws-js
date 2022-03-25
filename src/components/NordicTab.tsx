@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import * as NordicYImage from "../asset/nordic-marker-orange.svg";
+import * as NordicYImage from "../assets/nordic-marker-orange.svg";
 import "./NordicTab.scss";
 
 const NordicTab = () => (
