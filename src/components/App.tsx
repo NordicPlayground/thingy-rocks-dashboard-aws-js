@@ -6,7 +6,6 @@ import InfoBox from "./InfoBox";
 import WorldMap from "./WorldMap";
 import NordicTab from "./NordicTab";
 import DeviceAPI from "../requests";
-import { DeviceResponseJSON } from "../types";
 import Device from "../device";
 
 export function ThingyWorld() {
@@ -18,15 +17,13 @@ export function ThingyWorld() {
       setDevices(devices.map((d) => Device.fromDeviceJSON(d)));
     });
   }, []);
-  // Loaders:
-  // devices
-  // cesium JS
+
   return (
     <>
       <SideBar />
       <WorldMap />
-      <InfoBox />
-      <NordicTab />
+      {/* <InfoBox /> */}
+      {/* <NordicTab /> */}
     </>
   );
 }

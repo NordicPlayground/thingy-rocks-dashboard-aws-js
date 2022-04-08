@@ -1,7 +1,9 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { ProvidePlugin } = require("webpack");
+const { ProvidePlugin, DefinePlugin } = require("webpack");
 const Dotenv = require("dotenv-webpack");
+const HtmlTagsPlugin = require("html-webpack-tags-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (env) => ({
   entry: "./src/index.tsx",
@@ -13,6 +15,9 @@ module.exports = (env) => ({
   },
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+  },
+  externals: {
+    cesium: "Cesium",
   },
   module: {
     rules: [
@@ -27,6 +32,13 @@ module.exports = (env) => ({
       {
         test: /\.tsx?$/,
         loader: "ts-loader",
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        },
       },
       {
         enforce: "pre",
@@ -47,8 +59,23 @@ module.exports = (env) => ({
     ],
   },
   plugins: [
+    new DefinePlugin({
+      CESIUM_BASE_URL: JSON.stringify("/cesium"),
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "./node_modules/cesium/Build/Cesium",
+          to: "./src/cesium",
+        },
+      ],
+    }),
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "src", "index.html"),
+    }),
+    new HtmlTagsPlugin({
+      append: false,
+      tags: ["./src/cesium/Widgets/widgets.css", "./src/cesium/Cesium.js"],
     }),
     new Dotenv(),
     new ProvidePlugin({
