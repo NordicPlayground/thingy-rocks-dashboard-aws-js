@@ -22,8 +22,8 @@ export function ThingyWorld() {
     <>
       <SideBar />
       <WorldMap />
-      {/* <InfoBox /> */}
-      {/* <NordicTab /> */}
+      <InfoBox />
+      <NordicTab />
     </>
   );
 }

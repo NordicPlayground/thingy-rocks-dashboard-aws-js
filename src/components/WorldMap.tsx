@@ -1,19 +1,11 @@
 import * as React from "react";
 import {
-  BingMapsImageryProvider,
-  BingMapsStyle,
   buildModuleUrl,
+  Cartesian3,
   IonImageryProvider,
   ProviderViewModel,
-  TileMapServiceImageryProvider,
 } from "cesium";
-import {
-  Viewer,
-  Entity,
-  ImageryLayerCollection,
-  ImageryLayer,
-  Globe,
-} from "resium";
+import { Viewer, Entity } from "resium";
 
 import "./WorldMap.scss";
 import { ViewerProps } from "resium/dist/Viewer/Viewer";
@@ -28,19 +20,30 @@ const defaultViewerProps: ViewerProps = {
   geocoder: false,
   projectionPicker: false,
   sceneModePicker: false,
+  fullscreenButton: false,
+  creditContainer: document.createElement("div"),
 };
 
+const position = Cartesian3.fromDegrees(-74.0707383, 40.7117244, 100);
+const pointGraphics = { pixelSize: 10 };
+
+// TODO: Create device entities
+// TODO: Select entity
+// TOO: Camera fly to selected entity
 export default function WorldMap() {
   const ref = useRef(null);
 
   useEffect(() => {
     if (ref.current && ref.current.cesiumElement) {
+      console.log(ref);
+      ref.current.cesiumElement.scene.screenSpaceCameraController.enableTilt = true;
     }
   }, []);
 
   return (
     <Viewer
       id="cesiumContainer"
+      ref={ref}
       {...defaultViewerProps}
       selectedImageryProviderViewModel={
         new ProviderViewModel({
@@ -49,11 +52,11 @@ export default function WorldMap() {
             "Widgets/Images/ImageryProviders/bingAerialLabels.png"
           ),
           tooltip: "Bing Aerial Labels",
-          creationFunction: function () {
-            return new IonImageryProvider({ assetId: 3 });
-          },
+          creationFunction: () => new IonImageryProvider({ assetId: 3 }),
         })
       }
-    ></Viewer>
+    >
+      <Entity position={position} point={pointGraphics}></Entity>
+    </Viewer>
   );
 }
