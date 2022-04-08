@@ -10,14 +10,19 @@ import Device from "../device";
 
 export function ThingyWorld() {
   const [devices, setDevices] = React.useState<Device[]>([]);
+  // selectedDevice
 
   React.useEffect(() => {
-    console.log(process.env);
     DeviceAPI.getDevices().then((devices) => {
       setDevices(devices.map((d) => Device.fromDeviceJSON(d)));
     });
   }, []);
 
+  // Load devices onto the globe asyncronously
+  // ---> Make Device component
+  // ---> pass in devices and selected device
+  // Load devices onto the the sidebar asyncrounously
+  // ---> pass in devices and selected device
   return (
     <>
       <SideBar />

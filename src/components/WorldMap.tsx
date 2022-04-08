@@ -30,6 +30,8 @@ const pointGraphics = { pixelSize: 10 };
 // TODO: Create device entities
 // TODO: Select entity
 // TOO: Camera fly to selected entity
+
+// What if the devices are ready before the globe??
 export default function WorldMap() {
   const ref = useRef(null);
 
