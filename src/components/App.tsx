@@ -10,11 +10,17 @@ import Device from "../device";
 
 export function ThingyWorld() {
   const [devices, setDevices] = React.useState<Device[]>([]);
-  // selectedDevice
 
   React.useEffect(() => {
-    DeviceAPI.getDevices().then((devices) => {
-      setDevices(devices.map((d) => Device.fromDeviceJSON(d)));
+    DeviceAPI.getDevices().then((devicesResponse) => {
+      devicesResponse.map((deviceJSON) =>
+        DeviceAPI.getDeviceWithData(deviceJSON.id).then((dataJSON) => {
+          setDevices((existingDevices) => [
+            Device.fromDeviceJSON({ ...deviceJSON, ...dataJSON }),
+            ...existingDevices,
+          ]);
+        })
+      );
     });
   }, []);
 

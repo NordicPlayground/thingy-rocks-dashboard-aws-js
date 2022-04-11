@@ -1,8 +1,6 @@
 import {
   ConnectionStatus,
   LocationServiceType,
-  DeviceResponseJSON,
-  DeviceLocationJSON,
   State,
   DeviceJSON,
 } from "./types";
@@ -10,35 +8,44 @@ import {
 export default class Device {
   id: string;
   name: string;
-  coords: {
-    lat: string | undefined;
-    lng: string | undefined;
-  };
   connected: ConnectionStatus;
-  properties: any;
-  serviceType: LocationServiceType | undefined;
-  uncertainty: number | undefined;
-  position: string[];
-  locationUpdate: string | number;
+  locationData: {
+    lat: number;
+    lng: number;
+    uncertainty: number;
+    serviceType: LocationServiceType;
+    updatedAt: string | number;
+  };
+  environmentalData: {
+    temperature: number;
+    temperatureUpdatedAt: number;
+    humidity: number;
+    humidityUpdatedAt: number;
+  };
 
   constructor(deviceJSON: DeviceJSON) {
-    const { id, name, lat, lon, serviceType, uncertainty, insertedAt, state } =
-      deviceJSON || {};
+    const { id, name, state } = deviceJSON || {};
+    const { lat, lng, serviceType, uncertainty, updatedAt } =
+      deviceJSON?.locationData || {};
+    const { temperature, humidity, humidityUpdatedAt, temperatureUpdatedAt } =
+      deviceJSON?.environmentalData || {};
+
     this.id = id;
     this.name = name;
-    this.coords = {
-      lat: lat,
-      lng: lon,
-    };
     this.connected = Device.getConnection(state);
-    this.properties = {
-      name,
-      connected: Device.getConnection(state),
+    this.locationData = {
+      lat: lat,
+      lng: lng,
+      uncertainty,
+      serviceType,
+      updatedAt,
     };
-    this.serviceType = serviceType;
-    this.uncertainty = +uncertainty;
-    this.position = lat && lon ? [lat, lon] : [];
-    this.locationUpdate = insertedAt;
+    this.environmentalData = {
+      temperature,
+      temperatureUpdatedAt,
+      humidity,
+      humidityUpdatedAt,
+    };
   }
 
   static fromDeviceJSON(rawDeviceJSON: any): Device {

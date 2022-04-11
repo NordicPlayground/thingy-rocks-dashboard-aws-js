@@ -55,7 +55,12 @@ const SideBar: React.FunctionComponent<{ devices: Device[] }> = ({
         <h3 className="sidebar-heading">All Devices</h3>
         <ul className="device-list">
           {devices.map(({ id, name, connected }) => (
-            <DeviceListItem id={id} name={name} connected={connected} />
+            <DeviceListItem
+              key={id}
+              id={id}
+              name={name}
+              connected={connected}
+            />
           ))}
         </ul>
       </div>

@@ -1,5 +1,6 @@
 import axios from "axios";
-import { DeviceResponseJSON } from "./types";
+import Device from "./device";
+import { DeviceResponseJSON, LocationServiceType } from "./types";
 
 export enum HttpMethod {
   get = "GET",
@@ -9,12 +10,42 @@ export enum HttpMethod {
   delete = "DELETE",
 }
 
-export interface DeviceMessage {
+interface ReturnResult<T> {
+  items: T[];
+  pageNextToken: string;
+  total: number;
+}
+
+export interface DeviceMessage<T> {
   tenantId: string;
   topic: string;
   deviceId: string;
   receivedAt: string;
-  message: unknown;
+  message: T;
+}
+
+export interface DeviceLocation {
+  deviceId: string;
+  insertedAt: string;
+  lat: string;
+  lon: string;
+  serviceType: LocationServiceType;
+  type: string;
+  uncertainty: string;
+}
+
+export interface Temperature {
+  appId: AppId.Temp;
+  data: string;
+  messageType: string;
+  ts?: number;
+}
+
+export interface Humidity {
+  appId: AppId.Humid;
+  data: string;
+  messageType: string;
+  ts?: number;
 }
 
 export enum AppId {
@@ -38,7 +69,7 @@ export enum AppId {
 
 interface MessageParams extends Record<string, string> {
   deviceId: string;
-  inclusiveStart: string;
+  inclusiveStart?: string;
   exclusiveEnd?: string;
   appId?: AppId;
   pageSort?: PageSort;
@@ -49,8 +80,12 @@ export enum PageSort {
   Descending = "desc",
 }
 
+// function parseResult(result):
+
 namespace DeviceAPI {
   const BASE_URL = "devices";
+  const inclusiveStart = "2018-06-18T19:19:45.902Z";
+  const exclusiveEnd = "3000-06-20T19:19:45.902Z";
 
   async function makeRequest(url: string): Promise<any> {
     return axios({
@@ -64,7 +99,7 @@ namespace DeviceAPI {
     });
   }
 
-  async function fetch(url: string): Promise<any> {
+  async function fetch<T>(url: string): Promise<ReturnResult<T>> {
     return (await makeRequest(url)).data;
   }
 
@@ -74,12 +109,13 @@ namespace DeviceAPI {
   ): Promise<any[]> {
     let items: any[] = [];
     do {
-      //Instead of trying to create a URL the hard way, let's use the built-in tools
-      console.log("expecting endpoint", process.env.DEVICE_API_ENDPOINT);
       let url = new URL(`${process.env.DEVICE_API_ENDPOINT}/${urlStr}`);
 
       if (paginationKey) {
-        url.searchParams.append("pageNextToken", paginationKey); //url.searchParams is guaranteed to be there so no need for null checks
+        url.searchParams.append(
+          "pageNextToken",
+          encodeURIComponent(paginationKey)
+        ); //url.searchParams is guaranteed to be there so no need for null checks
       }
 
       const data = await fetch(
@@ -104,15 +140,70 @@ namespace DeviceAPI {
     }
   }
 
-  function getMessages(params: MessageParams): Promise<DeviceMessage[]> {
-    return fetchAll(
-      `messages?pageLimit=100&${new URLSearchParams(params).toString()}`
+  export function getDeviceWithData(
+    deviceId: string
+  ): Promise<Pick<Device, "locationData" | "environmentalData">> {
+    return Promise.all([
+      getLocation({ deviceId }),
+      getMessages<Temperature>({
+        deviceId,
+        appId: AppId.Temp,
+        inclusiveStart,
+        exclusiveEnd,
+      }),
+      getMessages<Humidity>({
+        deviceId,
+        appId: AppId.Humid,
+        inclusiveStart,
+        exclusiveEnd,
+      }),
+    ]).then(([location, temp, humid]) => {
+      const [locationResult] = location?.items;
+      const [tempResult] = temp?.items;
+      const [humidtyResult] = humid?.items;
+      return mapToDeviceJSON(locationResult, tempResult, humidtyResult);
+    });
+  }
+
+  function mapToDeviceJSON(
+    locationJSON: DeviceLocation,
+    tempJSON: DeviceMessage<Temperature>,
+    humidJSON: DeviceMessage<Humidity>
+  ): Pick<Device, "locationData" | "environmentalData"> {
+    const { lat, lon, uncertainty, insertedAt, serviceType } =
+      locationJSON || {};
+    const { data: temperature, ts: tempTs } = tempJSON?.message || {};
+    const { data: humidity, ts: humidTs } = humidJSON?.message || {};
+    return {
+      locationData: {
+        lat: +lat,
+        lng: +lon,
+        uncertainty: +uncertainty,
+        serviceType,
+        updatedAt: insertedAt,
+      },
+      environmentalData: {
+        temperature: +temperature,
+        temperatureUpdatedAt: tempTs,
+        humidity: +humidity,
+        humidityUpdatedAt: humidTs,
+      },
+    };
+  }
+
+  function getMessages<T>(
+    params: MessageParams
+  ): Promise<ReturnResult<DeviceMessage<T>>> {
+    return fetch(
+      `messages?pageLimit=1&${new URLSearchParams(params).toString()}`
     );
   }
 
-  export function getLocations(params: MessageParams): Promise<Location[]> {
-    return fetchAll(
-      `location/history?pageLimit=100&${new URLSearchParams(params).toString()}`
+  export function getLocation(
+    params: MessageParams
+  ): Promise<ReturnResult<DeviceLocation>> {
+    return fetch(
+      `location/history?pageLimit=1&${new URLSearchParams(params).toString()}`
     );
   }
 }

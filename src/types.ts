@@ -75,11 +75,19 @@ export type DeviceInfo = { [key: string]: DeviceProperties } & Services; // Map 
 export type DeviceConfig = { [key: string]: DeviceProperties };
 
 export interface DeviceLocationJSON {
-  insertedAt: string | number;
-  lat: string;
-  lon: string;
-  uncertainty: string;
-  serviceType: LocationServiceType;
+  locationData: {
+    lat: number;
+    lng: number;
+    uncertainty: number;
+    serviceType: LocationServiceType;
+    updatedAt: string | number;
+  };
+  environmentalData: {
+    temperature: number;
+    temperatureUpdatedAt: number;
+    humidity: number;
+    humidityUpdatedAt: number;
+  };
 }
 
 export type DeviceJSON = DeviceResponseJSON & DeviceLocationJSON;
