@@ -25,7 +25,7 @@ export function ThingyWorld() {
   // ---> pass in devices and selected device
   return (
     <>
-      <SideBar />
+      <SideBar devices={devices} />
       <WorldMap />
       <InfoBox />
       <NordicTab />

@@ -5,8 +5,12 @@ import * as ThingyImage from "../assets/thingy.svg";
 import * as NordicYImage from "../assets/nordic-marker-orange.svg";
 
 import "./SideBar.scss";
+import DeviceListItem from "./DeviceListItem";
+import Device from "../device";
 
-const SideBar = () => (
+const SideBar: React.FunctionComponent<{ devices: Device[] }> = ({
+  devices,
+}) => (
   <div className="sidebar open">
     <a className="sidebar-toggle">
       <div></div>
@@ -50,7 +54,9 @@ const SideBar = () => (
       <div className="device-list-block">
         <h3 className="sidebar-heading">All Devices</h3>
         <ul className="device-list">
-          {/* TODO: Create device list component */}
+          {devices.map(({ id, name, connected }) => (
+            <DeviceListItem id={id} name={name} connected={connected} />
+          ))}
         </ul>
       </div>
     </div>
