@@ -32,7 +32,7 @@ const pointGraphics = { pixelSize: 10 };
 // TOO: Camera fly to selected entity
 
 // What if the devices are ready before the globe??
-export default function WorldMap() {
+const WorldMap = () => {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -61,4 +61,7 @@ export default function WorldMap() {
       <Entity position={position} point={pointGraphics}></Entity>
     </Viewer>
   );
-}
+};
+
+const MemoWorldMap = React.memo(WorldMap);
+export default MemoWorldMap;

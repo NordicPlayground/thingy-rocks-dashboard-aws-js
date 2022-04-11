@@ -3,7 +3,7 @@ import "./App.scss";
 
 import SideBar from "./SideBar";
 import InfoBox from "./InfoBox";
-import WorldMap from "./WorldMap";
+import MemoizedWorldMap from "./WorldMap";
 import NordicTab from "./NordicTab";
 import DeviceAPI from "../requests";
 import Device from "../device";
@@ -32,7 +32,7 @@ export function ThingyWorld() {
   return (
     <>
       <SideBar devices={devices} />
-      <WorldMap />
+      <MemoizedWorldMap />
       <InfoBox />
       <NordicTab />
     </>
