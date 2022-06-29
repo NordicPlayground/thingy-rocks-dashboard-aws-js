@@ -1,0 +1,23 @@
+@import "variables.scss";
+#cesiumContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  transition: right $transitionTime;
+  .open-sidebar & {
+    right: -300px; //offset to center globe when sidebar open - need to adjust for mobile
+  }
+  bottom: 0;
+  overflow: hidden;
+  .cesium-viewer,
+  .cesium-viewer-cesiumWidgetContainer,
+  .cesium-widget,
+  canvas {
+    height: 100%;
+    width: 100%;
+  }
+  .cesium-viewer-animationContainer {
+    display: none;
+  }
+}

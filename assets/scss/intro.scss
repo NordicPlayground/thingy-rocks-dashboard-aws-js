@@ -1,0 +1,57 @@
+@import "variables.scss";
+.intro-container {
+  transition: opacity $transitionTime;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 99999;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  &:not(.globe-rendered) {
+    pointer-events: none;
+  }
+  &.hidden {
+    opacity: 0;
+  }
+  .intro-inner {
+    background-color: $white;
+    display: inline-block;
+    padding: 60px;
+    max-height: 100%;
+    // height: 400px;
+    max-width: 90%;
+    width: 540px;
+    position: relative;
+    text-align: center;
+    img {
+      height: 240px;
+      margin: 0 auto;
+    }
+    .blue {
+      font-size: 18px;
+      color: $darkBlue;
+      letter-spacing: 0.5px;
+      text-align: center;
+      line-height: 21px;
+    }
+    .grey {
+      font-size: 18px;
+      color: $darkGrey;
+      letter-spacing: 0.5px;
+      text-align: center;
+      line-height: 21px;
+    }
+  }
+  p.white {
+    color: $white;
+    letter-spacing: 0.5px;
+    text-align: center;
+    line-height: 21px;
+    width: 100%;
+  }
+}

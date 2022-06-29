@@ -4,7 +4,7 @@
   "description": "[thingyworld.nrfcloud.com](http://thingyworld.nrfcloud.com)",
   "main": "assets/index.html",
   "scripts": {
-    "build": "gulp",
+    "build": "rm -rf dist/ && gulp",
     "local": "live-server --cors dist/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,9 +20,12 @@
   "homepage": "https://github.com/nRFCloud/thingy-world-app#readme",
   "devDependencies": {
     "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
     "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
     "gulp-uglify-es": "^2.0.0",
-    "live-server": "^1.2.1"
-  },
-  "dependencies": {}
+    "live-server": "^1.2.1",
+    "sass": "^1.53.0"
+  }
 }
