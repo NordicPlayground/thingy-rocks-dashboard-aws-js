@@ -4,8 +4,8 @@
   "description": "[thingyworld.nrfcloud.com](http://thingyworld.nrfcloud.com)",
   "main": "assets/index.html",
   "scripts": {
-    "build": "rm -rf dist/ && gulp",
-    "local": "live-server --cors dist/",
+    "build": "rm -rf build/ && gulp",
+    "local": "live-server --cors build/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

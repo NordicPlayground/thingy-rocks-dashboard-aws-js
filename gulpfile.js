@@ -1,13 +1,11 @@
-const { src, dest, series } = require("gulp");
+const { src, dest, parallel } = require("gulp");
 const rename = require("gulp-rename");
 const uglify = require("gulp-uglify-es").default;
 const sass = require("gulp-sass")(require("sass"));
 const concat = require("gulp-concat");
 const cleanCSS = require("gulp-clean-css");
 
-function build(cb) {
-  src(["assets/favicon.png", "assets/index.html"]).pipe(dest("dist/"));
-
+function javascript(cb) {
   src(["assets/js/classes/*.js", "assets/js/*.js"])
     .pipe(uglify())
     .pipe(
@@ -15,21 +13,32 @@ function build(cb) {
         path.basename += "-min";
       })
     )
-    .pipe(dest("dist/js/"));
+    .pipe(dest("build/js/"));
 
-  src(["assets/js/Cesium-1.75/Build/Cesium/**"]).pipe(dest("dist/js/Cesium"));
+  src([
+    "assets/js/Cesium-1.75/Build/Cesium/**",
+    "!assets/js/Cesium-1.75/Build/Cesium/Cesium.js",
+  ]).pipe(dest("build/js/Cesium"));
+  src(["assets/js/Cesium-1.75/Build/Cesium/Cesium.js"])
+    .pipe(uglify())
+    .pipe(dest("build/js/Cesium/"));
+  cb();
+}
 
-  src("assets/img/**").pipe(dest("dist/img/"));
-
-  src("assets/fonts/**").pipe(dest("dist/fonts"));
-
+function scss(cb) {
   src("assets/scss/*.scss")
     .pipe(sass().on("error", sass.logError))
     .pipe(concat("styles-min.css"))
     .pipe(cleanCSS())
-    .pipe(dest("dist/"));
-
+    .pipe(dest("build/"));
   cb();
 }
 
-exports.default = series(build);
+function imagesAndFonts(cb) {
+  src(["assets/favicon.png", "assets/index.html"]).pipe(dest("build/"));
+  src("assets/img/**").pipe(dest("build/img/"));
+  src("assets/fonts/**").pipe(dest("build/fonts"));
+  cb();
+}
+
+exports.default = parallel(javascript, scss, imagesAndFonts);
