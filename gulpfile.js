@@ -1,9 +1,21 @@
-const { src, dest, parallel } = require("gulp");
+const { src, dest, parallel, series } = require("gulp");
 const rename = require("gulp-rename");
 const uglify = require("gulp-uglify-es").default;
 const sass = require("gulp-sass")(require("sass"));
 const concat = require("gulp-concat");
 const cleanCSS = require("gulp-clean-css");
+const replace = require("gulp-replace");
+require("dotenv").config();
+
+function checkToken(cb) {
+  const cesiumToken = process.env.CESIUM_ION_ACCESS_TOKEN;
+  if (cesiumToken === "") {
+    console.error("\nCesium Token must be defined\n");
+    process.exit(0);
+  }
+  console.log("CESIUM_ION_ACCESS_TOKEN: ", cesiumToken);
+  cb();
+}
 
 function javascript(cb) {
   src(["assets/js/classes/*.js", "assets/js/*.js"])
@@ -19,9 +31,15 @@ function javascript(cb) {
     "assets/js/Cesium-1.75/Build/Cesium/**",
     "!assets/js/Cesium-1.75/Build/Cesium/Cesium.js",
   ]).pipe(dest("build/js/Cesium"));
+
   src(["assets/js/Cesium-1.75/Build/Cesium/Cesium.js"])
+    // insert the Cesium token inline
+    .pipe(
+      replace("CESIUM_ION_ACCESS_TOKEN", process.env.CESIUM_ION_ACCESS_TOKEN)
+    )
     .pipe(uglify())
     .pipe(dest("build/js/Cesium/"));
+
   cb();
 }
 
@@ -41,4 +59,7 @@ function imagesAndFonts(cb) {
   cb();
 }
 
-exports.default = parallel(javascript, scss, imagesAndFonts);
+exports.default = series(
+  checkToken,
+  parallel(javascript, scss, imagesAndFonts)
+);
