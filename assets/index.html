@@ -3,28 +3,33 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Thingy World - Nordic Semiconductors</title>
-    <link preload rel="stylesheet" href="./css/fonts/fonts-min.css" />
-    <link rel="stylesheet" href="./css/styles-min.css" />
+    <link preload rel="stylesheet" href="./fonts/fonts-min.css" />
+    <link rel="stylesheet" href="./styles-min.css" />
   </head>
 
-
   <body>
-
     <div class="intro-container">
-        <div class="intro-inner">
-          <img src="img/thingy-intro.png"/>
-          <p class="blue">Welcome to Nordic Semiconductor’s ThingyWorld.</p>
-          <p class="grey">ThingyWorld is an interactive map experience that lets you experience 
-          the Thingy91 in action.</p>
-        <p class="grey">Thingy91 devices are displayed on the left panel. Click on one to display its last location, temperature, and humidity.</p>
-        </div>
-        <p class="white message">Please wait while the data is loading...</p>
+      <div class="intro-inner">
+        <img src="img/thingy-intro.png" />
+        <p class="blue">Welcome to Nordic Semiconductor’s ThingyWorld.</p>
+        <p class="grey">
+          ThingyWorld is an interactive map experience that lets you experience
+          the Thingy91 in action.
+        </p>
+        <p class="grey">
+          Thingy91 devices are displayed on the left panel. Click on one to
+          display its last location, temperature, and humidity.
+        </p>
+      </div>
+      <p class="white message">Please wait while the data is loading...</p>
     </div>
 
     <div class="sidebar">
-      <a class="sidebar-toggle"><div></div></a>
+      <a class="sidebar-toggle">
+        <div></div>
+      </a>
 
       <img class="logo" src="img/logo.svg" />
       <div class="scrollable">
@@ -32,23 +37,40 @@
           <div class="device-info">
             <img class="device-img" src="img/thingy.svg" />
             <div class="device-location-name">
-              <img src="img/nordic-icon-y.svg">
-              <span class="device-location-name-label"><!-- populated on thingy click --></span>
+              <img src="img/nordic-icon-y.svg" />
+              <span class="device-location-name-label">
+                <!-- populated on thingy click -->
+              </span>
             </div>
             <div class="device-location-coords">
               <h3 class="sidebar-heading">Coordinates</h3>
-              <p class="coordinates"><!-- populated on thingy click --></p>
+              <p class="coordinates">
+                <!-- populated on thingy click -->
+              </p>
             </div>
           </div>
           <div class="device-data">
             <div class="device-data">
-              <div class="device-data__datum temp" style="display:none">
+              <div class="device-data__datum temp" style="display: none">
                 <h3 class="datum-name">Temperature</h3>
                 <p class="datum-info">loading data...</p>
                 <p class="datum-timestamp">updating...</p>
               </div>
-              <div class="device-data__datum humidity" style="display:none">
+              <div class="device-data__datum humidity" style="display: none">
                 <h3 class="datum-name">Humidity</h3>
+                <p class="datum-info">loading data...</p>
+                <p class="datum-timestamp">updating...</p>
+              </div>
+              <div
+                class="device-data__datum location_method"
+                style="display: none"
+              >
+                <h3 class="datum-name">Location Method</h3>
+                <p class="datum-info">loading data...</p>
+                <p class="datum-timestamp">updating...</p>
+              </div>
+              <div class="device-data__datum uncertainty" style="display: none">
+                <h3 class="datum-name">Uncertainty</h3>
                 <p class="datum-info">loading data...</p>
                 <p class="datum-timestamp">updating...</p>
               </div>
@@ -74,23 +96,19 @@
         Learn more about Nordic Semiconductor’s Thingy91 and newly updated
         device management platform.
       </p>
-      <a href="https://nrfcloud.com/"><img src="img/arrow-link.svg" /> Visit nrfCloud</a>
+      <a href="https://nrfcloud.com/"
+        ><img src="img/arrow-link.svg" /> Visit nrfCloud</a
+      >
     </div>
-
 
     <div id="cesiumContainer" class="fullSize"></div>
     <div id="toolbar"></div>
 
-    
-      
-
-      
     <div class="mobile-sidebar sidebar">
       <div class="data-display">
         <div class="device-info">
-        	
           <div class="device-location-name">
-            <img src="img/nordic-icon-b.svg">
+            <img src="img/nordic-icon-b.svg" />
             <span class="device-location-name-label"></span>
           </div>
           <div class="device-location-coords">
@@ -99,12 +117,12 @@
           </div>
         </div>
         <div class="device-data">
-          <div class="device-data__datum temp" style="display:none">
+          <div class="device-data__datum temp" style="display: none">
             <h3 class="datum-name">Temperature</h3>
             <p class="datum-info">loading data...</p>
             <p class="datum-timestamp">updating...</p>
           </div>
-          <div class="device-data__datum humidity" style="display:none">
+          <div class="device-data__datum humidity" style="display: none">
             <h3 class="datum-name">Humidity</h3>
             <p class="datum-info">loading data...</p>
             <p class="datum-timestamp">updating...</p>
@@ -112,13 +130,13 @@
         </div>
       </div>
     </div>
-  
+
     <div id="camera-nav">
       <img src="img/zoom-out.svg" id="zoom-out" />
       <img src="img/zoom-in.svg" id="zoom-in" />
     </div>
 
-    <script src='https://code.jquery.com/jquery-3.5.1.min.js'></script>    
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="./js/Cesium/Cesium.js"></script>
     <script src="./js/moment-with-locales-min.js"></script>
     <script src="./js/Device-min.js"></script>
