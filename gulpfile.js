@@ -7,18 +7,21 @@ const cleanCSS = require("gulp-clean-css");
 const replace = require("gulp-replace");
 require("dotenv").config();
 
-function checkToken(cb) {
+function checkKeys(cb) {
   const cesiumToken = process.env.CESIUM_ION_ACCESS_TOKEN;
-  if (cesiumToken === "") {
-    console.error("\nCesium Token must be defined\n");
+  const apiKey = process.env.API_KEY;
+  if (cesiumToken === "" || apiKey === "") {
+    console.error("\nBoth the Cesium Token and API_Key must be defined\n");
     process.exit(0);
   }
   console.log("CESIUM_ION_ACCESS_TOKEN: ", cesiumToken);
+  console.log("API_Key: ", apiKey);
   cb();
 }
 
 function javascript(cb) {
   src(["assets/js/classes/*.js", "assets/js/*.js"])
+    .pipe(replace("__API_KEY__", process.env.API_KEY))
     .pipe(uglify())
     .pipe(
       rename(function (path) {
@@ -59,7 +62,4 @@ function imagesAndFonts(cb) {
   cb();
 }
 
-exports.default = series(
-  checkToken,
-  parallel(javascript, scss, imagesAndFonts)
-);
+exports.default = series(checkKeys, parallel(javascript, scss, imagesAndFonts));

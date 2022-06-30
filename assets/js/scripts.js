@@ -26,7 +26,7 @@ function getAjaxSettings(url, async = true) {
     url: url,
     method: "GET",
     headers: {
-      Authorization: "Bearer 12af85ea3af2d76df38e56a9bc1484fd70389d1d", // viewer access token
+      Authorization: "Bearer __API_KEY__", // viewer access token
     },
   };
   return settings;
