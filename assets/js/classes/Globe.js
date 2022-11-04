@@ -467,6 +467,12 @@ class Globe {
     var datumContainer = deviceData.querySelector(
       ".mobile-sidebar .device-data"
     );
+    var image = document.querySelector(".device-img");
+    if (props.name.getValue().indexOf("Electronica22-Thingy") === 0) {
+      image.src = "https://placekitten.com/g/100/100";
+    } else {
+      image.src = "img/thingy.svg";
+    }
 
     name.innerHTML = props.name;
     coords.innerHTML =
