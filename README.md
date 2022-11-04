@@ -9,10 +9,10 @@ A web application that shows Thingy91s around the world displaying their locatio
 Install
 
 ```
-npm i
+npm ci
 ```
 
-Set the correct environmental variables `CESIUM_ION_ACCESS_TOKEN` and `API_KEY` in the `.env` file. See the [wiki](https://github.com/nRFCloud/thingy-world-app/wiki) on how to get both. You can use the `CESIUM_ION_ACCESS_TOKEN` from the existing Cesium account or setup a separate Cesium account. The former being the fastest way to get up and running. The `API_KEY` can be set to the existing nRFCloud viewer account or an account of your choice. If you deploy the app use only an `API_KEY` that has read permissions only. Details on how this is currently done is outlined in the wiki. 
+Set the correct environmental variables `CESIUM_ION_ACCESS_TOKEN` and `NRF_CLOUD_API_KEY`. See the [wiki](https://github.com/nRFCloud/thingy-world-app/wiki) on how to get both. You can use the `CESIUM_ION_ACCESS_TOKEN` from the existing Cesium account or setup a separate Cesium account. The former being the fastest way to get up and running. The `API_KEY` can be set to the existing nRFCloud viewer account or an account of your choice. If you deploy the app use only an `API_KEY` that has read permissions only. Details on how this is currently done is outlined in the wiki.
 
 Build and view locally
 

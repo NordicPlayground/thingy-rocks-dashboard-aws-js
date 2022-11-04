@@ -5,11 +5,11 @@ const sass = require("gulp-sass")(require("sass"));
 const concat = require("gulp-concat");
 const cleanCSS = require("gulp-clean-css");
 const replace = require("gulp-replace");
-require("dotenv").config();
+
+const cesiumToken = process.env.CESIUM_ION_ACCESS_TOKEN;
+const apiKey = process.env.NRF_CLOUD_API_KEY;
 
 function checkKeys(cb) {
-  const cesiumToken = process.env.CESIUM_ION_ACCESS_TOKEN;
-  const apiKey = process.env.API_KEY;
   if (cesiumToken === "" || apiKey === "") {
     console.error("\nBoth the Cesium Token and API_Key must be defined\n");
     process.exit(0);
@@ -21,7 +21,7 @@ function checkKeys(cb) {
 
 function javascript(cb) {
   src(["assets/js/classes/*.js", "assets/js/*.js"])
-    .pipe(replace("__API_KEY__", process.env.API_KEY))
+    .pipe(replace("__API_KEY__", apiKey))
     .pipe(uglify())
     .pipe(
       rename(function (path) {
@@ -37,9 +37,7 @@ function javascript(cb) {
 
   src(["assets/js/Cesium-1.75/Build/Cesium/Cesium.js"])
     // insert the Cesium token inline
-    .pipe(
-      replace("CESIUM_ION_ACCESS_TOKEN", process.env.CESIUM_ION_ACCESS_TOKEN)
-    )
+    .pipe(replace("CESIUM_ION_ACCESS_TOKEN", cesiumToken))
     .pipe(uglify())
     .pipe(dest("build/js/Cesium/"));
 
