@@ -1,0 +1,49 @@
+name: Build and Release
+
+on: push
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CNAME: world.thingy.rocks
+  # These are not secrets, they will be visible plain-text in the web app
+  CESIUM_ION_ACCESS_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4Y2U2ODRlMS0zYzBkLTRmNjQtYTlkOC1mMjg0MGY4NWIyNzEiLCJpZCI6NjExMTAsImlhdCI6MTYzODgxODYyMH0.Vu8wJT7AmTneNnboUooMyNFFLgG0sDiBeOIG5qAOEAw
+  NRF_CLOUD_API_KEY: 12af85ea3af2d76df38e56a9bc1484fd70389d1d
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+
+      - name: Keep npm cache around to speed up installs
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to GitHub pages
+        if: github.ref == 'refs/heads/saga'
+        working-directory: build
+        run: |
+          echo "machine github.com login accesskey password ${{ secrets.GITHUB_TOKEN }}" > ~/.netrc
+          git config --global user.email "actions@example.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global init.defaultBranch gh-pages
+          touch .nojekyll
+          echo ${{ env.CNAME }} > CNAME
+          git init
+          git add -A
+          git commit -m "update website"
+          git remote add origin https://github.com/${GITHUB_REPOSITORY}.git
+          git push -f origin HEAD:gh-pages
