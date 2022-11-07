@@ -469,8 +469,8 @@ class Globe {
 			'.mobile-sidebar .device-data',
 		)
 		var image = document.querySelector('.device-img')
-		if (props.name.getValue().indexOf('Electronica22-Thingy') === 0) {
-			image.src = 'https://placekitten.com/g/100/100'
+		if (props.name.getValue().includes('#nRF9160DK')) {
+			image.src = 'img/nRF9160DK.png'
 		} else {
 			image.src = 'img/thingy.svg'
 		}
