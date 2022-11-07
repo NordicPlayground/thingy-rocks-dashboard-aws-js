@@ -426,9 +426,9 @@ class Globe {
     name.innerHTML = props.name;
     coords.innerHTML =
       props.coords && props.coords.getValue().length > 0
-        ? `${props.coords
-            .getValue()[0]
-            .toFixed(4)}, ${props.coords.getValue()[1].toFixed(4)}`
+        ? `${props.coords.getValue()[0].toFixed(4)}, ${props.coords
+            .getValue()[1]
+            .toFixed(4)}`
         : "No Location Data Available";
 
     const deviceId = entity.properties.id.getValue();
@@ -443,8 +443,8 @@ class Globe {
         const deviceHTMLElement = document.getElementById(deviceId);
         let connectionStatus = "disconnected";
         if (deviceData.state && deviceData.state.reported) {
-          const isConnected_LEGACY_FIRMWARE = !!deviceData.state.reported
-            .connected;
+          const isConnected_LEGACY_FIRMWARE =
+            !!deviceData.state.reported.connected;
           const isConnected_UPDATED_FIRMWARE =
             deviceData.state.reported.connection &&
             deviceData.state.reported.connection.status === "connected";
@@ -460,6 +460,7 @@ class Globe {
   }
 
   static populateMobileData(entity) {
+    console.log(entity);
     var props = entity.properties;
     var deviceData = document.querySelector(".mobile-sidebar .data-display");
     var name = deviceData.querySelector(".device-location-name-label");

@@ -1,7 +1,7 @@
 {
   "name": "thingy-world-app",
-  "version": "1.0.0",
-  "description": "[thingyworld.nrfcloud.com](http://thingyworld.nrfcloud.com)",
+  "version": "0.0.0-development",
+  "description": "A web application that shows Thingy91s around the world displaying their location, humidity, temperature, and connection status.",
   "main": "assets/index.html",
   "scripts": {
     "build": "rm -rf build/ && gulp",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nRFCloud/thingy-world-app.git"
+    "url": "git+https://github.com/NordicPlayground/thingy-world-app.git"
   },
-  "author": "Chris Weaver",
-  "license": "ISC",
+  "author": "Nordic Semiconductor ASA | nordicsemi.no",
+  "license": "BSD-3-Clause",
   "bugs": {
-    "url": "https://github.com/nRFCloud/thingy-world-app/issues"
+    "url": "https://github.com/NordicPlayground/thingy-world-app/issues"
   },
-  "homepage": "https://github.com/nRFCloud/thingy-world-app#readme",
+  "homepage": "https://github.com/NordicPlayground/thingy-world-app#readme",
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
