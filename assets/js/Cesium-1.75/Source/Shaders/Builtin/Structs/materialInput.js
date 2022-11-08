@@ -27,4 +27,4 @@ struct czm_materialInput\n\
     float slope;\n\
     float aspect;\n\
 };\n\
-";
+"

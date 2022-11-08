@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#ifdef GL_EXT_frag_depth\n\
+export default '#ifdef GL_EXT_frag_depth\n\
 #extension GL_EXT_frag_depth : enable\n\
 #endif\n\
 \n\
@@ -16,4 +16,4 @@ void main(void)\n\
 #endif\n\
     czm_writeDepthClamp();\n\
 }\n\
-";
+'

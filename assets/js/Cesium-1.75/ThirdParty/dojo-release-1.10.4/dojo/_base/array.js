@@ -1,75 +1,82 @@
-define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
+define(['./kernel', '../has', './lang'], function (dojo, has, lang) {
 	// module:
 	//		dojo/_base/array
 
 	// our old simple function builder stuff
-	var cache = {}, u;
+	var cache = {},
+		u
 
-	function buildFn(fn){
-		return cache[fn] = new Function("item", "index", "array", fn); // Function
+	function buildFn(fn) {
+		return (cache[fn] = new Function('item', 'index', 'array', fn)) // Function
 	}
 	// magic snippet: if(typeof fn == "string") fn = cache[fn] || buildFn(fn);
 
 	// every & some
 
-	function everyOrSome(some){
-		var every = !some;
-		return function(a, fn, o){
-			var i = 0, l = a && a.length || 0, result;
-			if(l && typeof a == "string") a = a.split("");
-			if(typeof fn == "string") fn = cache[fn] || buildFn(fn);
-			if(o){
-				for(; i < l; ++i){
-					result = !fn.call(o, a[i], i, a);
-					if(some ^ result){
-						return !result;
+	function everyOrSome(some) {
+		var every = !some
+		return function (a, fn, o) {
+			var i = 0,
+				l = (a && a.length) || 0,
+				result
+			if (l && typeof a == 'string') a = a.split('')
+			if (typeof fn == 'string') fn = cache[fn] || buildFn(fn)
+			if (o) {
+				for (; i < l; ++i) {
+					result = !fn.call(o, a[i], i, a)
+					if (some ^ result) {
+						return !result
 					}
 				}
-			}else{
-				for(; i < l; ++i){
-					result = !fn(a[i], i, a);
-					if(some ^ result){
-						return !result;
+			} else {
+				for (; i < l; ++i) {
+					result = !fn(a[i], i, a)
+					if (some ^ result) {
+						return !result
 					}
 				}
 			}
-			return every; // Boolean
-		};
+			return every // Boolean
+		}
 	}
 
 	// indexOf, lastIndexOf
 
-	function index(up){
-		var delta = 1, lOver = 0, uOver = 0;
-		if(!up){
-			delta = lOver = uOver = -1;
+	function index(up) {
+		var delta = 1,
+			lOver = 0,
+			uOver = 0
+		if (!up) {
+			delta = lOver = uOver = -1
 		}
-		return function(a, x, from, last){
-			if(last && delta > 0){
+		return function (a, x, from, last) {
+			if (last && delta > 0) {
 				// TODO: why do we use a non-standard signature? why do we need "last"?
-				return array.lastIndexOf(a, x, from);
+				return array.lastIndexOf(a, x, from)
 			}
-			var l = a && a.length || 0, end = up ? l + uOver : lOver, i;
-			if(from === u){
-				i = up ? lOver : l + uOver;
-			}else{
-				if(from < 0){
-					i = l + from;
-					if(i < 0){
-						i = lOver;
+			var l = (a && a.length) || 0,
+				end = up ? l + uOver : lOver,
+				i
+			if (from === u) {
+				i = up ? lOver : l + uOver
+			} else {
+				if (from < 0) {
+					i = l + from
+					if (i < 0) {
+						i = lOver
 					}
-				}else{
-					i = from >= l ? l + uOver : from;
+				} else {
+					i = from >= l ? l + uOver : from
 				}
 			}
-			if(l && typeof a == "string") a = a.split("");
-			for(; i != end; i += delta){
-				if(a[i] == x){
-					return i; // Number
+			if (l && typeof a == 'string') a = a.split('')
+			for (; i != end; i += delta) {
+				if (a[i] == x) {
+					return i // Number
 				}
 			}
-			return -1; // Number
-		};
+			return -1 // Number
+		}
 	}
 
 	var array = {
@@ -180,7 +187,7 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 		},
 		=====*/
 
-		forEach: function(arr, callback, thisObject){
+		forEach: function (arr, callback, thisObject) {
 			// summary:
 			//		for every item in arr, callback is invoked. Return values are ignored.
 			//		If you want to break out of the loop, consider using array.every() or array.some().
@@ -239,21 +246,23 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			// callback: Function|String
 			// thisObject: Object?
 
-			var i = 0, l = arr && arr.length || 0;
-			if(l && typeof arr == "string") arr = arr.split("");
-			if(typeof callback == "string") callback = cache[callback] || buildFn(callback);
-			if(thisObject){
-				for(; i < l; ++i){
-					callback.call(thisObject, arr[i], i, arr);
+			var i = 0,
+				l = (arr && arr.length) || 0
+			if (l && typeof arr == 'string') arr = arr.split('')
+			if (typeof callback == 'string')
+				callback = cache[callback] || buildFn(callback)
+			if (thisObject) {
+				for (; i < l; ++i) {
+					callback.call(thisObject, arr[i], i, arr)
 				}
-			}else{
-				for(; i < l; ++i){
-					callback(arr[i], i, arr);
+			} else {
+				for (; i < l; ++i) {
+					callback(arr[i], i, arr)
 				}
 			}
 		},
 
-		map: function(arr, callback, thisObject, Ctr){
+		map: function (arr, callback, thisObject, Ctr) {
 			// summary:
 			//		applies callback to each element of arr and returns
 			//		an Array with the results
@@ -277,22 +286,25 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			//	| array.map([1, 2, 3, 4], function(item){ return item+1 });
 
 			// TODO: why do we have a non-standard signature here? do we need "Ctr"?
-			var i = 0, l = arr && arr.length || 0, out = new (Ctr || Array)(l);
-			if(l && typeof arr == "string") arr = arr.split("");
-			if(typeof callback == "string") callback = cache[callback] || buildFn(callback);
-			if(thisObject){
-				for(; i < l; ++i){
-					out[i] = callback.call(thisObject, arr[i], i, arr);
+			var i = 0,
+				l = (arr && arr.length) || 0,
+				out = new (Ctr || Array)(l)
+			if (l && typeof arr == 'string') arr = arr.split('')
+			if (typeof callback == 'string')
+				callback = cache[callback] || buildFn(callback)
+			if (thisObject) {
+				for (; i < l; ++i) {
+					out[i] = callback.call(thisObject, arr[i], i, arr)
 				}
-			}else{
-				for(; i < l; ++i){
-					out[i] = callback(arr[i], i, arr);
+			} else {
+				for (; i < l; ++i) {
+					out[i] = callback(arr[i], i, arr)
 				}
 			}
-			return out; // Array
+			return out // Array
 		},
 
-		filter: function(arr, callback, thisObject){
+		filter: function (arr, callback, thisObject) {
 			// summary:
 			//		Returns a new Array with those items from arr that match the
 			//		condition implemented by callback.
@@ -317,34 +329,37 @@ define(["./kernel", "../has", "./lang"], function(dojo, has, lang){
 			//	| array.filter([1, 2, 3, 4], function(item){ return item>1; });
 
 			// TODO: do we need "Ctr" here like in map()?
-			var i = 0, l = arr && arr.length || 0, out = [], value;
-			if(l && typeof arr == "string") arr = arr.split("");
-			if(typeof callback == "string") callback = cache[callback] || buildFn(callback);
-			if(thisObject){
-				for(; i < l; ++i){
-					value = arr[i];
-					if(callback.call(thisObject, value, i, arr)){
-						out.push(value);
+			var i = 0,
+				l = (arr && arr.length) || 0,
+				out = [],
+				value
+			if (l && typeof arr == 'string') arr = arr.split('')
+			if (typeof callback == 'string')
+				callback = cache[callback] || buildFn(callback)
+			if (thisObject) {
+				for (; i < l; ++i) {
+					value = arr[i]
+					if (callback.call(thisObject, value, i, arr)) {
+						out.push(value)
 					}
 				}
-			}else{
-				for(; i < l; ++i){
-					value = arr[i];
-					if(callback(value, i, arr)){
-						out.push(value);
+			} else {
+				for (; i < l; ++i) {
+					value = arr[i]
+					if (callback(value, i, arr)) {
+						out.push(value)
 					}
 				}
 			}
-			return out; // Array
+			return out // Array
 		},
 
-		clearCache: function(){
-			cache = {};
-		}
-	};
+		clearCache: function () {
+			cache = {}
+		},
+	}
 
+	has('extend-dojo') && lang.mixin(dojo, array)
 
-	has("extend-dojo") && lang.mixin(dojo, array);
-
-	return array;
-});
+	return array
+})

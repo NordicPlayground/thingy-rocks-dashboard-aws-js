@@ -1,9 +1,9 @@
-import Cartesian3 from "../Core/Cartesian3.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Matrix3 from "../Core/Matrix3.js";
-import ReferenceFrame from "../Core/ReferenceFrame.js";
-import Transforms from "../Core/Transforms.js";
+import Cartesian3 from '../Core/Cartesian3.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Matrix3 from '../Core/Matrix3.js'
+import ReferenceFrame from '../Core/ReferenceFrame.js'
+import Transforms from '../Core/Transforms.js'
 
 /**
  * The interface for all {@link Property} objects that define a world
@@ -20,42 +20,42 @@ import Transforms from "../Core/Transforms.js";
  * @see TimeIntervalCollectionPositionProperty
  */
 function PositionProperty() {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 Object.defineProperties(PositionProperty.prototype, {
-  /**
-   * Gets a value indicating if this property is constant.  A property is considered
-   * constant if getValue always returns the same result for the current definition.
-   * @memberof PositionProperty.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   */
-  isConstant: {
-    get: DeveloperError.throwInstantiationError,
-  },
-  /**
-   * Gets the event that is raised whenever the definition of this property changes.
-   * The definition is considered to have changed if a call to getValue would return
-   * a different result for the same time.
-   * @memberof PositionProperty.prototype
-   *
-   * @type {Event}
-   * @readonly
-   */
-  definitionChanged: {
-    get: DeveloperError.throwInstantiationError,
-  },
-  /**
-   * Gets the reference frame that the position is defined in.
-   * @memberof PositionProperty.prototype
-   * @type {ReferenceFrame}
-   */
-  referenceFrame: {
-    get: DeveloperError.throwInstantiationError,
-  },
-});
+	/**
+	 * Gets a value indicating if this property is constant.  A property is considered
+	 * constant if getValue always returns the same result for the current definition.
+	 * @memberof PositionProperty.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	isConstant: {
+		get: DeveloperError.throwInstantiationError,
+	},
+	/**
+	 * Gets the event that is raised whenever the definition of this property changes.
+	 * The definition is considered to have changed if a call to getValue would return
+	 * a different result for the same time.
+	 * @memberof PositionProperty.prototype
+	 *
+	 * @type {Event}
+	 * @readonly
+	 */
+	definitionChanged: {
+		get: DeveloperError.throwInstantiationError,
+	},
+	/**
+	 * Gets the reference frame that the position is defined in.
+	 * @memberof PositionProperty.prototype
+	 * @type {ReferenceFrame}
+	 */
+	referenceFrame: {
+		get: DeveloperError.throwInstantiationError,
+	},
+})
 
 /**
  * Gets the value of the property at the provided time in the fixed frame.
@@ -65,7 +65,7 @@ Object.defineProperties(PositionProperty.prototype, {
  * @param {Cartesian3} [result] The object to store the value into, if omitted, a new instance is created and returned.
  * @returns {Cartesian3} The modified result parameter or a new instance if the result parameter was not supplied.
  */
-PositionProperty.prototype.getValue = DeveloperError.throwInstantiationError;
+PositionProperty.prototype.getValue = DeveloperError.throwInstantiationError
 
 /**
  * Gets the value of the property at the provided time and in the provided reference frame.
@@ -77,7 +77,7 @@ PositionProperty.prototype.getValue = DeveloperError.throwInstantiationError;
  * @returns {Cartesian3} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 PositionProperty.prototype.getValueInReferenceFrame =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Compares this property to the provided property and returns
@@ -87,47 +87,47 @@ PositionProperty.prototype.getValueInReferenceFrame =
  * @param {Property} [other] The other property.
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
-PositionProperty.prototype.equals = DeveloperError.throwInstantiationError;
+PositionProperty.prototype.equals = DeveloperError.throwInstantiationError
 
-var scratchMatrix3 = new Matrix3();
+var scratchMatrix3 = new Matrix3()
 
 /**
  * @private
  */
 PositionProperty.convertToReferenceFrame = function (
-  time,
-  value,
-  inputFrame,
-  outputFrame,
-  result
+	time,
+	value,
+	inputFrame,
+	outputFrame,
+	result,
 ) {
-  if (!defined(value)) {
-    return value;
-  }
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
+	if (!defined(value)) {
+		return value
+	}
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
 
-  if (inputFrame === outputFrame) {
-    return Cartesian3.clone(value, result);
-  }
+	if (inputFrame === outputFrame) {
+		return Cartesian3.clone(value, result)
+	}
 
-  var icrfToFixed = Transforms.computeIcrfToFixedMatrix(time, scratchMatrix3);
-  if (!defined(icrfToFixed)) {
-    icrfToFixed = Transforms.computeTemeToPseudoFixedMatrix(
-      time,
-      scratchMatrix3
-    );
-  }
-  if (inputFrame === ReferenceFrame.INERTIAL) {
-    return Matrix3.multiplyByVector(icrfToFixed, value, result);
-  }
-  if (inputFrame === ReferenceFrame.FIXED) {
-    return Matrix3.multiplyByVector(
-      Matrix3.transpose(icrfToFixed, scratchMatrix3),
-      value,
-      result
-    );
-  }
-};
-export default PositionProperty;
+	var icrfToFixed = Transforms.computeIcrfToFixedMatrix(time, scratchMatrix3)
+	if (!defined(icrfToFixed)) {
+		icrfToFixed = Transforms.computeTemeToPseudoFixedMatrix(
+			time,
+			scratchMatrix3,
+		)
+	}
+	if (inputFrame === ReferenceFrame.INERTIAL) {
+		return Matrix3.multiplyByVector(icrfToFixed, value, result)
+	}
+	if (inputFrame === ReferenceFrame.FIXED) {
+		return Matrix3.multiplyByVector(
+			Matrix3.transpose(icrfToFixed, scratchMatrix3),
+			value,
+			result,
+		)
+	}
+}
+export default PositionProperty

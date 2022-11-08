@@ -39,4 +39,4 @@ vec4 czm_translateRelativeToEye(vec3 high, vec3 low)\n\
 \n\
     return vec4(highDifference + lowDifference, 1.0);\n\
 }\n\
-";
+"

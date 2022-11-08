@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#ifdef VECTOR_TILE\n\
+export default '#ifdef VECTOR_TILE\n\
 uniform vec4 u_highlightColor;\n\
 #endif\n\
 \n\
@@ -24,4 +24,4 @@ void main()\n\
 \n\
     czm_writeLogDepth();\n\
 }\n\
-";
+'

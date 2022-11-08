@@ -1,10 +1,10 @@
-import defaultValue from "../Core/defaultValue.js";
-import VertexFormat from "../Core/VertexFormat.js";
-import PerInstanceColorAppearanceFS from "../Shaders/Appearances/PerInstanceColorAppearanceFS.js";
-import PerInstanceColorAppearanceVS from "../Shaders/Appearances/PerInstanceColorAppearanceVS.js";
-import PerInstanceFlatColorAppearanceFS from "../Shaders/Appearances/PerInstanceFlatColorAppearanceFS.js";
-import PerInstanceFlatColorAppearanceVS from "../Shaders/Appearances/PerInstanceFlatColorAppearanceVS.js";
-import Appearance from "./Appearance.js";
+import defaultValue from '../Core/defaultValue.js'
+import VertexFormat from '../Core/VertexFormat.js'
+import PerInstanceColorAppearanceFS from '../Shaders/Appearances/PerInstanceColorAppearanceFS.js'
+import PerInstanceColorAppearanceVS from '../Shaders/Appearances/PerInstanceColorAppearanceVS.js'
+import PerInstanceFlatColorAppearanceFS from '../Shaders/Appearances/PerInstanceFlatColorAppearanceFS.js'
+import PerInstanceFlatColorAppearanceVS from '../Shaders/Appearances/PerInstanceFlatColorAppearanceVS.js'
+import Appearance from './Appearance.js'
 
 /**
  * An appearance for {@link GeometryInstance} instances with color attributes.
@@ -68,175 +68,175 @@ import Appearance from "./Appearance.js";
  * });
  */
 function PerInstanceColorAppearance(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  var translucent = defaultValue(options.translucent, true);
-  var closed = defaultValue(options.closed, false);
-  var flat = defaultValue(options.flat, false);
-  var vs = flat
-    ? PerInstanceFlatColorAppearanceVS
-    : PerInstanceColorAppearanceVS;
-  var fs = flat
-    ? PerInstanceFlatColorAppearanceFS
-    : PerInstanceColorAppearanceFS;
-  var vertexFormat = flat
-    ? PerInstanceColorAppearance.FLAT_VERTEX_FORMAT
-    : PerInstanceColorAppearance.VERTEX_FORMAT;
+	var translucent = defaultValue(options.translucent, true)
+	var closed = defaultValue(options.closed, false)
+	var flat = defaultValue(options.flat, false)
+	var vs = flat
+		? PerInstanceFlatColorAppearanceVS
+		: PerInstanceColorAppearanceVS
+	var fs = flat
+		? PerInstanceFlatColorAppearanceFS
+		: PerInstanceColorAppearanceFS
+	var vertexFormat = flat
+		? PerInstanceColorAppearance.FLAT_VERTEX_FORMAT
+		: PerInstanceColorAppearance.VERTEX_FORMAT
 
-  /**
-   * This property is part of the {@link Appearance} interface, but is not
-   * used by {@link PerInstanceColorAppearance} since a fully custom fragment shader is used.
-   *
-   * @type Material
-   *
-   * @default undefined
-   */
-  this.material = undefined;
+	/**
+	 * This property is part of the {@link Appearance} interface, but is not
+	 * used by {@link PerInstanceColorAppearance} since a fully custom fragment shader is used.
+	 *
+	 * @type Material
+	 *
+	 * @default undefined
+	 */
+	this.material = undefined
 
-  /**
-   * When <code>true</code>, the geometry is expected to appear translucent so
-   * {@link PerInstanceColorAppearance#renderState} has alpha blending enabled.
-   *
-   * @type {Boolean}
-   *
-   * @default true
-   */
-  this.translucent = translucent;
+	/**
+	 * When <code>true</code>, the geometry is expected to appear translucent so
+	 * {@link PerInstanceColorAppearance#renderState} has alpha blending enabled.
+	 *
+	 * @type {Boolean}
+	 *
+	 * @default true
+	 */
+	this.translucent = translucent
 
-  this._vertexShaderSource = defaultValue(options.vertexShaderSource, vs);
-  this._fragmentShaderSource = defaultValue(options.fragmentShaderSource, fs);
-  this._renderState = Appearance.getDefaultRenderState(
-    translucent,
-    closed,
-    options.renderState
-  );
-  this._closed = closed;
+	this._vertexShaderSource = defaultValue(options.vertexShaderSource, vs)
+	this._fragmentShaderSource = defaultValue(options.fragmentShaderSource, fs)
+	this._renderState = Appearance.getDefaultRenderState(
+		translucent,
+		closed,
+		options.renderState,
+	)
+	this._closed = closed
 
-  // Non-derived members
+	// Non-derived members
 
-  this._vertexFormat = vertexFormat;
-  this._flat = flat;
-  this._faceForward = defaultValue(options.faceForward, !closed);
+	this._vertexFormat = vertexFormat
+	this._flat = flat
+	this._faceForward = defaultValue(options.faceForward, !closed)
 }
 
 Object.defineProperties(PerInstanceColorAppearance.prototype, {
-  /**
-   * The GLSL source code for the vertex shader.
-   *
-   * @memberof PerInstanceColorAppearance.prototype
-   *
-   * @type {String}
-   * @readonly
-   */
-  vertexShaderSource: {
-    get: function () {
-      return this._vertexShaderSource;
-    },
-  },
+	/**
+	 * The GLSL source code for the vertex shader.
+	 *
+	 * @memberof PerInstanceColorAppearance.prototype
+	 *
+	 * @type {String}
+	 * @readonly
+	 */
+	vertexShaderSource: {
+		get: function () {
+			return this._vertexShaderSource
+		},
+	},
 
-  /**
-   * The GLSL source code for the fragment shader.
-   *
-   * @memberof PerInstanceColorAppearance.prototype
-   *
-   * @type {String}
-   * @readonly
-   */
-  fragmentShaderSource: {
-    get: function () {
-      return this._fragmentShaderSource;
-    },
-  },
+	/**
+	 * The GLSL source code for the fragment shader.
+	 *
+	 * @memberof PerInstanceColorAppearance.prototype
+	 *
+	 * @type {String}
+	 * @readonly
+	 */
+	fragmentShaderSource: {
+		get: function () {
+			return this._fragmentShaderSource
+		},
+	},
 
-  /**
-   * The WebGL fixed-function state to use when rendering the geometry.
-   * <p>
-   * The render state can be explicitly defined when constructing a {@link PerInstanceColorAppearance}
-   * instance, or it is set implicitly via {@link PerInstanceColorAppearance#translucent}
-   * and {@link PerInstanceColorAppearance#closed}.
-   * </p>
-   *
-   * @memberof PerInstanceColorAppearance.prototype
-   *
-   * @type {Object}
-   * @readonly
-   */
-  renderState: {
-    get: function () {
-      return this._renderState;
-    },
-  },
+	/**
+	 * The WebGL fixed-function state to use when rendering the geometry.
+	 * <p>
+	 * The render state can be explicitly defined when constructing a {@link PerInstanceColorAppearance}
+	 * instance, or it is set implicitly via {@link PerInstanceColorAppearance#translucent}
+	 * and {@link PerInstanceColorAppearance#closed}.
+	 * </p>
+	 *
+	 * @memberof PerInstanceColorAppearance.prototype
+	 *
+	 * @type {Object}
+	 * @readonly
+	 */
+	renderState: {
+		get: function () {
+			return this._renderState
+		},
+	},
 
-  /**
-   * When <code>true</code>, the geometry is expected to be closed so
-   * {@link PerInstanceColorAppearance#renderState} has backface culling enabled.
-   * If the viewer enters the geometry, it will not be visible.
-   *
-   * @memberof PerInstanceColorAppearance.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   *
-   * @default false
-   */
-  closed: {
-    get: function () {
-      return this._closed;
-    },
-  },
+	/**
+	 * When <code>true</code>, the geometry is expected to be closed so
+	 * {@link PerInstanceColorAppearance#renderState} has backface culling enabled.
+	 * If the viewer enters the geometry, it will not be visible.
+	 *
+	 * @memberof PerInstanceColorAppearance.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 *
+	 * @default false
+	 */
+	closed: {
+		get: function () {
+			return this._closed
+		},
+	},
 
-  /**
-   * The {@link VertexFormat} that this appearance instance is compatible with.
-   * A geometry can have more vertex attributes and still be compatible - at a
-   * potential performance cost - but it can't have less.
-   *
-   * @memberof PerInstanceColorAppearance.prototype
-   *
-   * @type VertexFormat
-   * @readonly
-   */
-  vertexFormat: {
-    get: function () {
-      return this._vertexFormat;
-    },
-  },
+	/**
+	 * The {@link VertexFormat} that this appearance instance is compatible with.
+	 * A geometry can have more vertex attributes and still be compatible - at a
+	 * potential performance cost - but it can't have less.
+	 *
+	 * @memberof PerInstanceColorAppearance.prototype
+	 *
+	 * @type VertexFormat
+	 * @readonly
+	 */
+	vertexFormat: {
+		get: function () {
+			return this._vertexFormat
+		},
+	},
 
-  /**
-   * When <code>true</code>, flat shading is used in the fragment shader,
-   * which means lighting is not taking into account.
-   *
-   * @memberof PerInstanceColorAppearance.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   *
-   * @default false
-   */
-  flat: {
-    get: function () {
-      return this._flat;
-    },
-  },
+	/**
+	 * When <code>true</code>, flat shading is used in the fragment shader,
+	 * which means lighting is not taking into account.
+	 *
+	 * @memberof PerInstanceColorAppearance.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 *
+	 * @default false
+	 */
+	flat: {
+		get: function () {
+			return this._flat
+		},
+	},
 
-  /**
-   * When <code>true</code>, the fragment shader flips the surface normal
-   * as needed to ensure that the normal faces the viewer to avoid
-   * dark spots.  This is useful when both sides of a geometry should be
-   * shaded like {@link WallGeometry}.
-   *
-   * @memberof PerInstanceColorAppearance.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   *
-   * @default true
-   */
-  faceForward: {
-    get: function () {
-      return this._faceForward;
-    },
-  },
-});
+	/**
+	 * When <code>true</code>, the fragment shader flips the surface normal
+	 * as needed to ensure that the normal faces the viewer to avoid
+	 * dark spots.  This is useful when both sides of a geometry should be
+	 * shaded like {@link WallGeometry}.
+	 *
+	 * @memberof PerInstanceColorAppearance.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 *
+	 * @default true
+	 */
+	faceForward: {
+		get: function () {
+			return this._faceForward
+		},
+	},
+})
 
 /**
  * The {@link VertexFormat} that all {@link PerInstanceColorAppearance} instances
@@ -247,7 +247,7 @@ Object.defineProperties(PerInstanceColorAppearance.prototype, {
  *
  * @constant
  */
-PerInstanceColorAppearance.VERTEX_FORMAT = VertexFormat.POSITION_AND_NORMAL;
+PerInstanceColorAppearance.VERTEX_FORMAT = VertexFormat.POSITION_AND_NORMAL
 
 /**
  * The {@link VertexFormat} that all {@link PerInstanceColorAppearance} instances
@@ -258,7 +258,7 @@ PerInstanceColorAppearance.VERTEX_FORMAT = VertexFormat.POSITION_AND_NORMAL;
  *
  * @constant
  */
-PerInstanceColorAppearance.FLAT_VERTEX_FORMAT = VertexFormat.POSITION_ONLY;
+PerInstanceColorAppearance.FLAT_VERTEX_FORMAT = VertexFormat.POSITION_ONLY
 
 /**
  * Procedurally creates the full GLSL fragment shader source.  For {@link PerInstanceColorAppearance},
@@ -270,7 +270,7 @@ PerInstanceColorAppearance.FLAT_VERTEX_FORMAT = VertexFormat.POSITION_ONLY;
  * @returns {String} The full GLSL fragment shader source.
  */
 PerInstanceColorAppearance.prototype.getFragmentShaderSource =
-  Appearance.prototype.getFragmentShaderSource;
+	Appearance.prototype.getFragmentShaderSource
 
 /**
  * Determines if the geometry is translucent based on {@link PerInstanceColorAppearance#translucent}.
@@ -280,7 +280,7 @@ PerInstanceColorAppearance.prototype.getFragmentShaderSource =
  * @returns {Boolean} <code>true</code> if the appearance is translucent.
  */
 PerInstanceColorAppearance.prototype.isTranslucent =
-  Appearance.prototype.isTranslucent;
+	Appearance.prototype.isTranslucent
 
 /**
  * Creates a render state.  This is not the final render state instance; instead,
@@ -292,5 +292,5 @@ PerInstanceColorAppearance.prototype.isTranslucent =
  * @returns {Object} The render state.
  */
 PerInstanceColorAppearance.prototype.getRenderState =
-  Appearance.prototype.getRenderState;
-export default PerInstanceColorAppearance;
+	Appearance.prototype.getRenderState
+export default PerInstanceColorAppearance

@@ -1,19 +1,19 @@
 define([
-	"./kernel",
-	"../Deferred",
-	"../promise/Promise",
-	"../errors/CancelError",
-	"../has",
-	"./lang",
-	"../when"
-], function(dojo, NewDeferred, Promise, CancelError, has, lang, when){
+	'./kernel',
+	'../Deferred',
+	'../promise/Promise',
+	'../errors/CancelError',
+	'../has',
+	'./lang',
+	'../when',
+], function (dojo, NewDeferred, Promise, CancelError, has, lang, when) {
 	// module:
 	//		dojo/_base/Deferred
 
-	var mutator = function(){};
-	var freeze = Object.freeze || function(){};
+	var mutator = function () {}
+	var freeze = Object.freeze || function () {}
 	// A deferred provides an API for creating and resolving a promise.
-	var Deferred = dojo.Deferred = function(/*Function?*/ canceller){
+	var Deferred = (dojo.Deferred = function (/*Function?*/ canceller) {
 		// summary:
 		//		Deprecated.   This module defines the legacy dojo/_base/Deferred API.
 		//		New code should use dojo/Deferred instead.
@@ -156,125 +156,131 @@ define([
 		//		Note that the caller doesn't have to change his code at all to
 		//		handle the asynchronous case.
 
-		var result, finished, canceled, fired, isError, head, nextListener;
-		var promise = (this.promise = new Promise());
+		var result, finished, canceled, fired, isError, head, nextListener
+		var promise = (this.promise = new Promise())
 
-		function complete(value){
-			if(finished){
-				throw new Error("This deferred has already been resolved");
+		function complete(value) {
+			if (finished) {
+				throw new Error('This deferred has already been resolved')
 			}
-			result = value;
-			finished = true;
-			notify();
+			result = value
+			finished = true
+			notify()
 		}
-		function notify(){
-			var mutated;
-			while(!mutated && nextListener){
-				var listener = nextListener;
-				nextListener = nextListener.next;
-				if((mutated = (listener.progress == mutator))){ // assignment and check
-					finished = false;
+		function notify() {
+			var mutated
+			while (!mutated && nextListener) {
+				var listener = nextListener
+				nextListener = nextListener.next
+				if ((mutated = listener.progress == mutator)) {
+					// assignment and check
+					finished = false
 				}
 
-				var func = (isError ? listener.error : listener.resolved);
-				if(has("config-useDeferredInstrumentation")){
-					if(isError && NewDeferred.instrumentRejected){
-						NewDeferred.instrumentRejected(result, !!func);
+				var func = isError ? listener.error : listener.resolved
+				if (has('config-useDeferredInstrumentation')) {
+					if (isError && NewDeferred.instrumentRejected) {
+						NewDeferred.instrumentRejected(result, !!func)
 					}
 				}
-				if(func){
-					try{
-						var newResult = func(result);
-						if (newResult && typeof newResult.then === "function"){
-							newResult.then(lang.hitch(listener.deferred, "resolve"), lang.hitch(listener.deferred, "reject"), lang.hitch(listener.deferred, "progress"));
-							continue;
+				if (func) {
+					try {
+						var newResult = func(result)
+						if (newResult && typeof newResult.then === 'function') {
+							newResult.then(
+								lang.hitch(listener.deferred, 'resolve'),
+								lang.hitch(listener.deferred, 'reject'),
+								lang.hitch(listener.deferred, 'progress'),
+							)
+							continue
 						}
-						var unchanged = mutated && newResult === undefined;
-						if(mutated && !unchanged){
-							isError = newResult instanceof Error;
+						var unchanged = mutated && newResult === undefined
+						if (mutated && !unchanged) {
+							isError = newResult instanceof Error
 						}
-						listener.deferred[unchanged && isError ? "reject" : "resolve"](unchanged ? result : newResult);
-					}catch(e){
-						listener.deferred.reject(e);
+						listener.deferred[unchanged && isError ? 'reject' : 'resolve'](
+							unchanged ? result : newResult,
+						)
+					} catch (e) {
+						listener.deferred.reject(e)
 					}
-				}else{
-					if(isError){
-						listener.deferred.reject(result);
-					}else{
-						listener.deferred.resolve(result);
+				} else {
+					if (isError) {
+						listener.deferred.reject(result)
+					} else {
+						listener.deferred.resolve(result)
 					}
 				}
 			}
 		}
 
-		this.isResolved = promise.isResolved = function(){
+		this.isResolved = promise.isResolved = function () {
 			// summary:
 			//		Checks whether the deferred has been resolved.
 			// returns: Boolean
 
-			return fired == 0;
-		};
+			return fired == 0
+		}
 
-		this.isRejected = promise.isRejected = function(){
+		this.isRejected = promise.isRejected = function () {
 			// summary:
 			//		Checks whether the deferred has been rejected.
 			// returns: Boolean
 
-			return fired == 1;
-		};
+			return fired == 1
+		}
 
-		this.isFulfilled = promise.isFulfilled = function(){
+		this.isFulfilled = promise.isFulfilled = function () {
 			// summary:
 			//		Checks whether the deferred has been resolved or rejected.
 			// returns: Boolean
 
-			return fired >= 0;
-		};
+			return fired >= 0
+		}
 
-		this.isCanceled = promise.isCanceled = function(){
+		this.isCanceled = promise.isCanceled = function () {
 			// summary:
 			//		Checks whether the deferred has been canceled.
 			// returns: Boolean
 
-			return canceled;
-		};
+			return canceled
+		}
 
 		// calling resolve will resolve the promise
-		this.resolve = this.callback = function(value){
+		this.resolve = this.callback = function (value) {
 			// summary:
 			//		Fulfills the Deferred instance successfully with the provide value
-			this.fired = fired = 0;
-			this.results = [value, null];
-			complete(value);
-		};
-
+			this.fired = fired = 0
+			this.results = [value, null]
+			complete(value)
+		}
 
 		// calling error will indicate that the promise failed
-		this.reject = this.errback = function(error){
+		this.reject = this.errback = function (error) {
 			// summary:
 			//		Fulfills the Deferred instance as an error with the provided error
-			isError = true;
-			this.fired = fired = 1;
-			if(has("config-useDeferredInstrumentation")){
-				if(NewDeferred.instrumentRejected){
-					NewDeferred.instrumentRejected(error, !!nextListener);
+			isError = true
+			this.fired = fired = 1
+			if (has('config-useDeferredInstrumentation')) {
+				if (NewDeferred.instrumentRejected) {
+					NewDeferred.instrumentRejected(error, !!nextListener)
 				}
 			}
-			complete(error);
-			this.results = [null, error];
-		};
+			complete(error)
+			this.results = [null, error]
+		}
 		// call progress to provide updates on the progress on the completion of the promise
-		this.progress = function(update){
+		this.progress = function (update) {
 			// summary:
 			//		Send progress events to all listeners
-			var listener = nextListener;
-			while(listener){
-				var progress = listener.progress;
-				progress && progress(update);
-				listener = listener.next;
+			var listener = nextListener
+			while (listener) {
+				var progress = listener.progress
+				progress && progress(update)
+				listener = listener.next
 			}
-		};
-		this.addCallbacks = function(callback, errback){
+		}
+		this.addCallbacks = function (callback, errback) {
 			// summary:
 			//		Adds callback and error callback for this deferred instance.
 			// callback: Function?
@@ -283,11 +289,15 @@ define([
 			//		The error callback attached to this deferred object.
 			// returns:
 			//		Returns this deferred object.
-			this.then(callback, errback, mutator);
-			return this;	// Deferred
-		};
+			this.then(callback, errback, mutator)
+			return this // Deferred
+		}
 		// provide the implementation of the promise
-		promise.then = this.then = function(/*Function?*/resolvedCallback, /*Function?*/errorCallback, /*Function?*/progressCallback){
+		promise.then = this.then = function (
+			/*Function?*/ resolvedCallback,
+			/*Function?*/ errorCallback,
+			/*Function?*/ progressCallback,
+		) {
 			// summary:
 			//		Adds a fulfilledHandler, errorHandler, and progressHandler to be called for
 			//		completion of a promise. The fulfilledHandler is called when the promise
@@ -313,71 +323,71 @@ define([
 			//		|		then(printResult, onError);
 			//		|	>44
 			//
-			var returnDeferred = progressCallback == mutator ? this : new Deferred(promise.cancel);
+			var returnDeferred =
+				progressCallback == mutator ? this : new Deferred(promise.cancel)
 			var listener = {
 				resolved: resolvedCallback,
 				error: errorCallback,
 				progress: progressCallback,
-				deferred: returnDeferred
-			};
-			if(nextListener){
-				head = head.next = listener;
+				deferred: returnDeferred,
 			}
-			else{
-				nextListener = head = listener;
+			if (nextListener) {
+				head = head.next = listener
+			} else {
+				nextListener = head = listener
 			}
-			if(finished){
-				notify();
+			if (finished) {
+				notify()
 			}
-			return returnDeferred.promise; // Promise
-		};
-		var deferred = this;
-		promise.cancel = this.cancel = function(){
+			return returnDeferred.promise // Promise
+		}
+		var deferred = this
+		promise.cancel = this.cancel = function () {
 			// summary:
 			//		Cancels the asynchronous operation
-			if(!finished){
-				var error = canceller && canceller(deferred);
-				if(!finished){
-					if (!(error instanceof Error)){
-						error = new CancelError(error);
+			if (!finished) {
+				var error = canceller && canceller(deferred)
+				if (!finished) {
+					if (!(error instanceof Error)) {
+						error = new CancelError(error)
 					}
-					error.log = false;
-					deferred.reject(error);
+					error.log = false
+					deferred.reject(error)
 				}
 			}
-			canceled = true;
-		};
-		freeze(promise);
-	};
+			canceled = true
+		}
+		freeze(promise)
+	})
 	lang.extend(Deferred, {
-		addCallback: function(/*Function*/ callback){
+		addCallback: function (/*Function*/ callback) {
 			// summary:
 			//		Adds successful callback for this deferred instance.
 			// returns:
 			//		Returns this deferred object.
-			return this.addCallbacks(lang.hitch.apply(dojo, arguments));	// Deferred
+			return this.addCallbacks(lang.hitch.apply(dojo, arguments)) // Deferred
 		},
 
-		addErrback: function(/*Function*/ errback){
+		addErrback: function (/*Function*/ errback) {
 			// summary:
 			//		Adds error callback for this deferred instance.
 			// returns:
 			//		Returns this deferred object.
-			return this.addCallbacks(null, lang.hitch.apply(dojo, arguments));	// Deferred
+			return this.addCallbacks(null, lang.hitch.apply(dojo, arguments)) // Deferred
 		},
 
-		addBoth: function(/*Function*/ callback){
+		addBoth: function (/*Function*/ callback) {
 			// summary:
 			//		Add handler as both successful callback and error callback for this deferred instance.
 			// returns:
 			//		Returns this deferred object.
-			var enclosed = lang.hitch.apply(dojo, arguments);
-			return this.addCallbacks(enclosed, enclosed);	// Deferred
+			var enclosed = lang.hitch.apply(dojo, arguments)
+			return this.addCallbacks(enclosed, enclosed) // Deferred
 		},
-		fired: -1
-	});
+		fired: -1,
+	})
 
-	Deferred.when = dojo.when = when;
+	Deferred.when = dojo.when = when
 
-	return Deferred;
-});
+	return Deferred
+})

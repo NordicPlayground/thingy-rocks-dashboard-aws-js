@@ -99,9 +99,8 @@
 
             // Follow the vehicle with the camera.
             if (!viewer.trackedEntity) {
-              viewer.trackedEntity = vehicleEntity = dataSource.entities.getById(
-                "Vehicle"
-              );
+              viewer.trackedEntity = vehicleEntity =
+                dataSource.entities.getById("Vehicle");
             }
           });
         }

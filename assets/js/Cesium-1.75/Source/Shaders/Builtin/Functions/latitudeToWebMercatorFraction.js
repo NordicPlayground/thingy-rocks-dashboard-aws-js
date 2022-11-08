@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Computes the fraction of a Web Wercator rectangle at which a given geodetic latitude is located.\n\
  *\n\
  * @name czm_latitudeToWebMercatorFraction\n\
@@ -20,4 +20,4 @@ float czm_latitudeToWebMercatorFraction(float latitude, float southMercatorY, fl
     \n\
     return (mercatorY - southMercatorY) * oneOverMercatorHeight;\n\
 }\n\
-";
+'

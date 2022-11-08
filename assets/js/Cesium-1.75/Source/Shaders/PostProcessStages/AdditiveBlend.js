@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform sampler2D colorTexture;\n\
+export default 'uniform sampler2D colorTexture;\n\
 uniform sampler2D colorTexture2;\n\
 \n\
 uniform vec2 center;\n\
@@ -16,4 +16,4 @@ void main()\n\
     float t = smoothstep(0.5, 0.8, x);\n\
     gl_FragColor = mix(color0 + color1, color1, t);\n\
 }\n\
-";
+'

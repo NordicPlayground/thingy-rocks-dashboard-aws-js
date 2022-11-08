@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#define SHIFT_RIGHT_8 0.00390625 //1.0 / 256.0\n\
+export default '#define SHIFT_RIGHT_8 0.00390625 //1.0 / 256.0\n\
 #define SHIFT_RIGHT_16 0.00001525878 //1.0 / 65536.0\n\
 #define SHIFT_RIGHT_24 5.960464477539063e-8//1.0 / 16777216.0\n\
 \n\
@@ -29,4 +29,4 @@ export default "#define SHIFT_RIGHT_8 0.00390625 //1.0 / 256.0\n\
     unpacked += sign * packedFloat.z * float(SHIFT_RIGHT_24);\n\
     return unpacked * pow(10.0, exponent);\n\
 }\n\
-";
+'

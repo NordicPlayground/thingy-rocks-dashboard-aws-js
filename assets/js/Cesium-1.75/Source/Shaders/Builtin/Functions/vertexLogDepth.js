@@ -63,4 +63,4 @@ void czm_vertexLogDepth(vec4 clipCoords)\n\
     czm_updatePositionDepth(clipCoords);\n\
 #endif\n\
 }\n\
-";
+"

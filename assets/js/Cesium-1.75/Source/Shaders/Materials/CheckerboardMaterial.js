@@ -28,4 +28,4 @@ czm_material czm_getMaterial(czm_materialInput materialInput)\n\
 \n\
     return material;\n\
 }\n\
-";
+"

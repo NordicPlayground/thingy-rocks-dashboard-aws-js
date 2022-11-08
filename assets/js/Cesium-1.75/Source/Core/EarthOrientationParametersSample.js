@@ -13,40 +13,40 @@
  * @private
  */
 function EarthOrientationParametersSample(
-  xPoleWander,
-  yPoleWander,
-  xPoleOffset,
-  yPoleOffset,
-  ut1MinusUtc
+	xPoleWander,
+	yPoleWander,
+	xPoleOffset,
+	yPoleOffset,
+	ut1MinusUtc,
 ) {
-  /**
-   * The pole wander about the X axis, in radians.
-   * @type {Number}
-   */
-  this.xPoleWander = xPoleWander;
+	/**
+	 * The pole wander about the X axis, in radians.
+	 * @type {Number}
+	 */
+	this.xPoleWander = xPoleWander
 
-  /**
-   * The pole wander about the Y axis, in radians.
-   * @type {Number}
-   */
-  this.yPoleWander = yPoleWander;
+	/**
+	 * The pole wander about the Y axis, in radians.
+	 * @type {Number}
+	 */
+	this.yPoleWander = yPoleWander
 
-  /**
-   * The offset to the Celestial Intermediate Pole (CIP) about the X axis, in radians.
-   * @type {Number}
-   */
-  this.xPoleOffset = xPoleOffset;
+	/**
+	 * The offset to the Celestial Intermediate Pole (CIP) about the X axis, in radians.
+	 * @type {Number}
+	 */
+	this.xPoleOffset = xPoleOffset
 
-  /**
-   * The offset to the Celestial Intermediate Pole (CIP) about the Y axis, in radians.
-   * @type {Number}
-   */
-  this.yPoleOffset = yPoleOffset;
+	/**
+	 * The offset to the Celestial Intermediate Pole (CIP) about the Y axis, in radians.
+	 * @type {Number}
+	 */
+	this.yPoleOffset = yPoleOffset
 
-  /**
-   * The difference in time standards, UT1 - UTC, in seconds.
-   * @type {Number}
-   */
-  this.ut1MinusUtc = ut1MinusUtc;
+	/**
+	 * The difference in time standards, UT1 - UTC, in seconds.
+	 * @type {Number}
+	 */
+	this.ut1MinusUtc = ut1MinusUtc
 }
-export default EarthOrientationParametersSample;
+export default EarthOrientationParametersSample

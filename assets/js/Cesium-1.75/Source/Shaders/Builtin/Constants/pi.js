@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * A built-in GLSL floating-point constant for <code>Math.PI</code>.\n\
  *\n\
  * @alias czm_pi\n\
@@ -15,4 +15,4 @@ export default "/**\n\
  * float twoPi = 2.0 * czm_pi;\n\
  */\n\
 const float czm_pi = 3.141592653589793;\n\
-";
+'

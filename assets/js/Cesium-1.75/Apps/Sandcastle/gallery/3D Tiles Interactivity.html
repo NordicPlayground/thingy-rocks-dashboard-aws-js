@@ -204,9 +204,8 @@
             latitude,
             height * 0.5
           );
-          var position = scene.globe.ellipsoid.cartographicToCartesian(
-            positionCartographic
-          );
+          var position =
+            scene.globe.ellipsoid.cartographicToCartesian(positionCartographic);
 
           var camera = scene.camera;
           var heading = camera.heading;

@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform sampler2D randomTexture;\n\
+export default 'uniform sampler2D randomTexture;\n\
 uniform sampler2D depthTexture;\n\
 uniform float intensity;\n\
 uniform float bias;\n\
@@ -114,4 +114,4 @@ void main(void)\n\
     ao = pow(ao, intensity);\n\
     gl_FragColor = vec4(vec3(ao), 1.0);\n\
 }\n\
-";
+'

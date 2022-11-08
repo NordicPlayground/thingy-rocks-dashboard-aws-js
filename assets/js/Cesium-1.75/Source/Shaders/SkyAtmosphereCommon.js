@@ -317,4 +317,4 @@ vec4 calculateFinalColor(vec3 positionWC, vec3 toCamera, vec3 lightDirection, ve
 \n\
     return finalColor;\n\
 }\n\
-";
+"

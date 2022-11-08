@@ -1,4 +1,4 @@
-import DeveloperError from "../Core/DeveloperError.js";
+import DeveloperError from '../Core/DeveloperError.js'
 
 /**
  * A light source. This type describes an interface and is not intended to be instantiated directly.
@@ -12,23 +12,23 @@ import DeveloperError from "../Core/DeveloperError.js";
 function Light() {}
 
 Object.defineProperties(Light.prototype, {
-  /**
-   * The color of the light.
-   * @memberof Light.prototype
-   * @type {Color}
-   */
-  color: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * The color of the light.
+	 * @memberof Light.prototype
+	 * @type {Color}
+	 */
+	color: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * The intensity of the light.
-   * @memberof Light.prototype
-   * @type {Number}
-   */
-  intensity: {
-    get: DeveloperError.throwInstantiationError,
-  },
-});
+	/**
+	 * The intensity of the light.
+	 * @memberof Light.prototype
+	 * @type {Number}
+	 */
+	intensity: {
+		get: DeveloperError.throwInstantiationError,
+	},
+})
 
-export default Light;
+export default Light

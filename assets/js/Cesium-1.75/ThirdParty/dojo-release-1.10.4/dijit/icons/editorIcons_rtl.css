@@ -6,18 +6,17 @@ editorIcons_rtl.css contains references to the dijit editor widget icons. There 
 
 */
 
-
 /* Editor */
 .dijitEditorRtl .dijitEditorIcon {
-	background-image: url('images/editorIconsEnabled_rtl.png'); /* editor icons sprite image for the enabled right to left state */
+  background-image: url("images/editorIconsEnabled_rtl.png"); /* editor icons sprite image for the enabled right to left state */
 }
 .dijitEditorRtlDisabled .dijitEditorIcon {
-	background-image: url('images/editorIconsDisabled_rtl.png'); /* editor icons sprite image for the disabled right to left state */
+  background-image: url("images/editorIconsDisabled_rtl.png"); /* editor icons sprite image for the disabled right to left state */
 }
 
 /* Toolbar */
 .dijitToolbarRtl .dijitToolbarSeparator {
-	background-image: url('images/editorIconsEnabled_rtl.png');
+  background-image: url("images/editorIconsEnabled_rtl.png");
 }
 
 /* took this information above from editorRtl.css - good or bad? */

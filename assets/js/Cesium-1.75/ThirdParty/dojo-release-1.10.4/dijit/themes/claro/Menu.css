@@ -36,10 +36,22 @@ There are three areas of styling for the Menu:
   background-color: #efefef;
   background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
 }
 .claro .dijitMenu {
@@ -81,19 +93,47 @@ There are three areas of styling for the Menu:
   background-color: #abd6ff;
   background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
 }
 .claro .dijitMenuItemActive {
   background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
 }
 .dj_ie .claro .dijitMenuActive .dijitMenuItemHover,
@@ -149,17 +189,14 @@ There are three areas of styling for the Menu:
 .claro .dijitCheckedMenuItemChecked .dijitCheckedMenuItemIcon {
   background-position: 0 50%;
   /* checked checkbox */
-
 }
 .claro .dijitRadioMenuItem .dijitMenuItemIcon {
   background-position: -105px 50%;
   /* unfilled circle */
-
 }
 .claro .dijitRadioMenuItemChecked .dijitMenuItemIcon {
   background-position: -90px 50%;
   /* filled circle */
-
 }
 /*ComboBox Menu*/
 .claro .dijitComboBoxMenu {
@@ -175,7 +212,6 @@ There are three areas of styling for the Menu:
 .claro .dijitComboBoxMenuActive .dijitMenuItemSelected {
   background-color: #7dbdfa;
   /* TODO: why is this a different color than normal .dijitMenuItemSelected? */
-
 }
 .claro .dijitMenuPreviousButton,
 .claro .dijitMenuNextButton {

@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "varying vec2 v_textureCoordinates;\n\
+export default 'varying vec2 v_textureCoordinates;\n\
 const float M_PI = 3.141592653589793;\n\
 \n\
 float vdcRadicalInverse(int i)\n\
@@ -82,4 +82,4 @@ void main()\n\
 {\n\
     gl_FragColor = vec4(integrateBrdf(v_textureCoordinates.y, v_textureCoordinates.x), 0.0, 1.0);\n\
 }\n\
-";
+'

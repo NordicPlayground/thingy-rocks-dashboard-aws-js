@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#ifdef GL_OES_standard_derivatives\n\
+export default '#ifdef GL_OES_standard_derivatives\n\
     #extension GL_OES_standard_derivatives : enable\n\
 #endif\n\
 \n\
@@ -28,4 +28,4 @@ czm_material czm_getMaterial(czm_materialInput materialInput)\n\
 \n\
     return material;\n\
 }\n\
-";
+'

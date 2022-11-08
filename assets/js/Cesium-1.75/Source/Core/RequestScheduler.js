@@ -1,42 +1,42 @@
-import Uri from "../ThirdParty/Uri.js";
-import when from "../ThirdParty/when.js";
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import Event from "./Event.js";
-import Heap from "./Heap.js";
-import isBlobUri from "./isBlobUri.js";
-import isDataUri from "./isDataUri.js";
-import RequestState from "./RequestState.js";
+import Uri from '../ThirdParty/Uri.js'
+import when from '../ThirdParty/when.js'
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import Event from './Event.js'
+import Heap from './Heap.js'
+import isBlobUri from './isBlobUri.js'
+import isDataUri from './isDataUri.js'
+import RequestState from './RequestState.js'
 
 function sortRequests(a, b) {
-  return a.priority - b.priority;
+	return a.priority - b.priority
 }
 
 var statistics = {
-  numberOfAttemptedRequests: 0,
-  numberOfActiveRequests: 0,
-  numberOfCancelledRequests: 0,
-  numberOfCancelledActiveRequests: 0,
-  numberOfFailedRequests: 0,
-  numberOfActiveRequestsEver: 0,
-  lastNumberOfActiveRequests: 0,
-};
+	numberOfAttemptedRequests: 0,
+	numberOfActiveRequests: 0,
+	numberOfCancelledRequests: 0,
+	numberOfCancelledActiveRequests: 0,
+	numberOfFailedRequests: 0,
+	numberOfActiveRequestsEver: 0,
+	lastNumberOfActiveRequests: 0,
+}
 
-var priorityHeapLength = 20;
+var priorityHeapLength = 20
 var requestHeap = new Heap({
-  comparator: sortRequests,
-});
-requestHeap.maximumLength = priorityHeapLength;
-requestHeap.reserve(priorityHeapLength);
+	comparator: sortRequests,
+})
+requestHeap.maximumLength = priorityHeapLength
+requestHeap.reserve(priorityHeapLength)
 
-var activeRequests = [];
-var numberOfActiveRequestsByServer = {};
+var activeRequests = []
+var numberOfActiveRequestsByServer = {}
 
 var pageUri =
-  typeof document !== "undefined" ? new Uri(document.location.href) : new Uri();
+	typeof document !== 'undefined' ? new Uri(document.location.href) : new Uri()
 
-var requestCompletedEvent = new Event();
+var requestCompletedEvent = new Event()
 
 /**
  * The request scheduler is used to track and constrain the number of active requests in order to prioritize incoming requests. The ability
@@ -54,7 +54,7 @@ function RequestScheduler() {}
  * @type {Number}
  * @default 50
  */
-RequestScheduler.maximumRequests = 50;
+RequestScheduler.maximumRequests = 50
 
 /**
  * The maximum number of simultaneous active requests per server. Un-throttled requests or servers specifically
@@ -62,7 +62,7 @@ RequestScheduler.maximumRequests = 50;
  * @type {Number}
  * @default 6
  */
-RequestScheduler.maximumRequestsPerServer = 6;
+RequestScheduler.maximumRequestsPerServer = 6
 
 /**
  * A per server key list of overrides to use for throttling instead of <code>maximumRequestsPerServer</code>
@@ -75,16 +75,16 @@ RequestScheduler.maximumRequestsPerServer = 6;
  * };
  */
 RequestScheduler.requestsByServer = {
-  "api.cesium.com:443": 18,
-  "assets.cesium.com:443": 18,
-};
+	'api.cesium.com:443': 18,
+	'assets.cesium.com:443': 18,
+}
 
 /**
  * Specifies if the request scheduler should throttle incoming requests, or let the browser queue requests under its control.
  * @type {Boolean}
  * @default true
  */
-RequestScheduler.throttleRequests = true;
+RequestScheduler.throttleRequests = true
 
 /**
  * When true, log statistics to the console every frame
@@ -92,7 +92,7 @@ RequestScheduler.throttleRequests = true;
  * @default false
  * @private
  */
-RequestScheduler.debugShowStatistics = false;
+RequestScheduler.debugShowStatistics = false
 
 /**
  * An event that's raised when a request is completed.  Event handlers are passed
@@ -102,144 +102,144 @@ RequestScheduler.debugShowStatistics = false;
  * @default Event()
  * @private
  */
-RequestScheduler.requestCompletedEvent = requestCompletedEvent;
+RequestScheduler.requestCompletedEvent = requestCompletedEvent
 
 Object.defineProperties(RequestScheduler, {
-  /**
-   * Returns the statistics used by the request scheduler.
-   *
-   * @memberof RequestScheduler
-   *
-   * @type Object
-   * @readonly
-   * @private
-   */
-  statistics: {
-    get: function () {
-      return statistics;
-    },
-  },
+	/**
+	 * Returns the statistics used by the request scheduler.
+	 *
+	 * @memberof RequestScheduler
+	 *
+	 * @type Object
+	 * @readonly
+	 * @private
+	 */
+	statistics: {
+		get: function () {
+			return statistics
+		},
+	},
 
-  /**
-   * The maximum size of the priority heap. This limits the number of requests that are sorted by priority. Only applies to requests that are not yet active.
-   *
-   * @memberof RequestScheduler
-   *
-   * @type {Number}
-   * @default 20
-   * @private
-   */
-  priorityHeapLength: {
-    get: function () {
-      return priorityHeapLength;
-    },
-    set: function (value) {
-      // If the new length shrinks the heap, need to cancel some of the requests.
-      // Since this value is not intended to be tweaked regularly it is fine to just cancel the high priority requests.
-      if (value < priorityHeapLength) {
-        while (requestHeap.length > value) {
-          var request = requestHeap.pop();
-          cancelRequest(request);
-        }
-      }
-      priorityHeapLength = value;
-      requestHeap.maximumLength = value;
-      requestHeap.reserve(value);
-    },
-  },
-});
+	/**
+	 * The maximum size of the priority heap. This limits the number of requests that are sorted by priority. Only applies to requests that are not yet active.
+	 *
+	 * @memberof RequestScheduler
+	 *
+	 * @type {Number}
+	 * @default 20
+	 * @private
+	 */
+	priorityHeapLength: {
+		get: function () {
+			return priorityHeapLength
+		},
+		set: function (value) {
+			// If the new length shrinks the heap, need to cancel some of the requests.
+			// Since this value is not intended to be tweaked regularly it is fine to just cancel the high priority requests.
+			if (value < priorityHeapLength) {
+				while (requestHeap.length > value) {
+					var request = requestHeap.pop()
+					cancelRequest(request)
+				}
+			}
+			priorityHeapLength = value
+			requestHeap.maximumLength = value
+			requestHeap.reserve(value)
+		},
+	},
+})
 
 function updatePriority(request) {
-  if (defined(request.priorityFunction)) {
-    request.priority = request.priorityFunction();
-  }
+	if (defined(request.priorityFunction)) {
+		request.priority = request.priorityFunction()
+	}
 }
 
 function serverHasOpenSlots(serverKey) {
-  var maxRequests = defaultValue(
-    RequestScheduler.requestsByServer[serverKey],
-    RequestScheduler.maximumRequestsPerServer
-  );
-  return numberOfActiveRequestsByServer[serverKey] < maxRequests;
+	var maxRequests = defaultValue(
+		RequestScheduler.requestsByServer[serverKey],
+		RequestScheduler.maximumRequestsPerServer,
+	)
+	return numberOfActiveRequestsByServer[serverKey] < maxRequests
 }
 
 function issueRequest(request) {
-  if (request.state === RequestState.UNISSUED) {
-    request.state = RequestState.ISSUED;
-    request.deferred = when.defer();
-  }
-  return request.deferred.promise;
+	if (request.state === RequestState.UNISSUED) {
+		request.state = RequestState.ISSUED
+		request.deferred = when.defer()
+	}
+	return request.deferred.promise
 }
 
 function getRequestReceivedFunction(request) {
-  return function (results) {
-    if (request.state === RequestState.CANCELLED) {
-      // If the data request comes back but the request is cancelled, ignore it.
-      return;
-    }
-    // explicitly set to undefined to ensure GC of request response data. See #8843
-    var deferred = request.deferred;
+	return function (results) {
+		if (request.state === RequestState.CANCELLED) {
+			// If the data request comes back but the request is cancelled, ignore it.
+			return
+		}
+		// explicitly set to undefined to ensure GC of request response data. See #8843
+		var deferred = request.deferred
 
-    --statistics.numberOfActiveRequests;
-    --numberOfActiveRequestsByServer[request.serverKey];
-    requestCompletedEvent.raiseEvent();
-    request.state = RequestState.RECEIVED;
-    request.deferred = undefined;
+		--statistics.numberOfActiveRequests
+		--numberOfActiveRequestsByServer[request.serverKey]
+		requestCompletedEvent.raiseEvent()
+		request.state = RequestState.RECEIVED
+		request.deferred = undefined
 
-    deferred.resolve(results);
-  };
+		deferred.resolve(results)
+	}
 }
 
 function getRequestFailedFunction(request) {
-  return function (error) {
-    if (request.state === RequestState.CANCELLED) {
-      // If the data request comes back but the request is cancelled, ignore it.
-      return;
-    }
-    ++statistics.numberOfFailedRequests;
-    --statistics.numberOfActiveRequests;
-    --numberOfActiveRequestsByServer[request.serverKey];
-    requestCompletedEvent.raiseEvent(error);
-    request.state = RequestState.FAILED;
-    request.deferred.reject(error);
-  };
+	return function (error) {
+		if (request.state === RequestState.CANCELLED) {
+			// If the data request comes back but the request is cancelled, ignore it.
+			return
+		}
+		++statistics.numberOfFailedRequests
+		--statistics.numberOfActiveRequests
+		--numberOfActiveRequestsByServer[request.serverKey]
+		requestCompletedEvent.raiseEvent(error)
+		request.state = RequestState.FAILED
+		request.deferred.reject(error)
+	}
 }
 
 function startRequest(request) {
-  var promise = issueRequest(request);
-  request.state = RequestState.ACTIVE;
-  activeRequests.push(request);
-  ++statistics.numberOfActiveRequests;
-  ++statistics.numberOfActiveRequestsEver;
-  ++numberOfActiveRequestsByServer[request.serverKey];
-  request
-    .requestFunction()
-    .then(getRequestReceivedFunction(request))
-    .otherwise(getRequestFailedFunction(request));
-  return promise;
+	var promise = issueRequest(request)
+	request.state = RequestState.ACTIVE
+	activeRequests.push(request)
+	++statistics.numberOfActiveRequests
+	++statistics.numberOfActiveRequestsEver
+	++numberOfActiveRequestsByServer[request.serverKey]
+	request
+		.requestFunction()
+		.then(getRequestReceivedFunction(request))
+		.otherwise(getRequestFailedFunction(request))
+	return promise
 }
 
 function cancelRequest(request) {
-  var active = request.state === RequestState.ACTIVE;
-  request.state = RequestState.CANCELLED;
-  ++statistics.numberOfCancelledRequests;
-  // check that deferred has not been cleared since cancelRequest can be called
-  // on a finished request, e.g. by clearForSpecs during tests
-  if (defined(request.deferred)) {
-    var deferred = request.deferred;
-    request.deferred = undefined;
-    deferred.reject();
-  }
+	var active = request.state === RequestState.ACTIVE
+	request.state = RequestState.CANCELLED
+	++statistics.numberOfCancelledRequests
+	// check that deferred has not been cleared since cancelRequest can be called
+	// on a finished request, e.g. by clearForSpecs during tests
+	if (defined(request.deferred)) {
+		var deferred = request.deferred
+		request.deferred = undefined
+		deferred.reject()
+	}
 
-  if (active) {
-    --statistics.numberOfActiveRequests;
-    --numberOfActiveRequestsByServer[request.serverKey];
-    ++statistics.numberOfCancelledActiveRequests;
-  }
+	if (active) {
+		--statistics.numberOfActiveRequests
+		--numberOfActiveRequestsByServer[request.serverKey]
+		++statistics.numberOfCancelledActiveRequests
+	}
 
-  if (defined(request.cancelFunction)) {
-    request.cancelFunction();
-  }
+	if (defined(request.cancelFunction)) {
+		request.cancelFunction()
+	}
 }
 
 /**
@@ -247,66 +247,66 @@ function cancelRequest(request) {
  * @private
  */
 RequestScheduler.update = function () {
-  var i;
-  var request;
+	var i
+	var request
 
-  // Loop over all active requests. Cancelled, failed, or received requests are removed from the array to make room for new requests.
-  var removeCount = 0;
-  var activeLength = activeRequests.length;
-  for (i = 0; i < activeLength; ++i) {
-    request = activeRequests[i];
-    if (request.cancelled) {
-      // Request was explicitly cancelled
-      cancelRequest(request);
-    }
-    if (request.state !== RequestState.ACTIVE) {
-      // Request is no longer active, remove from array
-      ++removeCount;
-      continue;
-    }
-    if (removeCount > 0) {
-      // Shift back to fill in vacated slots from completed requests
-      activeRequests[i - removeCount] = request;
-    }
-  }
-  activeRequests.length -= removeCount;
+	// Loop over all active requests. Cancelled, failed, or received requests are removed from the array to make room for new requests.
+	var removeCount = 0
+	var activeLength = activeRequests.length
+	for (i = 0; i < activeLength; ++i) {
+		request = activeRequests[i]
+		if (request.cancelled) {
+			// Request was explicitly cancelled
+			cancelRequest(request)
+		}
+		if (request.state !== RequestState.ACTIVE) {
+			// Request is no longer active, remove from array
+			++removeCount
+			continue
+		}
+		if (removeCount > 0) {
+			// Shift back to fill in vacated slots from completed requests
+			activeRequests[i - removeCount] = request
+		}
+	}
+	activeRequests.length -= removeCount
 
-  // Update priority of issued requests and resort the heap
-  var issuedRequests = requestHeap.internalArray;
-  var issuedLength = requestHeap.length;
-  for (i = 0; i < issuedLength; ++i) {
-    updatePriority(issuedRequests[i]);
-  }
-  requestHeap.resort();
+	// Update priority of issued requests and resort the heap
+	var issuedRequests = requestHeap.internalArray
+	var issuedLength = requestHeap.length
+	for (i = 0; i < issuedLength; ++i) {
+		updatePriority(issuedRequests[i])
+	}
+	requestHeap.resort()
 
-  // Get the number of open slots and fill with the highest priority requests.
-  // Un-throttled requests are automatically added to activeRequests, so activeRequests.length may exceed maximumRequests
-  var openSlots = Math.max(
-    RequestScheduler.maximumRequests - activeRequests.length,
-    0
-  );
-  var filledSlots = 0;
-  while (filledSlots < openSlots && requestHeap.length > 0) {
-    // Loop until all open slots are filled or the heap becomes empty
-    request = requestHeap.pop();
-    if (request.cancelled) {
-      // Request was explicitly cancelled
-      cancelRequest(request);
-      continue;
-    }
+	// Get the number of open slots and fill with the highest priority requests.
+	// Un-throttled requests are automatically added to activeRequests, so activeRequests.length may exceed maximumRequests
+	var openSlots = Math.max(
+		RequestScheduler.maximumRequests - activeRequests.length,
+		0,
+	)
+	var filledSlots = 0
+	while (filledSlots < openSlots && requestHeap.length > 0) {
+		// Loop until all open slots are filled or the heap becomes empty
+		request = requestHeap.pop()
+		if (request.cancelled) {
+			// Request was explicitly cancelled
+			cancelRequest(request)
+			continue
+		}
 
-    if (request.throttleByServer && !serverHasOpenSlots(request.serverKey)) {
-      // Open slots are available, but the request is throttled by its server. Cancel and try again later.
-      cancelRequest(request);
-      continue;
-    }
+		if (request.throttleByServer && !serverHasOpenSlots(request.serverKey)) {
+			// Open slots are available, but the request is throttled by its server. Cancel and try again later.
+			cancelRequest(request)
+			continue
+		}
 
-    startRequest(request);
-    ++filledSlots;
-  }
+		startRequest(request)
+		++filledSlots
+	}
 
-  updateStatistics();
-};
+	updateStatistics()
+}
 
 /**
  * Get the server key from a given url.
@@ -316,25 +316,25 @@ RequestScheduler.update = function () {
  * @private
  */
 RequestScheduler.getServerKey = function (url) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.string("url", url);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.string('url', url)
+	//>>includeEnd('debug');
 
-  var uri = new Uri(url).resolve(pageUri);
-  uri.normalize();
-  var serverKey = uri.authority;
-  if (!/:/.test(serverKey)) {
-    // If the authority does not contain a port number, add port 443 for https or port 80 for http
-    serverKey = serverKey + ":" + (uri.scheme === "https" ? "443" : "80");
-  }
+	var uri = new Uri(url).resolve(pageUri)
+	uri.normalize()
+	var serverKey = uri.authority
+	if (!/:/.test(serverKey)) {
+		// If the authority does not contain a port number, add port 443 for https or port 80 for http
+		serverKey = serverKey + ':' + (uri.scheme === 'https' ? '443' : '80')
+	}
 
-  var length = numberOfActiveRequestsByServer[serverKey];
-  if (!defined(length)) {
-    numberOfActiveRequestsByServer[serverKey] = 0;
-  }
+	var length = numberOfActiveRequestsByServer[serverKey]
+	if (!defined(length)) {
+		numberOfActiveRequestsByServer[serverKey] = 0
+	}
 
-  return serverKey;
-};
+	return serverKey
+}
 
 /**
  * Issue a request. If request.throttle is false, the request is sent immediately. Otherwise the request will be
@@ -347,99 +347,99 @@ RequestScheduler.getServerKey = function (url) {
  * @private
  */
 RequestScheduler.request = function (request) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("request", request);
-  Check.typeOf.string("request.url", request.url);
-  Check.typeOf.func("request.requestFunction", request.requestFunction);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('request', request)
+	Check.typeOf.string('request.url', request.url)
+	Check.typeOf.func('request.requestFunction', request.requestFunction)
+	//>>includeEnd('debug');
 
-  if (isDataUri(request.url) || isBlobUri(request.url)) {
-    requestCompletedEvent.raiseEvent();
-    request.state = RequestState.RECEIVED;
-    return request.requestFunction();
-  }
+	if (isDataUri(request.url) || isBlobUri(request.url)) {
+		requestCompletedEvent.raiseEvent()
+		request.state = RequestState.RECEIVED
+		return request.requestFunction()
+	}
 
-  ++statistics.numberOfAttemptedRequests;
+	++statistics.numberOfAttemptedRequests
 
-  if (!defined(request.serverKey)) {
-    request.serverKey = RequestScheduler.getServerKey(request.url);
-  }
+	if (!defined(request.serverKey)) {
+		request.serverKey = RequestScheduler.getServerKey(request.url)
+	}
 
-  if (
-    RequestScheduler.throttleRequests &&
-    request.throttleByServer &&
-    !serverHasOpenSlots(request.serverKey)
-  ) {
-    // Server is saturated. Try again later.
-    return undefined;
-  }
+	if (
+		RequestScheduler.throttleRequests &&
+		request.throttleByServer &&
+		!serverHasOpenSlots(request.serverKey)
+	) {
+		// Server is saturated. Try again later.
+		return undefined
+	}
 
-  if (!RequestScheduler.throttleRequests || !request.throttle) {
-    return startRequest(request);
-  }
+	if (!RequestScheduler.throttleRequests || !request.throttle) {
+		return startRequest(request)
+	}
 
-  if (activeRequests.length >= RequestScheduler.maximumRequests) {
-    // Active requests are saturated. Try again later.
-    return undefined;
-  }
+	if (activeRequests.length >= RequestScheduler.maximumRequests) {
+		// Active requests are saturated. Try again later.
+		return undefined
+	}
 
-  // Insert into the priority heap and see if a request was bumped off. If this request is the lowest
-  // priority it will be returned.
-  updatePriority(request);
-  var removedRequest = requestHeap.insert(request);
+	// Insert into the priority heap and see if a request was bumped off. If this request is the lowest
+	// priority it will be returned.
+	updatePriority(request)
+	var removedRequest = requestHeap.insert(request)
 
-  if (defined(removedRequest)) {
-    if (removedRequest === request) {
-      // Request does not have high enough priority to be issued
-      return undefined;
-    }
-    // A previously issued request has been bumped off the priority heap, so cancel it
-    cancelRequest(removedRequest);
-  }
+	if (defined(removedRequest)) {
+		if (removedRequest === request) {
+			// Request does not have high enough priority to be issued
+			return undefined
+		}
+		// A previously issued request has been bumped off the priority heap, so cancel it
+		cancelRequest(removedRequest)
+	}
 
-  return issueRequest(request);
-};
+	return issueRequest(request)
+}
 
 function updateStatistics() {
-  if (!RequestScheduler.debugShowStatistics) {
-    return;
-  }
+	if (!RequestScheduler.debugShowStatistics) {
+		return
+	}
 
-  if (
-    statistics.numberOfActiveRequests === 0 &&
-    statistics.lastNumberOfActiveRequests > 0
-  ) {
-    if (statistics.numberOfAttemptedRequests > 0) {
-      console.log(
-        "Number of attempted requests: " + statistics.numberOfAttemptedRequests
-      );
-      statistics.numberOfAttemptedRequests = 0;
-    }
+	if (
+		statistics.numberOfActiveRequests === 0 &&
+		statistics.lastNumberOfActiveRequests > 0
+	) {
+		if (statistics.numberOfAttemptedRequests > 0) {
+			console.log(
+				'Number of attempted requests: ' + statistics.numberOfAttemptedRequests,
+			)
+			statistics.numberOfAttemptedRequests = 0
+		}
 
-    if (statistics.numberOfCancelledRequests > 0) {
-      console.log(
-        "Number of cancelled requests: " + statistics.numberOfCancelledRequests
-      );
-      statistics.numberOfCancelledRequests = 0;
-    }
+		if (statistics.numberOfCancelledRequests > 0) {
+			console.log(
+				'Number of cancelled requests: ' + statistics.numberOfCancelledRequests,
+			)
+			statistics.numberOfCancelledRequests = 0
+		}
 
-    if (statistics.numberOfCancelledActiveRequests > 0) {
-      console.log(
-        "Number of cancelled active requests: " +
-          statistics.numberOfCancelledActiveRequests
-      );
-      statistics.numberOfCancelledActiveRequests = 0;
-    }
+		if (statistics.numberOfCancelledActiveRequests > 0) {
+			console.log(
+				'Number of cancelled active requests: ' +
+					statistics.numberOfCancelledActiveRequests,
+			)
+			statistics.numberOfCancelledActiveRequests = 0
+		}
 
-    if (statistics.numberOfFailedRequests > 0) {
-      console.log(
-        "Number of failed requests: " + statistics.numberOfFailedRequests
-      );
-      statistics.numberOfFailedRequests = 0;
-    }
-  }
+		if (statistics.numberOfFailedRequests > 0) {
+			console.log(
+				'Number of failed requests: ' + statistics.numberOfFailedRequests,
+			)
+			statistics.numberOfFailedRequests = 0
+		}
+	}
 
-  statistics.lastNumberOfActiveRequests = statistics.numberOfActiveRequests;
+	statistics.lastNumberOfActiveRequests = statistics.numberOfActiveRequests
 }
 
 /**
@@ -448,26 +448,26 @@ function updateStatistics() {
  * @private
  */
 RequestScheduler.clearForSpecs = function () {
-  while (requestHeap.length > 0) {
-    var request = requestHeap.pop();
-    cancelRequest(request);
-  }
-  var length = activeRequests.length;
-  for (var i = 0; i < length; ++i) {
-    cancelRequest(activeRequests[i]);
-  }
-  activeRequests.length = 0;
-  numberOfActiveRequestsByServer = {};
+	while (requestHeap.length > 0) {
+		var request = requestHeap.pop()
+		cancelRequest(request)
+	}
+	var length = activeRequests.length
+	for (var i = 0; i < length; ++i) {
+		cancelRequest(activeRequests[i])
+	}
+	activeRequests.length = 0
+	numberOfActiveRequestsByServer = {}
 
-  // Clear stats
-  statistics.numberOfAttemptedRequests = 0;
-  statistics.numberOfActiveRequests = 0;
-  statistics.numberOfCancelledRequests = 0;
-  statistics.numberOfCancelledActiveRequests = 0;
-  statistics.numberOfFailedRequests = 0;
-  statistics.numberOfActiveRequestsEver = 0;
-  statistics.lastNumberOfActiveRequests = 0;
-};
+	// Clear stats
+	statistics.numberOfAttemptedRequests = 0
+	statistics.numberOfActiveRequests = 0
+	statistics.numberOfCancelledRequests = 0
+	statistics.numberOfCancelledActiveRequests = 0
+	statistics.numberOfFailedRequests = 0
+	statistics.numberOfActiveRequestsEver = 0
+	statistics.lastNumberOfActiveRequests = 0
+}
 
 /**
  * For testing only.
@@ -475,13 +475,13 @@ RequestScheduler.clearForSpecs = function () {
  * @private
  */
 RequestScheduler.numberOfActiveRequestsByServer = function (serverKey) {
-  return numberOfActiveRequestsByServer[serverKey];
-};
+	return numberOfActiveRequestsByServer[serverKey]
+}
 
 /**
  * For testing only.
  *
  * @private
  */
-RequestScheduler.requestHeap = requestHeap;
-export default RequestScheduler;
+RequestScheduler.requestHeap = requestHeap
+export default RequestScheduler

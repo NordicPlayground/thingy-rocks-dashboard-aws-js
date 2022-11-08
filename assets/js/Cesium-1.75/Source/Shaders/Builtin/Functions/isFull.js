@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Determines if a time interval is empty.\n\
  *\n\
  * @name czm_isFull\n\
@@ -18,4 +18,4 @@ bool czm_isFull(czm_raySegment interval)\n\
 {\n\
     return (interval.start == 0.0 && interval.stop == czm_infinity);\n\
 }\n\
-";
+'

@@ -1,11 +1,11 @@
-define(["Workers/createTaskProcessorWorker"], function (
-  createTaskProcessorWorker
+define(['Workers/createTaskProcessorWorker'], function (
+	createTaskProcessorWorker,
 ) {
-  "use strict";
+	'use strict'
 
-  return createTaskProcessorWorker(function (parameters, transferableObjects) {
-    return function () {
-      //functions are not cloneable
-    };
-  });
-});
+	return createTaskProcessorWorker(function (parameters, transferableObjects) {
+		return function () {
+			//functions are not cloneable
+		}
+	})
+})

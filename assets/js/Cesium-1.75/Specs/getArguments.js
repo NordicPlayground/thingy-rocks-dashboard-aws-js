@@ -14,6 +14,6 @@
  * @return {Array} The arguments passed to the function.
  */
 function getArguments() {
-  return arguments;
+	return arguments
 }
-export default getArguments;
+export default getArguments

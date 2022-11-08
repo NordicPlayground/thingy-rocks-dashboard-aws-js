@@ -1,4 +1,4 @@
-import DeveloperError from "./DeveloperError.js";
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Terrain data for a single tile.  This type describes an
@@ -12,29 +12,29 @@ import DeveloperError from "./DeveloperError.js";
  * @see GoogleEarthEnterpriseTerrainData
  */
 function TerrainData() {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 Object.defineProperties(TerrainData.prototype, {
-  /**
-   * An array of credits for this tile.
-   * @memberof TerrainData.prototype
-   * @type {Credit[]}
-   */
-  credits: {
-    get: DeveloperError.throwInstantiationError,
-  },
-  /**
-   * The water mask included in this terrain data, if any.  A water mask is a rectangular
-   * Uint8Array or image where a value of 255 indicates water and a value of 0 indicates land.
-   * Values in between 0 and 255 are allowed as well to smoothly blend between land and water.
-   * @memberof TerrainData.prototype
-   * @type {Uint8Array|HTMLImageElement|HTMLCanvasElement}
-   */
-  waterMask: {
-    get: DeveloperError.throwInstantiationError,
-  },
-});
+	/**
+	 * An array of credits for this tile.
+	 * @memberof TerrainData.prototype
+	 * @type {Credit[]}
+	 */
+	credits: {
+		get: DeveloperError.throwInstantiationError,
+	},
+	/**
+	 * The water mask included in this terrain data, if any.  A water mask is a rectangular
+	 * Uint8Array or image where a value of 255 indicates water and a value of 0 indicates land.
+	 * Values in between 0 and 255 are allowed as well to smoothly blend between land and water.
+	 * @memberof TerrainData.prototype
+	 * @type {Uint8Array|HTMLImageElement|HTMLCanvasElement}
+	 */
+	waterMask: {
+		get: DeveloperError.throwInstantiationError,
+	},
+})
 
 /**
  * Computes the terrain height at a specified longitude and latitude.
@@ -47,8 +47,7 @@ Object.defineProperties(TerrainData.prototype, {
  *          is outside the rectangle, this method will extrapolate the height, which is likely to be wildly
  *          incorrect for positions far outside the rectangle.
  */
-TerrainData.prototype.interpolateHeight =
-  DeveloperError.throwInstantiationError;
+TerrainData.prototype.interpolateHeight = DeveloperError.throwInstantiationError
 
 /**
  * Determines if a given child tile is available, based on the
@@ -63,7 +62,7 @@ TerrainData.prototype.interpolateHeight =
  * @param {Number} childY The tile Y coordinate of the child tile to check for availability.
  * @returns {Boolean} True if the child tile is available; otherwise, false.
  */
-TerrainData.prototype.isChildAvailable = DeveloperError.throwInstantiationError;
+TerrainData.prototype.isChildAvailable = DeveloperError.throwInstantiationError
 
 /**
  * Creates a {@link TerrainMesh} from this terrain data.
@@ -79,7 +78,7 @@ TerrainData.prototype.isChildAvailable = DeveloperError.throwInstantiationError;
  *          asynchronous mesh creations are already in progress and the operation should
  *          be retried later.
  */
-TerrainData.prototype.createMesh = DeveloperError.throwInstantiationError;
+TerrainData.prototype.createMesh = DeveloperError.throwInstantiationError
 
 /**
  * Upsamples this terrain data for use by a descendant tile.
@@ -96,7 +95,7 @@ TerrainData.prototype.createMesh = DeveloperError.throwInstantiationError;
  *          or undefined if too many asynchronous upsample operations are in progress and the request has been
  *          deferred.
  */
-TerrainData.prototype.upsample = DeveloperError.throwInstantiationError;
+TerrainData.prototype.upsample = DeveloperError.throwInstantiationError
 
 /**
  * Gets a value indicating whether or not this terrain data was created by upsampling lower resolution
@@ -108,5 +107,5 @@ TerrainData.prototype.upsample = DeveloperError.throwInstantiationError;
  * @returns {Boolean} True if this instance was created by upsampling; otherwise, false.
  */
 TerrainData.prototype.wasCreatedByUpsampling =
-  DeveloperError.throwInstantiationError;
-export default TerrainData;
+	DeveloperError.throwInstantiationError
+export default TerrainData

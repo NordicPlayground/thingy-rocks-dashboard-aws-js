@@ -1,4 +1,4 @@
-import destroyObject from "../Core/destroyObject.js";
+import destroyObject from '../Core/destroyObject.js'
 
 /**
  * Represents empty content for tiles in a
@@ -14,113 +14,113 @@ import destroyObject from "../Core/destroyObject.js";
  * @private
  */
 function Empty3DTileContent(tileset, tile) {
-  this._tileset = tileset;
-  this._tile = tile;
+	this._tileset = tileset
+	this._tile = tile
 
-  this.featurePropertiesDirty = false;
+	this.featurePropertiesDirty = false
 }
 
 Object.defineProperties(Empty3DTileContent.prototype, {
-  featuresLength: {
-    get: function () {
-      return 0;
-    },
-  },
+	featuresLength: {
+		get: function () {
+			return 0
+		},
+	},
 
-  pointsLength: {
-    get: function () {
-      return 0;
-    },
-  },
+	pointsLength: {
+		get: function () {
+			return 0
+		},
+	},
 
-  trianglesLength: {
-    get: function () {
-      return 0;
-    },
-  },
+	trianglesLength: {
+		get: function () {
+			return 0
+		},
+	},
 
-  geometryByteLength: {
-    get: function () {
-      return 0;
-    },
-  },
+	geometryByteLength: {
+		get: function () {
+			return 0
+		},
+	},
 
-  texturesByteLength: {
-    get: function () {
-      return 0;
-    },
-  },
+	texturesByteLength: {
+		get: function () {
+			return 0
+		},
+	},
 
-  batchTableByteLength: {
-    get: function () {
-      return 0;
-    },
-  },
+	batchTableByteLength: {
+		get: function () {
+			return 0
+		},
+	},
 
-  innerContents: {
-    get: function () {
-      return undefined;
-    },
-  },
+	innerContents: {
+		get: function () {
+			return undefined
+		},
+	},
 
-  readyPromise: {
-    get: function () {
-      return undefined;
-    },
-  },
+	readyPromise: {
+		get: function () {
+			return undefined
+		},
+	},
 
-  tileset: {
-    get: function () {
-      return this._tileset;
-    },
-  },
+	tileset: {
+		get: function () {
+			return this._tileset
+		},
+	},
 
-  tile: {
-    get: function () {
-      return this._tile;
-    },
-  },
+	tile: {
+		get: function () {
+			return this._tile
+		},
+	},
 
-  url: {
-    get: function () {
-      return undefined;
-    },
-  },
+	url: {
+		get: function () {
+			return undefined
+		},
+	},
 
-  batchTable: {
-    get: function () {
-      return undefined;
-    },
-  },
-});
+	batchTable: {
+		get: function () {
+			return undefined
+		},
+	},
+})
 
 /**
  * Part of the {@link Cesium3DTileContent} interface.  <code>Empty3DTileContent</code>
  * always returns <code>false</code> since a tile of this type does not have any features.
  */
 Empty3DTileContent.prototype.hasProperty = function (batchId, name) {
-  return false;
-};
+	return false
+}
 
 /**
  * Part of the {@link Cesium3DTileContent} interface.  <code>Empty3DTileContent</code>
  * always returns <code>undefined</code> since a tile of this type does not have any features.
  */
 Empty3DTileContent.prototype.getFeature = function (batchId) {
-  return undefined;
-};
+	return undefined
+}
 
-Empty3DTileContent.prototype.applyDebugSettings = function (enabled, color) {};
+Empty3DTileContent.prototype.applyDebugSettings = function (enabled, color) {}
 
-Empty3DTileContent.prototype.applyStyle = function (style) {};
+Empty3DTileContent.prototype.applyStyle = function (style) {}
 
-Empty3DTileContent.prototype.update = function (tileset, frameState) {};
+Empty3DTileContent.prototype.update = function (tileset, frameState) {}
 
 Empty3DTileContent.prototype.isDestroyed = function () {
-  return false;
-};
+	return false
+}
 
 Empty3DTileContent.prototype.destroy = function () {
-  return destroyObject(this);
-};
-export default Empty3DTileContent;
+	return destroyObject(this)
+}
+export default Empty3DTileContent

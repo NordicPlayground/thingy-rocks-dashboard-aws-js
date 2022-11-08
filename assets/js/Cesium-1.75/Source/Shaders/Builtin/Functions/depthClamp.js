@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "// emulated noperspective\n\
+export default '// emulated noperspective\n\
 #if defined(GL_EXT_frag_depth) && !defined(LOG_DEPTH)\n\
 varying float v_WindowZ;\n\
 #endif\n\
@@ -46,4 +46,4 @@ vec4 czm_depthClamp(vec4 coords)\n\
 #endif\n\
     return coords;\n\
 }\n\
-";
+'

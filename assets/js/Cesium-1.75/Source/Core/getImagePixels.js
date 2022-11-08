@@ -1,6 +1,6 @@
-import defined from "./defined.js";
+import defined from './defined.js'
 
-var context2DsByWidthAndHeight = {};
+var context2DsByWidthAndHeight = {}
 
 /**
  * Extract a pixel array from a loaded image.  Draws the image
@@ -14,30 +14,30 @@ var context2DsByWidthAndHeight = {};
  * @returns {ImageData} The pixels of the image.
  */
 function getImagePixels(image, width, height) {
-  if (!defined(width)) {
-    width = image.width;
-  }
-  if (!defined(height)) {
-    height = image.height;
-  }
+	if (!defined(width)) {
+		width = image.width
+	}
+	if (!defined(height)) {
+		height = image.height
+	}
 
-  var context2DsByHeight = context2DsByWidthAndHeight[width];
-  if (!defined(context2DsByHeight)) {
-    context2DsByHeight = {};
-    context2DsByWidthAndHeight[width] = context2DsByHeight;
-  }
+	var context2DsByHeight = context2DsByWidthAndHeight[width]
+	if (!defined(context2DsByHeight)) {
+		context2DsByHeight = {}
+		context2DsByWidthAndHeight[width] = context2DsByHeight
+	}
 
-  var context2d = context2DsByHeight[height];
-  if (!defined(context2d)) {
-    var canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-    context2d = canvas.getContext("2d");
-    context2d.globalCompositeOperation = "copy";
-    context2DsByHeight[height] = context2d;
-  }
+	var context2d = context2DsByHeight[height]
+	if (!defined(context2d)) {
+		var canvas = document.createElement('canvas')
+		canvas.width = width
+		canvas.height = height
+		context2d = canvas.getContext('2d')
+		context2d.globalCompositeOperation = 'copy'
+		context2DsByHeight[height] = context2d
+	}
 
-  context2d.drawImage(image, 0, 0, width, height);
-  return context2d.getImageData(0, 0, width, height).data;
+	context2d.drawImage(image, 0, 0, width, height)
+	return context2d.getImageData(0, 0, width, height).data
 }
-export default getImagePixels;
+export default getImagePixels

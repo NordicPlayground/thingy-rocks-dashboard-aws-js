@@ -1,4 +1,4 @@
-define(["require", "module"], function(require, module){
+define(['require', 'module'], function (require, module) {
 	// module:
 	//		dojo/has
 	// summary:
@@ -15,23 +15,24 @@ define(["require", "module"], function(require, module){
 	// try to pull the has implementation from the loader; both the dojo loader and bdLoad provide one
 	// if using a foreign loader, then the has cache may be initialized via the config object for this module
 	// WARNING: if a foreign loader defines require.has to be something other than the has.js API, then this implementation fail
-	var has = require.has || function(){};
-	if(!has("dojo-has-api")){
-		var
-			isBrowser =
+	var has = require.has || function () {}
+	if (!has('dojo-has-api')) {
+		var isBrowser =
 				// the most fundamental decision: are we in the browser?
-				typeof window != "undefined" &&
-				typeof location != "undefined" &&
-				typeof document != "undefined" &&
-				window.location == location && window.document == document,
-
+				typeof window != 'undefined' &&
+				typeof location != 'undefined' &&
+				typeof document != 'undefined' &&
+				window.location == location &&
+				window.document == document,
 			// has API variables
-			global = (function () { return this; })(),
+			global = (function () {
+				return this
+			})(),
 			doc = isBrowser && document,
-			element = doc && doc.createElement("DiV"),
-			cache = (module.config && module.config()) || {};
+			element = doc && doc.createElement('DiV'),
+			cache = (module.config && module.config()) || {}
 
-		has = function(name){
+		has = function (name) {
 			// summary:
 			//		Return the current value of the named feature.
 			//
@@ -42,12 +43,14 @@ define(["require", "module"], function(require, module){
 			//		Returns the value of the feature named by name. The feature must have been
 			//		previously added to the cache by has.add.
 
-			return typeof cache[name] == "function" ? (cache[name] = cache[name](global, doc, element)) : cache[name]; // Boolean
-		};
+			return typeof cache[name] == 'function'
+				? (cache[name] = cache[name](global, doc, element))
+				: cache[name] // Boolean
+		}
 
-		has.cache = cache;
+		has.cache = cache
 
-		has.add = function(name, test, now, force){
+		has.add = function (name, test, now, force) {
 			// summary:
 			//	 	Register a new feature test for some named feature.
 			// name: String|Integer
@@ -82,90 +85,106 @@ define(["require", "module"], function(require, module){
 			//	|		return false; // fake test, byid-when-form-has-name-matching-an-id is slightly longer
 			//	|	});
 
-			(typeof cache[name]=="undefined" || force) && (cache[name]= test);
-			return now && has(name);
-		};
+			;(typeof cache[name] == 'undefined' || force) && (cache[name] = test)
+			return now && has(name)
+		}
 
 		// since we're operating under a loader that doesn't provide a has API, we must explicitly initialize
 		// has as it would have otherwise been initialized by the dojo loader; use has.add to the builder
 		// can optimize these away iff desired
-		has.add("host-browser", isBrowser);
-		has.add("host-node", (typeof process == "object" && process.versions && process.versions.node && process.versions.v8));
-		has.add("host-rhino", (typeof load == "function" && (typeof Packages == "function" || typeof Packages == "object")));
-		has.add("dom", isBrowser);
-		has.add("dojo-dom-ready-api", 1);
-		has.add("dojo-sniff", 1);
+		has.add('host-browser', isBrowser)
+		has.add(
+			'host-node',
+			typeof process == 'object' &&
+				process.versions &&
+				process.versions.node &&
+				process.versions.v8,
+		)
+		has.add(
+			'host-rhino',
+			typeof load == 'function' &&
+				(typeof Packages == 'function' || typeof Packages == 'object'),
+		)
+		has.add('dom', isBrowser)
+		has.add('dojo-dom-ready-api', 1)
+		has.add('dojo-sniff', 1)
 	}
 
-	if(has("host-browser")){
+	if (has('host-browser')) {
 		// Common application level tests
-		has.add("dom-addeventlistener", !!document.addEventListener);
+		has.add('dom-addeventlistener', !!document.addEventListener)
 
 		// Do the device and browser have touch capability?
-		has.add("touch", "ontouchstart" in document
-			|| ("onpointerdown" in document && navigator.maxTouchPoints > 0)
-			|| window.navigator.msMaxTouchPoints);
+		has.add(
+			'touch',
+			'ontouchstart' in document ||
+				('onpointerdown' in document && navigator.maxTouchPoints > 0) ||
+				window.navigator.msMaxTouchPoints,
+		)
 
 		// Touch events support
-		has.add("touch-events", "ontouchstart" in document);
+		has.add('touch-events', 'ontouchstart' in document)
 
 		// Pointer Events support
-		has.add("pointer-events", "onpointerdown" in document);
-		has.add("MSPointer", "msMaxTouchPoints" in navigator); //IE10 (+IE11 preview)
+		has.add('pointer-events', 'onpointerdown' in document)
+		has.add('MSPointer', 'msMaxTouchPoints' in navigator) //IE10 (+IE11 preview)
 
 		// I don't know if any of these tests are really correct, just a rough guess
-		has.add("device-width", screen.availWidth || innerWidth);
+		has.add('device-width', screen.availWidth || innerWidth)
 
 		// Tests for DOMNode.attributes[] behavior:
 		//	 - dom-attributes-explicit - attributes[] only lists explicitly user specified attributes
 		//	 - dom-attributes-specified-flag (IE8) - need to check attr.specified flag to skip attributes user didn't specify
 		//	 - Otherwise, in IE6-7. attributes[] will list hundreds of values, so need to do outerHTML to get attrs instead.
-		var form = document.createElement("form");
-		has.add("dom-attributes-explicit", form.attributes.length == 0); // W3C
-		has.add("dom-attributes-specified-flag", form.attributes.length > 0 && form.attributes.length < 40);	// IE8
+		var form = document.createElement('form')
+		has.add('dom-attributes-explicit', form.attributes.length == 0) // W3C
+		has.add(
+			'dom-attributes-specified-flag',
+			form.attributes.length > 0 && form.attributes.length < 40,
+		) // IE8
 	}
 
-	has.clearElement = function(element){
+	has.clearElement = function (element) {
 		// summary:
 		//	 Deletes the contents of the element passed to test functions.
-		element.innerHTML= "";
-		return element;
-	};
+		element.innerHTML = ''
+		return element
+	}
 
-	has.normalize = function(id, toAbsMid){
+	has.normalize = function (id, toAbsMid) {
 		// summary:
 		//	 Resolves id into a module id based on possibly-nested tenary expression that branches on has feature test value(s).
 		//
 		// toAbsMid: Function
 		//	 Resolves a relative module id into an absolute module id
-		var
-			tokens = id.match(/[\?:]|[^:\?]*/g), i = 0,
-			get = function(skip){
-				var term = tokens[i++];
-				if(term == ":"){
+		var tokens = id.match(/[\?:]|[^:\?]*/g),
+			i = 0,
+			get = function (skip) {
+				var term = tokens[i++]
+				if (term == ':') {
 					// empty string module name, resolves to 0
-					return 0;
-				}else{
+					return 0
+				} else {
 					// postfixed with a ? means it is a feature to branch on, the term is the name of the feature
-					if(tokens[i++] == "?"){
-						if(!skip && has(term)){
+					if (tokens[i++] == '?') {
+						if (!skip && has(term)) {
 							// matched the feature, get the first value from the options
-							return get();
-						}else{
+							return get()
+						} else {
 							// did not match, get the second value, passing over the first
-							get(true);
-							return get(skip);
+							get(true)
+							return get(skip)
 						}
 					}
 					// a module
-					return term || 0;
+					return term || 0
 				}
-			};
-		id = get();
-		return id && toAbsMid(id);
-	};
+			}
+		id = get()
+		return id && toAbsMid(id)
+	}
 
-	has.load = function(id, parentRequire, loaded){
+	has.load = function (id, parentRequire, loaded) {
 		// summary:
 		//		Conditional loading of AMD modules based on a has feature test value.
 		// id: String
@@ -176,12 +195,12 @@ define(["require", "module"], function(require, module){
 		// loaded: Function
 		//	 Callback to loader that consumes result of plugin demand.
 
-		if(id){
-			parentRequire([id], loaded);
-		}else{
-			loaded();
+		if (id) {
+			parentRequire([id], loaded)
+		} else {
+			loaded()
 		}
-	};
+	}
 
-	return has;
-});
+	return has
+})

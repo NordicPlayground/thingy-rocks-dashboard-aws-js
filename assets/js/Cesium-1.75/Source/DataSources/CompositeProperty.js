@@ -1,23 +1,23 @@
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Event from "../Core/Event.js";
-import EventHelper from "../Core/EventHelper.js";
-import TimeIntervalCollection from "../Core/TimeIntervalCollection.js";
-import Property from "./Property.js";
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Event from '../Core/Event.js'
+import EventHelper from '../Core/EventHelper.js'
+import TimeIntervalCollection from '../Core/TimeIntervalCollection.js'
+import Property from './Property.js'
 
 function subscribeAll(property, eventHelper, definitionChanged, intervals) {
-  function callback() {
-    definitionChanged.raiseEvent(property);
-  }
-  var items = [];
-  eventHelper.removeAll();
-  var length = intervals.length;
-  for (var i = 0; i < length; i++) {
-    var interval = intervals.get(i);
-    if (defined(interval.data) && items.indexOf(interval.data) === -1) {
-      eventHelper.add(interval.data.definitionChanged, callback);
-    }
-  }
+	function callback() {
+		definitionChanged.raiseEvent(property)
+	}
+	var items = []
+	eventHelper.removeAll()
+	var length = intervals.length
+	for (var i = 0; i < length; i++) {
+		var interval = intervals.get(i)
+		if (defined(interval.data) && items.indexOf(interval.data) === -1) {
+			eventHelper.add(interval.data.definitionChanged, callback)
+		}
+	}
 }
 
 /**
@@ -53,55 +53,55 @@ function subscribeAll(property, eventHelper, definitionChanged, intervals) {
  * @see CompositePositionProperty
  */
 function CompositeProperty() {
-  this._eventHelper = new EventHelper();
-  this._definitionChanged = new Event();
-  this._intervals = new TimeIntervalCollection();
-  this._intervals.changedEvent.addEventListener(
-    CompositeProperty.prototype._intervalsChanged,
-    this
-  );
+	this._eventHelper = new EventHelper()
+	this._definitionChanged = new Event()
+	this._intervals = new TimeIntervalCollection()
+	this._intervals.changedEvent.addEventListener(
+		CompositeProperty.prototype._intervalsChanged,
+		this,
+	)
 }
 
 Object.defineProperties(CompositeProperty.prototype, {
-  /**
-   * Gets a value indicating if this property is constant.  A property is considered
-   * constant if getValue always returns the same result for the current definition.
-   * @memberof CompositeProperty.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   */
-  isConstant: {
-    get: function () {
-      return this._intervals.isEmpty;
-    },
-  },
-  /**
-   * Gets the event that is raised whenever the definition of this property changes.
-   * The definition is changed whenever setValue is called with data different
-   * than the current value.
-   * @memberof CompositeProperty.prototype
-   *
-   * @type {Event}
-   * @readonly
-   */
-  definitionChanged: {
-    get: function () {
-      return this._definitionChanged;
-    },
-  },
-  /**
-   * Gets the interval collection.
-   * @memberof CompositeProperty.prototype
-   *
-   * @type {TimeIntervalCollection}
-   */
-  intervals: {
-    get: function () {
-      return this._intervals;
-    },
-  },
-});
+	/**
+	 * Gets a value indicating if this property is constant.  A property is considered
+	 * constant if getValue always returns the same result for the current definition.
+	 * @memberof CompositeProperty.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	isConstant: {
+		get: function () {
+			return this._intervals.isEmpty
+		},
+	},
+	/**
+	 * Gets the event that is raised whenever the definition of this property changes.
+	 * The definition is changed whenever setValue is called with data different
+	 * than the current value.
+	 * @memberof CompositeProperty.prototype
+	 *
+	 * @type {Event}
+	 * @readonly
+	 */
+	definitionChanged: {
+		get: function () {
+			return this._definitionChanged
+		},
+	},
+	/**
+	 * Gets the interval collection.
+	 * @memberof CompositeProperty.prototype
+	 *
+	 * @type {TimeIntervalCollection}
+	 */
+	intervals: {
+		get: function () {
+			return this._intervals
+		},
+	},
+})
 
 /**
  * Gets the value of the property at the provided time.
@@ -111,18 +111,18 @@ Object.defineProperties(CompositeProperty.prototype, {
  * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 CompositeProperty.prototype.getValue = function (time, result) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(time)) {
-    throw new DeveloperError("time is required");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(time)) {
+		throw new DeveloperError('time is required')
+	}
+	//>>includeEnd('debug');
 
-  var innerProperty = this._intervals.findDataForIntervalContainingDate(time);
-  if (defined(innerProperty)) {
-    return innerProperty.getValue(time, result);
-  }
-  return undefined;
-};
+	var innerProperty = this._intervals.findDataForIntervalContainingDate(time)
+	if (defined(innerProperty)) {
+		return innerProperty.getValue(time, result)
+	}
+	return undefined
+}
 
 /**
  * Compares this property to the provided property and returns
@@ -132,23 +132,23 @@ CompositeProperty.prototype.getValue = function (time, result) {
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
 CompositeProperty.prototype.equals = function (other) {
-  return (
-    this === other || //
-    (other instanceof CompositeProperty && //
-      this._intervals.equals(other._intervals, Property.equals))
-  );
-};
+	return (
+		this === other || //
+		(other instanceof CompositeProperty && //
+			this._intervals.equals(other._intervals, Property.equals))
+	)
+}
 
 /**
  * @private
  */
 CompositeProperty.prototype._intervalsChanged = function () {
-  subscribeAll(
-    this,
-    this._eventHelper,
-    this._definitionChanged,
-    this._intervals
-  );
-  this._definitionChanged.raiseEvent(this);
-};
-export default CompositeProperty;
+	subscribeAll(
+		this,
+		this._eventHelper,
+		this._definitionChanged,
+		this._intervals,
+	)
+	this._definitionChanged.raiseEvent(this)
+}
+export default CompositeProperty

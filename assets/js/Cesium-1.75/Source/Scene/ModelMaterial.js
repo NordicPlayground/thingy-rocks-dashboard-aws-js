@@ -1,5 +1,5 @@
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
 
 /**
  * A model's material with modifiable parameters.  A glTF material
@@ -17,44 +17,44 @@ import DeveloperError from "../Core/DeveloperError.js";
  * @see Model#getMaterial
  */
 function ModelMaterial(model, material, id) {
-  this._name = material.name;
-  this._id = id;
-  this._uniformMap = model._uniformMaps[id];
+	this._name = material.name
+	this._id = id
+	this._uniformMap = model._uniformMaps[id]
 
-  this._technique = undefined;
-  this._program = undefined;
-  this._values = undefined;
+	this._technique = undefined
+	this._program = undefined
+	this._values = undefined
 }
 
 Object.defineProperties(ModelMaterial.prototype, {
-  /**
-   * The value of the <code>name</code> property of this material.
-   *
-   * @memberof ModelMaterial.prototype
-   *
-   * @type {String}
-   * @readonly
-   */
-  name: {
-    get: function () {
-      return this._name;
-    },
-  },
+	/**
+	 * The value of the <code>name</code> property of this material.
+	 *
+	 * @memberof ModelMaterial.prototype
+	 *
+	 * @type {String}
+	 * @readonly
+	 */
+	name: {
+		get: function () {
+			return this._name
+		},
+	},
 
-  /**
-   * The index of the material.
-   *
-   * @memberof ModelMaterial.prototype
-   *
-   * @type {String}
-   * @readonly
-   */
-  id: {
-    get: function () {
-      return this._id;
-    },
-  },
-});
+	/**
+	 * The index of the material.
+	 *
+	 * @memberof ModelMaterial.prototype
+	 *
+	 * @type {String}
+	 * @readonly
+	 */
+	id: {
+		get: function () {
+			return this._id
+		},
+	},
+})
 
 /**
  * Assigns a value to a material parameter.  The type for <code>value</code>
@@ -71,25 +71,25 @@ Object.defineProperties(ModelMaterial.prototype, {
  * material.setValue('shininess', 256.0); // scalar
  */
 ModelMaterial.prototype.setValue = function (name, value) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(name)) {
-    throw new DeveloperError("name is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(name)) {
+		throw new DeveloperError('name is required.')
+	}
+	//>>includeEnd('debug');
 
-  var uniformName = "u_" + name;
-  var v = this._uniformMap.values[uniformName];
+	var uniformName = 'u_' + name
+	var v = this._uniformMap.values[uniformName]
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(v)) {
-    throw new DeveloperError(
-      "name must match a parameter name in the material's technique that is targetable and not optimized out."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(v)) {
+		throw new DeveloperError(
+			"name must match a parameter name in the material's technique that is targetable and not optimized out.",
+		)
+	}
+	//>>includeEnd('debug');
 
-  v.value = v.clone(value, v.value);
-};
+	v.value = v.clone(value, v.value)
+}
 
 /**
  * Returns the value of the parameter with the given <code>name</code>.  The type of the
@@ -100,19 +100,19 @@ ModelMaterial.prototype.setValue = function (name, value) {
  * @returns {*} The value of the parameter or <code>undefined</code> if the parameter does not exist.
  */
 ModelMaterial.prototype.getValue = function (name) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(name)) {
-    throw new DeveloperError("name is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(name)) {
+		throw new DeveloperError('name is required.')
+	}
+	//>>includeEnd('debug');
 
-  var uniformName = "u_" + name;
-  var v = this._uniformMap.values[uniformName];
+	var uniformName = 'u_' + name
+	var v = this._uniformMap.values[uniformName]
 
-  if (!defined(v)) {
-    return undefined;
-  }
+	if (!defined(v)) {
+		return undefined
+	}
 
-  return v.value;
-};
-export default ModelMaterial;
+	return v.value
+}
+export default ModelMaterial

@@ -1,13 +1,13 @@
-import Cartesian3 from "../Core/Cartesian3.js";
-import Check from "../Core/Check.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Event from "../Core/Event.js";
-import ReferenceFrame from "../Core/ReferenceFrame.js";
-import PositionProperty from "./PositionProperty.js";
-import Property from "./Property.js";
-import SampledProperty from "./SampledProperty.js";
+import Cartesian3 from '../Core/Cartesian3.js'
+import Check from '../Core/Check.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Event from '../Core/Event.js'
+import ReferenceFrame from '../Core/ReferenceFrame.js'
+import PositionProperty from './PositionProperty.js'
+import Property from './Property.js'
+import SampledProperty from './SampledProperty.js'
 
 /**
  * A {@link SampledProperty} which is also a {@link PositionProperty}.
@@ -19,164 +19,164 @@ import SampledProperty from "./SampledProperty.js";
  * @param {Number} [numberOfDerivatives=0] The number of derivatives that accompany each position; i.e. velocity, acceleration, etc...
  */
 function SampledPositionProperty(referenceFrame, numberOfDerivatives) {
-  numberOfDerivatives = defaultValue(numberOfDerivatives, 0);
+	numberOfDerivatives = defaultValue(numberOfDerivatives, 0)
 
-  var derivativeTypes;
-  if (numberOfDerivatives > 0) {
-    derivativeTypes = new Array(numberOfDerivatives);
-    for (var i = 0; i < numberOfDerivatives; i++) {
-      derivativeTypes[i] = Cartesian3;
-    }
-  }
+	var derivativeTypes
+	if (numberOfDerivatives > 0) {
+		derivativeTypes = new Array(numberOfDerivatives)
+		for (var i = 0; i < numberOfDerivatives; i++) {
+			derivativeTypes[i] = Cartesian3
+		}
+	}
 
-  this._numberOfDerivatives = numberOfDerivatives;
-  this._property = new SampledProperty(Cartesian3, derivativeTypes);
-  this._definitionChanged = new Event();
-  this._referenceFrame = defaultValue(referenceFrame, ReferenceFrame.FIXED);
+	this._numberOfDerivatives = numberOfDerivatives
+	this._property = new SampledProperty(Cartesian3, derivativeTypes)
+	this._definitionChanged = new Event()
+	this._referenceFrame = defaultValue(referenceFrame, ReferenceFrame.FIXED)
 
-  this._property._definitionChanged.addEventListener(function () {
-    this._definitionChanged.raiseEvent(this);
-  }, this);
+	this._property._definitionChanged.addEventListener(function () {
+		this._definitionChanged.raiseEvent(this)
+	}, this)
 }
 
 Object.defineProperties(SampledPositionProperty.prototype, {
-  /**
-   * Gets a value indicating if this property is constant.  A property is considered
-   * constant if getValue always returns the same result for the current definition.
-   * @memberof SampledPositionProperty.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   */
-  isConstant: {
-    get: function () {
-      return this._property.isConstant;
-    },
-  },
-  /**
-   * Gets the event that is raised whenever the definition of this property changes.
-   * The definition is considered to have changed if a call to getValue would return
-   * a different result for the same time.
-   * @memberof SampledPositionProperty.prototype
-   *
-   * @type {Event}
-   * @readonly
-   */
-  definitionChanged: {
-    get: function () {
-      return this._definitionChanged;
-    },
-  },
-  /**
-   * Gets the reference frame in which the position is defined.
-   * @memberof SampledPositionProperty.prototype
-   * @type {ReferenceFrame}
-   * @default ReferenceFrame.FIXED;
-   */
-  referenceFrame: {
-    get: function () {
-      return this._referenceFrame;
-    },
-  },
-  /**
-   * Gets the degree of interpolation to perform when retrieving a value. Call <code>setInterpolationOptions</code> to set this.
-   * @memberof SampledPositionProperty.prototype
-   *
-   * @type {Number}
-   * @default 1
-   * @readonly
-   */
-  interpolationDegree: {
-    get: function () {
-      return this._property.interpolationDegree;
-    },
-  },
-  /**
-   * Gets the interpolation algorithm to use when retrieving a value. Call <code>setInterpolationOptions</code> to set this.
-   * @memberof SampledPositionProperty.prototype
-   *
-   * @type {InterpolationAlgorithm}
-   * @default LinearApproximation
-   * @readonly
-   */
-  interpolationAlgorithm: {
-    get: function () {
-      return this._property.interpolationAlgorithm;
-    },
-  },
-  /**
-   * The number of derivatives contained by this property; i.e. 0 for just position, 1 for velocity, etc.
-   * @memberof SampledPositionProperty.prototype
-   *
-   * @type {Number}
-   * @default 0
-   */
-  numberOfDerivatives: {
-    get: function () {
-      return this._numberOfDerivatives;
-    },
-  },
-  /**
-   * Gets or sets the type of extrapolation to perform when a value
-   * is requested at a time after any available samples.
-   * @memberof SampledPositionProperty.prototype
-   * @type {ExtrapolationType}
-   * @default ExtrapolationType.NONE
-   */
-  forwardExtrapolationType: {
-    get: function () {
-      return this._property.forwardExtrapolationType;
-    },
-    set: function (value) {
-      this._property.forwardExtrapolationType = value;
-    },
-  },
-  /**
-   * Gets or sets the amount of time to extrapolate forward before
-   * the property becomes undefined.  A value of 0 will extrapolate forever.
-   * @memberof SampledPositionProperty.prototype
-   * @type {Number}
-   * @default 0
-   */
-  forwardExtrapolationDuration: {
-    get: function () {
-      return this._property.forwardExtrapolationDuration;
-    },
-    set: function (value) {
-      this._property.forwardExtrapolationDuration = value;
-    },
-  },
-  /**
-   * Gets or sets the type of extrapolation to perform when a value
-   * is requested at a time before any available samples.
-   * @memberof SampledPositionProperty.prototype
-   * @type {ExtrapolationType}
-   * @default ExtrapolationType.NONE
-   */
-  backwardExtrapolationType: {
-    get: function () {
-      return this._property.backwardExtrapolationType;
-    },
-    set: function (value) {
-      this._property.backwardExtrapolationType = value;
-    },
-  },
-  /**
-   * Gets or sets the amount of time to extrapolate backward
-   * before the property becomes undefined.  A value of 0 will extrapolate forever.
-   * @memberof SampledPositionProperty.prototype
-   * @type {Number}
-   * @default 0
-   */
-  backwardExtrapolationDuration: {
-    get: function () {
-      return this._property.backwardExtrapolationDuration;
-    },
-    set: function (value) {
-      this._property.backwardExtrapolationDuration = value;
-    },
-  },
-});
+	/**
+	 * Gets a value indicating if this property is constant.  A property is considered
+	 * constant if getValue always returns the same result for the current definition.
+	 * @memberof SampledPositionProperty.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	isConstant: {
+		get: function () {
+			return this._property.isConstant
+		},
+	},
+	/**
+	 * Gets the event that is raised whenever the definition of this property changes.
+	 * The definition is considered to have changed if a call to getValue would return
+	 * a different result for the same time.
+	 * @memberof SampledPositionProperty.prototype
+	 *
+	 * @type {Event}
+	 * @readonly
+	 */
+	definitionChanged: {
+		get: function () {
+			return this._definitionChanged
+		},
+	},
+	/**
+	 * Gets the reference frame in which the position is defined.
+	 * @memberof SampledPositionProperty.prototype
+	 * @type {ReferenceFrame}
+	 * @default ReferenceFrame.FIXED;
+	 */
+	referenceFrame: {
+		get: function () {
+			return this._referenceFrame
+		},
+	},
+	/**
+	 * Gets the degree of interpolation to perform when retrieving a value. Call <code>setInterpolationOptions</code> to set this.
+	 * @memberof SampledPositionProperty.prototype
+	 *
+	 * @type {Number}
+	 * @default 1
+	 * @readonly
+	 */
+	interpolationDegree: {
+		get: function () {
+			return this._property.interpolationDegree
+		},
+	},
+	/**
+	 * Gets the interpolation algorithm to use when retrieving a value. Call <code>setInterpolationOptions</code> to set this.
+	 * @memberof SampledPositionProperty.prototype
+	 *
+	 * @type {InterpolationAlgorithm}
+	 * @default LinearApproximation
+	 * @readonly
+	 */
+	interpolationAlgorithm: {
+		get: function () {
+			return this._property.interpolationAlgorithm
+		},
+	},
+	/**
+	 * The number of derivatives contained by this property; i.e. 0 for just position, 1 for velocity, etc.
+	 * @memberof SampledPositionProperty.prototype
+	 *
+	 * @type {Number}
+	 * @default 0
+	 */
+	numberOfDerivatives: {
+		get: function () {
+			return this._numberOfDerivatives
+		},
+	},
+	/**
+	 * Gets or sets the type of extrapolation to perform when a value
+	 * is requested at a time after any available samples.
+	 * @memberof SampledPositionProperty.prototype
+	 * @type {ExtrapolationType}
+	 * @default ExtrapolationType.NONE
+	 */
+	forwardExtrapolationType: {
+		get: function () {
+			return this._property.forwardExtrapolationType
+		},
+		set: function (value) {
+			this._property.forwardExtrapolationType = value
+		},
+	},
+	/**
+	 * Gets or sets the amount of time to extrapolate forward before
+	 * the property becomes undefined.  A value of 0 will extrapolate forever.
+	 * @memberof SampledPositionProperty.prototype
+	 * @type {Number}
+	 * @default 0
+	 */
+	forwardExtrapolationDuration: {
+		get: function () {
+			return this._property.forwardExtrapolationDuration
+		},
+		set: function (value) {
+			this._property.forwardExtrapolationDuration = value
+		},
+	},
+	/**
+	 * Gets or sets the type of extrapolation to perform when a value
+	 * is requested at a time before any available samples.
+	 * @memberof SampledPositionProperty.prototype
+	 * @type {ExtrapolationType}
+	 * @default ExtrapolationType.NONE
+	 */
+	backwardExtrapolationType: {
+		get: function () {
+			return this._property.backwardExtrapolationType
+		},
+		set: function (value) {
+			this._property.backwardExtrapolationType = value
+		},
+	},
+	/**
+	 * Gets or sets the amount of time to extrapolate backward
+	 * before the property becomes undefined.  A value of 0 will extrapolate forever.
+	 * @memberof SampledPositionProperty.prototype
+	 * @type {Number}
+	 * @default 0
+	 */
+	backwardExtrapolationDuration: {
+		get: function () {
+			return this._property.backwardExtrapolationDuration
+		},
+		set: function (value) {
+			this._property.backwardExtrapolationDuration = value
+		},
+	},
+})
 
 /**
  * Gets the position at the provided time.
@@ -186,8 +186,8 @@ Object.defineProperties(SampledPositionProperty.prototype, {
  * @returns {Cartesian3} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 SampledPositionProperty.prototype.getValue = function (time, result) {
-  return this.getValueInReferenceFrame(time, ReferenceFrame.FIXED, result);
-};
+	return this.getValueInReferenceFrame(time, ReferenceFrame.FIXED, result)
+}
 
 /**
  * Gets the position at the provided time and in the provided reference frame.
@@ -198,27 +198,27 @@ SampledPositionProperty.prototype.getValue = function (time, result) {
  * @returns {Cartesian3} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 SampledPositionProperty.prototype.getValueInReferenceFrame = function (
-  time,
-  referenceFrame,
-  result
+	time,
+	referenceFrame,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("time", time);
-  Check.defined("referenceFrame", referenceFrame);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('time', time)
+	Check.defined('referenceFrame', referenceFrame)
+	//>>includeEnd('debug');
 
-  result = this._property.getValue(time, result);
-  if (defined(result)) {
-    return PositionProperty.convertToReferenceFrame(
-      time,
-      result,
-      this._referenceFrame,
-      referenceFrame,
-      result
-    );
-  }
-  return undefined;
-};
+	result = this._property.getValue(time, result)
+	if (defined(result)) {
+		return PositionProperty.convertToReferenceFrame(
+			time,
+			result,
+			this._referenceFrame,
+			referenceFrame,
+			result,
+		)
+	}
+	return undefined
+}
 
 /**
  * Sets the algorithm and degree to use when interpolating a position.
@@ -228,8 +228,8 @@ SampledPositionProperty.prototype.getValueInReferenceFrame = function (
  * @param {Number} [options.interpolationDegree] The new interpolation degree.  If undefined, the existing property will be unchanged.
  */
 SampledPositionProperty.prototype.setInterpolationOptions = function (options) {
-  this._property.setInterpolationOptions(options);
-};
+	this._property.setInterpolationOptions(options)
+}
 
 /**
  * Adds a new sample.
@@ -239,23 +239,23 @@ SampledPositionProperty.prototype.setInterpolationOptions = function (options) {
  * @param {Cartesian3[]} [derivatives] The array of derivative values at the provided time.
  */
 SampledPositionProperty.prototype.addSample = function (
-  time,
-  position,
-  derivatives
+	time,
+	position,
+	derivatives,
 ) {
-  var numberOfDerivatives = this._numberOfDerivatives;
-  //>>includeStart('debug', pragmas.debug);
-  if (
-    numberOfDerivatives > 0 &&
-    (!defined(derivatives) || derivatives.length !== numberOfDerivatives)
-  ) {
-    throw new DeveloperError(
-      "derivatives length must be equal to the number of derivatives."
-    );
-  }
-  //>>includeEnd('debug');
-  this._property.addSample(time, position, derivatives);
-};
+	var numberOfDerivatives = this._numberOfDerivatives
+	//>>includeStart('debug', pragmas.debug);
+	if (
+		numberOfDerivatives > 0 &&
+		(!defined(derivatives) || derivatives.length !== numberOfDerivatives)
+	) {
+		throw new DeveloperError(
+			'derivatives length must be equal to the number of derivatives.',
+		)
+	}
+	//>>includeEnd('debug');
+	this._property.addSample(time, position, derivatives)
+}
 
 /**
  * Adds multiple samples via parallel arrays.
@@ -267,12 +267,12 @@ SampledPositionProperty.prototype.addSample = function (
  * @exception {DeveloperError} All arrays must be the same length.
  */
 SampledPositionProperty.prototype.addSamples = function (
-  times,
-  positions,
-  derivatives
+	times,
+	positions,
+	derivatives,
 ) {
-  this._property.addSamples(times, positions, derivatives);
-};
+	this._property.addSamples(times, positions, derivatives)
+}
 
 /**
  * Adds samples as a single packed array where each new sample is represented as a date,
@@ -282,11 +282,11 @@ SampledPositionProperty.prototype.addSamples = function (
  * @param {JulianDate} [epoch] If any of the dates in packedSamples are numbers, they are considered an offset from this epoch, in seconds.
  */
 SampledPositionProperty.prototype.addSamplesPackedArray = function (
-  packedSamples,
-  epoch
+	packedSamples,
+	epoch,
 ) {
-  this._property.addSamplesPackedArray(packedSamples, epoch);
-};
+	this._property.addSamplesPackedArray(packedSamples, epoch)
+}
 
 /**
  * Removes a sample at the given time, if present.
@@ -295,8 +295,8 @@ SampledPositionProperty.prototype.addSamplesPackedArray = function (
  * @returns {Boolean} <code>true</code> if a sample at time was removed, <code>false</code> otherwise.
  */
 SampledPositionProperty.prototype.removeSample = function (time) {
-  return this._property.removeSample(time);
-};
+	return this._property.removeSample(time)
+}
 
 /**
  * Removes all samples for the given time interval.
@@ -304,8 +304,8 @@ SampledPositionProperty.prototype.removeSample = function (time) {
  * @param {TimeInterval} time The time interval for which to remove all samples.
  */
 SampledPositionProperty.prototype.removeSamples = function (timeInterval) {
-  this._property.removeSamples(timeInterval);
-};
+	this._property.removeSamples(timeInterval)
+}
 
 /**
  * Compares this property to the provided property and returns
@@ -315,11 +315,11 @@ SampledPositionProperty.prototype.removeSamples = function (timeInterval) {
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
 SampledPositionProperty.prototype.equals = function (other) {
-  return (
-    this === other || //
-    (other instanceof SampledPositionProperty &&
-      Property.equals(this._property, other._property) && //
-      this._referenceFrame === other._referenceFrame)
-  );
-};
-export default SampledPositionProperty;
+	return (
+		this === other || //
+		(other instanceof SampledPositionProperty &&
+			Property.equals(this._property, other._property) && //
+			this._referenceFrame === other._referenceFrame)
+	)
+}
+export default SampledPositionProperty

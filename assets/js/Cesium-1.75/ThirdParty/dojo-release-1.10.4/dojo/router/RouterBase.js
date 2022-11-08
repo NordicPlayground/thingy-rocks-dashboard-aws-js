@@ -1,55 +1,62 @@
-define([
-	"dojo/_base/declare",
-	"dojo/hash",
-	"dojo/topic"
-], function(declare, hash, topic){
-
+define(['dojo/_base/declare', 'dojo/hash', 'dojo/topic'], function (
+	declare,
+	hash,
+	topic,
+) {
 	// module:
 	//		dojo/router/RouterBase
 
 	// Creating a basic trim to avoid needing the full dojo/string module
 	// similarly to dojo/_base/lang's trim
-	var trim;
-	if(String.prototype.trim){
-		trim = function(str){ return str.trim(); };
-	}else{
-		trim = function(str){ return str.replace(/^\s\s*/, '').replace(/\s\s*$/, ''); };
+	var trim
+	if (String.prototype.trim) {
+		trim = function (str) {
+			return str.trim()
+		}
+	} else {
+		trim = function (str) {
+			return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+		}
 	}
 
 	// Firing of routes on the route object is always the same,
 	// no clean way to expose this on the prototype since it's for the
 	// internal router objects.
-	function fireRoute(params, currentPath, newPath){
-		var queue, isStopped, isPrevented, eventObj, callbackArgs, i, l;
+	function fireRoute(params, currentPath, newPath) {
+		var queue, isStopped, isPrevented, eventObj, callbackArgs, i, l
 
-		queue = this.callbackQueue;
-		isStopped = false;
-		isPrevented = false;
+		queue = this.callbackQueue
+		isStopped = false
+		isPrevented = false
 		eventObj = {
-			stopImmediatePropagation: function(){ isStopped = true; },
-			preventDefault: function(){ isPrevented = true; },
+			stopImmediatePropagation: function () {
+				isStopped = true
+			},
+			preventDefault: function () {
+				isPrevented = true
+			},
 			oldPath: currentPath,
 			newPath: newPath,
-			params: params
-		};
+			params: params,
+		}
 
-		callbackArgs = [eventObj];
+		callbackArgs = [eventObj]
 
-		if(params instanceof Array){
-			callbackArgs = callbackArgs.concat(params);
-		}else{
-			for(var key in params){
-				callbackArgs.push(params[key]);
+		if (params instanceof Array) {
+			callbackArgs = callbackArgs.concat(params)
+		} else {
+			for (var key in params) {
+				callbackArgs.push(params[key])
 			}
 		}
 
-		for(i=0, l=queue.length; i<l; ++i){
-			if(!isStopped){
-				queue[i].apply(null, callbackArgs);
+		for (i = 0, l = queue.length; i < l; ++i) {
+			if (!isStopped) {
+				queue[i].apply(null, callbackArgs)
 			}
 		}
 
-		return !isPrevented;
+		return !isPrevented
 	}
 
 	// Our actual class-like object
@@ -74,27 +81,27 @@ define([
 		_routes: null,
 		_routeIndex: null,
 		_started: false,
-		_currentPath: "",
+		_currentPath: '',
 
 		idMatch: /:(\w[\w\d]*)/g,
-		idReplacement: "([^\\/]+)",
+		idReplacement: '([^\\/]+)',
 		globMatch: /\*(\w[\w\d]*)/,
-		globReplacement: "(.+)",
+		globReplacement: '(.+)',
 
-		constructor: function(kwArgs){
+		constructor: function (kwArgs) {
 			// A couple of safety initializations
-			this._routes = [];
-			this._routeIndex = {};
+			this._routes = []
+			this._routeIndex = {}
 
 			// Simple constructor-style "Decorate myself all over" for now
-			for(var i in kwArgs){
-				if(kwArgs.hasOwnProperty(i)){
-					this[i] = kwArgs[i];
+			for (var i in kwArgs) {
+				if (kwArgs.hasOwnProperty(i)) {
+					this[i] = kwArgs[i]
 				}
 			}
 		},
 
-		register: function(/*String|RegExp*/ route, /*Function*/ callback){
+		register: function (/*String|RegExp*/ route, /*Function*/ callback) {
 			// summary:
 			//		Registers a route to a handling callback
 			// description:
@@ -155,10 +162,10 @@ define([
 			//		some way, this will *not* keep other routes from receiving
 			//		notice of the change.
 
-			return this._registerRoute(route, callback);
+			return this._registerRoute(route, callback)
 		},
 
-		registerBefore: function(/*String|RegExp*/ route, /*Function*/ callback){
+		registerBefore: function (/*String|RegExp*/ route, /*Function*/ callback) {
 			// summary:
 			//		Registers a route to a handling callback, except before
 			//		any previously registered callbacks
@@ -168,10 +175,10 @@ define([
 			//		previously registered callbacks. See the documentation for
 			//		`register` for more details and examples.
 
-			return this._registerRoute(route, callback, true);
+			return this._registerRoute(route, callback, true)
 		},
 
-		go: function(path, replace){
+		go: function (path, replace) {
 			// summary:
 			//		A simple pass-through to make changing the hash easy,
 			//		without having to require dojo/hash directly. It also
@@ -179,200 +186,229 @@ define([
 			// example:
 			//	|	router.go("/foo/bar");
 
-			var applyChange;
+			var applyChange
 
-			if(typeof path !== "string"){return false;}
-
-			path = trim(path);
-			applyChange = this._handlePathChange(path);
-
-			if(applyChange){
-				hash(path, replace);
+			if (typeof path !== 'string') {
+				return false
 			}
 
-			return applyChange;
+			path = trim(path)
+			applyChange = this._handlePathChange(path)
+
+			if (applyChange) {
+				hash(path, replace)
+			}
+
+			return applyChange
 		},
 
-		startup: function(defaultPath){
+		startup: function (defaultPath) {
 			// summary:
 			//		This method must be called to activate the router. Until
 			//		startup is called, no hash changes will trigger route
 			//		callbacks.
 
-			if(this._started){ return; }
+			if (this._started) {
+				return
+			}
 
 			var self = this,
-				startingPath = hash();
+				startingPath = hash()
 
-			this._started = true;
-			this._hashchangeHandle = topic.subscribe("/dojo/hashchange", function(){
-				self._handlePathChange.apply(self, arguments);
-			});
+			this._started = true
+			this._hashchangeHandle = topic.subscribe('/dojo/hashchange', function () {
+				self._handlePathChange.apply(self, arguments)
+			})
 
-			if(!startingPath){
+			if (!startingPath) {
 				// If there is no initial starting point, push our defaultPath into our
 				// history as the starting point
-				this.go(defaultPath, true);
-			}else{
+				this.go(defaultPath, true)
+			} else {
 				// Handle the starting path
-				this._handlePathChange(startingPath);
+				this._handlePathChange(startingPath)
 			}
 		},
 
-		destroy: function(){
-			if(this._hashchangeHandle){
-				this._hashchangeHandle.remove();
-			} 			
-			this._routes = null;
-			this._routeIndex = null;
+		destroy: function () {
+			if (this._hashchangeHandle) {
+				this._hashchangeHandle.remove()
+			}
+			this._routes = null
+			this._routeIndex = null
 		},
 
-		_handlePathChange: function(newPath){
-			var i, j, li, lj, routeObj, result,
-				allowChange, parameterNames, params,
+		_handlePathChange: function (newPath) {
+			var i,
+				j,
+				li,
+				lj,
+				routeObj,
+				result,
+				allowChange,
+				parameterNames,
+				params,
 				routes = this._routes,
-				currentPath = this._currentPath;
+				currentPath = this._currentPath
 
-			if(!this._started || newPath === currentPath){ return allowChange; }
+			if (!this._started || newPath === currentPath) {
+				return allowChange
+			}
 
-			allowChange = true;
+			allowChange = true
 
-			for(i=0, li=routes.length; i<li; ++i){
-				routeObj = routes[i];
-				result = routeObj.route.exec(newPath);
+			for (i = 0, li = routes.length; i < li; ++i) {
+				routeObj = routes[i]
+				result = routeObj.route.exec(newPath)
 
-				if(result){
-					if(routeObj.parameterNames){
-						parameterNames = routeObj.parameterNames;
-						params = {};
+				if (result) {
+					if (routeObj.parameterNames) {
+						parameterNames = routeObj.parameterNames
+						params = {}
 
-						for(j=0, lj=parameterNames.length; j<lj; ++j){
-							params[parameterNames[j]] = result[j+1];
+						for (j = 0, lj = parameterNames.length; j < lj; ++j) {
+							params[parameterNames[j]] = result[j + 1]
 						}
-					}else{
-						params = result.slice(1);
+					} else {
+						params = result.slice(1)
 					}
-					allowChange = routeObj.fire(params, currentPath, newPath);
+					allowChange = routeObj.fire(params, currentPath, newPath)
 				}
 			}
 
-			if(allowChange){
-				this._currentPath = newPath;
+			if (allowChange) {
+				this._currentPath = newPath
 			}
 
-			return allowChange;
+			return allowChange
 		},
 
-		_convertRouteToRegExp: function(route){
+		_convertRouteToRegExp: function (route) {
 			// Sub in based on IDs and globs
-			route = route.replace(this.idMatch, this.idReplacement);
-			route = route.replace(this.globMatch, this.globReplacement);
+			route = route.replace(this.idMatch, this.idReplacement)
+			route = route.replace(this.globMatch, this.globReplacement)
 			// Make sure it's an exact match
-			route = "^" + route + "$";
+			route = '^' + route + '$'
 
-			return new RegExp(route);
+			return new RegExp(route)
 		},
 
-		_getParameterNames: function(route){
+		_getParameterNames: function (route) {
 			var idMatch = this.idMatch,
 				globMatch = this.globMatch,
-				parameterNames = [], match;
+				parameterNames = [],
+				match
 
-			idMatch.lastIndex = 0;
+			idMatch.lastIndex = 0
 
-			while((match = idMatch.exec(route)) !== null){
-				parameterNames.push(match[1]);
+			while ((match = idMatch.exec(route)) !== null) {
+				parameterNames.push(match[1])
 			}
-			if((match = globMatch.exec(route)) !== null){
-				parameterNames.push(match[1]);
+			if ((match = globMatch.exec(route)) !== null) {
+				parameterNames.push(match[1])
 			}
 
-			return parameterNames.length > 0 ? parameterNames : null;
+			return parameterNames.length > 0 ? parameterNames : null
 		},
 
-		_indexRoutes: function(){
-			var i, l, route, routeIndex, routes = this._routes;
+		_indexRoutes: function () {
+			var i,
+				l,
+				route,
+				routeIndex,
+				routes = this._routes
 
 			// Start a new route index
-			routeIndex = this._routeIndex = {};
+			routeIndex = this._routeIndex = {}
 
 			// Set it up again
-			for(i=0, l=routes.length; i<l; ++i){
-				route = routes[i];
-				routeIndex[route.route] = i;
+			for (i = 0, l = routes.length; i < l; ++i) {
+				route = routes[i]
+				routeIndex[route.route] = i
 			}
 		},
 
-		_registerRoute: function(/*String|RegExp*/route, /*Function*/callback, /*Boolean?*/isBefore){
-			var index, exists, routeObj, callbackQueue, removed,
-				self = this, routes = this._routes,
-				routeIndex = this._routeIndex;
+		_registerRoute: function (
+			/*String|RegExp*/ route,
+			/*Function*/ callback,
+			/*Boolean?*/ isBefore,
+		) {
+			var index,
+				exists,
+				routeObj,
+				callbackQueue,
+				removed,
+				self = this,
+				routes = this._routes,
+				routeIndex = this._routeIndex
 
 			// Try to fetch the route if it already exists.
 			// This works thanks to stringifying of regex
-			index = this._routeIndex[route];
-			exists = typeof index !== "undefined";
-			if(exists){
-				routeObj = routes[index];
+			index = this._routeIndex[route]
+			exists = typeof index !== 'undefined'
+			if (exists) {
+				routeObj = routes[index]
 			}
 
 			// If we didn't get one, make a default start point
-			if(!routeObj){
+			if (!routeObj) {
 				routeObj = {
 					route: route,
 					callbackQueue: [],
-					fire: fireRoute
-				};
+					fire: fireRoute,
+				}
 			}
 
-			callbackQueue = routeObj.callbackQueue;
+			callbackQueue = routeObj.callbackQueue
 
-			if(typeof route == "string"){
-				routeObj.parameterNames = this._getParameterNames(route);
-				routeObj.route = this._convertRouteToRegExp(route);
+			if (typeof route == 'string') {
+				routeObj.parameterNames = this._getParameterNames(route)
+				routeObj.route = this._convertRouteToRegExp(route)
 			}
 
-			if(isBefore){
-				callbackQueue.unshift(callback);
-			}else{
-				callbackQueue.push(callback);
+			if (isBefore) {
+				callbackQueue.unshift(callback)
+			} else {
+				callbackQueue.push(callback)
 			}
 
-			if(!exists){
-				index = routes.length;
-				routeIndex[route] = index;
-				routes.push(routeObj);
+			if (!exists) {
+				index = routes.length
+				routeIndex[route] = index
+				routes.push(routeObj)
 			}
 
 			// Useful in a moment to keep from re-removing routes
-			removed = false;
+			removed = false
 
-			return { // Object
-				remove: function(){
-					var i, l;
+			return {
+				// Object
+				remove: function () {
+					var i, l
 
-					if(removed){ return; }
+					if (removed) {
+						return
+					}
 
-					for(i=0, l=callbackQueue.length; i<l; ++i){
-						if(callbackQueue[i] === callback){
-							callbackQueue.splice(i, 1);
+					for (i = 0, l = callbackQueue.length; i < l; ++i) {
+						if (callbackQueue[i] === callback) {
+							callbackQueue.splice(i, 1)
 						}
 					}
 
-
-					if(callbackQueue.length === 0){
-						routes.splice(index, 1);
-						self._indexRoutes();
+					if (callbackQueue.length === 0) {
+						routes.splice(index, 1)
+						self._indexRoutes()
 					}
 
-					removed = true;
+					removed = true
 				},
-				register: function(callback, isBefore){
-					return self.register(route, callback, isBefore);
-				}
-			};
-		}
-	});
+				register: function (callback, isBefore) {
+					return self.register(route, callback, isBefore)
+				},
+			}
+		},
+	})
 
-	return RouterBase;
-});
+	return RouterBase
+})

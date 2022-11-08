@@ -1,35 +1,41 @@
-define(["./_base/lang", "./dom", "./io-query", "./json"], function(lang, dom, ioq, json){
+define(['./_base/lang', './dom', './io-query', './json'], function (
+	lang,
+	dom,
+	ioq,
+	json,
+) {
 	// module:
 	//		dojo/dom-form
 
-    function setValue(/*Object*/ obj, /*String*/ name, /*String*/ value){
-        // summary:
-        //		For the named property in object, set the value. If a value
-        //		already exists and it is a string, convert the value to be an
-        //		array of values.
+	function setValue(/*Object*/ obj, /*String*/ name, /*String*/ value) {
+		// summary:
+		//		For the named property in object, set the value. If a value
+		//		already exists and it is a string, convert the value to be an
+		//		array of values.
 
-        // Skip it if there is no value
-        if(value === null){
-            return;
-        }
+		// Skip it if there is no value
+		if (value === null) {
+			return
+		}
 
-        var val = obj[name];
-        if(typeof val == "string"){ // inline'd type check
-            obj[name] = [val, value];
-        }else if(lang.isArray(val)){
-            val.push(value);
-        }else{
-            obj[name] = value;
-        }
-    }
+		var val = obj[name]
+		if (typeof val == 'string') {
+			// inline'd type check
+			obj[name] = [val, value]
+		} else if (lang.isArray(val)) {
+			val.push(value)
+		} else {
+			obj[name] = value
+		}
+	}
 
-	var exclude = "file|submit|image|reset|button";
+	var exclude = 'file|submit|image|reset|button'
 
 	var form = {
 		// summary:
 		//		This module defines form-processing functions.
 
-		fieldToObject: function fieldToObject(/*DOMNode|String*/ inputNode){
+		fieldToObject: function fieldToObject(/*DOMNode|String*/ inputNode) {
 			// summary:
 			//		Serialize a form field to a JavaScript object.
 			// description:
@@ -40,44 +46,48 @@ define(["./_base/lang", "./dom", "./io-query", "./json"], function(lang, dom, io
 			// inputNode: DOMNode|String
 			// returns: Object
 
-			var ret = null;
-			inputNode = dom.byId(inputNode);
-			if(inputNode){
-				var _in = inputNode.name, type = (inputNode.type || "").toLowerCase();
-				if(_in && type && !inputNode.disabled){
-					if(type == "radio" || type == "checkbox"){
-						if(inputNode.checked){
-							ret = inputNode.value;
+			var ret = null
+			inputNode = dom.byId(inputNode)
+			if (inputNode) {
+				var _in = inputNode.name,
+					type = (inputNode.type || '').toLowerCase()
+				if (_in && type && !inputNode.disabled) {
+					if (type == 'radio' || type == 'checkbox') {
+						if (inputNode.checked) {
+							ret = inputNode.value
 						}
-					}else if(inputNode.multiple){
-						ret = [];
-						var nodes = [inputNode.firstChild];
-						while(nodes.length){
-							for(var node = nodes.pop(); node; node = node.nextSibling){
-								if(node.nodeType == 1 && node.tagName.toLowerCase() == "option"){
-									if(node.selected){
-										ret.push(node.value);
+					} else if (inputNode.multiple) {
+						ret = []
+						var nodes = [inputNode.firstChild]
+						while (nodes.length) {
+							for (var node = nodes.pop(); node; node = node.nextSibling) {
+								if (
+									node.nodeType == 1 &&
+									node.tagName.toLowerCase() == 'option'
+								) {
+									if (node.selected) {
+										ret.push(node.value)
 									}
-								}else{
-									if(node.nextSibling){
-										nodes.push(node.nextSibling);
+								} else {
+									if (node.nextSibling) {
+										nodes.push(node.nextSibling)
 									}
-									if(node.firstChild){
-										nodes.push(node.firstChild);
+									if (node.firstChild) {
+										nodes.push(node.firstChild)
 									}
-									break;
+									break
 								}
 							}
 						}
-					}else{
-						ret = inputNode.value;
+					} else {
+						ret = inputNode.value
 					}
 				}
 			}
-			return ret; // Object
+			return ret // Object
 		},
 
-		toObject: function formToObject(/*DOMNode|String*/ formNode){
+		toObject: function formToObject(/*DOMNode|String*/ formNode) {
 			// summary:
 			//		Serialize a form node to a JavaScript object.
 			// description:
@@ -110,30 +120,36 @@ define(["./_base/lang", "./dom", "./io-query", "./json"], function(lang, dom, io
 			//		|		]
 			//		|	};
 
-			var ret = {}, elems = dom.byId(formNode).elements;
-			for(var i = 0, l = elems.length; i < l; ++i){
-				var item = elems[i], _in = item.name, type = (item.type || "").toLowerCase();
-				if(_in && type && exclude.indexOf(type) < 0 && !item.disabled){
-					setValue(ret, _in, form.fieldToObject(item));
-					if(type == "image"){
-						ret[_in + ".x"] = ret[_in + ".y"] = ret[_in].x = ret[_in].y = 0;
+			var ret = {},
+				elems = dom.byId(formNode).elements
+			for (var i = 0, l = elems.length; i < l; ++i) {
+				var item = elems[i],
+					_in = item.name,
+					type = (item.type || '').toLowerCase()
+				if (_in && type && exclude.indexOf(type) < 0 && !item.disabled) {
+					setValue(ret, _in, form.fieldToObject(item))
+					if (type == 'image') {
+						ret[_in + '.x'] = ret[_in + '.y'] = ret[_in].x = ret[_in].y = 0
 					}
 				}
 			}
-			return ret; // Object
+			return ret // Object
 		},
 
-		toQuery: function formToQuery(/*DOMNode|String*/ formNode){
+		toQuery: function formToQuery(/*DOMNode|String*/ formNode) {
 			// summary:
 			//		Returns a URL-encoded string representing the form passed as either a
 			//		node or string ID identifying the form to serialize
 			// formNode: DOMNode|String
 			// returns: String
 
-			return ioq.objectToQuery(form.toObject(formNode)); // String
+			return ioq.objectToQuery(form.toObject(formNode)) // String
 		},
 
-		toJson: function formToJson(/*DOMNode|String*/ formNode, /*Boolean?*/ prettyPrint){
+		toJson: function formToJson(
+			/*DOMNode|String*/ formNode,
+			/*Boolean?*/ prettyPrint,
+		) {
 			// summary:
 			//		Create a serialized JSON string from a form node or string
 			//		ID identifying the form to serialize
@@ -141,9 +157,9 @@ define(["./_base/lang", "./dom", "./io-query", "./json"], function(lang, dom, io
 			// prettyPrint: Boolean?
 			// returns: String
 
-			return json.stringify(form.toObject(formNode), null, prettyPrint ? 4 : 0); // String
-		}
-	};
+			return json.stringify(form.toObject(formNode), null, prettyPrint ? 4 : 0) // String
+		},
+	}
 
-    return form;
-});
+	return form
+})

@@ -1,4 +1,4 @@
-import DeveloperError from "./DeveloperError.js";
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Defines how geodetic ellipsoid coordinates ({@link Cartographic}) project to a
@@ -11,22 +11,22 @@ import DeveloperError from "./DeveloperError.js";
  * @see WebMercatorProjection
  */
 function MapProjection() {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 Object.defineProperties(MapProjection.prototype, {
-  /**
-   * Gets the {@link Ellipsoid}.
-   *
-   * @memberof MapProjection.prototype
-   *
-   * @type {Ellipsoid}
-   * @readonly
-   */
-  ellipsoid: {
-    get: DeveloperError.throwInstantiationError,
-  },
-});
+	/**
+	 * Gets the {@link Ellipsoid}.
+	 *
+	 * @memberof MapProjection.prototype
+	 *
+	 * @type {Ellipsoid}
+	 * @readonly
+	 */
+	ellipsoid: {
+		get: DeveloperError.throwInstantiationError,
+	},
+})
 
 /**
  * Projects {@link Cartographic} coordinates, in radians, to projection-specific map coordinates, in meters.
@@ -41,7 +41,7 @@ Object.defineProperties(MapProjection.prototype, {
  *          coordinates are copied there and that instance is returned.  Otherwise, a new instance is
  *          created and returned.
  */
-MapProjection.prototype.project = DeveloperError.throwInstantiationError;
+MapProjection.prototype.project = DeveloperError.throwInstantiationError
 
 /**
  * Unprojects projection-specific map {@link Cartesian3} coordinates, in meters, to {@link Cartographic}
@@ -57,5 +57,5 @@ MapProjection.prototype.project = DeveloperError.throwInstantiationError;
  *          coordinates are copied there and that instance is returned.  Otherwise, a new instance is
  *          created and returned.
  */
-MapProjection.prototype.unproject = DeveloperError.throwInstantiationError;
-export default MapProjection;
+MapProjection.prototype.unproject = DeveloperError.throwInstantiationError
+export default MapProjection

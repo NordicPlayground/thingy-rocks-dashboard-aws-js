@@ -1,5 +1,5 @@
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * An {@link InterpolationAlgorithm} for performing linear interpolation.
@@ -7,8 +7,8 @@ import DeveloperError from "./DeveloperError.js";
  * @namespace LinearApproximation
  */
 var LinearApproximation = {
-  type: "Linear",
-};
+	type: 'Linear',
+}
 
 /**
  * Given the desired degree, returns the number of data points required for interpolation.
@@ -19,8 +19,8 @@ var LinearApproximation = {
  *
  */
 LinearApproximation.getRequiredDataPoints = function (degree) {
-  return 2;
-};
+	return 2
+}
 
 /**
  * Interpolates values using linear approximation.
@@ -36,48 +36,48 @@ LinearApproximation.getRequiredDataPoints = function (degree) {
  * @returns {Number[]} The array of interpolated values, or the result parameter if one was provided.
  */
 LinearApproximation.interpolateOrderZero = function (
-  x,
-  xTable,
-  yTable,
-  yStride,
-  result
+	x,
+	xTable,
+	yTable,
+	yStride,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  if (xTable.length !== 2) {
-    throw new DeveloperError(
-      "The xTable provided to the linear interpolator must have exactly two elements."
-    );
-  } else if (yStride <= 0) {
-    throw new DeveloperError(
-      "There must be at least 1 dependent variable for each independent variable."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (xTable.length !== 2) {
+		throw new DeveloperError(
+			'The xTable provided to the linear interpolator must have exactly two elements.',
+		)
+	} else if (yStride <= 0) {
+		throw new DeveloperError(
+			'There must be at least 1 dependent variable for each independent variable.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = new Array(yStride);
-  }
+	if (!defined(result)) {
+		result = new Array(yStride)
+	}
 
-  var i;
-  var y0;
-  var y1;
-  var x0 = xTable[0];
-  var x1 = xTable[1];
+	var i
+	var y0
+	var y1
+	var x0 = xTable[0]
+	var x1 = xTable[1]
 
-  //>>includeStart('debug', pragmas.debug);
-  if (x0 === x1) {
-    throw new DeveloperError(
-      "Divide by zero error: xTable[0] and xTable[1] are equal"
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (x0 === x1) {
+		throw new DeveloperError(
+			'Divide by zero error: xTable[0] and xTable[1] are equal',
+		)
+	}
+	//>>includeEnd('debug');
 
-  for (i = 0; i < yStride; i++) {
-    y0 = yTable[i];
-    y1 = yTable[i + yStride];
-    result[i] = ((y1 - y0) * x + x1 * y0 - x0 * y1) / (x1 - x0);
-  }
+	for (i = 0; i < yStride; i++) {
+		y0 = yTable[i]
+		y1 = yTable[i + yStride]
+		result[i] = ((y1 - y0) * x + x1 * y0 - x0 * y1) / (x1 - x0)
+	}
 
-  return result;
-};
-export default LinearApproximation;
+	return result
+}
+export default LinearApproximation

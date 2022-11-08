@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "varying vec2 v_textureCoordinates;\n\
+export default 'varying vec2 v_textureCoordinates;\n\
 \n\
 uniform sampler2D colorTexture;\n\
 \n\
@@ -20,4 +20,4 @@ void main()\n\
     float alpha = texture2D(colorTexture, v_textureCoordinates).a;\n\
     gl_FragColor = vec4(color.rgb, alpha);\n\
 }\n\
-";
+'

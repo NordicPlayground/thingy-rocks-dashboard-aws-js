@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "varying vec3 v_cubeMapCoordinates;\n\
+export default 'varying vec3 v_cubeMapCoordinates;\n\
 uniform samplerCube cubeMap;\n\
 \n\
 void main()\n\
@@ -9,4 +9,4 @@ void main()\n\
     vec3 r = rgbm.rgb * m;\n\
     gl_FragColor = vec4(r * r, 1.0);\n\
 }\n\
-";
+'

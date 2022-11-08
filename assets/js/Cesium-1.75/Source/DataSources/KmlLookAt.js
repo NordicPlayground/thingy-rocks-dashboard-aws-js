@@ -6,7 +6,7 @@
  * @param {HeadingPitchRange} headingPitchRange camera orientation
  */
 function KmlLookAt(position, headingPitchRange) {
-  this.position = position;
-  this.headingPitchRange = headingPitchRange;
+	this.position = position
+	this.headingPitchRange = headingPitchRange
 }
-export default KmlLookAt;
+export default KmlLookAt

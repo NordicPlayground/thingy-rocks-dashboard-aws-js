@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Returns a position in model coordinates relative to eye taking into\n\
  * account the current scene mode: 3D, 2D, or Columbus view.\n\
  * <p>\n\
@@ -21,4 +21,4 @@ export default "/**\n\
  * @see czm_translateRelativeToEye\n\
  */\n\
 vec4 czm_computePosition();\n\
-";
+'

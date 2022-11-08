@@ -1,5 +1,24 @@
-define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-class", "./dom-construct", "./dom-geometry", "./dom-attr", "./dom-style"], function(dojo, query, array, lang, domCls, domCtr, domGeom, domAttr, domStyle){
-
+define([
+	'./_base/kernel',
+	'./query',
+	'./_base/array',
+	'./_base/lang',
+	'./dom-class',
+	'./dom-construct',
+	'./dom-geometry',
+	'./dom-attr',
+	'./dom-style',
+], function (
+	dojo,
+	query,
+	array,
+	lang,
+	domCls,
+	domCtr,
+	domGeom,
+	domAttr,
+	domStyle,
+) {
 	// module:
 	//		dojo/NodeList-dom.js
 
@@ -10,39 +29,42 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 	 };
 	 =====*/
 
-	var magicGuard = function(a){
+	var magicGuard = function (a) {
 		// summary:
 		//		the guard function for dojo/dom-attr() and dojo/dom-style()
-		return a.length == 1 && (typeof a[0] == "string"); // inline'd type check
-	};
+		return a.length == 1 && typeof a[0] == 'string' // inline'd type check
+	}
 
-	var orphan = function(node){
+	var orphan = function (node) {
 		// summary:
 		//		function to orphan nodes
-		var p = node.parentNode;
-		if(p){
-			p.removeChild(node);
+		var p = node.parentNode
+		if (p) {
+			p.removeChild(node)
 		}
-	};
+	}
 	// FIXME: should we move orphan() to dojo/_base/html?
 
 	var NodeList = query.NodeList,
 		awc = NodeList._adaptWithCondition,
 		aafe = NodeList._adaptAsForEach,
-		aam = NodeList._adaptAsMap;
+		aam = NodeList._adaptAsMap
 
-	function getSet(module){
-		return function(node, name, value){
-			if(arguments.length == 2){
-				return module[typeof name == "string" ? "get" : "set"](node, name);
+	function getSet(module) {
+		return function (node, name, value) {
+			if (arguments.length == 2) {
+				return module[typeof name == 'string' ? 'get' : 'set'](node, name)
 			}
 			// setter
-			return module.set(node, name, value);
-		};
+			return module.set(node, name, value)
+		}
 	}
 
 	lang.extend(NodeList, {
-		_normalize: function(/*String||Element||Object||NodeList*/content, /*DOMNode?*/refNode){
+		_normalize: function (
+			/*String||Element||Object||NodeList*/ content,
+			/*DOMNode?*/ refNode,
+		) {
 			// summary:
 			//		normalizes data to an array of items to insert.
 			// description:
@@ -61,47 +83,55 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//multiple refNodes. Also, need a real array, not a NodeList from the
 			//DOM since the node movements could change those NodeLists.
 
-			var parse = content.parse === true;
+			var parse = content.parse === true
 
 			//Do we have an object that needs to be run through a template?
-			if(typeof content.template == "string"){
-				var templateFunc = content.templateFunc || (dojo.string && dojo.string.substitute);
-				content = templateFunc ? templateFunc(content.template, content) : content;
+			if (typeof content.template == 'string') {
+				var templateFunc =
+					content.templateFunc || (dojo.string && dojo.string.substitute)
+				content = templateFunc
+					? templateFunc(content.template, content)
+					: content
 			}
 
-			var type = (typeof content);
-			if(type == "string" || type == "number"){
-				content = domCtr.toDom(content, (refNode && refNode.ownerDocument));
-				if(content.nodeType == 11){
+			var type = typeof content
+			if (type == 'string' || type == 'number') {
+				content = domCtr.toDom(content, refNode && refNode.ownerDocument)
+				if (content.nodeType == 11) {
 					//DocumentFragment. It cannot handle cloneNode calls, so pull out the children.
-					content = lang._toArray(content.childNodes);
-				}else{
-					content = [content];
+					content = lang._toArray(content.childNodes)
+				} else {
+					content = [content]
 				}
-			}else if(!lang.isArrayLike(content)){
-				content = [content];
-			}else if(!lang.isArray(content)){
+			} else if (!lang.isArrayLike(content)) {
+				content = [content]
+			} else if (!lang.isArray(content)) {
 				//To get to this point, content is array-like, but
 				//not an array, which likely means a DOM NodeList. Convert it now.
-				content = lang._toArray(content);
+				content = lang._toArray(content)
 			}
 
 			//Pass around the parse info
-			if(parse){
-				content._runParse = true;
+			if (parse) {
+				content._runParse = true
 			}
-			return content; //Array
+			return content //Array
 		},
 
-		_cloneNode: function(/*DOMNode*/ node){
+		_cloneNode: function (/*DOMNode*/ node) {
 			// summary:
 			//		private utility to clone a node. Not very interesting in the vanilla
 			//		dojo/NodeList case, but delegates could do interesting things like
 			//		clone event handlers if that is derivable from the node.
-			return node.cloneNode(true);
+			return node.cloneNode(true)
 		},
 
-		_place: function(/*Array*/ary, /*DOMNode*/refNode, /*String*/position, /*Boolean*/useClone){
+		_place: function (
+			/*Array*/ ary,
+			/*DOMNode*/ refNode,
+			/*String*/ position,
+			/*Boolean*/ useClone,
+		) {
 			// summary:
 			//		private utility to handle placing an array of nodes relative to another node.
 			// description:
@@ -109,41 +139,41 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		optionally parsing widgets, if ary._runParse is true.
 
 			//Avoid a disallowed operation if trying to do an innerHTML on a non-element node.
-			if(refNode.nodeType != 1 && position == "only"){
-				return;
+			if (refNode.nodeType != 1 && position == 'only') {
+				return
 			}
-			var rNode = refNode, tempNode;
+			var rNode = refNode,
+				tempNode
 
 			//Always cycle backwards in case the array is really a
 			//DOM NodeList and the DOM operations take it out of the live collection.
-			var length = ary.length;
-			for(var i = length - 1; i >= 0; i--){
-				var node = (useClone ? this._cloneNode(ary[i]) : ary[i]);
+			var length = ary.length
+			for (var i = length - 1; i >= 0; i--) {
+				var node = useClone ? this._cloneNode(ary[i]) : ary[i]
 
 				//If need widget parsing, use a temp node, instead of waiting after inserting into
 				//real DOM because we need to start widget parsing at one node up from current node,
 				//which could cause some already parsed widgets to be parsed again.
-				if(ary._runParse && dojo.parser && dojo.parser.parse){
-					if(!tempNode){
-						tempNode = rNode.ownerDocument.createElement("div");
+				if (ary._runParse && dojo.parser && dojo.parser.parse) {
+					if (!tempNode) {
+						tempNode = rNode.ownerDocument.createElement('div')
 					}
-					tempNode.appendChild(node);
-					dojo.parser.parse(tempNode);
-					node = tempNode.firstChild;
-					while(tempNode.firstChild){
-						tempNode.removeChild(tempNode.firstChild);
+					tempNode.appendChild(node)
+					dojo.parser.parse(tempNode)
+					node = tempNode.firstChild
+					while (tempNode.firstChild) {
+						tempNode.removeChild(tempNode.firstChild)
 					}
 				}
 
-				if(i == length - 1){
-					domCtr.place(node, rNode, position);
-				}else{
-					rNode.parentNode.insertBefore(node, rNode);
+				if (i == length - 1) {
+					domCtr.place(node, rNode, position)
+				} else {
+					rNode.parentNode.insertBefore(node, rNode)
 				}
-				rNode = node;
+				rNode = node
 			}
 		},
-
 
 		position: aam(domGeom.position),
 		/*=====
@@ -308,7 +338,7 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 		},
 		*/
 
-		place: function(/*String||Node*/ queryOrNode, /*String*/ position){
+		place: function (/*String||Node*/ queryOrNode, /*String*/ position) {
 			// summary:
 			//		places elements of this node list relative to the first element matched
 			//		by queryOrNode. Returns the original NodeList. See: `dojo/dom-construct.place`
@@ -327,11 +357,13 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		-	"replace"
 			//
 			//		or an offset in the childNodes property
-			var item = query(queryOrNode)[0];
-			return this.forEach(function(node){ domCtr.place(node, item, position); }); // dojo/NodeList
+			var item = query(queryOrNode)[0]
+			return this.forEach(function (node) {
+				domCtr.place(node, item, position)
+			}) // dojo/NodeList
 		},
 
-		orphan: function(/*String?*/ filter){
+		orphan: function (/*String?*/ filter) {
 			// summary:
 			//		removes elements in this list that match the filter
 			//		from their parents and returns them as a new NodeList.
@@ -339,10 +371,13 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		CSS selector like ".foo" or "div > span"
 			// returns:
 			//		NodeList containing the orphaned elements
-			return (filter ? query._filterResult(this, filter) : this).forEach(orphan); // dojo/NodeList
+			return (filter ? query._filterResult(this, filter) : this).forEach(orphan) // dojo/NodeList
 		},
 
-		adopt: function(/*String||Array||DomNode*/ queryOrListOrNode, /*String?*/ position){
+		adopt: function (
+			/*String||Array||DomNode*/ queryOrListOrNode,
+			/*String?*/ position,
+		) {
 			// summary:
 			//		places any/all elements in queryOrListOrNode at a
 			//		position relative to the first element in this list.
@@ -362,11 +397,11 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//		-	"replace"
 			//
 			//		or an offset in the childNodes property
-			return query(queryOrListOrNode).place(this[0], position)._stash(this);	// dojo/NodeList
+			return query(queryOrListOrNode).place(this[0], position)._stash(this) // dojo/NodeList
 		},
 
 		// FIXME: do we need this?
-		query: function(/*String*/ queryStr){
+		query: function (/*String*/ queryStr) {
 			// summary:
 			//		Returns a new list whose members match the passed query,
 			//		assuming elements of the current NodeList as the root for
@@ -391,20 +426,22 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//	|	});
 
 			// FIXME: probably slow
-			if(!queryStr){ return this; }
-			var ret = new NodeList;
-			this.map(function(node){
+			if (!queryStr) {
+				return this
+			}
+			var ret = new NodeList()
+			this.map(function (node) {
 				// FIXME: why would we ever get undefined here?
-				query(queryStr, node).forEach(function(subNode){
-					if(subNode !== undefined){
-						ret.push(subNode);
+				query(queryStr, node).forEach(function (subNode) {
+					if (subNode !== undefined) {
+						ret.push(subNode)
 					}
-				});
-			});
-			return ret._stash(this);	// dojo/NodeList
+				})
+			})
+			return ret._stash(this) // dojo/NodeList
 		},
 
-		filter: function(/*String|Function*/ filter){
+		filter: function (/*String|Function*/ filter) {
 			// summary:
 			//		"masks" the built-in javascript filter() method (supported
 			//		in Dojo via `dojo.filter`) to support passing a simple
@@ -427,17 +464,20 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//	|	], function(query){
 			//	|		query("*").filter("p").styles("backgroundColor", "yellow");
 			//	|	});
-			var a = arguments, items = this, start = 0;
-			if(typeof filter == "string"){ // inline'd type check
-				items = query._filterResult(this, a[0]);
-				if(a.length == 1){
+			var a = arguments,
+				items = this,
+				start = 0
+			if (typeof filter == 'string') {
+				// inline'd type check
+				items = query._filterResult(this, a[0])
+				if (a.length == 1) {
 					// if we only got a string query, pass back the filtered results
-					return items._stash(this); // dojo/NodeList
+					return items._stash(this) // dojo/NodeList
 				}
 				// if we got a callback, run it over the filtered items
-				start = 1;
+				start = 1
 			}
-			return this._wrap(array.filter(items, a[start], a[start + 1]), this);	// dojo/NodeList
+			return this._wrap(array.filter(items, a[start], a[start + 1]), this) // dojo/NodeList
 		},
 
 		/*
@@ -449,7 +489,10 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 		},
 		*/
 
-		addContent: function(/*String||DomNode||Object||dojo/NodeList*/ content, /*String||Integer?*/ position){
+		addContent: function (
+			/*String||DomNode||Object||dojo/NodeList*/ content,
+			/*String||Integer?*/ position,
+		) {
 			// summary:
 			//		add a node, NodeList or some HTML as a string to every item in the
 			//		list.  Returns the original list.
@@ -526,18 +569,18 @@ define(["./_base/kernel", "./query", "./_base/array", "./_base/lang", "./dom-cla
 			//	|			text: "Send"
 			//	|		});
 			//	|	});
-			content = this._normalize(content, this[0]);
-			for(var i = 0, node; (node = this[i]); i++){
-				if(content.length){
-					this._place(content, node, position, i > 0);
-				}else{
+			content = this._normalize(content, this[0])
+			for (var i = 0, node; (node = this[i]); i++) {
+				if (content.length) {
+					this._place(content, node, position, i > 0)
+				} else {
 					// if it is an empty array, we empty the target node
-					domCtr.empty(node);
+					domCtr.empty(node)
 				}
 			}
-			return this; // dojo/NodeList
-		}
-	});
+			return this // dojo/NodeList
+		},
+	})
 
-	return NodeList;
-});
+	return NodeList
+})

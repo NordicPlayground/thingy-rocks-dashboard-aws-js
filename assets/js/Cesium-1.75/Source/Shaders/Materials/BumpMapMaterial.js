@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform sampler2D image;\n\
+export default 'uniform sampler2D image;\n\
 uniform float strength;\n\
 uniform vec2 repeat;\n\
 \n\
@@ -28,4 +28,4 @@ czm_material czm_getMaterial(czm_materialInput materialInput)\n\
 \n\
     return material;\n\
 }\n\
-";
+'

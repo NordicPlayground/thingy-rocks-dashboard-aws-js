@@ -1,55 +1,55 @@
-import Cartesian3 from "./Cartesian3.js";
-import Cartographic from "./Cartographic.js";
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import CesiumMath from "./Math.js";
-import scaleToGeodeticSurface from "./scaleToGeodeticSurface.js";
+import Cartesian3 from './Cartesian3.js'
+import Cartographic from './Cartographic.js'
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import CesiumMath from './Math.js'
+import scaleToGeodeticSurface from './scaleToGeodeticSurface.js'
 
 function initialize(ellipsoid, x, y, z) {
-  x = defaultValue(x, 0.0);
-  y = defaultValue(y, 0.0);
-  z = defaultValue(z, 0.0);
+	x = defaultValue(x, 0.0)
+	y = defaultValue(y, 0.0)
+	z = defaultValue(z, 0.0)
 
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number.greaterThanOrEquals("x", x, 0.0);
-  Check.typeOf.number.greaterThanOrEquals("y", y, 0.0);
-  Check.typeOf.number.greaterThanOrEquals("z", z, 0.0);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number.greaterThanOrEquals('x', x, 0.0)
+	Check.typeOf.number.greaterThanOrEquals('y', y, 0.0)
+	Check.typeOf.number.greaterThanOrEquals('z', z, 0.0)
+	//>>includeEnd('debug');
 
-  ellipsoid._radii = new Cartesian3(x, y, z);
+	ellipsoid._radii = new Cartesian3(x, y, z)
 
-  ellipsoid._radiiSquared = new Cartesian3(x * x, y * y, z * z);
+	ellipsoid._radiiSquared = new Cartesian3(x * x, y * y, z * z)
 
-  ellipsoid._radiiToTheFourth = new Cartesian3(
-    x * x * x * x,
-    y * y * y * y,
-    z * z * z * z
-  );
+	ellipsoid._radiiToTheFourth = new Cartesian3(
+		x * x * x * x,
+		y * y * y * y,
+		z * z * z * z,
+	)
 
-  ellipsoid._oneOverRadii = new Cartesian3(
-    x === 0.0 ? 0.0 : 1.0 / x,
-    y === 0.0 ? 0.0 : 1.0 / y,
-    z === 0.0 ? 0.0 : 1.0 / z
-  );
+	ellipsoid._oneOverRadii = new Cartesian3(
+		x === 0.0 ? 0.0 : 1.0 / x,
+		y === 0.0 ? 0.0 : 1.0 / y,
+		z === 0.0 ? 0.0 : 1.0 / z,
+	)
 
-  ellipsoid._oneOverRadiiSquared = new Cartesian3(
-    x === 0.0 ? 0.0 : 1.0 / (x * x),
-    y === 0.0 ? 0.0 : 1.0 / (y * y),
-    z === 0.0 ? 0.0 : 1.0 / (z * z)
-  );
+	ellipsoid._oneOverRadiiSquared = new Cartesian3(
+		x === 0.0 ? 0.0 : 1.0 / (x * x),
+		y === 0.0 ? 0.0 : 1.0 / (y * y),
+		z === 0.0 ? 0.0 : 1.0 / (z * z),
+	)
 
-  ellipsoid._minimumRadius = Math.min(x, y, z);
+	ellipsoid._minimumRadius = Math.min(x, y, z)
 
-  ellipsoid._maximumRadius = Math.max(x, y, z);
+	ellipsoid._maximumRadius = Math.max(x, y, z)
 
-  ellipsoid._centerToleranceSquared = CesiumMath.EPSILON1;
+	ellipsoid._centerToleranceSquared = CesiumMath.EPSILON1
 
-  if (ellipsoid._radiiSquared.z !== 0) {
-    ellipsoid._squaredXOverSquaredZ =
-      ellipsoid._radiiSquared.x / ellipsoid._radiiSquared.z;
-  }
+	if (ellipsoid._radiiSquared.z !== 0) {
+		ellipsoid._squaredXOverSquaredZ =
+			ellipsoid._radiiSquared.x / ellipsoid._radiiSquared.z
+	}
 }
 
 /**
@@ -73,98 +73,98 @@ function initialize(ellipsoid, x, y, z) {
  * @see Ellipsoid.UNIT_SPHERE
  */
 function Ellipsoid(x, y, z) {
-  this._radii = undefined;
-  this._radiiSquared = undefined;
-  this._radiiToTheFourth = undefined;
-  this._oneOverRadii = undefined;
-  this._oneOverRadiiSquared = undefined;
-  this._minimumRadius = undefined;
-  this._maximumRadius = undefined;
-  this._centerToleranceSquared = undefined;
-  this._squaredXOverSquaredZ = undefined;
+	this._radii = undefined
+	this._radiiSquared = undefined
+	this._radiiToTheFourth = undefined
+	this._oneOverRadii = undefined
+	this._oneOverRadiiSquared = undefined
+	this._minimumRadius = undefined
+	this._maximumRadius = undefined
+	this._centerToleranceSquared = undefined
+	this._squaredXOverSquaredZ = undefined
 
-  initialize(this, x, y, z);
+	initialize(this, x, y, z)
 }
 
 Object.defineProperties(Ellipsoid.prototype, {
-  /**
-   * Gets the radii of the ellipsoid.
-   * @memberof Ellipsoid.prototype
-   * @type {Cartesian3}
-   * @readonly
-   */
-  radii: {
-    get: function () {
-      return this._radii;
-    },
-  },
-  /**
-   * Gets the squared radii of the ellipsoid.
-   * @memberof Ellipsoid.prototype
-   * @type {Cartesian3}
-   * @readonly
-   */
-  radiiSquared: {
-    get: function () {
-      return this._radiiSquared;
-    },
-  },
-  /**
-   * Gets the radii of the ellipsoid raise to the fourth power.
-   * @memberof Ellipsoid.prototype
-   * @type {Cartesian3}
-   * @readonly
-   */
-  radiiToTheFourth: {
-    get: function () {
-      return this._radiiToTheFourth;
-    },
-  },
-  /**
-   * Gets one over the radii of the ellipsoid.
-   * @memberof Ellipsoid.prototype
-   * @type {Cartesian3}
-   * @readonly
-   */
-  oneOverRadii: {
-    get: function () {
-      return this._oneOverRadii;
-    },
-  },
-  /**
-   * Gets one over the squared radii of the ellipsoid.
-   * @memberof Ellipsoid.prototype
-   * @type {Cartesian3}
-   * @readonly
-   */
-  oneOverRadiiSquared: {
-    get: function () {
-      return this._oneOverRadiiSquared;
-    },
-  },
-  /**
-   * Gets the minimum radius of the ellipsoid.
-   * @memberof Ellipsoid.prototype
-   * @type {Number}
-   * @readonly
-   */
-  minimumRadius: {
-    get: function () {
-      return this._minimumRadius;
-    },
-  },
-  /**
-   * Gets the maximum radius of the ellipsoid.
-   * @memberof Ellipsoid.prototype
-   * @type {Number}
-   * @readonly
-   */
-  maximumRadius: {
-    get: function () {
-      return this._maximumRadius;
-    },
-  },
-});
+	/**
+	 * Gets the radii of the ellipsoid.
+	 * @memberof Ellipsoid.prototype
+	 * @type {Cartesian3}
+	 * @readonly
+	 */
+	radii: {
+		get: function () {
+			return this._radii
+		},
+	},
+	/**
+	 * Gets the squared radii of the ellipsoid.
+	 * @memberof Ellipsoid.prototype
+	 * @type {Cartesian3}
+	 * @readonly
+	 */
+	radiiSquared: {
+		get: function () {
+			return this._radiiSquared
+		},
+	},
+	/**
+	 * Gets the radii of the ellipsoid raise to the fourth power.
+	 * @memberof Ellipsoid.prototype
+	 * @type {Cartesian3}
+	 * @readonly
+	 */
+	radiiToTheFourth: {
+		get: function () {
+			return this._radiiToTheFourth
+		},
+	},
+	/**
+	 * Gets one over the radii of the ellipsoid.
+	 * @memberof Ellipsoid.prototype
+	 * @type {Cartesian3}
+	 * @readonly
+	 */
+	oneOverRadii: {
+		get: function () {
+			return this._oneOverRadii
+		},
+	},
+	/**
+	 * Gets one over the squared radii of the ellipsoid.
+	 * @memberof Ellipsoid.prototype
+	 * @type {Cartesian3}
+	 * @readonly
+	 */
+	oneOverRadiiSquared: {
+		get: function () {
+			return this._oneOverRadiiSquared
+		},
+	},
+	/**
+	 * Gets the minimum radius of the ellipsoid.
+	 * @memberof Ellipsoid.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	minimumRadius: {
+		get: function () {
+			return this._minimumRadius
+		},
+	},
+	/**
+	 * Gets the maximum radius of the ellipsoid.
+	 * @memberof Ellipsoid.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	maximumRadius: {
+		get: function () {
+			return this._maximumRadius
+		},
+	},
+})
 
 /**
  * Duplicates an Ellipsoid instance.
@@ -175,26 +175,26 @@ Object.defineProperties(Ellipsoid.prototype, {
  * @returns {Ellipsoid} The cloned Ellipsoid. (Returns undefined if ellipsoid is undefined)
  */
 Ellipsoid.clone = function (ellipsoid, result) {
-  if (!defined(ellipsoid)) {
-    return undefined;
-  }
-  var radii = ellipsoid._radii;
+	if (!defined(ellipsoid)) {
+		return undefined
+	}
+	var radii = ellipsoid._radii
 
-  if (!defined(result)) {
-    return new Ellipsoid(radii.x, radii.y, radii.z);
-  }
+	if (!defined(result)) {
+		return new Ellipsoid(radii.x, radii.y, radii.z)
+	}
 
-  Cartesian3.clone(radii, result._radii);
-  Cartesian3.clone(ellipsoid._radiiSquared, result._radiiSquared);
-  Cartesian3.clone(ellipsoid._radiiToTheFourth, result._radiiToTheFourth);
-  Cartesian3.clone(ellipsoid._oneOverRadii, result._oneOverRadii);
-  Cartesian3.clone(ellipsoid._oneOverRadiiSquared, result._oneOverRadiiSquared);
-  result._minimumRadius = ellipsoid._minimumRadius;
-  result._maximumRadius = ellipsoid._maximumRadius;
-  result._centerToleranceSquared = ellipsoid._centerToleranceSquared;
+	Cartesian3.clone(radii, result._radii)
+	Cartesian3.clone(ellipsoid._radiiSquared, result._radiiSquared)
+	Cartesian3.clone(ellipsoid._radiiToTheFourth, result._radiiToTheFourth)
+	Cartesian3.clone(ellipsoid._oneOverRadii, result._oneOverRadii)
+	Cartesian3.clone(ellipsoid._oneOverRadiiSquared, result._oneOverRadiiSquared)
+	result._minimumRadius = ellipsoid._minimumRadius
+	result._maximumRadius = ellipsoid._maximumRadius
+	result._centerToleranceSquared = ellipsoid._centerToleranceSquared
 
-  return result;
-};
+	return result
+}
 
 /**
  * Computes an Ellipsoid from a Cartesian specifying the radii in x, y, and z directions.
@@ -210,17 +210,17 @@ Ellipsoid.clone = function (ellipsoid, result) {
  * @see Ellipsoid.UNIT_SPHERE
  */
 Ellipsoid.fromCartesian3 = function (cartesian, result) {
-  if (!defined(result)) {
-    result = new Ellipsoid();
-  }
+	if (!defined(result)) {
+		result = new Ellipsoid()
+	}
 
-  if (!defined(cartesian)) {
-    return result;
-  }
+	if (!defined(cartesian)) {
+		return result
+	}
 
-  initialize(result, cartesian.x, cartesian.y, cartesian.z);
-  return result;
-};
+	initialize(result, cartesian.x, cartesian.y, cartesian.z)
+	return result
+}
 
 /**
  * An Ellipsoid instance initialized to the WGS84 standard.
@@ -229,8 +229,8 @@ Ellipsoid.fromCartesian3 = function (cartesian, result) {
  * @constant
  */
 Ellipsoid.WGS84 = Object.freeze(
-  new Ellipsoid(6378137.0, 6378137.0, 6356752.3142451793)
-);
+	new Ellipsoid(6378137.0, 6378137.0, 6356752.3142451793),
+)
 
 /**
  * An Ellipsoid instance initialized to radii of (1.0, 1.0, 1.0).
@@ -238,7 +238,7 @@ Ellipsoid.WGS84 = Object.freeze(
  * @type {Ellipsoid}
  * @constant
  */
-Ellipsoid.UNIT_SPHERE = Object.freeze(new Ellipsoid(1.0, 1.0, 1.0));
+Ellipsoid.UNIT_SPHERE = Object.freeze(new Ellipsoid(1.0, 1.0, 1.0))
 
 /**
  * An Ellipsoid instance initialized to a sphere with the lunar radius.
@@ -247,12 +247,12 @@ Ellipsoid.UNIT_SPHERE = Object.freeze(new Ellipsoid(1.0, 1.0, 1.0));
  * @constant
  */
 Ellipsoid.MOON = Object.freeze(
-  new Ellipsoid(
-    CesiumMath.LUNAR_RADIUS,
-    CesiumMath.LUNAR_RADIUS,
-    CesiumMath.LUNAR_RADIUS
-  )
-);
+	new Ellipsoid(
+		CesiumMath.LUNAR_RADIUS,
+		CesiumMath.LUNAR_RADIUS,
+		CesiumMath.LUNAR_RADIUS,
+	),
+)
 
 /**
  * Duplicates an Ellipsoid instance.
@@ -262,14 +262,14 @@ Ellipsoid.MOON = Object.freeze(
  * @returns {Ellipsoid} The cloned Ellipsoid.
  */
 Ellipsoid.prototype.clone = function (result) {
-  return Ellipsoid.clone(this, result);
-};
+	return Ellipsoid.clone(this, result)
+}
 
 /**
  * The number of elements used to pack the object into an array.
  * @type {Number}
  */
-Ellipsoid.packedLength = Cartesian3.packedLength;
+Ellipsoid.packedLength = Cartesian3.packedLength
 
 /**
  * Stores the provided instance into the provided array.
@@ -281,17 +281,17 @@ Ellipsoid.packedLength = Cartesian3.packedLength;
  * @returns {Number[]} The array that was packed into
  */
 Ellipsoid.pack = function (value, array, startingIndex) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("value", value);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('value', value)
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
+	startingIndex = defaultValue(startingIndex, 0)
 
-  Cartesian3.pack(value._radii, array, startingIndex);
+	Cartesian3.pack(value._radii, array, startingIndex)
 
-  return array;
-};
+	return array
+}
 
 /**
  * Retrieves an instance from a packed array.
@@ -302,15 +302,15 @@ Ellipsoid.pack = function (value, array, startingIndex) {
  * @returns {Ellipsoid} The modified result parameter or a new Ellipsoid instance if one was not provided.
  */
 Ellipsoid.unpack = function (array, startingIndex, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
+	startingIndex = defaultValue(startingIndex, 0)
 
-  var radii = Cartesian3.unpack(array, startingIndex);
-  return Ellipsoid.fromCartesian3(radii, result);
-};
+	var radii = Cartesian3.unpack(array, startingIndex)
+	return Ellipsoid.fromCartesian3(radii, result)
+}
 
 /**
  * Computes the unit vector directed from the center of this ellipsoid toward the provided Cartesian position.
@@ -320,7 +320,7 @@ Ellipsoid.unpack = function (array, startingIndex, result) {
  * @param {Cartesian3} [result] The object onto which to store the result.
  * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if none was provided.
  */
-Ellipsoid.prototype.geocentricSurfaceNormal = Cartesian3.normalize;
+Ellipsoid.prototype.geocentricSurfaceNormal = Cartesian3.normalize
 
 /**
  * Computes the normal of the plane tangent to the surface of the ellipsoid at the provided position.
@@ -330,29 +330,29 @@ Ellipsoid.prototype.geocentricSurfaceNormal = Cartesian3.normalize;
  * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if none was provided.
  */
 Ellipsoid.prototype.geodeticSurfaceNormalCartographic = function (
-  cartographic,
-  result
+	cartographic,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartographic", cartographic);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartographic', cartographic)
+	//>>includeEnd('debug');
 
-  var longitude = cartographic.longitude;
-  var latitude = cartographic.latitude;
-  var cosLatitude = Math.cos(latitude);
+	var longitude = cartographic.longitude
+	var latitude = cartographic.latitude
+	var cosLatitude = Math.cos(latitude)
 
-  var x = cosLatitude * Math.cos(longitude);
-  var y = cosLatitude * Math.sin(longitude);
-  var z = Math.sin(latitude);
+	var x = cosLatitude * Math.cos(longitude)
+	var y = cosLatitude * Math.sin(longitude)
+	var z = Math.sin(latitude)
 
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
-  result.x = x;
-  result.y = y;
-  result.z = z;
-  return Cartesian3.normalize(result, result);
-};
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
+	result.x = x
+	result.y = y
+	result.z = z
+	return Cartesian3.normalize(result, result)
+}
 
 /**
  * Computes the normal of the plane tangent to the surface of the ellipsoid at the provided position.
@@ -362,24 +362,24 @@ Ellipsoid.prototype.geodeticSurfaceNormalCartographic = function (
  * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if none was provided.
  */
 Ellipsoid.prototype.geodeticSurfaceNormal = function (cartesian, result) {
-  if (
-    Cartesian3.equalsEpsilon(cartesian, Cartesian3.ZERO, CesiumMath.EPSILON14)
-  ) {
-    return undefined;
-  }
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
-  result = Cartesian3.multiplyComponents(
-    cartesian,
-    this._oneOverRadiiSquared,
-    result
-  );
-  return Cartesian3.normalize(result, result);
-};
+	if (
+		Cartesian3.equalsEpsilon(cartesian, Cartesian3.ZERO, CesiumMath.EPSILON14)
+	) {
+		return undefined
+	}
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
+	result = Cartesian3.multiplyComponents(
+		cartesian,
+		this._oneOverRadiiSquared,
+		result,
+	)
+	return Cartesian3.normalize(result, result)
+}
 
-var cartographicToCartesianNormal = new Cartesian3();
-var cartographicToCartesianK = new Cartesian3();
+var cartographicToCartesianNormal = new Cartesian3()
+var cartographicToCartesianK = new Cartesian3()
 
 /**
  * Converts the provided cartographic to Cartesian representation.
@@ -394,20 +394,20 @@ var cartographicToCartesianK = new Cartesian3();
  * var cartesianPosition = Cesium.Ellipsoid.WGS84.cartographicToCartesian(position);
  */
 Ellipsoid.prototype.cartographicToCartesian = function (cartographic, result) {
-  //`cartographic is required` is thrown from geodeticSurfaceNormalCartographic.
-  var n = cartographicToCartesianNormal;
-  var k = cartographicToCartesianK;
-  this.geodeticSurfaceNormalCartographic(cartographic, n);
-  Cartesian3.multiplyComponents(this._radiiSquared, n, k);
-  var gamma = Math.sqrt(Cartesian3.dot(n, k));
-  Cartesian3.divideByScalar(k, gamma, k);
-  Cartesian3.multiplyByScalar(n, cartographic.height, n);
+	//`cartographic is required` is thrown from geodeticSurfaceNormalCartographic.
+	var n = cartographicToCartesianNormal
+	var k = cartographicToCartesianK
+	this.geodeticSurfaceNormalCartographic(cartographic, n)
+	Cartesian3.multiplyComponents(this._radiiSquared, n, k)
+	var gamma = Math.sqrt(Cartesian3.dot(n, k))
+	Cartesian3.divideByScalar(k, gamma, k)
+	Cartesian3.multiplyByScalar(n, cartographic.height, n)
 
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
-  return Cartesian3.add(k, n, result);
-};
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
+	return Cartesian3.add(k, n, result)
+}
 
 /**
  * Converts the provided array of cartographics to an array of Cartesians.
@@ -424,28 +424,28 @@ Ellipsoid.prototype.cartographicToCartesian = function (cartographic, result) {
  * var cartesianPositions = Cesium.Ellipsoid.WGS84.cartographicArrayToCartesianArray(positions);
  */
 Ellipsoid.prototype.cartographicArrayToCartesianArray = function (
-  cartographics,
-  result
+	cartographics,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartographics", cartographics);
-  //>>includeEnd('debug')
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartographics', cartographics)
+	//>>includeEnd('debug')
 
-  var length = cartographics.length;
-  if (!defined(result)) {
-    result = new Array(length);
-  } else {
-    result.length = length;
-  }
-  for (var i = 0; i < length; i++) {
-    result[i] = this.cartographicToCartesian(cartographics[i], result[i]);
-  }
-  return result;
-};
+	var length = cartographics.length
+	if (!defined(result)) {
+		result = new Array(length)
+	} else {
+		result.length = length
+	}
+	for (var i = 0; i < length; i++) {
+		result[i] = this.cartographicToCartesian(cartographics[i], result[i])
+	}
+	return result
+}
 
-var cartesianToCartographicN = new Cartesian3();
-var cartesianToCartographicP = new Cartesian3();
-var cartesianToCartographicH = new Cartesian3();
+var cartesianToCartographicN = new Cartesian3()
+var cartesianToCartographicP = new Cartesian3()
+var cartesianToCartographicH = new Cartesian3()
 
 /**
  * Converts the provided cartesian to cartographic representation.
@@ -461,29 +461,29 @@ var cartesianToCartographicH = new Cartesian3();
  * var cartographicPosition = Cesium.Ellipsoid.WGS84.cartesianToCartographic(position);
  */
 Ellipsoid.prototype.cartesianToCartographic = function (cartesian, result) {
-  //`cartesian is required.` is thrown from scaleToGeodeticSurface
-  var p = this.scaleToGeodeticSurface(cartesian, cartesianToCartographicP);
+	//`cartesian is required.` is thrown from scaleToGeodeticSurface
+	var p = this.scaleToGeodeticSurface(cartesian, cartesianToCartographicP)
 
-  if (!defined(p)) {
-    return undefined;
-  }
+	if (!defined(p)) {
+		return undefined
+	}
 
-  var n = this.geodeticSurfaceNormal(p, cartesianToCartographicN);
-  var h = Cartesian3.subtract(cartesian, p, cartesianToCartographicH);
+	var n = this.geodeticSurfaceNormal(p, cartesianToCartographicN)
+	var h = Cartesian3.subtract(cartesian, p, cartesianToCartographicH)
 
-  var longitude = Math.atan2(n.y, n.x);
-  var latitude = Math.asin(n.z);
-  var height =
-    CesiumMath.sign(Cartesian3.dot(h, cartesian)) * Cartesian3.magnitude(h);
+	var longitude = Math.atan2(n.y, n.x)
+	var latitude = Math.asin(n.z)
+	var height =
+		CesiumMath.sign(Cartesian3.dot(h, cartesian)) * Cartesian3.magnitude(h)
 
-  if (!defined(result)) {
-    return new Cartographic(longitude, latitude, height);
-  }
-  result.longitude = longitude;
-  result.latitude = latitude;
-  result.height = height;
-  return result;
-};
+	if (!defined(result)) {
+		return new Cartographic(longitude, latitude, height)
+	}
+	result.longitude = longitude
+	result.latitude = latitude
+	result.height = height
+	return result
+}
 
 /**
  * Converts the provided array of cartesians to an array of cartographics.
@@ -500,24 +500,24 @@ Ellipsoid.prototype.cartesianToCartographic = function (cartesian, result) {
  * var cartographicPositions = Cesium.Ellipsoid.WGS84.cartesianArrayToCartographicArray(positions);
  */
 Ellipsoid.prototype.cartesianArrayToCartographicArray = function (
-  cartesians,
-  result
+	cartesians,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartesians", cartesians);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartesians', cartesians)
+	//>>includeEnd('debug');
 
-  var length = cartesians.length;
-  if (!defined(result)) {
-    result = new Array(length);
-  } else {
-    result.length = length;
-  }
-  for (var i = 0; i < length; ++i) {
-    result[i] = this.cartesianToCartographic(cartesians[i], result[i]);
-  }
-  return result;
-};
+	var length = cartesians.length
+	if (!defined(result)) {
+		result = new Array(length)
+	} else {
+		result.length = length
+	}
+	for (var i = 0; i < length; ++i) {
+		result[i] = this.cartesianToCartographic(cartesians[i], result[i])
+	}
+	return result
+}
 
 /**
  * Scales the provided Cartesian position along the geodetic surface normal
@@ -529,14 +529,14 @@ Ellipsoid.prototype.cartesianArrayToCartographicArray = function (
  * @returns {Cartesian3} The modified result parameter, a new Cartesian3 instance if none was provided, or undefined if the position is at the center.
  */
 Ellipsoid.prototype.scaleToGeodeticSurface = function (cartesian, result) {
-  return scaleToGeodeticSurface(
-    cartesian,
-    this._oneOverRadii,
-    this._oneOverRadiiSquared,
-    this._centerToleranceSquared,
-    result
-  );
-};
+	return scaleToGeodeticSurface(
+		cartesian,
+		this._oneOverRadii,
+		this._oneOverRadiiSquared,
+		this._centerToleranceSquared,
+		result,
+	)
+}
 
 /**
  * Scales the provided Cartesian position along the geocentric surface normal
@@ -547,29 +547,29 @@ Ellipsoid.prototype.scaleToGeodeticSurface = function (cartesian, result) {
  * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if none was provided.
  */
 Ellipsoid.prototype.scaleToGeocentricSurface = function (cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
 
-  var positionX = cartesian.x;
-  var positionY = cartesian.y;
-  var positionZ = cartesian.z;
-  var oneOverRadiiSquared = this._oneOverRadiiSquared;
+	var positionX = cartesian.x
+	var positionY = cartesian.y
+	var positionZ = cartesian.z
+	var oneOverRadiiSquared = this._oneOverRadiiSquared
 
-  var beta =
-    1.0 /
-    Math.sqrt(
-      positionX * positionX * oneOverRadiiSquared.x +
-        positionY * positionY * oneOverRadiiSquared.y +
-        positionZ * positionZ * oneOverRadiiSquared.z
-    );
+	var beta =
+		1.0 /
+		Math.sqrt(
+			positionX * positionX * oneOverRadiiSquared.x +
+				positionY * positionY * oneOverRadiiSquared.y +
+				positionZ * positionZ * oneOverRadiiSquared.z,
+		)
 
-  return Cartesian3.multiplyByScalar(cartesian, beta, result);
-};
+	return Cartesian3.multiplyByScalar(cartesian, beta, result)
+}
 
 /**
  * Transforms a Cartesian X, Y, Z position to the ellipsoid-scaled space by multiplying
@@ -582,15 +582,15 @@ Ellipsoid.prototype.scaleToGeocentricSurface = function (cartesian, result) {
  *          one passed as the result parameter if it is not undefined, or a new instance of it is.
  */
 Ellipsoid.prototype.transformPositionToScaledSpace = function (
-  position,
-  result
+	position,
+	result,
 ) {
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
 
-  return Cartesian3.multiplyComponents(position, this._oneOverRadii, result);
-};
+	return Cartesian3.multiplyComponents(position, this._oneOverRadii, result)
+}
 
 /**
  * Transforms a Cartesian X, Y, Z position from the ellipsoid-scaled space by multiplying
@@ -603,15 +603,15 @@ Ellipsoid.prototype.transformPositionToScaledSpace = function (
  *          one passed as the result parameter if it is not undefined, or a new instance of it is.
  */
 Ellipsoid.prototype.transformPositionFromScaledSpace = function (
-  position,
-  result
+	position,
+	result,
 ) {
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
 
-  return Cartesian3.multiplyComponents(position, this._radii, result);
-};
+	return Cartesian3.multiplyComponents(position, this._radii, result)
+}
 
 /**
  * Compares this Ellipsoid against the provided Ellipsoid componentwise and returns
@@ -621,11 +621,11 @@ Ellipsoid.prototype.transformPositionFromScaledSpace = function (
  * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
  */
 Ellipsoid.prototype.equals = function (right) {
-  return (
-    this === right ||
-    (defined(right) && Cartesian3.equals(this._radii, right._radii))
-  );
-};
+	return (
+		this === right ||
+		(defined(right) && Cartesian3.equals(this._radii, right._radii))
+	)
+}
 
 /**
  * Creates a string representing this Ellipsoid in the format '(radii.x, radii.y, radii.z)'.
@@ -633,8 +633,8 @@ Ellipsoid.prototype.equals = function (right) {
  * @returns {String} A string representing this ellipsoid in the format '(radii.x, radii.y, radii.z)'.
  */
 Ellipsoid.prototype.toString = function () {
-  return this._radii.toString();
-};
+	return this._radii.toString()
+}
 
 /**
  * Computes a point which is the intersection of the surface normal with the z-axis.
@@ -653,63 +653,55 @@ Ellipsoid.prototype.toString = function () {
  * @exception {DeveloperError} Ellipsoid.radii.z must be greater than 0.
  */
 Ellipsoid.prototype.getSurfaceNormalIntersectionWithZAxis = function (
-  position,
-  buffer,
-  result
+	position,
+	buffer,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("position", position);
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('position', position)
 
-  if (
-    !CesiumMath.equalsEpsilon(
-      this._radii.x,
-      this._radii.y,
-      CesiumMath.EPSILON15
-    )
-  ) {
-    throw new DeveloperError(
-      "Ellipsoid must be an ellipsoid of revolution (radii.x == radii.y)"
-    );
-  }
+	if (
+		!CesiumMath.equalsEpsilon(
+			this._radii.x,
+			this._radii.y,
+			CesiumMath.EPSILON15,
+		)
+	) {
+		throw new DeveloperError(
+			'Ellipsoid must be an ellipsoid of revolution (radii.x == radii.y)',
+		)
+	}
 
-  Check.typeOf.number.greaterThan("Ellipsoid.radii.z", this._radii.z, 0);
-  //>>includeEnd('debug');
+	Check.typeOf.number.greaterThan('Ellipsoid.radii.z', this._radii.z, 0)
+	//>>includeEnd('debug');
 
-  buffer = defaultValue(buffer, 0.0);
+	buffer = defaultValue(buffer, 0.0)
 
-  var squaredXOverSquaredZ = this._squaredXOverSquaredZ;
+	var squaredXOverSquaredZ = this._squaredXOverSquaredZ
 
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
 
-  result.x = 0.0;
-  result.y = 0.0;
-  result.z = position.z * (1 - squaredXOverSquaredZ);
+	result.x = 0.0
+	result.y = 0.0
+	result.z = position.z * (1 - squaredXOverSquaredZ)
 
-  if (Math.abs(result.z) >= this._radii.z - buffer) {
-    return undefined;
-  }
+	if (Math.abs(result.z) >= this._radii.z - buffer) {
+		return undefined
+	}
 
-  return result;
-};
+	return result
+}
 
 var abscissas = [
-  0.14887433898163,
-  0.43339539412925,
-  0.67940956829902,
-  0.86506336668898,
-  0.97390652851717,
-  0.0,
-];
+	0.14887433898163, 0.43339539412925, 0.67940956829902, 0.86506336668898,
+	0.97390652851717, 0.0,
+]
 var weights = [
-  0.29552422471475,
-  0.26926671930999,
-  0.21908636251598,
-  0.14945134915058,
-  0.066671344308684,
-  0.0,
-];
+	0.29552422471475, 0.26926671930999, 0.21908636251598, 0.14945134915058,
+	0.066671344308684, 0.0,
+]
 
 /**
  * Compute the 10th order Gauss-Legendre Quadrature of the given definite integral.
@@ -722,26 +714,26 @@ var weights = [
  * @private
  */
 function gaussLegendreQuadrature(a, b, func) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number("a", a);
-  Check.typeOf.number("b", b);
-  Check.typeOf.func("func", func);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number('a', a)
+	Check.typeOf.number('b', b)
+	Check.typeOf.func('func', func)
+	//>>includeEnd('debug');
 
-  // The range is half of the normal range since the five weights add to one (ten weights add to two).
-  // The values of the abscissas are multiplied by two to account for this.
-  var xMean = 0.5 * (b + a);
-  var xRange = 0.5 * (b - a);
+	// The range is half of the normal range since the five weights add to one (ten weights add to two).
+	// The values of the abscissas are multiplied by two to account for this.
+	var xMean = 0.5 * (b + a)
+	var xRange = 0.5 * (b - a)
 
-  var sum = 0.0;
-  for (var i = 0; i < 5; i++) {
-    var dx = xRange * abscissas[i];
-    sum += weights[i] * (func(xMean + dx) + func(xMean - dx));
-  }
+	var sum = 0.0
+	for (var i = 0; i < 5; i++) {
+		var dx = xRange * abscissas[i]
+		sum += weights[i] * (func(xMean + dx) + func(xMean - dx))
+	}
 
-  // Scale the sum to the range of x.
-  sum *= xRange;
-  return sum;
+	// Scale the sum to the range of x.
+	sum *= xRange
+	return sum
 }
 
 /**
@@ -762,43 +754,43 @@ function gaussLegendreQuadrature(a, b, func) {
  * @returns {Number} The approximate area of the rectangle on the surface of this ellipsoid.
  */
 Ellipsoid.prototype.surfaceArea = function (rectangle) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("rectangle", rectangle);
-  //>>includeEnd('debug');
-  var minLongitude = rectangle.west;
-  var maxLongitude = rectangle.east;
-  var minLatitude = rectangle.south;
-  var maxLatitude = rectangle.north;
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('rectangle', rectangle)
+	//>>includeEnd('debug');
+	var minLongitude = rectangle.west
+	var maxLongitude = rectangle.east
+	var minLatitude = rectangle.south
+	var maxLatitude = rectangle.north
 
-  while (maxLongitude < minLongitude) {
-    maxLongitude += CesiumMath.TWO_PI;
-  }
+	while (maxLongitude < minLongitude) {
+		maxLongitude += CesiumMath.TWO_PI
+	}
 
-  var radiiSquared = this._radiiSquared;
-  var a2 = radiiSquared.x;
-  var b2 = radiiSquared.y;
-  var c2 = radiiSquared.z;
-  var a2b2 = a2 * b2;
-  return gaussLegendreQuadrature(minLatitude, maxLatitude, function (lat) {
-    // phi represents the angle measured from the north pole
-    // sin(phi) = sin(pi / 2 - lat) = cos(lat), cos(phi) is similar
-    var sinPhi = Math.cos(lat);
-    var cosPhi = Math.sin(lat);
-    return (
-      Math.cos(lat) *
-      gaussLegendreQuadrature(minLongitude, maxLongitude, function (lon) {
-        var cosTheta = Math.cos(lon);
-        var sinTheta = Math.sin(lon);
-        return Math.sqrt(
-          a2b2 * cosPhi * cosPhi +
-            c2 *
-              (b2 * cosTheta * cosTheta + a2 * sinTheta * sinTheta) *
-              sinPhi *
-              sinPhi
-        );
-      })
-    );
-  });
-};
+	var radiiSquared = this._radiiSquared
+	var a2 = radiiSquared.x
+	var b2 = radiiSquared.y
+	var c2 = radiiSquared.z
+	var a2b2 = a2 * b2
+	return gaussLegendreQuadrature(minLatitude, maxLatitude, function (lat) {
+		// phi represents the angle measured from the north pole
+		// sin(phi) = sin(pi / 2 - lat) = cos(lat), cos(phi) is similar
+		var sinPhi = Math.cos(lat)
+		var cosPhi = Math.sin(lat)
+		return (
+			Math.cos(lat) *
+			gaussLegendreQuadrature(minLongitude, maxLongitude, function (lon) {
+				var cosTheta = Math.cos(lon)
+				var sinTheta = Math.sin(lon)
+				return Math.sqrt(
+					a2b2 * cosPhi * cosPhi +
+						c2 *
+							(b2 * cosTheta * cosTheta + a2 * sinTheta * sinTheta) *
+							sinPhi *
+							sinPhi,
+				)
+			})
+		)
+	})
+}
 
-export default Ellipsoid;
+export default Ellipsoid

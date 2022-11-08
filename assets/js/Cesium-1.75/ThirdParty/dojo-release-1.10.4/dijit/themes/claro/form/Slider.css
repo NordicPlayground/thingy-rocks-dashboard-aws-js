@@ -74,10 +74,30 @@
 .claro .dijitSlider .dijitSliderLeftBumper {
   border-color: #b5bcc7;
   background-color: #cfe5fa;
-  background-image: -moz-linear-gradient(top, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px);
-  background-image: -webkit-linear-gradient(top, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px);
-  background-image: -o-linear-gradient(top, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px);
-  background-image: linear-gradient(top, #ffffff 0px, #ffffff 1px, rgba(255, 255, 255, 0) 2px);
+  background-image: -moz-linear-gradient(
+    top,
+    #ffffff 0px,
+    #ffffff 1px,
+    rgba(255, 255, 255, 0) 2px
+  );
+  background-image: -webkit-linear-gradient(
+    top,
+    #ffffff 0px,
+    #ffffff 1px,
+    rgba(255, 255, 255, 0) 2px
+  );
+  background-image: -o-linear-gradient(
+    top,
+    #ffffff 0px,
+    #ffffff 1px,
+    rgba(255, 255, 255, 0) 2px
+  );
+  background-image: linear-gradient(
+    top,
+    #ffffff 0px,
+    #ffffff 1px,
+    rgba(255, 255, 255, 0) 2px
+  );
 }
 .claro .dijitSlider .dijitSliderRemainingBarH,
 .claro .dijitSlider .dijitSliderRightBumper {
@@ -135,10 +155,26 @@
 .claro .dijitSlider .dijitSliderBottomBumper {
   border-color: #b5bcc7;
   background-color: #cfe5fa;
-  background-image: -moz-linear-gradient(left, #ffffff 0px, rgba(255, 255, 255, 0) 1px);
-  background-image: -webkit-linear-gradient(left, #ffffff 0px, rgba(255, 255, 255, 0) 1px);
-  background-image: -o-linear-gradient(left, #ffffff 0px, rgba(255, 255, 255, 0) 1px);
-  background-image: linear-gradient(left, #ffffff 0px, rgba(255, 255, 255, 0) 1px);
+  background-image: -moz-linear-gradient(
+    left,
+    #ffffff 0px,
+    rgba(255, 255, 255, 0) 1px
+  );
+  background-image: -webkit-linear-gradient(
+    left,
+    #ffffff 0px,
+    rgba(255, 255, 255, 0) 1px
+  );
+  background-image: -o-linear-gradient(
+    left,
+    #ffffff 0px,
+    rgba(255, 255, 255, 0) 1px
+  );
+  background-image: linear-gradient(
+    left,
+    #ffffff 0px,
+    rgba(255, 255, 255, 0) 1px
+  );
 }
 .claro .dijitSlider .dijitSliderRemainingBarV,
 .claro .dijitSlider .dijitSliderTopBumper {
@@ -181,7 +217,6 @@
 .claro .dijitSliderDisabled .dijitSliderBottomBumper {
   background-color: #d3d3d3;
   /* bottom side of slider, fill matches border */
-
 }
 .claro .dijitSliderDisabled .dijitSliderRemainingBarV,
 .claro .dijitSliderDisabled .dijitSliderTopBumper {
@@ -281,25 +316,45 @@
 .claro .dijitSliderDecrementIconH {
   background-position: -357px 50%;
 }
-.claro .dijitSliderActive .dijitSliderDecrementIconH .claro .dijitSliderHover .dijitSliderDecrementIconH {
+.claro
+  .dijitSliderActive
+  .dijitSliderDecrementIconH
+  .claro
+  .dijitSliderHover
+  .dijitSliderDecrementIconH {
   background-position: -393px 50%;
 }
 .claro .dijitSliderIncrementIconH {
   background-position: -251px 50%;
 }
-.claro .dijitSliderActive .dijitSliderIncrementIconH .claro .dijitSliderHover .dijitSliderIncrementIconH {
+.claro
+  .dijitSliderActive
+  .dijitSliderIncrementIconH
+  .claro
+  .dijitSliderHover
+  .dijitSliderIncrementIconH {
   background-position: -283px 50%;
 }
 .claro .dijitSliderDecrementIconV {
   background-position: -38px 50%;
 }
-.claro .dijitSliderActive .dijitSliderDecrementIconV .claro .dijitSliderHover .dijitSliderDecrementIconV {
+.claro
+  .dijitSliderActive
+  .dijitSliderDecrementIconV
+  .claro
+  .dijitSliderHover
+  .dijitSliderDecrementIconV {
   background-position: -73px 50%;
 }
 .claro .dijitSliderIncrementIconV {
   background-position: -143px 49%;
 }
-.claro .dijitSliderActive .dijitSliderIncrementIconV .claro .dijitSliderHover .dijitSliderIncrementIconV {
+.claro
+  .dijitSliderActive
+  .dijitSliderIncrementIconV
+  .claro
+  .dijitSliderHover
+  .dijitSliderIncrementIconV {
   background-position: -178px 49%;
 }
 .claro .dijitSliderButtonContainerV .dijitSliderDecrementButtonHover,

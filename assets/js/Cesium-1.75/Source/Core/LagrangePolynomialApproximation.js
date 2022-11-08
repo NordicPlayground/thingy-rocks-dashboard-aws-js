@@ -1,4 +1,4 @@
-import defined from "./defined.js";
+import defined from './defined.js'
 
 /**
  * An {@link InterpolationAlgorithm} for performing Lagrange interpolation.
@@ -6,8 +6,8 @@ import defined from "./defined.js";
  * @namespace LagrangePolynomialApproximation
  */
 var LagrangePolynomialApproximation = {
-  type: "Lagrange",
-};
+	type: 'Lagrange',
+}
 
 /**
  * Given the desired degree, returns the number of data points required for interpolation.
@@ -16,8 +16,8 @@ var LagrangePolynomialApproximation = {
  * @returns {Number} The number of required data points needed for the desired degree of interpolation.
  */
 LagrangePolynomialApproximation.getRequiredDataPoints = function (degree) {
-  return Math.max(degree + 1.0, 2);
-};
+	return Math.max(degree + 1.0, 2)
+}
 
 /**
  * Interpolates values using Lagrange Polynomial Approximation.
@@ -33,39 +33,39 @@ LagrangePolynomialApproximation.getRequiredDataPoints = function (degree) {
  * @returns {Number[]} The array of interpolated values, or the result parameter if one was provided.
  */
 LagrangePolynomialApproximation.interpolateOrderZero = function (
-  x,
-  xTable,
-  yTable,
-  yStride,
-  result
+	x,
+	xTable,
+	yTable,
+	yStride,
+	result,
 ) {
-  if (!defined(result)) {
-    result = new Array(yStride);
-  }
+	if (!defined(result)) {
+		result = new Array(yStride)
+	}
 
-  var i;
-  var j;
-  var length = xTable.length;
+	var i
+	var j
+	var length = xTable.length
 
-  for (i = 0; i < yStride; i++) {
-    result[i] = 0;
-  }
+	for (i = 0; i < yStride; i++) {
+		result[i] = 0
+	}
 
-  for (i = 0; i < length; i++) {
-    var coefficient = 1;
+	for (i = 0; i < length; i++) {
+		var coefficient = 1
 
-    for (j = 0; j < length; j++) {
-      if (j !== i) {
-        var diffX = xTable[i] - xTable[j];
-        coefficient *= (x - xTable[j]) / diffX;
-      }
-    }
+		for (j = 0; j < length; j++) {
+			if (j !== i) {
+				var diffX = xTable[i] - xTable[j]
+				coefficient *= (x - xTable[j]) / diffX
+			}
+		}
 
-    for (j = 0; j < yStride; j++) {
-      result[j] += coefficient * yTable[i * yStride + j];
-    }
-  }
+		for (j = 0; j < yStride; j++) {
+			result[j] += coefficient * yTable[i * yStride + j]
+		}
+	}
 
-  return result;
-};
-export default LagrangePolynomialApproximation;
+	return result
+}
+export default LagrangePolynomialApproximation

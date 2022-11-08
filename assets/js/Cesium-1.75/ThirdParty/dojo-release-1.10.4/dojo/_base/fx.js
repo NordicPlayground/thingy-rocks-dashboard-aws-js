@@ -1,39 +1,58 @@
-define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Evented", "./Color", "../aspect", "../sniff", "../dom", "../dom-style"],
-	function(dojo, config, /*===== declare, =====*/ lang, Evented, Color, aspect, has, dom, style){
+define([
+	'./kernel',
+	'./config',
+	/*===== "./declare", =====*/ './lang',
+	'../Evented',
+	'./Color',
+	'../aspect',
+	'../sniff',
+	'../dom',
+	'../dom-style',
+], function (
+	dojo,
+	config,
+	/*===== declare, =====*/ lang,
+	Evented,
+	Color,
+	aspect,
+	has,
+	dom,
+	style,
+) {
 	// module:
 	//		dojo/_base/fx
 	// notes:
 	//		Animation loosely package based on Dan Pupius' work, contributed under CLA; see
 	//		http://pupius.co.uk/js/Toolkit.Drawing.js
 
-	var _mixin = lang.mixin;
+	var _mixin = lang.mixin
 
 	// Module export
 	var basefx = {
 		// summary:
 		//		This module defines the base dojo/_base/fx implementation.
-	};
+	}
 
-	var _Line = basefx._Line = function(/*int*/ start, /*int*/ end){
+	var _Line = (basefx._Line = function (/*int*/ start, /*int*/ end) {
 		// summary:
 		//		Object used to generate values from a start value to an end value
 		// start: int
 		//		Beginning value for range
 		// end: int
 		//		Ending value for range
-		this.start = start;
-		this.end = end;
-	};
+		this.start = start
+		this.end = end
+	})
 
-	_Line.prototype.getValue = function(/*float*/ n){
+	_Line.prototype.getValue = function (/*float*/ n) {
 		// summary:
 		//		Returns the point on the line
 		// n:
 		//		a floating point number greater than 0 and less than 1
-		return ((this.end - this.start) * n) + this.start; // Decimal
-	};
+		return (this.end - this.start) * n + this.start // Decimal
+	}
 
-	var Animation = basefx.Animation = function(args){
+	var Animation = (basefx.Animation = function (args) {
 		// summary:
 		//		A generic animation class that fires callbacks into its handlers
 		//		object at various states.
@@ -48,20 +67,19 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 		//		The 'magic argument', mixing all the properties into this
 		//		animation instance.
 
-		_mixin(this, args);
-		if(lang.isArray(this.curve)){
-			this.curve = new _Line(this.curve[0], this.curve[1]);
+		_mixin(this, args)
+		if (lang.isArray(this.curve)) {
+			this.curve = new _Line(this.curve[0], this.curve[1])
 		}
-
-	};
-	Animation.prototype = new Evented();
+	})
+	Animation.prototype = new Evented()
 
 	lang.extend(Animation, {
 		// duration: Integer
 		//		The time in milliseconds the animation will take to run
 		duration: 350,
 
-	/*=====
+		/*=====
 		// curve: _Line|Array
 		//		A two element array of start and end values, or a `_Line` instance to be
 		//		used in the Animation.
@@ -82,7 +100,7 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 		//		(used as a fps timer: 1000/rate = fps)
 		rate: 20 /* 50 fps */,
 
-	/*=====
+		/*=====
 		// delay: Integer?
 		//		The time in milliseconds to wait before starting animation after it
 		//		has been .play()'ed
@@ -121,13 +139,12 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 		_percent: 0,
 		_startRepeatCount: 0,
 
-		_getStep: function(){
+		_getStep: function () {
 			var _p = this._percent,
 				_e = this.easing
-			;
-			return _e ? _e(_p) : _p;
+			return _e ? _e(_p) : _p
 		},
-		_fire: function(/*Event*/ evt, /*Array?*/ args){
+		_fire: function (/*Event*/ evt, /*Array?*/ args) {
 			// summary:
 			//		Convenience function.  Fire event "evt" and pass it the
 			//		arguments specified in "args".
@@ -140,28 +157,28 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 			//		The event to fire.
 			// args:
 			//		The arguments to pass to the event.
-			var a = args||[];
-			if(this[evt]){
-				if(config.debugAtAllCosts){
-					this[evt].apply(this, a);
-				}else{
-					try{
-						this[evt].apply(this, a);
-					}catch(e){
+			var a = args || []
+			if (this[evt]) {
+				if (config.debugAtAllCosts) {
+					this[evt].apply(this, a)
+				} else {
+					try {
+						this[evt].apply(this, a)
+					} catch (e) {
 						// squelch and log because we shouldn't allow exceptions in
 						// synthetic event handlers to cause the internal timer to run
 						// amuck, potentially pegging the CPU. I'm not a fan of this
 						// squelch, but hopefully logging will make it clear what's
 						// going on
-						console.error("exception in animation handler for:", evt);
-						console.error(e);
+						console.error('exception in animation handler for:', evt)
+						console.error(e)
 					}
 				}
 			}
-			return this; // Animation
+			return this // Animation
 		},
 
-		play: function(/*int?*/ delay, /*Boolean?*/ gotoStart){
+		play: function (/*int?*/ delay, /*Boolean?*/ gotoStart) {
 			// summary:
 			//		Start the animation.
 			// delay:
@@ -172,233 +189,255 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 			// returns: Animation
 			//		The instance to allow chaining.
 
-			var _t = this;
-			if(_t._delayTimer){ _t._clearTimer(); }
-			if(gotoStart){
-				_t._stopTimer();
-				_t._active = _t._paused = false;
-				_t._percent = 0;
-			}else if(_t._active && !_t._paused){
-				return _t;
+			var _t = this
+			if (_t._delayTimer) {
+				_t._clearTimer()
+			}
+			if (gotoStart) {
+				_t._stopTimer()
+				_t._active = _t._paused = false
+				_t._percent = 0
+			} else if (_t._active && !_t._paused) {
+				return _t
 			}
 
-			_t._fire("beforeBegin", [_t.node]);
+			_t._fire('beforeBegin', [_t.node])
 
 			var de = delay || _t.delay,
-				_p = lang.hitch(_t, "_play", gotoStart);
+				_p = lang.hitch(_t, '_play', gotoStart)
 
-			if(de > 0){
-				_t._delayTimer = setTimeout(_p, de);
-				return _t;
+			if (de > 0) {
+				_t._delayTimer = setTimeout(_p, de)
+				return _t
 			}
-			_p();
-			return _t;	// Animation
+			_p()
+			return _t // Animation
 		},
 
-		_play: function(gotoStart){
-			var _t = this;
-			if(_t._delayTimer){ _t._clearTimer(); }
-			_t._startTime = new Date().valueOf();
-			if(_t._paused){
-				_t._startTime -= _t.duration * _t._percent;
+		_play: function (gotoStart) {
+			var _t = this
+			if (_t._delayTimer) {
+				_t._clearTimer()
+			}
+			_t._startTime = new Date().valueOf()
+			if (_t._paused) {
+				_t._startTime -= _t.duration * _t._percent
 			}
 
-			_t._active = true;
-			_t._paused = false;
-			var value = _t.curve.getValue(_t._getStep());
-			if(!_t._percent){
-				if(!_t._startRepeatCount){
-					_t._startRepeatCount = _t.repeat;
+			_t._active = true
+			_t._paused = false
+			var value = _t.curve.getValue(_t._getStep())
+			if (!_t._percent) {
+				if (!_t._startRepeatCount) {
+					_t._startRepeatCount = _t.repeat
 				}
-				_t._fire("onBegin", [value]);
+				_t._fire('onBegin', [value])
 			}
 
-			_t._fire("onPlay", [value]);
+			_t._fire('onPlay', [value])
 
-			_t._cycle();
-			return _t; // Animation
+			_t._cycle()
+			return _t // Animation
 		},
 
-		pause: function(){
+		pause: function () {
 			// summary:
 			//		Pauses a running animation.
-			var _t = this;
-			if(_t._delayTimer){ _t._clearTimer(); }
-			_t._stopTimer();
-			if(!_t._active){ return _t; /*Animation*/ }
-			_t._paused = true;
-			_t._fire("onPause", [_t.curve.getValue(_t._getStep())]);
-			return _t; // Animation
+			var _t = this
+			if (_t._delayTimer) {
+				_t._clearTimer()
+			}
+			_t._stopTimer()
+			if (!_t._active) {
+				return _t /*Animation*/
+			}
+			_t._paused = true
+			_t._fire('onPause', [_t.curve.getValue(_t._getStep())])
+			return _t // Animation
 		},
 
-		gotoPercent: function(/*Decimal*/ percent, /*Boolean?*/ andPlay){
+		gotoPercent: function (/*Decimal*/ percent, /*Boolean?*/ andPlay) {
 			// summary:
 			//		Sets the progress of the animation.
 			// percent:
 			//		A percentage in decimal notation (between and including 0.0 and 1.0).
 			// andPlay:
 			//		If true, play the animation after setting the progress.
-			var _t = this;
-			_t._stopTimer();
-			_t._active = _t._paused = true;
-			_t._percent = percent;
-			if(andPlay){ _t.play(); }
-			return _t; // Animation
+			var _t = this
+			_t._stopTimer()
+			_t._active = _t._paused = true
+			_t._percent = percent
+			if (andPlay) {
+				_t.play()
+			}
+			return _t // Animation
 		},
 
-		stop: function(/*boolean?*/ gotoEnd){
+		stop: function (/*boolean?*/ gotoEnd) {
 			// summary:
 			//		Stops a running animation.
 			// gotoEnd:
 			//		If true, the animation will end.
-			var _t = this;
-			if(_t._delayTimer){ _t._clearTimer(); }
-			if(!_t._timer){ return _t; /* Animation */ }
-			_t._stopTimer();
-			if(gotoEnd){
-				_t._percent = 1;
+			var _t = this
+			if (_t._delayTimer) {
+				_t._clearTimer()
 			}
-			_t._fire("onStop", [_t.curve.getValue(_t._getStep())]);
-			_t._active = _t._paused = false;
-			return _t; // Animation
+			if (!_t._timer) {
+				return _t /* Animation */
+			}
+			_t._stopTimer()
+			if (gotoEnd) {
+				_t._percent = 1
+			}
+			_t._fire('onStop', [_t.curve.getValue(_t._getStep())])
+			_t._active = _t._paused = false
+			return _t // Animation
 		},
 
-		destroy: function(){
+		destroy: function () {
 			// summary:
 			//		cleanup the animation
-			this.stop();
+			this.stop()
 		},
 
-		status: function(){
+		status: function () {
 			// summary:
 			//		Returns a string token representation of the status of
 			//		the animation, one of: "paused", "playing", "stopped"
-			if(this._active){
-				return this._paused ? "paused" : "playing"; // String
+			if (this._active) {
+				return this._paused ? 'paused' : 'playing' // String
 			}
-			return "stopped"; // String
+			return 'stopped' // String
 		},
 
-		_cycle: function(){
-			var _t = this;
-			if(_t._active){
-				var curr = new Date().valueOf();
+		_cycle: function () {
+			var _t = this
+			if (_t._active) {
+				var curr = new Date().valueOf()
 				// Allow durations of 0 (instant) by setting step to 1 - see #13798
-				var step = _t.duration === 0 ? 1 : (curr - _t._startTime) / (_t.duration);
+				var step = _t.duration === 0 ? 1 : (curr - _t._startTime) / _t.duration
 
-				if(step >= 1){
-					step = 1;
+				if (step >= 1) {
+					step = 1
 				}
-				_t._percent = step;
+				_t._percent = step
 
 				// Perform easing
-				if(_t.easing){
-					step = _t.easing(step);
+				if (_t.easing) {
+					step = _t.easing(step)
 				}
 
-				_t._fire("onAnimate", [_t.curve.getValue(step)]);
+				_t._fire('onAnimate', [_t.curve.getValue(step)])
 
-				if(_t._percent < 1){
-					_t._startTimer();
-				}else{
-					_t._active = false;
+				if (_t._percent < 1) {
+					_t._startTimer()
+				} else {
+					_t._active = false
 
-					if(_t.repeat > 0){
-						_t.repeat--;
-						_t.play(null, true);
-					}else if(_t.repeat == -1){
-						_t.play(null, true);
-					}else{
-						if(_t._startRepeatCount){
-							_t.repeat = _t._startRepeatCount;
-							_t._startRepeatCount = 0;
+					if (_t.repeat > 0) {
+						_t.repeat--
+						_t.play(null, true)
+					} else if (_t.repeat == -1) {
+						_t.play(null, true)
+					} else {
+						if (_t._startRepeatCount) {
+							_t.repeat = _t._startRepeatCount
+							_t._startRepeatCount = 0
 						}
 					}
-					_t._percent = 0;
-					_t._fire("onEnd", [_t.node]);
-					!_t.repeat && _t._stopTimer();
+					_t._percent = 0
+					_t._fire('onEnd', [_t.node])
+					!_t.repeat && _t._stopTimer()
 				}
 			}
-			return _t; // Animation
+			return _t // Animation
 		},
 
-		_clearTimer: function(){
+		_clearTimer: function () {
 			// summary:
 			//		Clear the play delay timer
-			clearTimeout(this._delayTimer);
-			delete this._delayTimer;
-		}
-
-	});
+			clearTimeout(this._delayTimer)
+			delete this._delayTimer
+		},
+	})
 
 	// the local timer, stubbed into all Animation instances
 	var ctr = 0,
 		timer = null,
 		runner = {
-			run: function(){}
-		};
+			run: function () {},
+		}
 
 	lang.extend(Animation, {
-
-		_startTimer: function(){
-			if(!this._timer){
-				this._timer = aspect.after(runner, "run", lang.hitch(this, "_cycle"), true);
-				ctr++;
+		_startTimer: function () {
+			if (!this._timer) {
+				this._timer = aspect.after(
+					runner,
+					'run',
+					lang.hitch(this, '_cycle'),
+					true,
+				)
+				ctr++
 			}
-			if(!timer){
-				timer = setInterval(lang.hitch(runner, "run"), this.rate);
+			if (!timer) {
+				timer = setInterval(lang.hitch(runner, 'run'), this.rate)
 			}
 		},
 
-		_stopTimer: function(){
-			if(this._timer){
-				this._timer.remove();
-				this._timer = null;
-				ctr--;
+		_stopTimer: function () {
+			if (this._timer) {
+				this._timer.remove()
+				this._timer = null
+				ctr--
 			}
-			if(ctr <= 0){
-				clearInterval(timer);
-				timer = null;
-				ctr = 0;
+			if (ctr <= 0) {
+				clearInterval(timer)
+				timer = null
+				ctr = 0
 			}
-		}
+		},
+	})
 
-	});
+	var _makeFadeable = has('ie')
+		? function (node) {
+				// only set the zoom if the "tickle" value would be the same as the
+				// default
+				var ns = node.style
+				// don't set the width to auto if it didn't already cascade that way.
+				// We don't want to f anyones designs
+				if (!ns.width.length && style.get(node, 'width') == 'auto') {
+					ns.width = 'auto'
+				}
+		  }
+		: function () {}
 
-	var _makeFadeable =
-		has("ie") ? function(node){
-			// only set the zoom if the "tickle" value would be the same as the
-			// default
-			var ns = node.style;
-			// don't set the width to auto if it didn't already cascade that way.
-			// We don't want to f anyones designs
-			if(!ns.width.length && style.get(node, "width") == "auto"){
-				ns.width = "auto";
-			}
-		} :
-		function(){};
-
-	basefx._fade = function(/*Object*/ args){
+	basefx._fade = function (/*Object*/ args) {
 		// summary:
 		//		Returns an animation that will fade the node defined by
 		//		args.node from the start to end values passed (args.start
 		//		args.end) (end is mandatory, start is optional)
 
-		args.node = dom.byId(args.node);
+		args.node = dom.byId(args.node)
 		var fArgs = _mixin({ properties: {} }, args),
-			props = (fArgs.properties.opacity = {});
+			props = (fArgs.properties.opacity = {})
 
-		props.start = !("start" in fArgs) ?
-			function(){
-				return +style.get(fArgs.node, "opacity")||0;
-			} : fArgs.start;
-		props.end = fArgs.end;
+		props.start = !('start' in fArgs)
+			? function () {
+					return +style.get(fArgs.node, 'opacity') || 0
+			  }
+			: fArgs.start
+		props.end = fArgs.end
 
-		var anim = basefx.animateProperty(fArgs);
-		aspect.after(anim, "beforeBegin", lang.partial(_makeFadeable, fArgs.node), true);
+		var anim = basefx.animateProperty(fArgs)
+		aspect.after(
+			anim,
+			'beforeBegin',
+			lang.partial(_makeFadeable, fArgs.node),
+			true,
+		)
 
-		return anim; // Animation
-	};
+		return anim // Animation
+	}
 
 	/*=====
 	var __FadeArgs = declare(null, {
@@ -411,54 +450,57 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 	});
 	=====*/
 
-	basefx.fadeIn = function(/*__FadeArgs*/ args){
+	basefx.fadeIn = function (/*__FadeArgs*/ args) {
 		// summary:
 		//		Returns an animation that will fade node defined in 'args' from
 		//		its current opacity to fully opaque.
-		return basefx._fade(_mixin({ end: 1 }, args)); // Animation
-	};
+		return basefx._fade(_mixin({ end: 1 }, args)) // Animation
+	}
 
-	basefx.fadeOut = function(/*__FadeArgs*/ args){
+	basefx.fadeOut = function (/*__FadeArgs*/ args) {
 		// summary:
 		//		Returns an animation that will fade node defined in 'args'
 		//		from its current opacity to fully transparent.
-		return basefx._fade(_mixin({ end: 0 }, args)); // Animation
-	};
+		return basefx._fade(_mixin({ end: 0 }, args)) // Animation
+	}
 
-	basefx._defaultEasing = function(/*Decimal?*/ n){
+	basefx._defaultEasing = function (/*Decimal?*/ n) {
 		// summary:
 		//		The default easing function for Animation(s)
-		return 0.5 + ((Math.sin((n + 1.5) * Math.PI)) / 2);	// Decimal
-	};
+		return 0.5 + Math.sin((n + 1.5) * Math.PI) / 2 // Decimal
+	}
 
-	var PropLine = function(properties){
+	var PropLine = function (properties) {
 		// PropLine is an internal class which is used to model the values of
 		// an a group of CSS properties across an animation lifecycle. In
 		// particular, the "getValue" function handles getting interpolated
 		// values between start and end for a particular CSS value.
-		this._properties = properties;
-		for(var p in properties){
-			var prop = properties[p];
-			if(prop.start instanceof Color){
+		this._properties = properties
+		for (var p in properties) {
+			var prop = properties[p]
+			if (prop.start instanceof Color) {
 				// create a reusable temp color object to keep intermediate results
-				prop.tempColor = new Color();
+				prop.tempColor = new Color()
 			}
 		}
-	};
+	}
 
-	PropLine.prototype.getValue = function(r){
-		var ret = {};
-		for(var p in this._properties){
+	PropLine.prototype.getValue = function (r) {
+		var ret = {}
+		for (var p in this._properties) {
 			var prop = this._properties[p],
-				start = prop.start;
-			if(start instanceof Color){
-				ret[p] = Color.blendColors(start, prop.end, r, prop.tempColor).toCss();
-			}else if(!lang.isArray(start)){
-				ret[p] = ((prop.end - start) * r) + start + (p != "opacity" ? prop.units || "px" : 0);
+				start = prop.start
+			if (start instanceof Color) {
+				ret[p] = Color.blendColors(start, prop.end, r, prop.tempColor).toCss()
+			} else if (!lang.isArray(start)) {
+				ret[p] =
+					(prop.end - start) * r +
+					start +
+					(p != 'opacity' ? prop.units || 'px' : 0)
 			}
 		}
-		return ret;
-	};
+		return ret
+	}
 
 	/*=====
 	var __AnimArgs = declare(__FadeArgs, {
@@ -471,7 +513,7 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 	});
 	=====*/
 
-	basefx.animateProperty = function(/*__AnimArgs*/ args){
+	basefx.animateProperty = function (/*__AnimArgs*/ args) {
 		// summary:
 		//		Returns an animation that will transition the properties of
 		//		node defined in `args` depending how they are defined in
@@ -560,65 +602,76 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 		//	|	}).play();
 		//
 
-		var n = args.node = dom.byId(args.node);
-		if(!args.easing){ args.easing = dojo._defaultEasing; }
+		var n = (args.node = dom.byId(args.node))
+		if (!args.easing) {
+			args.easing = dojo._defaultEasing
+		}
 
-		var anim = new Animation(args);
-		aspect.after(anim, "beforeBegin", lang.hitch(anim, function(){
-			var pm = {};
-			for(var p in this.properties){
-				// Make shallow copy of properties into pm because we overwrite
-				// some values below. In particular if start/end are functions
-				// we don't want to overwrite them or the functions won't be
-				// called if the animation is reused.
-				if(p == "width" || p == "height"){
-					this.node.display = "block";
-				}
-				var prop = this.properties[p];
-				if(lang.isFunction(prop)){
-					prop = prop(n);
-				}
-				prop = pm[p] = _mixin({}, (lang.isObject(prop) ? prop: { end: prop }));
+		var anim = new Animation(args)
+		aspect.after(
+			anim,
+			'beforeBegin',
+			lang.hitch(anim, function () {
+				var pm = {}
+				for (var p in this.properties) {
+					// Make shallow copy of properties into pm because we overwrite
+					// some values below. In particular if start/end are functions
+					// we don't want to overwrite them or the functions won't be
+					// called if the animation is reused.
+					if (p == 'width' || p == 'height') {
+						this.node.display = 'block'
+					}
+					var prop = this.properties[p]
+					if (lang.isFunction(prop)) {
+						prop = prop(n)
+					}
+					prop = pm[p] = _mixin({}, lang.isObject(prop) ? prop : { end: prop })
 
-				if(lang.isFunction(prop.start)){
-					prop.start = prop.start(n);
-				}
-				if(lang.isFunction(prop.end)){
-					prop.end = prop.end(n);
-				}
-				var isColor = (p.toLowerCase().indexOf("color") >= 0);
-				function getStyle(node, p){
-					// domStyle.get(node, "height") can return "auto" or "" on IE; this is more reliable:
-					var v = { height: node.offsetHeight, width: node.offsetWidth }[p];
-					if(v !== undefined){ return v; }
-					v = style.get(node, p);
-					return (p == "opacity") ? +v : (isColor ? v : parseFloat(v));
-				}
-				if(!("end" in prop)){
-					prop.end = getStyle(n, p);
-				}else if(!("start" in prop)){
-					prop.start = getStyle(n, p);
-				}
+					if (lang.isFunction(prop.start)) {
+						prop.start = prop.start(n)
+					}
+					if (lang.isFunction(prop.end)) {
+						prop.end = prop.end(n)
+					}
+					var isColor = p.toLowerCase().indexOf('color') >= 0
+					function getStyle(node, p) {
+						// domStyle.get(node, "height") can return "auto" or "" on IE; this is more reliable:
+						var v = { height: node.offsetHeight, width: node.offsetWidth }[p]
+						if (v !== undefined) {
+							return v
+						}
+						v = style.get(node, p)
+						return p == 'opacity' ? +v : isColor ? v : parseFloat(v)
+					}
+					if (!('end' in prop)) {
+						prop.end = getStyle(n, p)
+					} else if (!('start' in prop)) {
+						prop.start = getStyle(n, p)
+					}
 
-				if(isColor){
-					prop.start = new Color(prop.start);
-					prop.end = new Color(prop.end);
-				}else{
-					prop.start = (p == "opacity") ? +prop.start : parseFloat(prop.start);
+					if (isColor) {
+						prop.start = new Color(prop.start)
+						prop.end = new Color(prop.end)
+					} else {
+						prop.start = p == 'opacity' ? +prop.start : parseFloat(prop.start)
+					}
 				}
-			}
-			this.curve = new PropLine(pm);
-		}), true);
-		aspect.after(anim, "onAnimate", lang.hitch(style, "set", anim.node), true);
-		return anim; // Animation
-	};
+				this.curve = new PropLine(pm)
+			}),
+			true,
+		)
+		aspect.after(anim, 'onAnimate', lang.hitch(style, 'set', anim.node), true)
+		return anim // Animation
+	}
 
-	basefx.anim = function(	/*DOMNode|String*/	node,
-							/*Object*/			properties,
-							/*Integer?*/		duration,
-							/*Function?*/		easing,
-							/*Function?*/		onEnd,
-							/*Integer?*/		delay){
+	basefx.anim = function (
+		/*DOMNode|String*/ node,
+		/*Object*/ properties,
+		/*Integer?*/ duration,
+		/*Function?*/ easing,
+		/*Function?*/ onEnd,
+		/*Integer?*/ delay,
+	) {
 		// summary:
 		//		A simpler interface to `animateProperty()`, also returns
 		//		an instance of `Animation` but begins the animation
@@ -656,21 +709,23 @@ define(["./kernel", "./config", /*===== "./declare", =====*/ "./lang", "../Event
 		// example:
 		//		Fade out a node over a full second
 		//	|	basefx.anim("id", { opacity: 0 }, 1000);
-		return basefx.animateProperty({ // Animation
-			node: node,
-			duration: duration || Animation.prototype.duration,
-			properties: properties,
-			easing: easing,
-			onEnd: onEnd
-		}).play(delay || 0);
-	};
-
-
-	if(has("extend-dojo")){
-		_mixin(dojo, basefx);
-		// Alias to drop come 2.0:
-		dojo._Animation = Animation;
+		return basefx
+			.animateProperty({
+				// Animation
+				node: node,
+				duration: duration || Animation.prototype.duration,
+				properties: properties,
+				easing: easing,
+				onEnd: onEnd,
+			})
+			.play(delay || 0)
 	}
 
-	return basefx;
-});
+	if (has('extend-dojo')) {
+		_mixin(dojo, basefx)
+		// Alias to drop come 2.0:
+		dojo._Animation = Animation
+	}
+
+	return basefx
+})

@@ -1,5 +1,11 @@
-define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./dom-attr"],
-		function(exports, dojo, has, win, dom, attr){
+define([
+	'exports',
+	'./_base/kernel',
+	'./sniff',
+	'./_base/window',
+	'./dom',
+	'./dom-attr',
+], function (exports, dojo, has, win, dom, attr) {
 	// module:
 	//		dojo/dom-construct
 	// summary:
@@ -9,73 +15,81 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 
 	// support stuff for toDom()
 	var tagWrap = {
-			option: ["select"],
-			tbody: ["table"],
-			thead: ["table"],
-			tfoot: ["table"],
-			tr: ["table", "tbody"],
-			td: ["table", "tbody", "tr"],
-			th: ["table", "thead", "tr"],
-			legend: ["fieldset"],
-			caption: ["table"],
-			colgroup: ["table"],
-			col: ["table", "colgroup"],
-			li: ["ul"]
+			option: ['select'],
+			tbody: ['table'],
+			thead: ['table'],
+			tfoot: ['table'],
+			tr: ['table', 'tbody'],
+			td: ['table', 'tbody', 'tr'],
+			th: ['table', 'thead', 'tr'],
+			legend: ['fieldset'],
+			caption: ['table'],
+			colgroup: ['table'],
+			col: ['table', 'colgroup'],
+			li: ['ul'],
 		},
 		reTag = /<\s*([\w\:]+)/,
-		masterNode = {}, masterNum = 0,
-		masterName = "__" + dojo._scopeName + "ToDomId";
+		masterNode = {},
+		masterNum = 0,
+		masterName = '__' + dojo._scopeName + 'ToDomId'
 
 	// generate start/end tag strings to use
 	// for the injection for each special tag wrap case.
-	for(var param in tagWrap){
-		if(tagWrap.hasOwnProperty(param)){
-			var tw = tagWrap[param];
-			tw.pre = param == "option" ? '<select multiple="multiple">' : "<" + tw.join("><") + ">";
-			tw.post = "</" + tw.reverse().join("></") + ">";
+	for (var param in tagWrap) {
+		if (tagWrap.hasOwnProperty(param)) {
+			var tw = tagWrap[param]
+			tw.pre =
+				param == 'option'
+					? '<select multiple="multiple">'
+					: '<' + tw.join('><') + '>'
+			tw.post = '</' + tw.reverse().join('></') + '>'
 			// the last line is destructive: it reverses the array,
 			// but we don't care at this point
 		}
 	}
 
-	var html5domfix;
-	if(has("ie") <= 8){
-		html5domfix = function(doc){
-			doc.__dojo_html5_tested = "yes";
-			var div = create('div', {innerHTML: "<nav>a</nav>", style: {visibility: "hidden"}}, doc.body);
-			if(div.childNodes.length !== 1){
-				('abbr article aside audio canvas details figcaption figure footer header ' +
-				'hgroup mark meter nav output progress section summary time video').replace(
-					/\b\w+\b/g, function(n){
-						doc.createElement(n);
-					}
-				);
+	var html5domfix
+	if (has('ie') <= 8) {
+		html5domfix = function (doc) {
+			doc.__dojo_html5_tested = 'yes'
+			var div = create(
+				'div',
+				{ innerHTML: '<nav>a</nav>', style: { visibility: 'hidden' } },
+				doc.body,
+			)
+			if (div.childNodes.length !== 1) {
+				;(
+					'abbr article aside audio canvas details figcaption figure footer header ' +
+					'hgroup mark meter nav output progress section summary time video'
+				).replace(/\b\w+\b/g, function (n) {
+					doc.createElement(n)
+				})
 			}
-			destroy(div);
+			destroy(div)
 		}
 	}
 
-	function _insertBefore(/*DomNode*/ node, /*DomNode*/ ref){
-		var parent = ref.parentNode;
-		if(parent){
-			parent.insertBefore(node, ref);
+	function _insertBefore(/*DomNode*/ node, /*DomNode*/ ref) {
+		var parent = ref.parentNode
+		if (parent) {
+			parent.insertBefore(node, ref)
 		}
 	}
 
-	function _insertAfter(/*DomNode*/ node, /*DomNode*/ ref){
+	function _insertAfter(/*DomNode*/ node, /*DomNode*/ ref) {
 		// summary:
 		//		Try to insert node after ref
-		var parent = ref.parentNode;
-		if(parent){
-			if(parent.lastChild == ref){
-				parent.appendChild(node);
-			}else{
-				parent.insertBefore(node, ref.nextSibling);
+		var parent = ref.parentNode
+		if (parent) {
+			if (parent.lastChild == ref) {
+				parent.appendChild(node)
+			} else {
+				parent.insertBefore(node, ref.nextSibling)
 			}
 		}
 	}
 
-	exports.toDom = function toDom(frag, doc){
+	exports.toDom = function toDom(frag, doc) {
 		// summary:
 		//		instantiates an HTML fragment returning the corresponding DOM.
 		// frag: String
@@ -91,51 +105,55 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//	|		var tr = domConstruct.toDom("<tr><td>First!</td></tr>");
 		//	|	});
 
-		doc = doc || win.doc;
-		var masterId = doc[masterName];
-		if(!masterId){
-			doc[masterName] = masterId = ++masterNum + "";
-			masterNode[masterId] = doc.createElement("div");
+		doc = doc || win.doc
+		var masterId = doc[masterName]
+		if (!masterId) {
+			doc[masterName] = masterId = ++masterNum + ''
+			masterNode[masterId] = doc.createElement('div')
 		}
 
-		if(has("ie") <= 8){
-			if(!doc.__dojo_html5_tested && doc.body){
-				html5domfix(doc);
+		if (has('ie') <= 8) {
+			if (!doc.__dojo_html5_tested && doc.body) {
+				html5domfix(doc)
 			}
 		}
 
 		// make sure the frag is a string.
-		frag += "";
+		frag += ''
 
 		// find the starting tag, and get node wrapper
 		var match = frag.match(reTag),
-			tag = match ? match[1].toLowerCase() : "",
+			tag = match ? match[1].toLowerCase() : '',
 			master = masterNode[masterId],
-			wrap, i, fc, df;
-		if(match && tagWrap[tag]){
-			wrap = tagWrap[tag];
-			master.innerHTML = wrap.pre + frag + wrap.post;
-			for(i = wrap.length; i; --i){
-				master = master.firstChild;
+			wrap,
+			i,
+			fc,
+			df
+		if (match && tagWrap[tag]) {
+			wrap = tagWrap[tag]
+			master.innerHTML = wrap.pre + frag + wrap.post
+			for (i = wrap.length; i; --i) {
+				master = master.firstChild
 			}
-		}else{
-			master.innerHTML = frag;
+		} else {
+			master.innerHTML = frag
 		}
 
 		// one node shortcut => return the node itself
-		if(master.childNodes.length == 1){
-			return master.removeChild(master.firstChild); // DOMNode
+		if (master.childNodes.length == 1) {
+			return master.removeChild(master.firstChild) // DOMNode
 		}
 
 		// return multiple nodes as a document fragment
-		df = doc.createDocumentFragment();
-		while((fc = master.firstChild)){ // intentional assignment
-			df.appendChild(fc);
+		df = doc.createDocumentFragment()
+		while ((fc = master.firstChild)) {
+			// intentional assignment
+			df.appendChild(fc)
 		}
-		return df; // DocumentFragment
-	};
+		return df // DocumentFragment
+	}
 
-	exports.place = function place(node, refNode, position){
+	exports.place = function place(node, refNode, position) {
 		// summary:
 		//		Attempt to insert node into the DOM, choosing from various positioning options.
 		//		Returns the first argument resolved to a DOM node.
@@ -183,46 +201,55 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//	|		domConstruct.place("<li></li>", "someUl", "first");
 		//	|	});
 
-		refNode = dom.byId(refNode);
-		if(typeof node == "string"){ // inline'd type check
-			node = /^\s*</.test(node) ? exports.toDom(node, refNode.ownerDocument) : dom.byId(node);
+		refNode = dom.byId(refNode)
+		if (typeof node == 'string') {
+			// inline'd type check
+			node = /^\s*</.test(node)
+				? exports.toDom(node, refNode.ownerDocument)
+				: dom.byId(node)
 		}
-		if(typeof position == "number"){ // inline'd type check
-			var cn = refNode.childNodes;
-			if(!cn.length || cn.length <= position){
-				refNode.appendChild(node);
-			}else{
-				_insertBefore(node, cn[position < 0 ? 0 : position]);
+		if (typeof position == 'number') {
+			// inline'd type check
+			var cn = refNode.childNodes
+			if (!cn.length || cn.length <= position) {
+				refNode.appendChild(node)
+			} else {
+				_insertBefore(node, cn[position < 0 ? 0 : position])
 			}
-		}else{
-			switch(position){
-				case "before":
-					_insertBefore(node, refNode);
-					break;
-				case "after":
-					_insertAfter(node, refNode);
-					break;
-				case "replace":
-					refNode.parentNode.replaceChild(node, refNode);
-					break;
-				case "only":
-					exports.empty(refNode);
-					refNode.appendChild(node);
-					break;
-				case "first":
-					if(refNode.firstChild){
-						_insertBefore(node, refNode.firstChild);
-						break;
+		} else {
+			switch (position) {
+				case 'before':
+					_insertBefore(node, refNode)
+					break
+				case 'after':
+					_insertAfter(node, refNode)
+					break
+				case 'replace':
+					refNode.parentNode.replaceChild(node, refNode)
+					break
+				case 'only':
+					exports.empty(refNode)
+					refNode.appendChild(node)
+					break
+				case 'first':
+					if (refNode.firstChild) {
+						_insertBefore(node, refNode.firstChild)
+						break
 					}
-					// else fallthrough...
+				// else fallthrough...
 				default: // aka: last
-					refNode.appendChild(node);
+					refNode.appendChild(node)
 			}
 		}
-		return node; // DomNode
-	};
+		return node // DomNode
+	}
 
-	var create = exports.create = function create(/*DOMNode|String*/ tag, /*Object*/ attrs, /*DOMNode|String?*/ refNode, /*String?*/ pos){
+	var create = (exports.create = function create(
+		/*DOMNode|String*/ tag,
+		/*Object*/ attrs,
+		/*DOMNode|String?*/ refNode,
+		/*String?*/ pos,
+	) {
 		// summary:
 		//		Create an element, allowing for optional attribute decoration
 		//		and placement.
@@ -288,42 +315,48 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//	|		domConstruct.create("a", { href:"foo.html", title:"Goto FOO!" }, win.body());
 		//	|	});
 
-		var doc = win.doc;
-		if(refNode){
-			refNode = dom.byId(refNode);
-			doc = refNode.ownerDocument;
+		var doc = win.doc
+		if (refNode) {
+			refNode = dom.byId(refNode)
+			doc = refNode.ownerDocument
 		}
-		if(typeof tag == "string"){ // inline'd type check
-			tag = doc.createElement(tag);
+		if (typeof tag == 'string') {
+			// inline'd type check
+			tag = doc.createElement(tag)
 		}
-		if(attrs){ attr.set(tag, attrs); }
-		if(refNode){ exports.place(tag, refNode, pos); }
-		return tag; // DomNode
-	};
+		if (attrs) {
+			attr.set(tag, attrs)
+		}
+		if (refNode) {
+			exports.place(tag, refNode, pos)
+		}
+		return tag // DomNode
+	})
 
-	function _empty(/*DomNode*/ node){
+	function _empty(/*DomNode*/ node) {
 		// TODO: remove this if() block in 2.0 when we no longer have to worry about IE memory leaks,
 		// and then uncomment the emptyGrandchildren() test case from html.html.
 		// Note that besides fixing #16957, using removeChild() is actually faster than setting node.innerHTML,
 		// see http://jsperf.com/clear-dom-node.
-		if("innerHTML" in node){
-			try{
+		if ('innerHTML' in node) {
+			try {
 				// fast path
-				node.innerHTML = "";
-				return;
-			}catch(e){
+				node.innerHTML = ''
+				return
+			} catch (e) {
 				// innerHTML is readOnly (e.g. TABLE (sub)elements in quirks mode)
 				// Fall through (saves bytes)
 			}
 		}
 
 		// SVG/strict elements don't support innerHTML
-		for(var c; c = node.lastChild;){ // intentional assignment
-			node.removeChild(c);
+		for (var c; (c = node.lastChild); ) {
+			// intentional assignment
+			node.removeChild(c)
 		}
 	}
 
-	exports.empty = function empty(/*DOMNode|String*/ node){
+	exports.empty = function empty(/*DOMNode|String*/ node) {
 		// summary:
 		//		safely removes all children of the node.
 		// node: DOMNode|String
@@ -334,24 +367,25 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//	|		domConstruct.empty("someId");
 		//	|	});
 
-		_empty(dom.byId(node));
-	};
+		_empty(dom.byId(node))
+	}
 
-
-	function _destroy(/*DomNode*/ node, /*DomNode*/ parent){
+	function _destroy(/*DomNode*/ node, /*DomNode*/ parent) {
 		// in IE quirks, node.canHaveChildren can be false but firstChild can be non-null (OBJECT/APPLET)
-		if(node.firstChild){
-			_empty(node);
+		if (node.firstChild) {
+			_empty(node)
 		}
-		if(parent){
+		if (parent) {
 			// removeNode(false) doesn't leak in IE 6+, but removeChild() and removeNode(true) are known to leak under IE 8- while 9+ is TBD.
 			// In IE quirks mode, PARAM nodes as children of OBJECT/APPLET nodes have a removeNode method that does nothing and
 			// the parent node has canHaveChildren=false even though removeChild correctly removes the PARAM children.
 			// In IE, SVG/strict nodes don't have a removeNode method nor a canHaveChildren boolean.
-			has("ie") && parent.canHaveChildren && "removeNode" in node ? node.removeNode(false) : parent.removeChild(node);
+			has('ie') && parent.canHaveChildren && 'removeNode' in node
+				? node.removeNode(false)
+				: parent.removeChild(node)
 		}
 	}
-	var destroy = exports.destroy = function destroy(/*DOMNode|String*/ node){
+	var destroy = (exports.destroy = function destroy(/*DOMNode|String*/ node) {
 		// summary:
 		//		Removes a node from its parent, clobbering it and all of its
 		//		children.
@@ -369,8 +403,10 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/window", "./dom", "./do
 		//	|		domConstruct.destroy("someId");
 		//	|	});
 
-		node = dom.byId(node);
-		if(!node){ return; }
-		_destroy(node, node.parentNode);
-	};
-});
+		node = dom.byId(node)
+		if (!node) {
+			return
+		}
+		_destroy(node, node.parentNode)
+	})
+})

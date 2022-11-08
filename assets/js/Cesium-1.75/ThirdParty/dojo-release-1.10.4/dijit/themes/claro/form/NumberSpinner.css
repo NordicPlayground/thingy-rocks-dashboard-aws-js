@@ -37,17 +37,28 @@
   background-color: #efefef;
   background-image: url("../images/standardGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
   overflow: hidden;
 }
 .dj_iequirks .claro .dijitSpinner .dijitArrowButton {
   overflow: visible;
   /* 0 height w/o this */
-
 }
 .claro .dijitSpinner .dijitSpinnerButtonInner {
   width: 15px;
@@ -72,7 +83,6 @@
   display: block;
   margin: -1px 0 -1px 0;
   /* compensate for inner border */
-
 }
 .dj_iequirks .claro .dijitSpinner .dijitArrowButtonInner,
 .dj_ie6 .claro .dijitSpinner .dijitArrowButtonInner,
@@ -80,7 +90,6 @@
 .dj_ie8 .claro .dijitSpinner .dijitArrowButtonInner {
   margin-top: 0;
   /* since its bottom aligned */
-
 }
 .dj_iequirks .claro .dijitSpinner .dijitArrowButtonInner {
   width: 19px;
@@ -117,10 +126,26 @@
   background-color: #7dbefa;
   background-image: url("../images/activeGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
 }
 .claro .dijitSpinner .dijitUpArrowButtonActive .dijitArrowButtonInner,

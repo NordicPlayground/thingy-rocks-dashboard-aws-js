@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Gets the color with fog at a distance from the camera.\n\
  *\n\
  * @name czm_fog\n\
@@ -37,4 +37,4 @@ vec3 czm_fog(float distanceToCamera, vec3 color, vec3 fogColor, float fogModifie
     float fog = 1.0 - exp(-((fogModifierConstant * scalar + fogModifierConstant) * (scalar * (1.0 + fogModifierConstant))));\n\
     return mix(color, fogColor, fog);\n\
 }\n\
-";
+'

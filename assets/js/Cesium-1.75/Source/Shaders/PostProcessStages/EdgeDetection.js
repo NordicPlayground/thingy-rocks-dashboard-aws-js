@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform sampler2D depthTexture;\n\
+export default 'uniform sampler2D depthTexture;\n\
 uniform float length;\n\
 uniform vec4 color;\n\
 \n\
@@ -59,4 +59,4 @@ void main(void)\n\
     float len = sqrt(horizEdge * horizEdge + vertEdge * vertEdge);\n\
     gl_FragColor = vec4(color.rgb, len > length ? color.a : 0.0);\n\
 }\n\
-";
+'

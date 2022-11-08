@@ -7,10 +7,7 @@
   "scenes": [
     {
       "name": "Scene",
-      "nodes": [
-        0,
-        1
-      ]
+      "nodes": [0, 1]
     }
   ],
   "nodes": [
@@ -59,21 +56,12 @@
       "pbrMetallicRoughness": {
         "metallicFactor": 1,
         "roughnessFactor": 1,
-        "baseColorFactor": [
-          1,
-          1,
-          1,
-          1
-        ]
+        "baseColorFactor": [1, 1, 1, 1]
       },
       "extensions": {
         "KHR_materials_unlit": {}
       },
-      "emissiveFactor": [
-        0,
-        0,
-        0
-      ],
+      "emissiveFactor": [0, 0, 0],
       "alphaMode": "OPAQUE",
       "doubleSided": false
     }
@@ -83,16 +71,8 @@
       "bufferView": 0,
       "componentType": 5126,
       "count": 4,
-      "max": [
-        0,
-        1,
-        0
-      ],
-      "min": [
-        -2,
-        -1,
-        0
-      ],
+      "max": [0, 1, 0],
+      "min": [-2, -1, 0],
       "type": "VEC3",
       "byteOffset": 0
     },
@@ -114,16 +94,8 @@
       "bufferView": 3,
       "componentType": 5126,
       "count": 4,
-      "max": [
-        2,
-        1,
-        0
-      ],
-      "min": [
-        0,
-        -1,
-        0
-      ],
+      "max": [2, 1, 0],
+      "min": [0, -1, 0],
       "type": "VEC3",
       "byteOffset": 0
     },
@@ -178,10 +150,6 @@
       "uri": "data:application/octet-stream;base64,AAAAAAAAgD8AAACAAAAAwAAAgL8AAACAAAAAAAAAgL8AAACAAAAAwAAAgD8AAACAAAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAACAPwAAgD8AAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAQACAAAAAwABAAAAAEAAAIA/AAAAgAAAAAAAAIC/AAAAgAAAAEAAAIC/AAAAgAAAAAAAAIA/AAAAgAAAgD8AAAAAAAAAAAAAgD8AAIA/AAAAAAAAAAAAAIA/AACAPwAAAAAAAAAAAACAPwAAgD8AAAAAAAAAAAAAgD8="
     }
   ],
-  "extensionsUsed": [
-    "KHR_materials_unlit"
-  ],
-  "extensionsRequired": [
-    "KHR_materials_unlit"
-  ]
+  "extensionsUsed": ["KHR_materials_unlit"],
+  "extensionsRequired": ["KHR_materials_unlit"]
 }

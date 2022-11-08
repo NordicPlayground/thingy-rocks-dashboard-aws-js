@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform vec4 color;\n\
+export default 'uniform vec4 color;\n\
 uniform vec4 gapColor;\n\
 uniform float dashLength;\n\
 uniform float dashPattern;\n\
@@ -38,4 +38,4 @@ czm_material czm_getMaterial(czm_materialInput materialInput)\n\
     material.alpha = fragColor.a;\n\
     return material;\n\
 }\n\
-";
+'

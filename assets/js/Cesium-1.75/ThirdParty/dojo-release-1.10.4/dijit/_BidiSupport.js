@@ -1,5 +1,8 @@
-define(["dojo/has", "./_WidgetBase", "./_BidiMixin"], function(has, _WidgetBase, _BidiMixin){
-
+define(['dojo/has', './_WidgetBase', './_BidiMixin'], function (
+	has,
+	_WidgetBase,
+	_BidiMixin,
+) {
 	// module:
 	//		dijit/_BidiSupport
 
@@ -11,11 +14,11 @@ define(["dojo/has", "./_WidgetBase", "./_BidiMixin"], function(has, _WidgetBase,
 	};
 	=====*/
 
-	_WidgetBase.extend(_BidiMixin);
+	_WidgetBase.extend(_BidiMixin)
 
 	// Back-compat with version 1.8: just including _BidiSupport should trigger bidi support in all the widgets.
 	// Although this statement doesn't do much because the other widgets have likely already been loaded.
-	has.add("dojo-bidi", true);
+	has.add('dojo-bidi', true)
 
-	return _WidgetBase;
-});
+	return _WidgetBase
+})

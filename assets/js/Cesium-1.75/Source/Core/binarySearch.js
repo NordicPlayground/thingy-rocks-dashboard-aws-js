@@ -1,4 +1,4 @@
-import Check from "./Check.js";
+import Check from './Check.js'
 
 /**
  * Finds an item in a sorted array.
@@ -22,31 +22,31 @@ import Check from "./Check.js";
  * var index = Cesium.binarySearch(numbers, 6, comparator); // 3
  */
 function binarySearch(array, itemToFind, comparator) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  Check.defined("itemToFind", itemToFind);
-  Check.defined("comparator", comparator);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	Check.defined('itemToFind', itemToFind)
+	Check.defined('comparator', comparator)
+	//>>includeEnd('debug');
 
-  var low = 0;
-  var high = array.length - 1;
-  var i;
-  var comparison;
+	var low = 0
+	var high = array.length - 1
+	var i
+	var comparison
 
-  while (low <= high) {
-    i = ~~((low + high) / 2);
-    comparison = comparator(array[i], itemToFind);
-    if (comparison < 0) {
-      low = i + 1;
-      continue;
-    }
-    if (comparison > 0) {
-      high = i - 1;
-      continue;
-    }
-    return i;
-  }
-  return ~(high + 1);
+	while (low <= high) {
+		i = ~~((low + high) / 2)
+		comparison = comparator(array[i], itemToFind)
+		if (comparison < 0) {
+			low = i + 1
+			continue
+		}
+		if (comparison > 0) {
+			high = i - 1
+			continue
+		}
+		return i
+	}
+	return ~(high + 1)
 }
 
 /**
@@ -64,4 +64,4 @@ function binarySearch(array, itemToFind, comparator) {
  *     return a - b;
  * }
  */
-export default binarySearch;
+export default binarySearch

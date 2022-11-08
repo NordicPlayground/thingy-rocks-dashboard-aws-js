@@ -1,6 +1,6 @@
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Encapsulates an algorithm to optimize triangles for the post
@@ -16,7 +16,7 @@ import DeveloperError from "./DeveloperError.js";
  *
  * @private
  */
-var Tipsify = {};
+var Tipsify = {}
 
 /**
  * Calculates the average cache miss ratio (ACMR) for a given set of indices.
@@ -39,62 +39,62 @@ var Tipsify = {};
  * var acmr = Cesium.Tipsify.calculateACMR({indices : indices, maxIndex : maxIndex, cacheSize : cacheSize});
  */
 Tipsify.calculateACMR = function (options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
-  var indices = options.indices;
-  var maximumIndex = options.maximumIndex;
-  var cacheSize = defaultValue(options.cacheSize, 24);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
+	var indices = options.indices
+	var maximumIndex = options.maximumIndex
+	var cacheSize = defaultValue(options.cacheSize, 24)
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(indices)) {
-    throw new DeveloperError("indices is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(indices)) {
+		throw new DeveloperError('indices is required.')
+	}
+	//>>includeEnd('debug');
 
-  var numIndices = indices.length;
+	var numIndices = indices.length
 
-  //>>includeStart('debug', pragmas.debug);
-  if (numIndices < 3 || numIndices % 3 !== 0) {
-    throw new DeveloperError("indices length must be a multiple of three.");
-  }
-  if (maximumIndex <= 0) {
-    throw new DeveloperError("maximumIndex must be greater than zero.");
-  }
-  if (cacheSize < 3) {
-    throw new DeveloperError("cacheSize must be greater than two.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (numIndices < 3 || numIndices % 3 !== 0) {
+		throw new DeveloperError('indices length must be a multiple of three.')
+	}
+	if (maximumIndex <= 0) {
+		throw new DeveloperError('maximumIndex must be greater than zero.')
+	}
+	if (cacheSize < 3) {
+		throw new DeveloperError('cacheSize must be greater than two.')
+	}
+	//>>includeEnd('debug');
 
-  // Compute the maximumIndex if not given
-  if (!defined(maximumIndex)) {
-    maximumIndex = 0;
-    var currentIndex = 0;
-    var intoIndices = indices[currentIndex];
-    while (currentIndex < numIndices) {
-      if (intoIndices > maximumIndex) {
-        maximumIndex = intoIndices;
-      }
-      ++currentIndex;
-      intoIndices = indices[currentIndex];
-    }
-  }
+	// Compute the maximumIndex if not given
+	if (!defined(maximumIndex)) {
+		maximumIndex = 0
+		var currentIndex = 0
+		var intoIndices = indices[currentIndex]
+		while (currentIndex < numIndices) {
+			if (intoIndices > maximumIndex) {
+				maximumIndex = intoIndices
+			}
+			++currentIndex
+			intoIndices = indices[currentIndex]
+		}
+	}
 
-  // Vertex time stamps
-  var vertexTimeStamps = [];
-  for (var i = 0; i < maximumIndex + 1; i++) {
-    vertexTimeStamps[i] = 0;
-  }
+	// Vertex time stamps
+	var vertexTimeStamps = []
+	for (var i = 0; i < maximumIndex + 1; i++) {
+		vertexTimeStamps[i] = 0
+	}
 
-  // Cache processing
-  var s = cacheSize + 1;
-  for (var j = 0; j < numIndices; ++j) {
-    if (s - vertexTimeStamps[indices[j]] > cacheSize) {
-      vertexTimeStamps[indices[j]] = s;
-      ++s;
-    }
-  }
+	// Cache processing
+	var s = cacheSize + 1
+	for (var j = 0; j < numIndices; ++j) {
+		if (s - vertexTimeStamps[indices[j]] > cacheSize) {
+			vertexTimeStamps[indices[j]] = s
+			++s
+		}
+	}
 
-  return (s - cacheSize + 1) / (numIndices / 3);
-};
+	return (s - cacheSize + 1) / (numIndices / 3)
+}
 
 /**
  * Optimizes triangles for the post-vertex shader cache.
@@ -117,198 +117,198 @@ Tipsify.calculateACMR = function (options) {
  * var reorderedIndices = Cesium.Tipsify.tipsify({indices : indices, maxIndex : maxIndex, cacheSize : cacheSize});
  */
 Tipsify.tipsify = function (options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
-  var indices = options.indices;
-  var maximumIndex = options.maximumIndex;
-  var cacheSize = defaultValue(options.cacheSize, 24);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
+	var indices = options.indices
+	var maximumIndex = options.maximumIndex
+	var cacheSize = defaultValue(options.cacheSize, 24)
 
-  var cursor;
+	var cursor
 
-  function skipDeadEnd(vertices, deadEnd, indices, maximumIndexPlusOne) {
-    while (deadEnd.length >= 1) {
-      // while the stack is not empty
-      var d = deadEnd[deadEnd.length - 1]; // top of the stack
-      deadEnd.splice(deadEnd.length - 1, 1); // pop the stack
+	function skipDeadEnd(vertices, deadEnd, indices, maximumIndexPlusOne) {
+		while (deadEnd.length >= 1) {
+			// while the stack is not empty
+			var d = deadEnd[deadEnd.length - 1] // top of the stack
+			deadEnd.splice(deadEnd.length - 1, 1) // pop the stack
 
-      if (vertices[d].numLiveTriangles > 0) {
-        return d;
-      }
-    }
+			if (vertices[d].numLiveTriangles > 0) {
+				return d
+			}
+		}
 
-    while (cursor < maximumIndexPlusOne) {
-      if (vertices[cursor].numLiveTriangles > 0) {
-        ++cursor;
-        return cursor - 1;
-      }
-      ++cursor;
-    }
-    return -1;
-  }
+		while (cursor < maximumIndexPlusOne) {
+			if (vertices[cursor].numLiveTriangles > 0) {
+				++cursor
+				return cursor - 1
+			}
+			++cursor
+		}
+		return -1
+	}
 
-  function getNextVertex(
-    indices,
-    cacheSize,
-    oneRing,
-    vertices,
-    s,
-    deadEnd,
-    maximumIndexPlusOne
-  ) {
-    var n = -1;
-    var p;
-    var m = -1;
-    var itOneRing = 0;
-    while (itOneRing < oneRing.length) {
-      var index = oneRing[itOneRing];
-      if (vertices[index].numLiveTriangles) {
-        p = 0;
-        if (
-          s -
-            vertices[index].timeStamp +
-            2 * vertices[index].numLiveTriangles <=
-          cacheSize
-        ) {
-          p = s - vertices[index].timeStamp;
-        }
-        if (p > m || m === -1) {
-          m = p;
-          n = index;
-        }
-      }
-      ++itOneRing;
-    }
-    if (n === -1) {
-      return skipDeadEnd(vertices, deadEnd, indices, maximumIndexPlusOne);
-    }
-    return n;
-  }
+	function getNextVertex(
+		indices,
+		cacheSize,
+		oneRing,
+		vertices,
+		s,
+		deadEnd,
+		maximumIndexPlusOne,
+	) {
+		var n = -1
+		var p
+		var m = -1
+		var itOneRing = 0
+		while (itOneRing < oneRing.length) {
+			var index = oneRing[itOneRing]
+			if (vertices[index].numLiveTriangles) {
+				p = 0
+				if (
+					s -
+						vertices[index].timeStamp +
+						2 * vertices[index].numLiveTriangles <=
+					cacheSize
+				) {
+					p = s - vertices[index].timeStamp
+				}
+				if (p > m || m === -1) {
+					m = p
+					n = index
+				}
+			}
+			++itOneRing
+		}
+		if (n === -1) {
+			return skipDeadEnd(vertices, deadEnd, indices, maximumIndexPlusOne)
+		}
+		return n
+	}
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(indices)) {
-    throw new DeveloperError("indices is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(indices)) {
+		throw new DeveloperError('indices is required.')
+	}
+	//>>includeEnd('debug');
 
-  var numIndices = indices.length;
+	var numIndices = indices.length
 
-  //>>includeStart('debug', pragmas.debug);
-  if (numIndices < 3 || numIndices % 3 !== 0) {
-    throw new DeveloperError("indices length must be a multiple of three.");
-  }
-  if (maximumIndex <= 0) {
-    throw new DeveloperError("maximumIndex must be greater than zero.");
-  }
-  if (cacheSize < 3) {
-    throw new DeveloperError("cacheSize must be greater than two.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (numIndices < 3 || numIndices % 3 !== 0) {
+		throw new DeveloperError('indices length must be a multiple of three.')
+	}
+	if (maximumIndex <= 0) {
+		throw new DeveloperError('maximumIndex must be greater than zero.')
+	}
+	if (cacheSize < 3) {
+		throw new DeveloperError('cacheSize must be greater than two.')
+	}
+	//>>includeEnd('debug');
 
-  // Determine maximum index
-  var maximumIndexPlusOne = 0;
-  var currentIndex = 0;
-  var intoIndices = indices[currentIndex];
-  var endIndex = numIndices;
-  if (defined(maximumIndex)) {
-    maximumIndexPlusOne = maximumIndex + 1;
-  } else {
-    while (currentIndex < endIndex) {
-      if (intoIndices > maximumIndexPlusOne) {
-        maximumIndexPlusOne = intoIndices;
-      }
-      ++currentIndex;
-      intoIndices = indices[currentIndex];
-    }
-    if (maximumIndexPlusOne === -1) {
-      return 0;
-    }
-    ++maximumIndexPlusOne;
-  }
+	// Determine maximum index
+	var maximumIndexPlusOne = 0
+	var currentIndex = 0
+	var intoIndices = indices[currentIndex]
+	var endIndex = numIndices
+	if (defined(maximumIndex)) {
+		maximumIndexPlusOne = maximumIndex + 1
+	} else {
+		while (currentIndex < endIndex) {
+			if (intoIndices > maximumIndexPlusOne) {
+				maximumIndexPlusOne = intoIndices
+			}
+			++currentIndex
+			intoIndices = indices[currentIndex]
+		}
+		if (maximumIndexPlusOne === -1) {
+			return 0
+		}
+		++maximumIndexPlusOne
+	}
 
-  // Vertices
-  var vertices = [];
-  var i;
-  for (i = 0; i < maximumIndexPlusOne; i++) {
-    vertices[i] = {
-      numLiveTriangles: 0,
-      timeStamp: 0,
-      vertexTriangles: [],
-    };
-  }
-  currentIndex = 0;
-  var triangle = 0;
-  while (currentIndex < endIndex) {
-    vertices[indices[currentIndex]].vertexTriangles.push(triangle);
-    ++vertices[indices[currentIndex]].numLiveTriangles;
-    vertices[indices[currentIndex + 1]].vertexTriangles.push(triangle);
-    ++vertices[indices[currentIndex + 1]].numLiveTriangles;
-    vertices[indices[currentIndex + 2]].vertexTriangles.push(triangle);
-    ++vertices[indices[currentIndex + 2]].numLiveTriangles;
-    ++triangle;
-    currentIndex += 3;
-  }
+	// Vertices
+	var vertices = []
+	var i
+	for (i = 0; i < maximumIndexPlusOne; i++) {
+		vertices[i] = {
+			numLiveTriangles: 0,
+			timeStamp: 0,
+			vertexTriangles: [],
+		}
+	}
+	currentIndex = 0
+	var triangle = 0
+	while (currentIndex < endIndex) {
+		vertices[indices[currentIndex]].vertexTriangles.push(triangle)
+		++vertices[indices[currentIndex]].numLiveTriangles
+		vertices[indices[currentIndex + 1]].vertexTriangles.push(triangle)
+		++vertices[indices[currentIndex + 1]].numLiveTriangles
+		vertices[indices[currentIndex + 2]].vertexTriangles.push(triangle)
+		++vertices[indices[currentIndex + 2]].numLiveTriangles
+		++triangle
+		currentIndex += 3
+	}
 
-  // Starting index
-  var f = 0;
+	// Starting index
+	var f = 0
 
-  // Time Stamp
-  var s = cacheSize + 1;
-  cursor = 1;
+	// Time Stamp
+	var s = cacheSize + 1
+	cursor = 1
 
-  // Process
-  var oneRing = [];
-  var deadEnd = []; //Stack
-  var vertex;
-  var intoVertices;
-  var currentOutputIndex = 0;
-  var outputIndices = [];
-  var numTriangles = numIndices / 3;
-  var triangleEmitted = [];
-  for (i = 0; i < numTriangles; i++) {
-    triangleEmitted[i] = false;
-  }
-  var index;
-  var limit;
-  while (f !== -1) {
-    oneRing = [];
-    intoVertices = vertices[f];
-    limit = intoVertices.vertexTriangles.length;
-    for (var k = 0; k < limit; ++k) {
-      triangle = intoVertices.vertexTriangles[k];
-      if (!triangleEmitted[triangle]) {
-        triangleEmitted[triangle] = true;
-        currentIndex = triangle + triangle + triangle;
-        for (var j = 0; j < 3; ++j) {
-          // Set this index as a possible next index
-          index = indices[currentIndex];
-          oneRing.push(index);
-          deadEnd.push(index);
+	// Process
+	var oneRing = []
+	var deadEnd = [] //Stack
+	var vertex
+	var intoVertices
+	var currentOutputIndex = 0
+	var outputIndices = []
+	var numTriangles = numIndices / 3
+	var triangleEmitted = []
+	for (i = 0; i < numTriangles; i++) {
+		triangleEmitted[i] = false
+	}
+	var index
+	var limit
+	while (f !== -1) {
+		oneRing = []
+		intoVertices = vertices[f]
+		limit = intoVertices.vertexTriangles.length
+		for (var k = 0; k < limit; ++k) {
+			triangle = intoVertices.vertexTriangles[k]
+			if (!triangleEmitted[triangle]) {
+				triangleEmitted[triangle] = true
+				currentIndex = triangle + triangle + triangle
+				for (var j = 0; j < 3; ++j) {
+					// Set this index as a possible next index
+					index = indices[currentIndex]
+					oneRing.push(index)
+					deadEnd.push(index)
 
-          // Output index
-          outputIndices[currentOutputIndex] = index;
-          ++currentOutputIndex;
+					// Output index
+					outputIndices[currentOutputIndex] = index
+					++currentOutputIndex
 
-          // Cache processing
-          vertex = vertices[index];
-          --vertex.numLiveTriangles;
-          if (s - vertex.timeStamp > cacheSize) {
-            vertex.timeStamp = s;
-            ++s;
-          }
-          ++currentIndex;
-        }
-      }
-    }
-    f = getNextVertex(
-      indices,
-      cacheSize,
-      oneRing,
-      vertices,
-      s,
-      deadEnd,
-      maximumIndexPlusOne
-    );
-  }
+					// Cache processing
+					vertex = vertices[index]
+					--vertex.numLiveTriangles
+					if (s - vertex.timeStamp > cacheSize) {
+						vertex.timeStamp = s
+						++s
+					}
+					++currentIndex
+				}
+			}
+		}
+		f = getNextVertex(
+			indices,
+			cacheSize,
+			oneRing,
+			vertices,
+			s,
+			deadEnd,
+			maximumIndexPlusOne,
+		)
+	}
 
-  return outputIndices;
-};
-export default Tipsify;
+	return outputIndices
+}
+export default Tipsify

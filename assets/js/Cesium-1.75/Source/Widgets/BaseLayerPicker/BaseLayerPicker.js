@@ -1,10 +1,10 @@
-import defined from "../../Core/defined.js";
-import destroyObject from "../../Core/destroyObject.js";
-import DeveloperError from "../../Core/DeveloperError.js";
-import FeatureDetection from "../../Core/FeatureDetection.js";
-import knockout from "../../ThirdParty/knockout.js";
-import getElement from "../getElement.js";
-import BaseLayerPickerViewModel from "./BaseLayerPickerViewModel.js";
+import defined from '../../Core/defined.js'
+import destroyObject from '../../Core/destroyObject.js'
+import DeveloperError from '../../Core/DeveloperError.js'
+import FeatureDetection from '../../Core/FeatureDetection.js'
+import knockout from '../../ThirdParty/knockout.js'
+import getElement from '../getElement.js'
+import BaseLayerPickerViewModel from './BaseLayerPickerViewModel.js'
 
 /**
  * <span style="display: block; text-align: center;">
@@ -89,219 +89,219 @@ import BaseLayerPickerViewModel from "./BaseLayerPickerViewModel.js";
  * @see ImageryLayerCollection
  */
 function BaseLayerPicker(container, options) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(container)) {
-    throw new DeveloperError("container is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(container)) {
+		throw new DeveloperError('container is required.')
+	}
+	//>>includeEnd('debug');
 
-  container = getElement(container);
+	container = getElement(container)
 
-  var viewModel = new BaseLayerPickerViewModel(options);
+	var viewModel = new BaseLayerPickerViewModel(options)
 
-  var element = document.createElement("button");
-  element.type = "button";
-  element.className = "cesium-button cesium-toolbar-button";
-  element.setAttribute(
-    "data-bind",
-    "\
+	var element = document.createElement('button')
+	element.type = 'button'
+	element.className = 'cesium-button cesium-toolbar-button'
+	element.setAttribute(
+		'data-bind',
+		'\
 attr: { title: buttonTooltip },\
-click: toggleDropDown"
-  );
-  container.appendChild(element);
+click: toggleDropDown',
+	)
+	container.appendChild(element)
 
-  var imgElement = document.createElement("img");
-  imgElement.setAttribute("draggable", "false");
-  imgElement.className = "cesium-baseLayerPicker-selected";
-  imgElement.setAttribute(
-    "data-bind",
-    "\
-attr: { src: buttonImageUrl }, visible: !!buttonImageUrl"
-  );
-  element.appendChild(imgElement);
+	var imgElement = document.createElement('img')
+	imgElement.setAttribute('draggable', 'false')
+	imgElement.className = 'cesium-baseLayerPicker-selected'
+	imgElement.setAttribute(
+		'data-bind',
+		'\
+attr: { src: buttonImageUrl }, visible: !!buttonImageUrl',
+	)
+	element.appendChild(imgElement)
 
-  var dropPanel = document.createElement("div");
-  dropPanel.className = "cesium-baseLayerPicker-dropDown";
-  dropPanel.setAttribute(
-    "data-bind",
-    '\
-css: { "cesium-baseLayerPicker-dropDown-visible" : dropDownVisible }'
-  );
-  container.appendChild(dropPanel);
+	var dropPanel = document.createElement('div')
+	dropPanel.className = 'cesium-baseLayerPicker-dropDown'
+	dropPanel.setAttribute(
+		'data-bind',
+		'\
+css: { "cesium-baseLayerPicker-dropDown-visible" : dropDownVisible }',
+	)
+	container.appendChild(dropPanel)
 
-  var imageryTitle = document.createElement("div");
-  imageryTitle.className = "cesium-baseLayerPicker-sectionTitle";
-  imageryTitle.setAttribute(
-    "data-bind",
-    "visible: imageryProviderViewModels.length > 0"
-  );
-  imageryTitle.innerHTML = "Imagery";
-  dropPanel.appendChild(imageryTitle);
+	var imageryTitle = document.createElement('div')
+	imageryTitle.className = 'cesium-baseLayerPicker-sectionTitle'
+	imageryTitle.setAttribute(
+		'data-bind',
+		'visible: imageryProviderViewModels.length > 0',
+	)
+	imageryTitle.innerHTML = 'Imagery'
+	dropPanel.appendChild(imageryTitle)
 
-  var imagerySection = document.createElement("div");
-  imagerySection.className = "cesium-baseLayerPicker-section";
-  imagerySection.setAttribute("data-bind", "foreach: _imageryProviders");
-  dropPanel.appendChild(imagerySection);
+	var imagerySection = document.createElement('div')
+	imagerySection.className = 'cesium-baseLayerPicker-section'
+	imagerySection.setAttribute('data-bind', 'foreach: _imageryProviders')
+	dropPanel.appendChild(imagerySection)
 
-  var imageryCategories = document.createElement("div");
-  imageryCategories.className = "cesium-baseLayerPicker-category";
-  imagerySection.appendChild(imageryCategories);
+	var imageryCategories = document.createElement('div')
+	imageryCategories.className = 'cesium-baseLayerPicker-category'
+	imagerySection.appendChild(imageryCategories)
 
-  var categoryTitle = document.createElement("div");
-  categoryTitle.className = "cesium-baseLayerPicker-categoryTitle";
-  categoryTitle.setAttribute("data-bind", "text: name");
-  imageryCategories.appendChild(categoryTitle);
+	var categoryTitle = document.createElement('div')
+	categoryTitle.className = 'cesium-baseLayerPicker-categoryTitle'
+	categoryTitle.setAttribute('data-bind', 'text: name')
+	imageryCategories.appendChild(categoryTitle)
 
-  var imageryChoices = document.createElement("div");
-  imageryChoices.className = "cesium-baseLayerPicker-choices";
-  imageryChoices.setAttribute("data-bind", "foreach: providers");
-  imageryCategories.appendChild(imageryChoices);
+	var imageryChoices = document.createElement('div')
+	imageryChoices.className = 'cesium-baseLayerPicker-choices'
+	imageryChoices.setAttribute('data-bind', 'foreach: providers')
+	imageryCategories.appendChild(imageryChoices)
 
-  var imageryProvider = document.createElement("div");
-  imageryProvider.className = "cesium-baseLayerPicker-item";
-  imageryProvider.setAttribute(
-    "data-bind",
-    '\
+	var imageryProvider = document.createElement('div')
+	imageryProvider.className = 'cesium-baseLayerPicker-item'
+	imageryProvider.setAttribute(
+		'data-bind',
+		'\
 css: { "cesium-baseLayerPicker-selectedItem" : $data === $parents[1].selectedImagery },\
 attr: { title: tooltip },\
 visible: creationCommand.canExecute,\
-click: function($data) { $parents[1].selectedImagery = $data; }'
-  );
-  imageryChoices.appendChild(imageryProvider);
+click: function($data) { $parents[1].selectedImagery = $data; }',
+	)
+	imageryChoices.appendChild(imageryProvider)
 
-  var providerIcon = document.createElement("img");
-  providerIcon.className = "cesium-baseLayerPicker-itemIcon";
-  providerIcon.setAttribute("data-bind", "attr: { src: iconUrl }");
-  providerIcon.setAttribute("draggable", "false");
-  imageryProvider.appendChild(providerIcon);
+	var providerIcon = document.createElement('img')
+	providerIcon.className = 'cesium-baseLayerPicker-itemIcon'
+	providerIcon.setAttribute('data-bind', 'attr: { src: iconUrl }')
+	providerIcon.setAttribute('draggable', 'false')
+	imageryProvider.appendChild(providerIcon)
 
-  var providerLabel = document.createElement("div");
-  providerLabel.className = "cesium-baseLayerPicker-itemLabel";
-  providerLabel.setAttribute("data-bind", "text: name");
-  imageryProvider.appendChild(providerLabel);
+	var providerLabel = document.createElement('div')
+	providerLabel.className = 'cesium-baseLayerPicker-itemLabel'
+	providerLabel.setAttribute('data-bind', 'text: name')
+	imageryProvider.appendChild(providerLabel)
 
-  var terrainTitle = document.createElement("div");
-  terrainTitle.className = "cesium-baseLayerPicker-sectionTitle";
-  terrainTitle.setAttribute(
-    "data-bind",
-    "visible: terrainProviderViewModels.length > 0"
-  );
-  terrainTitle.innerHTML = "Terrain";
-  dropPanel.appendChild(terrainTitle);
+	var terrainTitle = document.createElement('div')
+	terrainTitle.className = 'cesium-baseLayerPicker-sectionTitle'
+	terrainTitle.setAttribute(
+		'data-bind',
+		'visible: terrainProviderViewModels.length > 0',
+	)
+	terrainTitle.innerHTML = 'Terrain'
+	dropPanel.appendChild(terrainTitle)
 
-  var terrainSection = document.createElement("div");
-  terrainSection.className = "cesium-baseLayerPicker-section";
-  terrainSection.setAttribute("data-bind", "foreach: _terrainProviders");
-  dropPanel.appendChild(terrainSection);
+	var terrainSection = document.createElement('div')
+	terrainSection.className = 'cesium-baseLayerPicker-section'
+	terrainSection.setAttribute('data-bind', 'foreach: _terrainProviders')
+	dropPanel.appendChild(terrainSection)
 
-  var terrainCategories = document.createElement("div");
-  terrainCategories.className = "cesium-baseLayerPicker-category";
-  terrainSection.appendChild(terrainCategories);
+	var terrainCategories = document.createElement('div')
+	terrainCategories.className = 'cesium-baseLayerPicker-category'
+	terrainSection.appendChild(terrainCategories)
 
-  var terrainCategoryTitle = document.createElement("div");
-  terrainCategoryTitle.className = "cesium-baseLayerPicker-categoryTitle";
-  terrainCategoryTitle.setAttribute("data-bind", "text: name");
-  terrainCategories.appendChild(terrainCategoryTitle);
+	var terrainCategoryTitle = document.createElement('div')
+	terrainCategoryTitle.className = 'cesium-baseLayerPicker-categoryTitle'
+	terrainCategoryTitle.setAttribute('data-bind', 'text: name')
+	terrainCategories.appendChild(terrainCategoryTitle)
 
-  var terrainChoices = document.createElement("div");
-  terrainChoices.className = "cesium-baseLayerPicker-choices";
-  terrainChoices.setAttribute("data-bind", "foreach: providers");
-  terrainCategories.appendChild(terrainChoices);
+	var terrainChoices = document.createElement('div')
+	terrainChoices.className = 'cesium-baseLayerPicker-choices'
+	terrainChoices.setAttribute('data-bind', 'foreach: providers')
+	terrainCategories.appendChild(terrainChoices)
 
-  var terrainProvider = document.createElement("div");
-  terrainProvider.className = "cesium-baseLayerPicker-item";
-  terrainProvider.setAttribute(
-    "data-bind",
-    '\
+	var terrainProvider = document.createElement('div')
+	terrainProvider.className = 'cesium-baseLayerPicker-item'
+	terrainProvider.setAttribute(
+		'data-bind',
+		'\
 css: { "cesium-baseLayerPicker-selectedItem" : $data === $parents[1].selectedTerrain },\
 attr: { title: tooltip },\
 visible: creationCommand.canExecute,\
-click: function($data) { $parents[1].selectedTerrain = $data; }'
-  );
-  terrainChoices.appendChild(terrainProvider);
+click: function($data) { $parents[1].selectedTerrain = $data; }',
+	)
+	terrainChoices.appendChild(terrainProvider)
 
-  var terrainProviderIcon = document.createElement("img");
-  terrainProviderIcon.className = "cesium-baseLayerPicker-itemIcon";
-  terrainProviderIcon.setAttribute("data-bind", "attr: { src: iconUrl }");
-  terrainProviderIcon.setAttribute("draggable", "false");
-  terrainProvider.appendChild(terrainProviderIcon);
+	var terrainProviderIcon = document.createElement('img')
+	terrainProviderIcon.className = 'cesium-baseLayerPicker-itemIcon'
+	terrainProviderIcon.setAttribute('data-bind', 'attr: { src: iconUrl }')
+	terrainProviderIcon.setAttribute('draggable', 'false')
+	terrainProvider.appendChild(terrainProviderIcon)
 
-  var terrainProviderLabel = document.createElement("div");
-  terrainProviderLabel.className = "cesium-baseLayerPicker-itemLabel";
-  terrainProviderLabel.setAttribute("data-bind", "text: name");
-  terrainProvider.appendChild(terrainProviderLabel);
+	var terrainProviderLabel = document.createElement('div')
+	terrainProviderLabel.className = 'cesium-baseLayerPicker-itemLabel'
+	terrainProviderLabel.setAttribute('data-bind', 'text: name')
+	terrainProvider.appendChild(terrainProviderLabel)
 
-  knockout.applyBindings(viewModel, element);
-  knockout.applyBindings(viewModel, dropPanel);
+	knockout.applyBindings(viewModel, element)
+	knockout.applyBindings(viewModel, dropPanel)
 
-  this._viewModel = viewModel;
-  this._container = container;
-  this._element = element;
-  this._dropPanel = dropPanel;
+	this._viewModel = viewModel
+	this._container = container
+	this._element = element
+	this._dropPanel = dropPanel
 
-  this._closeDropDown = function (e) {
-    if (!(element.contains(e.target) || dropPanel.contains(e.target))) {
-      viewModel.dropDownVisible = false;
-    }
-  };
+	this._closeDropDown = function (e) {
+		if (!(element.contains(e.target) || dropPanel.contains(e.target))) {
+			viewModel.dropDownVisible = false
+		}
+	}
 
-  if (FeatureDetection.supportsPointerEvents()) {
-    document.addEventListener("pointerdown", this._closeDropDown, true);
-  } else {
-    document.addEventListener("mousedown", this._closeDropDown, true);
-    document.addEventListener("touchstart", this._closeDropDown, true);
-  }
+	if (FeatureDetection.supportsPointerEvents()) {
+		document.addEventListener('pointerdown', this._closeDropDown, true)
+	} else {
+		document.addEventListener('mousedown', this._closeDropDown, true)
+		document.addEventListener('touchstart', this._closeDropDown, true)
+	}
 }
 
 Object.defineProperties(BaseLayerPicker.prototype, {
-  /**
-   * Gets the parent container.
-   * @memberof BaseLayerPicker.prototype
-   *
-   * @type {Element}
-   */
-  container: {
-    get: function () {
-      return this._container;
-    },
-  },
+	/**
+	 * Gets the parent container.
+	 * @memberof BaseLayerPicker.prototype
+	 *
+	 * @type {Element}
+	 */
+	container: {
+		get: function () {
+			return this._container
+		},
+	},
 
-  /**
-   * Gets the view model.
-   * @memberof BaseLayerPicker.prototype
-   *
-   * @type {BaseLayerPickerViewModel}
-   */
-  viewModel: {
-    get: function () {
-      return this._viewModel;
-    },
-  },
-});
+	/**
+	 * Gets the view model.
+	 * @memberof BaseLayerPicker.prototype
+	 *
+	 * @type {BaseLayerPickerViewModel}
+	 */
+	viewModel: {
+		get: function () {
+			return this._viewModel
+		},
+	},
+})
 
 /**
  * @returns {Boolean} true if the object has been destroyed, false otherwise.
  */
 BaseLayerPicker.prototype.isDestroyed = function () {
-  return false;
-};
+	return false
+}
 
 /**
  * Destroys the widget.  Should be called if permanently
  * removing the widget from layout.
  */
 BaseLayerPicker.prototype.destroy = function () {
-  if (FeatureDetection.supportsPointerEvents()) {
-    document.removeEventListener("pointerdown", this._closeDropDown, true);
-  } else {
-    document.removeEventListener("mousedown", this._closeDropDown, true);
-    document.removeEventListener("touchstart", this._closeDropDown, true);
-  }
+	if (FeatureDetection.supportsPointerEvents()) {
+		document.removeEventListener('pointerdown', this._closeDropDown, true)
+	} else {
+		document.removeEventListener('mousedown', this._closeDropDown, true)
+		document.removeEventListener('touchstart', this._closeDropDown, true)
+	}
 
-  knockout.cleanNode(this._element);
-  knockout.cleanNode(this._dropPanel);
-  this._container.removeChild(this._element);
-  this._container.removeChild(this._dropPanel);
-  return destroyObject(this);
-};
-export default BaseLayerPicker;
+	knockout.cleanNode(this._element)
+	knockout.cleanNode(this._dropPanel)
+	this._container.removeChild(this._element)
+	this._container.removeChild(this._dropPanel)
+	return destroyObject(this)
+}
+export default BaseLayerPicker

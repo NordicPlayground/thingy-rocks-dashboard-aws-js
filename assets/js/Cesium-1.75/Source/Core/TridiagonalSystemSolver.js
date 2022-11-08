@@ -1,6 +1,6 @@
-import Cartesian3 from "./Cartesian3.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import Cartesian3 from './Cartesian3.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Uses the Tridiagonal Matrix Algorithm, also known as the Thomas Algorithm, to solve
@@ -8,7 +8,7 @@ import DeveloperError from "./DeveloperError.js";
  *
  * @namespace TridiagonalSystemSolver
  */
-var TridiagonalSystemSolver = {};
+var TridiagonalSystemSolver = {}
 
 /**
  * Solves a tridiagonal system of linear equations.
@@ -41,73 +41,73 @@ var TridiagonalSystemSolver = {};
  * @returns {Cartesian3[]} An array of Cartesians with length <code>n</code> that is the solution to the tridiagonal system of equations.
  */
 TridiagonalSystemSolver.solve = function (lower, diagonal, upper, right) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(lower) || !(lower instanceof Array)) {
-    throw new DeveloperError("The array lower is required.");
-  }
-  if (!defined(diagonal) || !(diagonal instanceof Array)) {
-    throw new DeveloperError("The array diagonal is required.");
-  }
-  if (!defined(upper) || !(upper instanceof Array)) {
-    throw new DeveloperError("The array upper is required.");
-  }
-  if (!defined(right) || !(right instanceof Array)) {
-    throw new DeveloperError("The array right is required.");
-  }
-  if (diagonal.length !== right.length) {
-    throw new DeveloperError("diagonal and right must have the same lengths.");
-  }
-  if (lower.length !== upper.length) {
-    throw new DeveloperError("lower and upper must have the same lengths.");
-  } else if (lower.length !== diagonal.length - 1) {
-    throw new DeveloperError(
-      "lower and upper must be one less than the length of diagonal."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(lower) || !(lower instanceof Array)) {
+		throw new DeveloperError('The array lower is required.')
+	}
+	if (!defined(diagonal) || !(diagonal instanceof Array)) {
+		throw new DeveloperError('The array diagonal is required.')
+	}
+	if (!defined(upper) || !(upper instanceof Array)) {
+		throw new DeveloperError('The array upper is required.')
+	}
+	if (!defined(right) || !(right instanceof Array)) {
+		throw new DeveloperError('The array right is required.')
+	}
+	if (diagonal.length !== right.length) {
+		throw new DeveloperError('diagonal and right must have the same lengths.')
+	}
+	if (lower.length !== upper.length) {
+		throw new DeveloperError('lower and upper must have the same lengths.')
+	} else if (lower.length !== diagonal.length - 1) {
+		throw new DeveloperError(
+			'lower and upper must be one less than the length of diagonal.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  var c = new Array(upper.length);
-  var d = new Array(right.length);
-  var x = new Array(right.length);
+	var c = new Array(upper.length)
+	var d = new Array(right.length)
+	var x = new Array(right.length)
 
-  var i;
-  for (i = 0; i < d.length; i++) {
-    d[i] = new Cartesian3();
-    x[i] = new Cartesian3();
-  }
+	var i
+	for (i = 0; i < d.length; i++) {
+		d[i] = new Cartesian3()
+		x[i] = new Cartesian3()
+	}
 
-  c[0] = upper[0] / diagonal[0];
-  d[0] = Cartesian3.multiplyByScalar(right[0], 1.0 / diagonal[0], d[0]);
+	c[0] = upper[0] / diagonal[0]
+	d[0] = Cartesian3.multiplyByScalar(right[0], 1.0 / diagonal[0], d[0])
 
-  var scalar;
-  for (i = 1; i < c.length; ++i) {
-    scalar = 1.0 / (diagonal[i] - c[i - 1] * lower[i - 1]);
-    c[i] = upper[i] * scalar;
-    d[i] = Cartesian3.subtract(
-      right[i],
-      Cartesian3.multiplyByScalar(d[i - 1], lower[i - 1], d[i]),
-      d[i]
-    );
-    d[i] = Cartesian3.multiplyByScalar(d[i], scalar, d[i]);
-  }
+	var scalar
+	for (i = 1; i < c.length; ++i) {
+		scalar = 1.0 / (diagonal[i] - c[i - 1] * lower[i - 1])
+		c[i] = upper[i] * scalar
+		d[i] = Cartesian3.subtract(
+			right[i],
+			Cartesian3.multiplyByScalar(d[i - 1], lower[i - 1], d[i]),
+			d[i],
+		)
+		d[i] = Cartesian3.multiplyByScalar(d[i], scalar, d[i])
+	}
 
-  scalar = 1.0 / (diagonal[i] - c[i - 1] * lower[i - 1]);
-  d[i] = Cartesian3.subtract(
-    right[i],
-    Cartesian3.multiplyByScalar(d[i - 1], lower[i - 1], d[i]),
-    d[i]
-  );
-  d[i] = Cartesian3.multiplyByScalar(d[i], scalar, d[i]);
+	scalar = 1.0 / (diagonal[i] - c[i - 1] * lower[i - 1])
+	d[i] = Cartesian3.subtract(
+		right[i],
+		Cartesian3.multiplyByScalar(d[i - 1], lower[i - 1], d[i]),
+		d[i],
+	)
+	d[i] = Cartesian3.multiplyByScalar(d[i], scalar, d[i])
 
-  x[x.length - 1] = d[d.length - 1];
-  for (i = x.length - 2; i >= 0; --i) {
-    x[i] = Cartesian3.subtract(
-      d[i],
-      Cartesian3.multiplyByScalar(x[i + 1], c[i], x[i]),
-      x[i]
-    );
-  }
+	x[x.length - 1] = d[d.length - 1]
+	for (i = x.length - 2; i >= 0; --i) {
+		x[i] = Cartesian3.subtract(
+			d[i],
+			Cartesian3.multiplyByScalar(x[i + 1], c[i], x[i]),
+			x[i],
+		)
+	}
 
-  return x;
-};
-export default TridiagonalSystemSolver;
+	return x
+}
+export default TridiagonalSystemSolver

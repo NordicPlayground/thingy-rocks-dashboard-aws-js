@@ -1,6 +1,4 @@
-define(
-({
-	loadingState: "Завантаження...",
-	errorState: "Сталася помилка"
+define({
+	loadingState: 'Завантаження...',
+	errorState: 'Сталася помилка',
 })
-);

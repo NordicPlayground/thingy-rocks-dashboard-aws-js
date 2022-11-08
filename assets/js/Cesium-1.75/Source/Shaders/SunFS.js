@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform sampler2D u_texture;\n\
+export default 'uniform sampler2D u_texture;\n\
 \n\
 varying vec2 v_textureCoordinates;\n\
 \n\
@@ -8,4 +8,4 @@ void main()\n\
     vec4 color = texture2D(u_texture, v_textureCoordinates);\n\
     gl_FragColor = czm_gammaCorrect(color);\n\
 }\n\
-";
+'

@@ -1,8 +1,8 @@
-import defaultValue from "./defaultValue.js";
-import DeveloperError from "./DeveloperError.js";
+import defaultValue from './defaultValue.js'
+import DeveloperError from './DeveloperError.js'
 
 function returnTrue() {
-  return true;
+	return true
 }
 
 /**
@@ -33,25 +33,25 @@ function returnTrue() {
  * @see DeveloperError
  */
 function destroyObject(object, message) {
-  message = defaultValue(
-    message,
-    "This object was destroyed, i.e., destroy() was called."
-  );
+	message = defaultValue(
+		message,
+		'This object was destroyed, i.e., destroy() was called.',
+	)
 
-  function throwOnDestroyed() {
-    //>>includeStart('debug', pragmas.debug);
-    throw new DeveloperError(message);
-    //>>includeEnd('debug');
-  }
+	function throwOnDestroyed() {
+		//>>includeStart('debug', pragmas.debug);
+		throw new DeveloperError(message)
+		//>>includeEnd('debug');
+	}
 
-  for (var key in object) {
-    if (typeof object[key] === "function") {
-      object[key] = throwOnDestroyed;
-    }
-  }
+	for (var key in object) {
+		if (typeof object[key] === 'function') {
+			object[key] = throwOnDestroyed
+		}
+	}
 
-  object.isDestroyed = returnTrue;
+	object.isDestroyed = returnTrue
 
-  return undefined;
+	return undefined
 }
-export default destroyObject;
+export default destroyObject

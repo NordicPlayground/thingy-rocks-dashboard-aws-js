@@ -1,21 +1,21 @@
 define([
-	"dojo/_base/declare", // declare
-	"./a11y"	// _getTabNavigable
-], function(declare, a11y){
-
+	'dojo/_base/declare', // declare
+	'./a11y', // _getTabNavigable
+], function (declare, a11y) {
 	// module:
 	//		dijit/_DialogMixin
 
-	return declare("dijit._DialogMixin", null, {
+	return declare('dijit._DialogMixin', null, {
 		// summary:
 		//		This provides functions useful to Dialog and TooltipDialog
 
 		// actionBarTemplate: String
 		//		HTML snippet to show the action bar (gray bar with OK/cancel buttons).
 		//		Blank by default, but used by ConfirmDialog/ConfirmTooltipDialog subclasses.
-		actionBarTemplate: "",
+		actionBarTemplate: '',
 
-		execute: function(/*Object*/ /*===== formContents =====*/){
+		execute: function () /*Object*/
+		/*===== formContents =====*/ {
 			// summary:
 			//		Callback when the user hits the submit button.
 			//		Override this method to handle Dialog execution.
@@ -29,7 +29,7 @@ define([
 			//		callback
 		},
 
-		onCancel: function(){
+		onCancel: function () {
 			// summary:
 			//		Called when user has pressed the Dialog's cancel button, to notify container.
 			// description:
@@ -40,7 +40,7 @@ define([
 			//		protected
 		},
 
-		onExecute: function(){
+		onExecute: function () {
 			// summary:
 			//		Called when user has pressed the dialog's OK button, to notify container.
 			// description:
@@ -51,25 +51,26 @@ define([
 			//		protected
 		},
 
-		_onSubmit: function(){
+		_onSubmit: function () {
 			// summary:
 			//		Callback when user hits submit button
 			// type:
 			//		protected
-			this.onExecute();	// notify container that we are about to execute
-			this.execute(this.get('value'));
+			this.onExecute() // notify container that we are about to execute
+			this.execute(this.get('value'))
 		},
 
-		_getFocusItems: function(){
+		_getFocusItems: function () {
 			// summary:
 			//		Finds focusable items in dialog,
 			//		and sets this._firstFocusItem and this._lastFocusItem
 			// tags:
 			//		protected
 
-			var elems = a11y._getTabNavigable(this.domNode);
-			this._firstFocusItem = elems.lowest || elems.first || this.closeButtonNode || this.domNode;
-			this._lastFocusItem = elems.last || elems.highest || this._firstFocusItem;
-		}
-	});
-});
+			var elems = a11y._getTabNavigable(this.domNode)
+			this._firstFocusItem =
+				elems.lowest || elems.first || this.closeButtonNode || this.domNode
+			this._lastFocusItem = elems.last || elems.highest || this._firstFocusItem
+		},
+	})
+})

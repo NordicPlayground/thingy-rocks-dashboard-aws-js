@@ -1,6 +1,6 @@
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
 
 /**
  * The interface for all properties, which represent a value that can optionally vary over time.
@@ -19,34 +19,34 @@ import DeveloperError from "../Core/DeveloperError.js";
  * @see ReferenceProperty
  */
 function Property() {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 Object.defineProperties(Property.prototype, {
-  /**
-   * Gets a value indicating if this property is constant.  A property is considered
-   * constant if getValue always returns the same result for the current definition.
-   * @memberof Property.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   */
-  isConstant: {
-    get: DeveloperError.throwInstantiationError,
-  },
-  /**
-   * Gets the event that is raised whenever the definition of this property changes.
-   * The definition is considered to have changed if a call to getValue would return
-   * a different result for the same time.
-   * @memberof Property.prototype
-   *
-   * @type {Event}
-   * @readonly
-   */
-  definitionChanged: {
-    get: DeveloperError.throwInstantiationError,
-  },
-});
+	/**
+	 * Gets a value indicating if this property is constant.  A property is considered
+	 * constant if getValue always returns the same result for the current definition.
+	 * @memberof Property.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	isConstant: {
+		get: DeveloperError.throwInstantiationError,
+	},
+	/**
+	 * Gets the event that is raised whenever the definition of this property changes.
+	 * The definition is considered to have changed if a call to getValue would return
+	 * a different result for the same time.
+	 * @memberof Property.prototype
+	 *
+	 * @type {Event}
+	 * @readonly
+	 */
+	definitionChanged: {
+		get: DeveloperError.throwInstantiationError,
+	},
+})
 
 /**
  * Gets the value of the property at the provided time.
@@ -56,7 +56,7 @@ Object.defineProperties(Property.prototype, {
  * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
  * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
  */
-Property.prototype.getValue = DeveloperError.throwInstantiationError;
+Property.prototype.getValue = DeveloperError.throwInstantiationError
 
 /**
  * Compares this property to the provided property and returns
@@ -66,73 +66,73 @@ Property.prototype.getValue = DeveloperError.throwInstantiationError;
  * @param {Property} [other] The other property.
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
-Property.prototype.equals = DeveloperError.throwInstantiationError;
+Property.prototype.equals = DeveloperError.throwInstantiationError
 
 /**
  * @private
  */
 Property.equals = function (left, right) {
-  return left === right || (defined(left) && left.equals(right));
-};
+	return left === right || (defined(left) && left.equals(right))
+}
 
 /**
  * @private
  */
 Property.arrayEquals = function (left, right) {
-  if (left === right) {
-    return true;
-  }
-  if (!defined(left) || !defined(right) || left.length !== right.length) {
-    return false;
-  }
-  var length = left.length;
-  for (var i = 0; i < length; i++) {
-    if (!Property.equals(left[i], right[i])) {
-      return false;
-    }
-  }
-  return true;
-};
+	if (left === right) {
+		return true
+	}
+	if (!defined(left) || !defined(right) || left.length !== right.length) {
+		return false
+	}
+	var length = left.length
+	for (var i = 0; i < length; i++) {
+		if (!Property.equals(left[i], right[i])) {
+			return false
+		}
+	}
+	return true
+}
 
 /**
  * @private
  */
 Property.isConstant = function (property) {
-  return !defined(property) || property.isConstant;
-};
+	return !defined(property) || property.isConstant
+}
 
 /**
  * @private
  */
 Property.getValueOrUndefined = function (property, time, result) {
-  return defined(property) ? property.getValue(time, result) : undefined;
-};
+	return defined(property) ? property.getValue(time, result) : undefined
+}
 
 /**
  * @private
  */
 Property.getValueOrDefault = function (property, time, valueDefault, result) {
-  return defined(property)
-    ? defaultValue(property.getValue(time, result), valueDefault)
-    : valueDefault;
-};
+	return defined(property)
+		? defaultValue(property.getValue(time, result), valueDefault)
+		: valueDefault
+}
 
 /**
  * @private
  */
 Property.getValueOrClonedDefault = function (
-  property,
-  time,
-  valueDefault,
-  result
+	property,
+	time,
+	valueDefault,
+	result,
 ) {
-  var value;
-  if (defined(property)) {
-    value = property.getValue(time, result);
-  }
-  if (!defined(value)) {
-    value = valueDefault.clone(value);
-  }
-  return value;
-};
-export default Property;
+	var value
+	if (defined(property)) {
+		value = property.getValue(time, result)
+	}
+	if (!defined(value)) {
+		value = valueDefault.clone(value)
+	}
+	return value
+}
+export default Property

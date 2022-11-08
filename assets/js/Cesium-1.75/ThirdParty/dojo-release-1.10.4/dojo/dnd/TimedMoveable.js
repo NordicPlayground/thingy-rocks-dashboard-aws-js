@@ -1,4 +1,7 @@
-define(["../_base/declare", "./Moveable" /*=====, "./Mover" =====*/], function(declare, Moveable /*=====, Mover =====*/){
+define(['../_base/declare', './Moveable' /*=====, "./Mover" =====*/], function (
+	declare,
+	Moveable /*=====, Mover =====*/,
+) {
 	// module:
 	//		dojo/dnd/TimedMoveable
 
@@ -12,9 +15,9 @@ define(["../_base/declare", "./Moveable" /*=====, "./Mover" =====*/], function(d
 	=====*/
 
 	// precalculate long expressions
-	var oldOnMove = Moveable.prototype.onMove;
+	var oldOnMove = Moveable.prototype.onMove
 
-	return declare("dojo.dnd.TimedMoveable", Moveable, {
+	return declare('dojo.dnd.TimedMoveable', Moveable, {
 		// summary:
 		//		A specialized version of Moveable to support an FPS throttling.
 		//		This class puts an upper restriction on FPS, which may reduce
@@ -22,9 +25,9 @@ define(["../_base/declare", "./Moveable" /*=====, "./Mover" =====*/], function(d
 		//		the delay before actually moving the moveable object.
 
 		// object attributes (for markup)
-		timeout: 40,	// in ms, 40ms corresponds to 25 fps
+		timeout: 40, // in ms, 40ms corresponds to 25 fps
 
-		constructor: function(node, params){
+		constructor: function (node, params) {
 			// summary:
 			//		an object that makes a node moveable with a timer
 			// node: Node||String
@@ -33,32 +36,38 @@ define(["../_base/declare", "./Moveable" /*=====, "./Mover" =====*/], function(d
 			//		object with additional parameters.
 
 			// sanitize parameters
-			if(!params){ params = {}; }
-			if(params.timeout && typeof params.timeout == "number" && params.timeout >= 0){
-				this.timeout = params.timeout;
+			if (!params) {
+				params = {}
+			}
+			if (
+				params.timeout &&
+				typeof params.timeout == 'number' &&
+				params.timeout >= 0
+			) {
+				this.timeout = params.timeout
 			}
 		},
 
-		onMoveStop: function(/*Mover*/ mover){
-			if(mover._timer){
+		onMoveStop: function (/*Mover*/ mover) {
+			if (mover._timer) {
 				// stop timer
-				clearTimeout(mover._timer);
+				clearTimeout(mover._timer)
 				// reflect the last received position
-				oldOnMove.call(this, mover, mover._leftTop);
+				oldOnMove.call(this, mover, mover._leftTop)
 			}
-			Moveable.prototype.onMoveStop.apply(this, arguments);
+			Moveable.prototype.onMoveStop.apply(this, arguments)
 		},
-		onMove: function(/*Mover*/ mover, /*Object*/ leftTop){
-			mover._leftTop = leftTop;
-			if(!mover._timer){
-				var _t = this;	// to avoid using dojo.hitch()
-				mover._timer = setTimeout(function(){
+		onMove: function (/*Mover*/ mover, /*Object*/ leftTop) {
+			mover._leftTop = leftTop
+			if (!mover._timer) {
+				var _t = this // to avoid using dojo.hitch()
+				mover._timer = setTimeout(function () {
 					// we don't have any pending requests
-					mover._timer = null;
+					mover._timer = null
 					// reflect the last received position
-					oldOnMove.call(_t, mover, mover._leftTop);
-				}, this.timeout);
+					oldOnMove.call(_t, mover, mover._leftTop)
+				}, this.timeout)
 			}
-		}
-	});
-});
+		},
+	})
+})

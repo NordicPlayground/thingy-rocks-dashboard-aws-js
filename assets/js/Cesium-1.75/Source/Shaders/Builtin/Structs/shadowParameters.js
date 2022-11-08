@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "struct czm_shadowParameters\n\
+export default 'struct czm_shadowParameters\n\
 {\n\
 #ifdef USE_CUBE_MAP_SHADOW\n\
     vec3 texCoords;\n\
@@ -14,4 +14,4 @@ export default "struct czm_shadowParameters\n\
     float normalShadingSmooth;\n\
     float darkness;\n\
 };\n\
-";
+'

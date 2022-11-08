@@ -1,10 +1,10 @@
-import Check from "./Check.js";
-import Credit from "./Credit.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import Ion from "./Ion.js";
-import PeliasGeocoderService from "./PeliasGeocoderService.js";
-import Resource from "./Resource.js";
+import Check from './Check.js'
+import Credit from './Credit.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import Ion from './Ion.js'
+import PeliasGeocoderService from './PeliasGeocoderService.js'
+import Resource from './Resource.js'
 
 /**
  * Provides geocoding through Cesium ion.
@@ -19,36 +19,36 @@ import Resource from "./Resource.js";
  * @see Ion
  */
 function IonGeocoderService(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("options.scene", options.scene);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('options.scene', options.scene)
+	//>>includeEnd('debug');
 
-  var accessToken = defaultValue(options.accessToken, Ion.defaultAccessToken);
-  var server = Resource.createIfNeeded(
-    defaultValue(options.server, Ion.defaultServer)
-  );
-  server.appendForwardSlash();
+	var accessToken = defaultValue(options.accessToken, Ion.defaultAccessToken)
+	var server = Resource.createIfNeeded(
+		defaultValue(options.server, Ion.defaultServer),
+	)
+	server.appendForwardSlash()
 
-  var defaultTokenCredit = Ion.getDefaultTokenCredit(accessToken);
-  if (defined(defaultTokenCredit)) {
-    options.scene.frameState.creditDisplay.addDefaultCredit(
-      Credit.clone(defaultTokenCredit)
-    );
-  }
+	var defaultTokenCredit = Ion.getDefaultTokenCredit(accessToken)
+	if (defined(defaultTokenCredit)) {
+		options.scene.frameState.creditDisplay.addDefaultCredit(
+			Credit.clone(defaultTokenCredit),
+		)
+	}
 
-  var searchEndpoint = server.getDerivedResource({
-    url: "v1/geocode",
-  });
+	var searchEndpoint = server.getDerivedResource({
+		url: 'v1/geocode',
+	})
 
-  if (defined(accessToken)) {
-    searchEndpoint.appendQueryParameters({ access_token: accessToken });
-  }
+	if (defined(accessToken)) {
+		searchEndpoint.appendQueryParameters({ access_token: accessToken })
+	}
 
-  this._accessToken = accessToken;
-  this._server = server;
-  this._pelias = new PeliasGeocoderService(searchEndpoint);
+	this._accessToken = accessToken
+	this._server = server
+	this._pelias = new PeliasGeocoderService(searchEndpoint)
 }
 
 /**
@@ -59,6 +59,6 @@ function IonGeocoderService(options) {
  * @returns {Promise<GeocoderService.Result[]>}
  */
 IonGeocoderService.prototype.geocode = function (query, geocodeType) {
-  return this._pelias.geocode(query, geocodeType);
-};
-export default IonGeocoderService;
+	return this._pelias.geocode(query, geocodeType)
+}
+export default IonGeocoderService

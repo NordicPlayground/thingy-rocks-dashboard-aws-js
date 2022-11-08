@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "\n\
+export default '\n\
 float czm_private_shadowVisibility(float visibility, float nDotL, float normalShadingSmooth, float darkness)\n\
 {\n\
 #ifdef USE_NORMAL_SHADING\n\
@@ -65,4 +65,4 @@ float czm_shadowVisibility(sampler2D shadowMap, czm_shadowParameters shadowParam
     return czm_private_shadowVisibility(visibility, nDotL, normalShadingSmooth, darkness);\n\
 }\n\
 #endif\n\
-";
+'

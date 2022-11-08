@@ -1,5 +1,5 @@
-import Check from "./Check.js";
-import defined from "./defined.js";
+import Check from './Check.js'
+import defined from './defined.js'
 
 /**
  * A generic utility class for managing subscribers for a particular event.
@@ -21,25 +21,25 @@ import defined from "./defined.js";
  * evt.removeEventListener(MyObject.prototype.myListener);
  */
 function Event() {
-  this._listeners = [];
-  this._scopes = [];
-  this._toRemove = [];
-  this._insideRaiseEvent = false;
+	this._listeners = []
+	this._scopes = []
+	this._toRemove = []
+	this._insideRaiseEvent = false
 }
 
 Object.defineProperties(Event.prototype, {
-  /**
-   * The number of listeners currently subscribed to the event.
-   * @memberof Event.prototype
-   * @type {Number}
-   * @readonly
-   */
-  numberOfListeners: {
-    get: function () {
-      return this._listeners.length - this._toRemove.length;
-    },
-  },
-});
+	/**
+	 * The number of listeners currently subscribed to the event.
+	 * @memberof Event.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	numberOfListeners: {
+		get: function () {
+			return this._listeners.length - this._toRemove.length
+		},
+	},
+})
 
 /**
  * Registers a callback function to be executed whenever the event is raised.
@@ -55,18 +55,18 @@ Object.defineProperties(Event.prototype, {
  * @see Event#removeEventListener
  */
 Event.prototype.addEventListener = function (listener, scope) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.func("listener", listener);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.func('listener', listener)
+	//>>includeEnd('debug');
 
-  this._listeners.push(listener);
-  this._scopes.push(scope);
+	this._listeners.push(listener)
+	this._scopes.push(scope)
 
-  var event = this;
-  return function () {
-    event.removeEventListener(listener, scope);
-  };
-};
+	var event = this
+	return function () {
+		event.removeEventListener(listener, scope)
+	}
+}
 
 /**
  * Unregisters a previously registered callback.
@@ -79,41 +79,41 @@ Event.prototype.addEventListener = function (listener, scope) {
  * @see Event#raiseEvent
  */
 Event.prototype.removeEventListener = function (listener, scope) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.func("listener", listener);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.func('listener', listener)
+	//>>includeEnd('debug');
 
-  var listeners = this._listeners;
-  var scopes = this._scopes;
+	var listeners = this._listeners
+	var scopes = this._scopes
 
-  var index = -1;
-  for (var i = 0; i < listeners.length; i++) {
-    if (listeners[i] === listener && scopes[i] === scope) {
-      index = i;
-      break;
-    }
-  }
+	var index = -1
+	for (var i = 0; i < listeners.length; i++) {
+		if (listeners[i] === listener && scopes[i] === scope) {
+			index = i
+			break
+		}
+	}
 
-  if (index !== -1) {
-    if (this._insideRaiseEvent) {
-      //In order to allow removing an event subscription from within
-      //a callback, we don't actually remove the items here.  Instead
-      //remember the index they are at and undefined their value.
-      this._toRemove.push(index);
-      listeners[index] = undefined;
-      scopes[index] = undefined;
-    } else {
-      listeners.splice(index, 1);
-      scopes.splice(index, 1);
-    }
-    return true;
-  }
+	if (index !== -1) {
+		if (this._insideRaiseEvent) {
+			//In order to allow removing an event subscription from within
+			//a callback, we don't actually remove the items here.  Instead
+			//remember the index they are at and undefined their value.
+			this._toRemove.push(index)
+			listeners[index] = undefined
+			scopes[index] = undefined
+		} else {
+			listeners.splice(index, 1)
+			scopes.splice(index, 1)
+		}
+		return true
+	}
 
-  return false;
-};
+	return false
+}
 
 function compareNumber(a, b) {
-  return b - a;
+	return b - a
 }
 
 /**
@@ -125,38 +125,38 @@ function compareNumber(a, b) {
  * @see Event#removeEventListener
  */
 Event.prototype.raiseEvent = function () {
-  this._insideRaiseEvent = true;
+	this._insideRaiseEvent = true
 
-  var i;
-  var listeners = this._listeners;
-  var scopes = this._scopes;
-  var length = listeners.length;
+	var i
+	var listeners = this._listeners
+	var scopes = this._scopes
+	var length = listeners.length
 
-  for (i = 0; i < length; i++) {
-    var listener = listeners[i];
-    if (defined(listener)) {
-      listeners[i].apply(scopes[i], arguments);
-    }
-  }
+	for (i = 0; i < length; i++) {
+		var listener = listeners[i]
+		if (defined(listener)) {
+			listeners[i].apply(scopes[i], arguments)
+		}
+	}
 
-  //Actually remove items removed in removeEventListener.
-  var toRemove = this._toRemove;
-  length = toRemove.length;
-  if (length > 0) {
-    toRemove.sort(compareNumber);
-    for (i = 0; i < length; i++) {
-      var index = toRemove[i];
-      listeners.splice(index, 1);
-      scopes.splice(index, 1);
-    }
-    toRemove.length = 0;
-  }
+	//Actually remove items removed in removeEventListener.
+	var toRemove = this._toRemove
+	length = toRemove.length
+	if (length > 0) {
+		toRemove.sort(compareNumber)
+		for (i = 0; i < length; i++) {
+			var index = toRemove[i]
+			listeners.splice(index, 1)
+			scopes.splice(index, 1)
+		}
+		toRemove.length = 0
+	}
 
-  this._insideRaiseEvent = false;
-};
+	this._insideRaiseEvent = false
+}
 
 /**
  * A function that removes a listener.
  * @callback Event.RemoveCallback
  */
-export default Event;
+export default Event

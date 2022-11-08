@@ -1,4 +1,4 @@
-import Check from "../Core/Check.js";
+import Check from '../Core/Check.js'
 
 /**
  * Gets a GLSL snippet that clips a fragment using the `clip` function from {@link getClippingFunction} and styles it.
@@ -10,33 +10,33 @@ import Check from "../Core/Check.js";
  * @private
  */
 function getClipAndStyleCode(
-  samplerUniformName,
-  matrixUniformName,
-  styleUniformName
+	samplerUniformName,
+	matrixUniformName,
+	styleUniformName,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.string("samplerUniformName", samplerUniformName);
-  Check.typeOf.string("matrixUniformName", matrixUniformName);
-  Check.typeOf.string("styleUniformName", styleUniformName);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.string('samplerUniformName', samplerUniformName)
+	Check.typeOf.string('matrixUniformName', matrixUniformName)
+	Check.typeOf.string('styleUniformName', styleUniformName)
+	//>>includeEnd('debug');
 
-  var shaderCode =
-    "    float clipDistance = clip(gl_FragCoord, " +
-    samplerUniformName +
-    ", " +
-    matrixUniformName +
-    "); \n" +
-    "    vec4 clippingPlanesEdgeColor = vec4(1.0); \n" +
-    "    clippingPlanesEdgeColor.rgb = " +
-    styleUniformName +
-    ".rgb; \n" +
-    "    float clippingPlanesEdgeWidth = " +
-    styleUniformName +
-    ".a; \n" +
-    "    if (clipDistance > 0.0 && clipDistance < clippingPlanesEdgeWidth) \n" +
-    "    { \n" +
-    "        gl_FragColor = clippingPlanesEdgeColor;\n" +
-    "    } \n";
-  return shaderCode;
+	var shaderCode =
+		'    float clipDistance = clip(gl_FragCoord, ' +
+		samplerUniformName +
+		', ' +
+		matrixUniformName +
+		'); \n' +
+		'    vec4 clippingPlanesEdgeColor = vec4(1.0); \n' +
+		'    clippingPlanesEdgeColor.rgb = ' +
+		styleUniformName +
+		'.rgb; \n' +
+		'    float clippingPlanesEdgeWidth = ' +
+		styleUniformName +
+		'.a; \n' +
+		'    if (clipDistance > 0.0 && clipDistance < clippingPlanesEdgeWidth) \n' +
+		'    { \n' +
+		'        gl_FragColor = clippingPlanesEdgeColor;\n' +
+		'    } \n'
+	return shaderCode
 }
-export default getClipAndStyleCode;
+export default getClipAndStyleCode

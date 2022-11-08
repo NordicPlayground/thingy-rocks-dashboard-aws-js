@@ -26,4 +26,4 @@ czm_material czm_getDefaultMaterial(czm_materialInput materialInput)\n\
     material.alpha = 1.0;\n\
     return material;\n\
 }\n\
-";
+"

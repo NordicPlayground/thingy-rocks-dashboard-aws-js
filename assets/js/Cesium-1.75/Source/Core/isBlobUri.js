@@ -1,6 +1,6 @@
-import Check from "./Check.js";
+import Check from './Check.js'
 
-var blobUriRegex = /^blob:/i;
+var blobUriRegex = /^blob:/i
 
 /**
  * Determines if the specified uri is a blob uri.
@@ -13,10 +13,10 @@ var blobUriRegex = /^blob:/i;
  * @private
  */
 function isBlobUri(uri) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.string("uri", uri);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.string('uri', uri)
+	//>>includeEnd('debug');
 
-  return blobUriRegex.test(uri);
+	return blobUriRegex.test(uri)
 }
-export default isBlobUri;
+export default isBlobUri

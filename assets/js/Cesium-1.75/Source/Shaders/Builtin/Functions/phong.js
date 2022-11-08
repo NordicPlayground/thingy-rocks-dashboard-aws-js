@@ -62,4 +62,4 @@ vec4 czm_private_phong(vec3 toEye, czm_material material, vec3 lightDirectionEC)
 \n\
     return vec4(color, material.alpha);\n\
 }\n\
-";
+"

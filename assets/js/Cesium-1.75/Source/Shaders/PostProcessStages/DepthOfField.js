@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform sampler2D colorTexture;\n\
+export default 'uniform sampler2D colorTexture;\n\
 uniform sampler2D blurTexture;\n\
 uniform sampler2D depthTexture;\n\
 uniform float focalDistance;\n\
@@ -38,4 +38,4 @@ void main(void)\n\
     float d = computeDepthBlur(-posInCamera.z);\n\
     gl_FragColor = mix(texture2D(colorTexture, v_textureCoordinates), texture2D(blurTexture, v_textureCoordinates), d);\n\
 }\n\
-";
+'

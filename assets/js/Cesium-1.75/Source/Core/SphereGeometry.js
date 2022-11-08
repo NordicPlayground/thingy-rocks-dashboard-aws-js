@@ -1,9 +1,9 @@
-import Cartesian3 from "./Cartesian3.js";
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import EllipsoidGeometry from "./EllipsoidGeometry.js";
-import VertexFormat from "./VertexFormat.js";
+import Cartesian3 from './Cartesian3.js'
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import EllipsoidGeometry from './EllipsoidGeometry.js'
+import VertexFormat from './VertexFormat.js'
 
 /**
  * A description of a sphere centered at the origin.
@@ -30,24 +30,24 @@ import VertexFormat from "./VertexFormat.js";
  * var geometry = Cesium.SphereGeometry.createGeometry(sphere);
  */
 function SphereGeometry(options) {
-  var radius = defaultValue(options.radius, 1.0);
-  var radii = new Cartesian3(radius, radius, radius);
-  var ellipsoidOptions = {
-    radii: radii,
-    stackPartitions: options.stackPartitions,
-    slicePartitions: options.slicePartitions,
-    vertexFormat: options.vertexFormat,
-  };
+	var radius = defaultValue(options.radius, 1.0)
+	var radii = new Cartesian3(radius, radius, radius)
+	var ellipsoidOptions = {
+		radii: radii,
+		stackPartitions: options.stackPartitions,
+		slicePartitions: options.slicePartitions,
+		vertexFormat: options.vertexFormat,
+	}
 
-  this._ellipsoidGeometry = new EllipsoidGeometry(ellipsoidOptions);
-  this._workerName = "createSphereGeometry";
+	this._ellipsoidGeometry = new EllipsoidGeometry(ellipsoidOptions)
+	this._workerName = 'createSphereGeometry'
 }
 
 /**
  * The number of elements used to pack the object into an array.
  * @type {Number}
  */
-SphereGeometry.packedLength = EllipsoidGeometry.packedLength;
+SphereGeometry.packedLength = EllipsoidGeometry.packedLength
 
 /**
  * Stores the provided instance into the provided array.
@@ -59,21 +59,21 @@ SphereGeometry.packedLength = EllipsoidGeometry.packedLength;
  * @returns {Number[]} The array that was packed into
  */
 SphereGeometry.pack = function (value, array, startingIndex) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("value", value);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('value', value)
+	//>>includeEnd('debug');
 
-  return EllipsoidGeometry.pack(value._ellipsoidGeometry, array, startingIndex);
-};
+	return EllipsoidGeometry.pack(value._ellipsoidGeometry, array, startingIndex)
+}
 
-var scratchEllipsoidGeometry = new EllipsoidGeometry();
+var scratchEllipsoidGeometry = new EllipsoidGeometry()
 var scratchOptions = {
-  radius: undefined,
-  radii: new Cartesian3(),
-  vertexFormat: new VertexFormat(),
-  stackPartitions: undefined,
-  slicePartitions: undefined,
-};
+	radius: undefined,
+	radii: new Cartesian3(),
+	vertexFormat: new VertexFormat(),
+	stackPartitions: undefined,
+	slicePartitions: undefined,
+}
 
 /**
  * Retrieves an instance from a packed array.
@@ -84,27 +84,27 @@ var scratchOptions = {
  * @returns {SphereGeometry} The modified result parameter or a new SphereGeometry instance if one was not provided.
  */
 SphereGeometry.unpack = function (array, startingIndex, result) {
-  var ellipsoidGeometry = EllipsoidGeometry.unpack(
-    array,
-    startingIndex,
-    scratchEllipsoidGeometry
-  );
-  scratchOptions.vertexFormat = VertexFormat.clone(
-    ellipsoidGeometry._vertexFormat,
-    scratchOptions.vertexFormat
-  );
-  scratchOptions.stackPartitions = ellipsoidGeometry._stackPartitions;
-  scratchOptions.slicePartitions = ellipsoidGeometry._slicePartitions;
+	var ellipsoidGeometry = EllipsoidGeometry.unpack(
+		array,
+		startingIndex,
+		scratchEllipsoidGeometry,
+	)
+	scratchOptions.vertexFormat = VertexFormat.clone(
+		ellipsoidGeometry._vertexFormat,
+		scratchOptions.vertexFormat,
+	)
+	scratchOptions.stackPartitions = ellipsoidGeometry._stackPartitions
+	scratchOptions.slicePartitions = ellipsoidGeometry._slicePartitions
 
-  if (!defined(result)) {
-    scratchOptions.radius = ellipsoidGeometry._radii.x;
-    return new SphereGeometry(scratchOptions);
-  }
+	if (!defined(result)) {
+		scratchOptions.radius = ellipsoidGeometry._radii.x
+		return new SphereGeometry(scratchOptions)
+	}
 
-  Cartesian3.clone(ellipsoidGeometry._radii, scratchOptions.radii);
-  result._ellipsoidGeometry = new EllipsoidGeometry(scratchOptions);
-  return result;
-};
+	Cartesian3.clone(ellipsoidGeometry._radii, scratchOptions.radii)
+	result._ellipsoidGeometry = new EllipsoidGeometry(scratchOptions)
+	return result
+}
 
 /**
  * Computes the geometric representation of a sphere, including its vertices, indices, and a bounding sphere.
@@ -113,6 +113,6 @@ SphereGeometry.unpack = function (array, startingIndex, result) {
  * @returns {Geometry|undefined} The computed vertices and indices.
  */
 SphereGeometry.createGeometry = function (sphereGeometry) {
-  return EllipsoidGeometry.createGeometry(sphereGeometry._ellipsoidGeometry);
-};
-export default SphereGeometry;
+	return EllipsoidGeometry.createGeometry(sphereGeometry._ellipsoidGeometry)
+}
+export default SphereGeometry

@@ -1,4 +1,13 @@
-define(["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../dom-class", "../dom-construct", "../dom-geometry"], function(dojo, dom, style, attr, prop, cls, ctr, geom){
+define([
+	'./kernel',
+	'../dom',
+	'../dom-style',
+	'../dom-attr',
+	'../dom-prop',
+	'../dom-class',
+	'../dom-construct',
+	'../dom-geometry',
+], function (dojo, dom, style, attr, prop, cls, ctr, geom) {
 	// module:
 	//		dojo/dom
 
@@ -10,18 +19,18 @@ define(["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../
 	=====*/
 
 	// mix-in dom
-	dojo.byId = dom.byId;
-	dojo.isDescendant = dom.isDescendant;
-	dojo.setSelectable = dom.setSelectable;
+	dojo.byId = dom.byId
+	dojo.isDescendant = dom.isDescendant
+	dojo.setSelectable = dom.setSelectable
 
 	// mix-in dom-attr
-	dojo.getAttr = attr.get;
-	dojo.setAttr = attr.set;
-	dojo.hasAttr = attr.has;
-	dojo.removeAttr = attr.remove;
-	dojo.getNodeProp = attr.getNodeProp;
+	dojo.getAttr = attr.get
+	dojo.setAttr = attr.set
+	dojo.hasAttr = attr.has
+	dojo.removeAttr = attr.remove
+	dojo.getNodeProp = attr.getNodeProp
 
-	dojo.attr = function(node, name, value){
+	dojo.attr = function (node, name, value) {
 		// summary:
 		//		Gets or sets an attribute on an HTML element.
 		// description:
@@ -102,43 +111,53 @@ define(["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../
 		//	|	// though shorter to use `dojo.style()` in this case:
 		//	|	dojo.style("someNode", obj);
 
-		if(arguments.length == 2){
-			return attr[typeof name == "string" ? "get" : "set"](node, name);
+		if (arguments.length == 2) {
+			return attr[typeof name == 'string' ? 'get' : 'set'](node, name)
 		}
-		return attr.set(node, name, value);
-	};
+		return attr.set(node, name, value)
+	}
 
 	// mix-in dom-class
-	dojo.hasClass = cls.contains;
-	dojo.addClass = cls.add;
-	dojo.removeClass = cls.remove;
-	dojo.toggleClass = cls.toggle;
-	dojo.replaceClass = cls.replace;
+	dojo.hasClass = cls.contains
+	dojo.addClass = cls.add
+	dojo.removeClass = cls.remove
+	dojo.toggleClass = cls.toggle
+	dojo.replaceClass = cls.replace
 
 	// mix-in dom-construct
-	dojo._toDom = dojo.toDom = ctr.toDom;
-	dojo.place = ctr.place;
-	dojo.create = ctr.create;
-	dojo.empty = function(node){ ctr.empty(node); };
-	dojo._destroyElement = dojo.destroy = function(node){ ctr.destroy(node); };
+	dojo._toDom = dojo.toDom = ctr.toDom
+	dojo.place = ctr.place
+	dojo.create = ctr.create
+	dojo.empty = function (node) {
+		ctr.empty(node)
+	}
+	dojo._destroyElement = dojo.destroy = function (node) {
+		ctr.destroy(node)
+	}
 
 	// mix-in dom-geometry
-	dojo._getPadExtents = dojo.getPadExtents = geom.getPadExtents;
-	dojo._getBorderExtents = dojo.getBorderExtents = geom.getBorderExtents;
-	dojo._getPadBorderExtents = dojo.getPadBorderExtents = geom.getPadBorderExtents;
-	dojo._getMarginExtents = dojo.getMarginExtents = geom.getMarginExtents;
-	dojo._getMarginSize = dojo.getMarginSize = geom.getMarginSize;
-	dojo._getMarginBox = dojo.getMarginBox = geom.getMarginBox;
-	dojo.setMarginBox = geom.setMarginBox;
-	dojo._getContentBox = dojo.getContentBox = geom.getContentBox;
-	dojo.setContentSize = geom.setContentSize;
-	dojo._isBodyLtr = dojo.isBodyLtr = geom.isBodyLtr;
-	dojo._docScroll = dojo.docScroll = geom.docScroll;
-	dojo._getIeDocumentElementOffset = dojo.getIeDocumentElementOffset = geom.getIeDocumentElementOffset;
-	dojo._fixIeBiDiScrollLeft = dojo.fixIeBiDiScrollLeft = geom.fixIeBiDiScrollLeft;
-	dojo.position = geom.position;
+	dojo._getPadExtents = dojo.getPadExtents = geom.getPadExtents
+	dojo._getBorderExtents = dojo.getBorderExtents = geom.getBorderExtents
+	dojo._getPadBorderExtents = dojo.getPadBorderExtents =
+		geom.getPadBorderExtents
+	dojo._getMarginExtents = dojo.getMarginExtents = geom.getMarginExtents
+	dojo._getMarginSize = dojo.getMarginSize = geom.getMarginSize
+	dojo._getMarginBox = dojo.getMarginBox = geom.getMarginBox
+	dojo.setMarginBox = geom.setMarginBox
+	dojo._getContentBox = dojo.getContentBox = geom.getContentBox
+	dojo.setContentSize = geom.setContentSize
+	dojo._isBodyLtr = dojo.isBodyLtr = geom.isBodyLtr
+	dojo._docScroll = dojo.docScroll = geom.docScroll
+	dojo._getIeDocumentElementOffset = dojo.getIeDocumentElementOffset =
+		geom.getIeDocumentElementOffset
+	dojo._fixIeBiDiScrollLeft = dojo.fixIeBiDiScrollLeft =
+		geom.fixIeBiDiScrollLeft
+	dojo.position = geom.position
 
-	dojo.marginBox = function marginBox(/*DomNode|String*/node, /*Object?*/box){
+	dojo.marginBox = function marginBox(
+		/*DomNode|String*/ node,
+		/*Object?*/ box,
+	) {
 		// summary:
 		//		Getter/setter for the margin-box of node.
 		// description:
@@ -164,10 +183,13 @@ define(["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../
 		//		Set a node's margin box to the size of another node
 		//	|	var box = dojo.marginBox("someNodeId");
 		//	|	dojo.marginBox("someOtherNode", box);
-		return box ? geom.setMarginBox(node, box) : geom.getMarginBox(node); // Object
-	};
+		return box ? geom.setMarginBox(node, box) : geom.getMarginBox(node) // Object
+	}
 
-	dojo.contentBox = function contentBox(/*DomNode|String*/node, /*Object?*/box){
+	dojo.contentBox = function contentBox(
+		/*DomNode|String*/ node,
+		/*Object?*/ box,
+	) {
 		// summary:
 		//		Getter/setter for the content-box of node.
 		// description:
@@ -188,10 +210,10 @@ define(["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../
 		//		update/set the content box for node. Box is an object in the
 		//		above format, but only w (width) and h (height) are supported.
 		//		All properties are optional if passed.
-		return box ? geom.setContentSize(node, box) : geom.getContentBox(node); // Object
-	};
+		return box ? geom.setContentSize(node, box) : geom.getContentBox(node) // Object
+	}
 
-	dojo.coords = function(/*DomNode|String*/node, /*Boolean?*/includeScroll){
+	dojo.coords = function (/*DomNode|String*/ node, /*Boolean?*/ includeScroll) {
 		// summary:
 		//		Deprecated: Use position() for border-box x/y/w/h
 		//		or marginBox() for margin-box w/h/l/t.
@@ -204,20 +226,25 @@ define(["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../
 		//|			{ l: 50, t: 200, w: 300: h: 150, x: 100, y: 300 }
 		//		Does not act as a setter. If includeScroll is passed, the x and
 		//		y params are affected as one would expect in dojo.position().
-		dojo.deprecated("dojo.coords()", "Use dojo.position() or dojo.marginBox().");
-		node = dom.byId(node);
-		var s = style.getComputedStyle(node), mb = geom.getMarginBox(node, s);
-		var abs = geom.position(node, includeScroll);
-		mb.x = abs.x;
-		mb.y = abs.y;
-		return mb;	// Object
-	};
+		dojo.deprecated('dojo.coords()', 'Use dojo.position() or dojo.marginBox().')
+		node = dom.byId(node)
+		var s = style.getComputedStyle(node),
+			mb = geom.getMarginBox(node, s)
+		var abs = geom.position(node, includeScroll)
+		mb.x = abs.x
+		mb.y = abs.y
+		return mb // Object
+	}
 
 	// mix-in dom-prop
-	dojo.getProp = prop.get;
-	dojo.setProp = prop.set;
+	dojo.getProp = prop.get
+	dojo.setProp = prop.set
 
-	dojo.prop = function(/*DomNode|String*/node, /*String|Object*/name, /*String?*/value){
+	dojo.prop = function (
+		/*DomNode|String*/ node,
+		/*String|Object*/ name,
+		/*String?*/ value,
+	) {
 		// summary:
 		//		Gets or sets a property on an HTML element.
 		// description:
@@ -298,20 +325,20 @@ define(["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../
 		//	|	// though shorter to use `dojo.style()` in this case:
 		//	|	dojo.style("someNode", obj);
 
-		if(arguments.length == 2){
-			return prop[typeof name == "string" ? "get" : "set"](node, name);
+		if (arguments.length == 2) {
+			return prop[typeof name == 'string' ? 'get' : 'set'](node, name)
 		}
 		// setter
-		return prop.set(node, name, value);
-	};
+		return prop.set(node, name, value)
+	}
 
 	// mix-in dom-style
-	dojo.getStyle = style.get;
-	dojo.setStyle = style.set;
-	dojo.getComputedStyle = style.getComputedStyle;
-	dojo.__toPixelValue = dojo.toPixelValue = style.toPixelValue;
+	dojo.getStyle = style.get
+	dojo.setStyle = style.set
+	dojo.getComputedStyle = style.getComputedStyle
+	dojo.__toPixelValue = dojo.toPixelValue = style.toPixelValue
 
-	dojo.style = function(node, name, value){
+	dojo.style = function (node, name, value) {
 		// summary:
 		//		Accesses styles on a node. If 2 arguments are
 		//		passed, acts as a getter. If 3 arguments are passed, acts
@@ -378,15 +405,15 @@ define(["./kernel", "../dom", "../dom-style", "../dom-attr", "../dom-prop", "../
 		//	|		fontSize:"13pt"
 		//	|	});
 
-		switch(arguments.length){
+		switch (arguments.length) {
 			case 1:
-				return style.get(node);
+				return style.get(node)
 			case 2:
-				return style[typeof name == "string" ? "get" : "set"](node, name);
+				return style[typeof name == 'string' ? 'get' : 'set'](node, name)
 		}
 		// setter
-		return style.set(node, name, value);
-	};
+		return style.set(node, name, value)
+	}
 
-	return dojo;
-});
+	return dojo
+})

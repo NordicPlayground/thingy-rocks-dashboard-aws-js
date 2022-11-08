@@ -1,4 +1,4 @@
-import defined from "./defined.js";
+import defined from './defined.js'
 
 /**
  * Formats an error object into a String.  If available, uses name, message, and stack
@@ -10,21 +10,21 @@ import defined from "./defined.js";
  * @returns {String} A string containing the formatted error.
  */
 function formatError(object) {
-  var result;
+	var result
 
-  var name = object.name;
-  var message = object.message;
-  if (defined(name) && defined(message)) {
-    result = name + ": " + message;
-  } else {
-    result = object.toString();
-  }
+	var name = object.name
+	var message = object.message
+	if (defined(name) && defined(message)) {
+		result = name + ': ' + message
+	} else {
+		result = object.toString()
+	}
 
-  var stack = object.stack;
-  if (defined(stack)) {
-    result += "\n" + stack;
-  }
+	var stack = object.stack
+	if (defined(stack)) {
+		result += '\n' + stack
+	}
 
-  return result;
+	return result
 }
-export default formatError;
+export default formatError

@@ -1,39 +1,63 @@
-define(["./_base/kernel", "./on", "./has", "./dom", "./_base/window"], function(dojo, on, has, dom, win){
-
+define([
+	'./_base/kernel',
+	'./on',
+	'./has',
+	'./dom',
+	'./_base/window',
+], function (dojo, on, has, dom, win) {
 	// module:
 	//		dojo/mouse
 
-    has.add("dom-quirks", win.doc && win.doc.compatMode == "BackCompat");
-	has.add("events-mouseenter", win.doc && "onmouseenter" in win.doc.createElement("div"));
-	has.add("events-mousewheel", win.doc && 'onmousewheel' in win.doc);
+	has.add('dom-quirks', win.doc && win.doc.compatMode == 'BackCompat')
+	has.add(
+		'events-mouseenter',
+		win.doc && 'onmouseenter' in win.doc.createElement('div'),
+	)
+	has.add('events-mousewheel', win.doc && 'onmousewheel' in win.doc)
 
-	var mouseButtons;
-	if((has("dom-quirks") && has("ie")) || !has("dom-addeventlistener")){
+	var mouseButtons
+	if ((has('dom-quirks') && has('ie')) || !has('dom-addeventlistener')) {
 		mouseButtons = {
-			LEFT:   1,
+			LEFT: 1,
 			MIDDLE: 4,
-			RIGHT:  2,
+			RIGHT: 2,
 			// helper functions
-			isButton: function(e, button){ return e.button & button; },
-			isLeft:   function(e){ return e.button & 1; },
-			isMiddle: function(e){ return e.button & 4; },
-			isRight:  function(e){ return e.button & 2; }
-		};
-	}else{
+			isButton: function (e, button) {
+				return e.button & button
+			},
+			isLeft: function (e) {
+				return e.button & 1
+			},
+			isMiddle: function (e) {
+				return e.button & 4
+			},
+			isRight: function (e) {
+				return e.button & 2
+			},
+		}
+	} else {
 		mouseButtons = {
-			LEFT:   0,
+			LEFT: 0,
 			MIDDLE: 1,
-			RIGHT:  2,
+			RIGHT: 2,
 			// helper functions
-			isButton: function(e, button){ return e.button == button; },
-			isLeft:   function(e){ return e.button == 0; },
-			isMiddle: function(e){ return e.button == 1; },
-			isRight:  function(e){ return e.button == 2; }
-		};
+			isButton: function (e, button) {
+				return e.button == button
+			},
+			isLeft: function (e) {
+				return e.button == 0
+			},
+			isMiddle: function (e) {
+				return e.button == 1
+			},
+			isRight: function (e) {
+				return e.button == 2
+			},
+		}
 	}
-	dojo.mouseButtons = mouseButtons;
+	dojo.mouseButtons = mouseButtons
 
-/*=====
+	/*=====
 	dojo.mouseButtons = {
 		// LEFT: Number
 		//		Numeric value of the left mouse button for the platform.
@@ -78,40 +102,47 @@ define(["./_base/kernel", "./on", "./has", "./dom", "./_base/window"], function(
 	};
 =====*/
 
-	function eventHandler(type, selectHandler){
+	function eventHandler(type, selectHandler) {
 		// emulation of mouseenter/leave with mouseover/out using descendant checking
-		var handler = function(node, listener){
-			return on(node, type, function(evt){
-				if(selectHandler){
-					return selectHandler(evt, listener);
+		var handler = function (node, listener) {
+			return on(node, type, function (evt) {
+				if (selectHandler) {
+					return selectHandler(evt, listener)
 				}
-				if(!dom.isDescendant(evt.relatedTarget, node)){
-					return listener.call(this, evt);
+				if (!dom.isDescendant(evt.relatedTarget, node)) {
+					return listener.call(this, evt)
 				}
-			});
-		};
-		handler.bubble = function(select){
-			return eventHandler(type, function(evt, listener){
+			})
+		}
+		handler.bubble = function (select) {
+			return eventHandler(type, function (evt, listener) {
 				// using a selector, use the select function to determine if the mouse moved inside the selector and was previously outside the selector
-				var target = select(evt.target);
-				var relatedTarget = evt.relatedTarget;
-				if(target && (target != (relatedTarget && relatedTarget.nodeType == 1 && select(relatedTarget)))){
-					return listener.call(target, evt);
-				} 
-			});
-		};
-		return handler;
+				var target = select(evt.target)
+				var relatedTarget = evt.relatedTarget
+				if (
+					target &&
+					target !=
+						(relatedTarget &&
+							relatedTarget.nodeType == 1 &&
+							select(relatedTarget))
+				) {
+					return listener.call(target, evt)
+				}
+			})
+		}
+		return handler
 	}
-	var wheel;
-	if(has("events-mousewheel")){
-		wheel = 'mousewheel';
-	}else{ //firefox
-		wheel = function(node, listener){
-			return on(node, 'DOMMouseScroll', function(evt){
-				evt.wheelDelta = -evt.detail;
-				listener.call(this, evt);
-			});
-		};
+	var wheel
+	if (has('events-mousewheel')) {
+		wheel = 'mousewheel'
+	} else {
+		//firefox
+		wheel = function (node, listener) {
+			return on(node, 'DOMMouseScroll', function (evt) {
+				evt.wheelDelta = -evt.detail
+				listener.call(this, evt)
+			})
+		}
 	}
 	return {
 		// summary:
@@ -127,17 +158,17 @@ define(["./_base/kernel", "./on", "./has", "./dom", "./_base/window"], function(
 		//		|			dojo.removeClass(targetNode, "highlighted");
 		//		|		});
 
-		_eventHandler: eventHandler,		// for dojo/touch
+		_eventHandler: eventHandler, // for dojo/touch
 
 		// enter: Synthetic Event
 		//		This is an extension event for the mouseenter that IE provides, emulating the
 		//		behavior on other browsers.
-		enter: eventHandler("mouseover"),
+		enter: eventHandler('mouseover'),
 
 		// leave: Synthetic Event
 		//		This is an extension event for the mouseleave that IE provides, emulating the
 		//		behavior on other browsers.
-		leave: eventHandler("mouseout"),
+		leave: eventHandler('mouseout'),
 
 		// wheel: Normalized Mouse Wheel Event
 		//		This is an extension event for the mousewheel that non-Mozilla browsers provide,
@@ -160,12 +191,12 @@ define(["./_base/kernel", "./on", "./has", "./dom", "./_base/window"], function(
 		 },
 		 =====*/
 
-		isRight: mouseButtons.isRight
+		isRight: mouseButtons.isRight,
 		/*=====
 		 , isRight: function(){
 			 // summary:
 			 //		Test an event object (from a mousedown event) to see if the right button was pressed.
 		 }
 		 =====*/
-	};
-});
+	}
+})

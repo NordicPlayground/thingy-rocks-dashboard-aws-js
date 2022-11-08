@@ -1,18 +1,18 @@
-import arraySlice from "../Core/arraySlice.js";
-import Cartesian3 from "../Core/Cartesian3.js";
-import Color from "../Core/Color.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import destroyObject from "../Core/destroyObject.js";
-import Ellipsoid from "../Core/Ellipsoid.js";
-import IndexDatatype from "../Core/IndexDatatype.js";
-import OrientedBoundingBox from "../Core/OrientedBoundingBox.js";
-import Rectangle from "../Core/Rectangle.js";
-import TaskProcessor from "../Core/TaskProcessor.js";
-import when from "../ThirdParty/when.js";
-import ClassificationType from "./ClassificationType.js";
-import Vector3DTileBatch from "./Vector3DTileBatch.js";
-import Vector3DTilePrimitive from "./Vector3DTilePrimitive.js";
+import arraySlice from '../Core/arraySlice.js'
+import Cartesian3 from '../Core/Cartesian3.js'
+import Color from '../Core/Color.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import destroyObject from '../Core/destroyObject.js'
+import Ellipsoid from '../Core/Ellipsoid.js'
+import IndexDatatype from '../Core/IndexDatatype.js'
+import OrientedBoundingBox from '../Core/OrientedBoundingBox.js'
+import Rectangle from '../Core/Rectangle.js'
+import TaskProcessor from '../Core/TaskProcessor.js'
+import when from '../ThirdParty/when.js'
+import ClassificationType from './ClassificationType.js'
+import Vector3DTileBatch from './Vector3DTileBatch.js'
+import Vector3DTilePrimitive from './Vector3DTilePrimitive.js'
 
 /**
  * Creates a batch of pre-triangulated polygons draped on terrain and/or 3D Tiles.
@@ -42,331 +42,332 @@ import Vector3DTilePrimitive from "./Vector3DTilePrimitive.js";
  * @private
  */
 function Vector3DTilePolygons(options) {
-  // All of the private properties will be released except _readyPromise
-  // and _primitive after the Vector3DTilePrimitive is created.
-  this._batchTable = options.batchTable;
+	// All of the private properties will be released except _readyPromise
+	// and _primitive after the Vector3DTilePrimitive is created.
+	this._batchTable = options.batchTable
 
-  this._batchIds = options.batchIds;
-  this._positions = options.positions;
-  this._counts = options.counts;
+	this._batchIds = options.batchIds
+	this._positions = options.positions
+	this._counts = options.counts
 
-  this._indices = options.indices;
-  this._indexCounts = options.indexCounts;
-  this._indexOffsets = undefined;
+	this._indices = options.indices
+	this._indexCounts = options.indexCounts
+	this._indexOffsets = undefined
 
-  this._batchTableColors = undefined;
-  this._packedBuffer = undefined;
+	this._batchTableColors = undefined
+	this._packedBuffer = undefined
 
-  this._batchedPositions = undefined;
-  this._transferrableBatchIds = undefined;
-  this._vertexBatchIds = undefined;
+	this._batchedPositions = undefined
+	this._transferrableBatchIds = undefined
+	this._vertexBatchIds = undefined
 
-  this._ellipsoid = defaultValue(options.ellipsoid, Ellipsoid.WGS84);
-  this._minimumHeight = options.minimumHeight;
-  this._maximumHeight = options.maximumHeight;
-  this._polygonMinimumHeights = options.polygonMinimumHeights;
-  this._polygonMaximumHeights = options.polygonMaximumHeights;
-  this._center = defaultValue(options.center, Cartesian3.ZERO);
-  this._rectangle = options.rectangle;
+	this._ellipsoid = defaultValue(options.ellipsoid, Ellipsoid.WGS84)
+	this._minimumHeight = options.minimumHeight
+	this._maximumHeight = options.maximumHeight
+	this._polygonMinimumHeights = options.polygonMinimumHeights
+	this._polygonMaximumHeights = options.polygonMaximumHeights
+	this._center = defaultValue(options.center, Cartesian3.ZERO)
+	this._rectangle = options.rectangle
 
-  this._center = undefined;
+	this._center = undefined
 
-  this._boundingVolume = options.boundingVolume;
-  this._boundingVolumes = undefined;
+	this._boundingVolume = options.boundingVolume
+	this._boundingVolumes = undefined
 
-  this._batchedIndices = undefined;
+	this._batchedIndices = undefined
 
-  this._ready = false;
-  this._readyPromise = when.defer();
+	this._ready = false
+	this._readyPromise = when.defer()
 
-  this._verticesPromise = undefined;
+	this._verticesPromise = undefined
 
-  this._primitive = undefined;
+	this._primitive = undefined
 
-  /**
-   * Draws the wireframe of the classification meshes.
-   * @type {Boolean}
-   * @default false
-   */
-  this.debugWireframe = false;
+	/**
+	 * Draws the wireframe of the classification meshes.
+	 * @type {Boolean}
+	 * @default false
+	 */
+	this.debugWireframe = false
 
-  /**
-   * Forces a re-batch instead of waiting after a number of frames have been rendered. For testing only.
-   * @type {Boolean}
-   * @default false
-   */
-  this.forceRebatch = false;
+	/**
+	 * Forces a re-batch instead of waiting after a number of frames have been rendered. For testing only.
+	 * @type {Boolean}
+	 * @default false
+	 */
+	this.forceRebatch = false
 
-  /**
-   * What this tile will classify.
-   * @type {ClassificationType}
-   * @default ClassificationType.BOTH
-   */
-  this.classificationType = ClassificationType.BOTH;
+	/**
+	 * What this tile will classify.
+	 * @type {ClassificationType}
+	 * @default ClassificationType.BOTH
+	 */
+	this.classificationType = ClassificationType.BOTH
 }
 
 Object.defineProperties(Vector3DTilePolygons.prototype, {
-  /**
-   * Gets the number of triangles.
-   *
-   * @memberof Vector3DTilePolygons.prototype
-   *
-   * @type {Number}
-   * @readonly
-   */
-  trianglesLength: {
-    get: function () {
-      if (defined(this._primitive)) {
-        return this._primitive.trianglesLength;
-      }
-      return 0;
-    },
-  },
+	/**
+	 * Gets the number of triangles.
+	 *
+	 * @memberof Vector3DTilePolygons.prototype
+	 *
+	 * @type {Number}
+	 * @readonly
+	 */
+	trianglesLength: {
+		get: function () {
+			if (defined(this._primitive)) {
+				return this._primitive.trianglesLength
+			}
+			return 0
+		},
+	},
 
-  /**
-   * Gets the geometry memory in bytes.
-   *
-   * @memberof Vector3DTilePolygons.prototype
-   *
-   * @type {Number}
-   * @readonly
-   */
-  geometryByteLength: {
-    get: function () {
-      if (defined(this._primitive)) {
-        return this._primitive.geometryByteLength;
-      }
-      return 0;
-    },
-  },
+	/**
+	 * Gets the geometry memory in bytes.
+	 *
+	 * @memberof Vector3DTilePolygons.prototype
+	 *
+	 * @type {Number}
+	 * @readonly
+	 */
+	geometryByteLength: {
+		get: function () {
+			if (defined(this._primitive)) {
+				return this._primitive.geometryByteLength
+			}
+			return 0
+		},
+	},
 
-  /**
-   * Gets a promise that resolves when the primitive is ready to render.
-   * @memberof Vector3DTilePolygons.prototype
-   * @type {Promise<void>}
-   * @readonly
-   */
-  readyPromise: {
-    get: function () {
-      return this._readyPromise.promise;
-    },
-  },
-});
+	/**
+	 * Gets a promise that resolves when the primitive is ready to render.
+	 * @memberof Vector3DTilePolygons.prototype
+	 * @type {Promise<void>}
+	 * @readonly
+	 */
+	readyPromise: {
+		get: function () {
+			return this._readyPromise.promise
+		},
+	},
+})
 
 function packBuffer(polygons) {
-  var packedBuffer = new Float64Array(
-    3 +
-      Cartesian3.packedLength +
-      Ellipsoid.packedLength +
-      Rectangle.packedLength
-  );
+	var packedBuffer = new Float64Array(
+		3 +
+			Cartesian3.packedLength +
+			Ellipsoid.packedLength +
+			Rectangle.packedLength,
+	)
 
-  var offset = 0;
-  packedBuffer[offset++] = polygons._indices.BYTES_PER_ELEMENT;
+	var offset = 0
+	packedBuffer[offset++] = polygons._indices.BYTES_PER_ELEMENT
 
-  packedBuffer[offset++] = polygons._minimumHeight;
-  packedBuffer[offset++] = polygons._maximumHeight;
+	packedBuffer[offset++] = polygons._minimumHeight
+	packedBuffer[offset++] = polygons._maximumHeight
 
-  Cartesian3.pack(polygons._center, packedBuffer, offset);
-  offset += Cartesian3.packedLength;
+	Cartesian3.pack(polygons._center, packedBuffer, offset)
+	offset += Cartesian3.packedLength
 
-  Ellipsoid.pack(polygons._ellipsoid, packedBuffer, offset);
-  offset += Ellipsoid.packedLength;
+	Ellipsoid.pack(polygons._ellipsoid, packedBuffer, offset)
+	offset += Ellipsoid.packedLength
 
-  Rectangle.pack(polygons._rectangle, packedBuffer, offset);
+	Rectangle.pack(polygons._rectangle, packedBuffer, offset)
 
-  return packedBuffer;
+	return packedBuffer
 }
 
 function unpackBuffer(polygons, packedBuffer) {
-  var offset = 1;
+	var offset = 1
 
-  var numBVS = packedBuffer[offset++];
-  var bvs = (polygons._boundingVolumes = new Array(numBVS));
+	var numBVS = packedBuffer[offset++]
+	var bvs = (polygons._boundingVolumes = new Array(numBVS))
 
-  for (var i = 0; i < numBVS; ++i) {
-    bvs[i] = OrientedBoundingBox.unpack(packedBuffer, offset);
-    offset += OrientedBoundingBox.packedLength;
-  }
+	for (var i = 0; i < numBVS; ++i) {
+		bvs[i] = OrientedBoundingBox.unpack(packedBuffer, offset)
+		offset += OrientedBoundingBox.packedLength
+	}
 
-  var numBatchedIndices = packedBuffer[offset++];
-  var bis = (polygons._batchedIndices = new Array(numBatchedIndices));
+	var numBatchedIndices = packedBuffer[offset++]
+	var bis = (polygons._batchedIndices = new Array(numBatchedIndices))
 
-  for (var j = 0; j < numBatchedIndices; ++j) {
-    var color = Color.unpack(packedBuffer, offset);
-    offset += Color.packedLength;
+	for (var j = 0; j < numBatchedIndices; ++j) {
+		var color = Color.unpack(packedBuffer, offset)
+		offset += Color.packedLength
 
-    var indexOffset = packedBuffer[offset++];
-    var count = packedBuffer[offset++];
+		var indexOffset = packedBuffer[offset++]
+		var count = packedBuffer[offset++]
 
-    var length = packedBuffer[offset++];
-    var batchIds = new Array(length);
+		var length = packedBuffer[offset++]
+		var batchIds = new Array(length)
 
-    for (var k = 0; k < length; ++k) {
-      batchIds[k] = packedBuffer[offset++];
-    }
+		for (var k = 0; k < length; ++k) {
+			batchIds[k] = packedBuffer[offset++]
+		}
 
-    bis[j] = new Vector3DTileBatch({
-      color: color,
-      offset: indexOffset,
-      count: count,
-      batchIds: batchIds,
-    });
-  }
+		bis[j] = new Vector3DTileBatch({
+			color: color,
+			offset: indexOffset,
+			count: count,
+			batchIds: batchIds,
+		})
+	}
 }
 
-var createVerticesTaskProcessor = new TaskProcessor("createVectorTilePolygons");
-var scratchColor = new Color();
+var createVerticesTaskProcessor = new TaskProcessor('createVectorTilePolygons')
+var scratchColor = new Color()
 
 function createPrimitive(polygons) {
-  if (defined(polygons._primitive)) {
-    return;
-  }
+	if (defined(polygons._primitive)) {
+		return
+	}
 
-  if (!defined(polygons._verticesPromise)) {
-    var positions = polygons._positions;
-    var counts = polygons._counts;
-    var indexCounts = polygons._indexCounts;
-    var indices = polygons._indices;
+	if (!defined(polygons._verticesPromise)) {
+		var positions = polygons._positions
+		var counts = polygons._counts
+		var indexCounts = polygons._indexCounts
+		var indices = polygons._indices
 
-    var batchIds = polygons._transferrableBatchIds;
-    var batchTableColors = polygons._batchTableColors;
+		var batchIds = polygons._transferrableBatchIds
+		var batchTableColors = polygons._batchTableColors
 
-    var packedBuffer = polygons._packedBuffer;
+		var packedBuffer = polygons._packedBuffer
 
-    if (!defined(batchTableColors)) {
-      // Copy because they may be the views on the same buffer.
-      positions = polygons._positions = arraySlice(polygons._positions);
-      counts = polygons._counts = arraySlice(polygons._counts);
-      indexCounts = polygons._indexCounts = arraySlice(polygons._indexCounts);
-      indices = polygons._indices = arraySlice(polygons._indices);
+		if (!defined(batchTableColors)) {
+			// Copy because they may be the views on the same buffer.
+			positions = polygons._positions = arraySlice(polygons._positions)
+			counts = polygons._counts = arraySlice(polygons._counts)
+			indexCounts = polygons._indexCounts = arraySlice(polygons._indexCounts)
+			indices = polygons._indices = arraySlice(polygons._indices)
 
-      polygons._center = polygons._ellipsoid.cartographicToCartesian(
-        Rectangle.center(polygons._rectangle)
-      );
+			polygons._center = polygons._ellipsoid.cartographicToCartesian(
+				Rectangle.center(polygons._rectangle),
+			)
 
-      batchIds = polygons._transferrableBatchIds = new Uint32Array(
-        polygons._batchIds
-      );
-      batchTableColors = polygons._batchTableColors = new Uint32Array(
-        batchIds.length
-      );
-      var batchTable = polygons._batchTable;
+			batchIds = polygons._transferrableBatchIds = new Uint32Array(
+				polygons._batchIds,
+			)
+			batchTableColors = polygons._batchTableColors = new Uint32Array(
+				batchIds.length,
+			)
+			var batchTable = polygons._batchTable
 
-      var length = batchTableColors.length;
-      for (var i = 0; i < length; ++i) {
-        var color = batchTable.getColor(i, scratchColor);
-        batchTableColors[i] = color.toRgba();
-      }
+			var length = batchTableColors.length
+			for (var i = 0; i < length; ++i) {
+				var color = batchTable.getColor(i, scratchColor)
+				batchTableColors[i] = color.toRgba()
+			}
 
-      packedBuffer = polygons._packedBuffer = packBuffer(polygons);
-    }
+			packedBuffer = polygons._packedBuffer = packBuffer(polygons)
+		}
 
-    var transferrableObjects = [
-      positions.buffer,
-      counts.buffer,
-      indexCounts.buffer,
-      indices.buffer,
-      batchIds.buffer,
-      batchTableColors.buffer,
-      packedBuffer.buffer,
-    ];
-    var parameters = {
-      packedBuffer: packedBuffer.buffer,
-      positions: positions.buffer,
-      counts: counts.buffer,
-      indexCounts: indexCounts.buffer,
-      indices: indices.buffer,
-      batchIds: batchIds.buffer,
-      batchTableColors: batchTableColors.buffer,
-    };
+		var transferrableObjects = [
+			positions.buffer,
+			counts.buffer,
+			indexCounts.buffer,
+			indices.buffer,
+			batchIds.buffer,
+			batchTableColors.buffer,
+			packedBuffer.buffer,
+		]
+		var parameters = {
+			packedBuffer: packedBuffer.buffer,
+			positions: positions.buffer,
+			counts: counts.buffer,
+			indexCounts: indexCounts.buffer,
+			indices: indices.buffer,
+			batchIds: batchIds.buffer,
+			batchTableColors: batchTableColors.buffer,
+		}
 
-    var minimumHeights = polygons._polygonMinimumHeights;
-    var maximumHeights = polygons._polygonMaximumHeights;
-    if (defined(minimumHeights) && defined(maximumHeights)) {
-      minimumHeights = arraySlice(minimumHeights);
-      maximumHeights = arraySlice(maximumHeights);
+		var minimumHeights = polygons._polygonMinimumHeights
+		var maximumHeights = polygons._polygonMaximumHeights
+		if (defined(minimumHeights) && defined(maximumHeights)) {
+			minimumHeights = arraySlice(minimumHeights)
+			maximumHeights = arraySlice(maximumHeights)
 
-      transferrableObjects.push(minimumHeights.buffer, maximumHeights.buffer);
-      parameters.minimumHeights = minimumHeights;
-      parameters.maximumHeights = maximumHeights;
-    }
+			transferrableObjects.push(minimumHeights.buffer, maximumHeights.buffer)
+			parameters.minimumHeights = minimumHeights
+			parameters.maximumHeights = maximumHeights
+		}
 
-    var verticesPromise = (polygons._verticesPromise = createVerticesTaskProcessor.scheduleTask(
-      parameters,
-      transferrableObjects
-    ));
-    if (!defined(verticesPromise)) {
-      // Postponed
-      return;
-    }
+		var verticesPromise = (polygons._verticesPromise =
+			createVerticesTaskProcessor.scheduleTask(
+				parameters,
+				transferrableObjects,
+			))
+		if (!defined(verticesPromise)) {
+			// Postponed
+			return
+		}
 
-    when(verticesPromise, function (result) {
-      polygons._positions = undefined;
-      polygons._counts = undefined;
-      polygons._polygonMinimumHeights = undefined;
-      polygons._polygonMaximumHeights = undefined;
+		when(verticesPromise, function (result) {
+			polygons._positions = undefined
+			polygons._counts = undefined
+			polygons._polygonMinimumHeights = undefined
+			polygons._polygonMaximumHeights = undefined
 
-      var packedBuffer = new Float64Array(result.packedBuffer);
-      var indexDatatype = packedBuffer[0];
-      unpackBuffer(polygons, packedBuffer);
+			var packedBuffer = new Float64Array(result.packedBuffer)
+			var indexDatatype = packedBuffer[0]
+			unpackBuffer(polygons, packedBuffer)
 
-      polygons._indices =
-        IndexDatatype.getSizeInBytes(indexDatatype) === 2
-          ? new Uint16Array(result.indices)
-          : new Uint32Array(result.indices);
-      polygons._indexOffsets = new Uint32Array(result.indexOffsets);
-      polygons._indexCounts = new Uint32Array(result.indexCounts);
+			polygons._indices =
+				IndexDatatype.getSizeInBytes(indexDatatype) === 2
+					? new Uint16Array(result.indices)
+					: new Uint32Array(result.indices)
+			polygons._indexOffsets = new Uint32Array(result.indexOffsets)
+			polygons._indexCounts = new Uint32Array(result.indexCounts)
 
-      // will be released
-      polygons._batchedPositions = new Float32Array(result.positions);
-      polygons._vertexBatchIds = new Uint16Array(result.batchIds);
+			// will be released
+			polygons._batchedPositions = new Float32Array(result.positions)
+			polygons._vertexBatchIds = new Uint16Array(result.batchIds)
 
-      polygons._ready = true;
-    });
-  }
+			polygons._ready = true
+		})
+	}
 
-  if (polygons._ready && !defined(polygons._primitive)) {
-    polygons._primitive = new Vector3DTilePrimitive({
-      batchTable: polygons._batchTable,
-      positions: polygons._batchedPositions,
-      batchIds: polygons._batchIds,
-      vertexBatchIds: polygons._vertexBatchIds,
-      indices: polygons._indices,
-      indexOffsets: polygons._indexOffsets,
-      indexCounts: polygons._indexCounts,
-      batchedIndices: polygons._batchedIndices,
-      boundingVolume: polygons._boundingVolume,
-      boundingVolumes: polygons._boundingVolumes,
-      center: polygons._center,
-    });
+	if (polygons._ready && !defined(polygons._primitive)) {
+		polygons._primitive = new Vector3DTilePrimitive({
+			batchTable: polygons._batchTable,
+			positions: polygons._batchedPositions,
+			batchIds: polygons._batchIds,
+			vertexBatchIds: polygons._vertexBatchIds,
+			indices: polygons._indices,
+			indexOffsets: polygons._indexOffsets,
+			indexCounts: polygons._indexCounts,
+			batchedIndices: polygons._batchedIndices,
+			boundingVolume: polygons._boundingVolume,
+			boundingVolumes: polygons._boundingVolumes,
+			center: polygons._center,
+		})
 
-    polygons._batchTable = undefined;
-    polygons._batchIds = undefined;
-    polygons._positions = undefined;
-    polygons._counts = undefined;
-    polygons._indices = undefined;
-    polygons._indexCounts = undefined;
-    polygons._indexOffsets = undefined;
-    polygons._batchTableColors = undefined;
-    polygons._packedBuffer = undefined;
-    polygons._batchedPositions = undefined;
-    polygons._transferrableBatchIds = undefined;
-    polygons._vertexBatchIds = undefined;
-    polygons._ellipsoid = undefined;
-    polygons._minimumHeight = undefined;
-    polygons._maximumHeight = undefined;
-    polygons._polygonMinimumHeights = undefined;
-    polygons._polygonMaximumHeights = undefined;
-    polygons._center = undefined;
-    polygons._rectangle = undefined;
-    polygons._boundingVolume = undefined;
-    polygons._boundingVolumes = undefined;
-    polygons._batchedIndices = undefined;
-    polygons._verticesPromise = undefined;
+		polygons._batchTable = undefined
+		polygons._batchIds = undefined
+		polygons._positions = undefined
+		polygons._counts = undefined
+		polygons._indices = undefined
+		polygons._indexCounts = undefined
+		polygons._indexOffsets = undefined
+		polygons._batchTableColors = undefined
+		polygons._packedBuffer = undefined
+		polygons._batchedPositions = undefined
+		polygons._transferrableBatchIds = undefined
+		polygons._vertexBatchIds = undefined
+		polygons._ellipsoid = undefined
+		polygons._minimumHeight = undefined
+		polygons._maximumHeight = undefined
+		polygons._polygonMinimumHeights = undefined
+		polygons._polygonMaximumHeights = undefined
+		polygons._center = undefined
+		polygons._rectangle = undefined
+		polygons._boundingVolume = undefined
+		polygons._boundingVolumes = undefined
+		polygons._batchedIndices = undefined
+		polygons._verticesPromise = undefined
 
-    polygons._readyPromise.resolve();
-  }
+		polygons._readyPromise.resolve()
+	}
 }
 
 /**
@@ -376,8 +377,8 @@ function createPrimitive(polygons) {
  * @param {Cesium3DTileFeature[]} features An array of features where the polygon features will be placed.
  */
 Vector3DTilePolygons.prototype.createFeatures = function (content, features) {
-  this._primitive.createFeatures(content, features);
-};
+	this._primitive.createFeatures(content, features)
+}
 
 /**
  * Colors the entire tile when enabled is true. The resulting color will be (polygon batch table color * color).
@@ -386,8 +387,8 @@ Vector3DTilePolygons.prototype.createFeatures = function (content, features) {
  * @param {Color} color The debug color.
  */
 Vector3DTilePolygons.prototype.applyDebugSettings = function (enabled, color) {
-  this._primitive.applyDebugSettings(enabled, color);
-};
+	this._primitive.applyDebugSettings(enabled, color)
+}
 
 /**
  * Apply a style to the content.
@@ -396,8 +397,8 @@ Vector3DTilePolygons.prototype.applyDebugSettings = function (enabled, color) {
  * @param {Cesium3DTileFeature[]} features The array of features.
  */
 Vector3DTilePolygons.prototype.applyStyle = function (style, features) {
-  this._primitive.applyStyle(style, features);
-};
+	this._primitive.applyStyle(style, features)
+}
 
 /**
  * Call when updating the color of a polygon with batchId changes color. The polygons will need to be re-batched
@@ -407,8 +408,8 @@ Vector3DTilePolygons.prototype.applyStyle = function (style, features) {
  * @param {Color} color The new polygon color.
  */
 Vector3DTilePolygons.prototype.updateCommands = function (batchId, color) {
-  this._primitive.updateCommands(batchId, color);
-};
+	this._primitive.updateCommands(batchId, color)
+}
 
 /**
  * Updates the batches and queues the commands for rendering.
@@ -416,17 +417,17 @@ Vector3DTilePolygons.prototype.updateCommands = function (batchId, color) {
  * @param {FrameState} frameState The current frame state.
  */
 Vector3DTilePolygons.prototype.update = function (frameState) {
-  createPrimitive(this);
+	createPrimitive(this)
 
-  if (!this._ready) {
-    return;
-  }
+	if (!this._ready) {
+		return
+	}
 
-  this._primitive.debugWireframe = this.debugWireframe;
-  this._primitive.forceRebatch = this.forceRebatch;
-  this._primitive.classificationType = this.classificationType;
-  this._primitive.update(frameState);
-};
+	this._primitive.debugWireframe = this.debugWireframe
+	this._primitive.forceRebatch = this.forceRebatch
+	this._primitive.classificationType = this.classificationType
+	this._primitive.update(frameState)
+}
 
 /**
  * Returns true if this object was destroyed; otherwise, false.
@@ -438,8 +439,8 @@ Vector3DTilePolygons.prototype.update = function (frameState) {
  * @returns {Boolean} <code>true</code> if this object was destroyed; otherwise, <code>false</code>.
  */
 Vector3DTilePolygons.prototype.isDestroyed = function () {
-  return false;
-};
+	return false
+}
 
 /**
  * Destroys the WebGL resources held by this object.  Destroying an object allows for deterministic
@@ -453,7 +454,7 @@ Vector3DTilePolygons.prototype.isDestroyed = function () {
  * @exception {DeveloperError} This object was destroyed, i.e., destroy() was called.
  */
 Vector3DTilePolygons.prototype.destroy = function () {
-  this._primitive = this._primitive && this._primitive.destroy();
-  return destroyObject(this);
-};
-export default Vector3DTilePolygons;
+	this._primitive = this._primitive && this._primitive.destroy()
+	return destroyObject(this)
+}
+export default Vector3DTilePolygons

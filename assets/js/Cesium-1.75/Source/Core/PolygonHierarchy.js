@@ -1,4 +1,4 @@
-import defined from "./defined.js";
+import defined from './defined.js'
 
 /**
  * An hierarchy of linear rings which define a polygon and its holes.
@@ -10,16 +10,16 @@ import defined from "./defined.js";
  * @param {PolygonHierarchy[]} [holes] An array of polygon hierarchies defining holes in the polygon.
  */
 function PolygonHierarchy(positions, holes) {
-  /**
-   * A linear ring defining the outer boundary of the polygon or hole.
-   * @type {Cartesian3[]}
-   */
-  this.positions = defined(positions) ? positions : [];
+	/**
+	 * A linear ring defining the outer boundary of the polygon or hole.
+	 * @type {Cartesian3[]}
+	 */
+	this.positions = defined(positions) ? positions : []
 
-  /**
-   * An array of polygon hierarchies defining holes in the polygon.
-   * @type {PolygonHierarchy[]}
-   */
-  this.holes = defined(holes) ? holes : [];
+	/**
+	 * An array of polygon hierarchies defining holes in the polygon.
+	 * @type {PolygonHierarchy[]}
+	 */
+	this.holes = defined(holes) ? holes : []
 }
-export default PolygonHierarchy;
+export default PolygonHierarchy

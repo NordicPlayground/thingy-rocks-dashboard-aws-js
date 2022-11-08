@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Computes a value that scales with distance.  The scaling is clamped at the near and\n\
  * far distances, and does not extrapolate.  This function works with the\n\
  * {@link NearFarScalar} JavaScript class.\n\
@@ -25,4 +25,4 @@ float czm_nearFarScalar(vec4 nearFarScalar, float cameraDistSq)\n\
 \n\
     return mix(valueAtMin, valueAtMax, t);\n\
 }\n\
-";
+'

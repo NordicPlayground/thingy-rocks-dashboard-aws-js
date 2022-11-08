@@ -32,4 +32,4 @@ mat3 czm_eastNorthUpToEyeCoordinates(vec3 positionMC, vec3 normalEC)\n\
         bitangentEC.x, bitangentEC.y, bitangentEC.z,\n\
         normalEC.x,    normalEC.y,    normalEC.z);\n\
 }\n\
-";
+"

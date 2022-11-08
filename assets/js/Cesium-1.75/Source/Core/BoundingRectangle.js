@@ -1,11 +1,11 @@
-import Cartesian2 from "./Cartesian2.js";
-import Cartographic from "./Cartographic.js";
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import GeographicProjection from "./GeographicProjection.js";
-import Intersect from "./Intersect.js";
-import Rectangle from "./Rectangle.js";
+import Cartesian2 from './Cartesian2.js'
+import Cartographic from './Cartographic.js'
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import GeographicProjection from './GeographicProjection.js'
+import Intersect from './Intersect.js'
+import Rectangle from './Rectangle.js'
 
 /**
  * A bounding rectangle given by a corner, width and height.
@@ -21,40 +21,40 @@ import Rectangle from "./Rectangle.js";
  * @see Packable
  */
 function BoundingRectangle(x, y, width, height) {
-  /**
-   * The x coordinate of the rectangle.
-   * @type {Number}
-   * @default 0.0
-   */
-  this.x = defaultValue(x, 0.0);
+	/**
+	 * The x coordinate of the rectangle.
+	 * @type {Number}
+	 * @default 0.0
+	 */
+	this.x = defaultValue(x, 0.0)
 
-  /**
-   * The y coordinate of the rectangle.
-   * @type {Number}
-   * @default 0.0
-   */
-  this.y = defaultValue(y, 0.0);
+	/**
+	 * The y coordinate of the rectangle.
+	 * @type {Number}
+	 * @default 0.0
+	 */
+	this.y = defaultValue(y, 0.0)
 
-  /**
-   * The width of the rectangle.
-   * @type {Number}
-   * @default 0.0
-   */
-  this.width = defaultValue(width, 0.0);
+	/**
+	 * The width of the rectangle.
+	 * @type {Number}
+	 * @default 0.0
+	 */
+	this.width = defaultValue(width, 0.0)
 
-  /**
-   * The height of the rectangle.
-   * @type {Number}
-   * @default 0.0
-   */
-  this.height = defaultValue(height, 0.0);
+	/**
+	 * The height of the rectangle.
+	 * @type {Number}
+	 * @default 0.0
+	 */
+	this.height = defaultValue(height, 0.0)
 }
 
 /**
  * The number of elements used to pack the object into an array.
  * @type {Number}
  */
-BoundingRectangle.packedLength = 4;
+BoundingRectangle.packedLength = 4
 
 /**
  * Stores the provided instance into the provided array.
@@ -66,20 +66,20 @@ BoundingRectangle.packedLength = 4;
  * @returns {Number[]} The array that was packed into
  */
 BoundingRectangle.pack = function (value, array, startingIndex) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("value", value);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('value', value)
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
+	startingIndex = defaultValue(startingIndex, 0)
 
-  array[startingIndex++] = value.x;
-  array[startingIndex++] = value.y;
-  array[startingIndex++] = value.width;
-  array[startingIndex] = value.height;
+	array[startingIndex++] = value.x
+	array[startingIndex++] = value.y
+	array[startingIndex++] = value.width
+	array[startingIndex] = value.height
 
-  return array;
-};
+	return array
+}
 
 /**
  * Retrieves an instance from a packed array.
@@ -90,21 +90,21 @@ BoundingRectangle.pack = function (value, array, startingIndex) {
  * @returns {BoundingRectangle} The modified result parameter or a new BoundingRectangle instance if one was not provided.
  */
 BoundingRectangle.unpack = function (array, startingIndex, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
+	startingIndex = defaultValue(startingIndex, 0)
 
-  if (!defined(result)) {
-    result = new BoundingRectangle();
-  }
-  result.x = array[startingIndex++];
-  result.y = array[startingIndex++];
-  result.width = array[startingIndex++];
-  result.height = array[startingIndex];
-  return result;
-};
+	if (!defined(result)) {
+		result = new BoundingRectangle()
+	}
+	result.x = array[startingIndex++]
+	result.y = array[startingIndex++]
+	result.width = array[startingIndex++]
+	result.height = array[startingIndex]
+	return result
+}
 
 /**
  * Computes a bounding rectangle enclosing the list of 2D points.
@@ -115,47 +115,47 @@ BoundingRectangle.unpack = function (array, startingIndex, result) {
  * @returns {BoundingRectangle} The modified result parameter or a new BoundingRectangle instance if one was not provided.
  */
 BoundingRectangle.fromPoints = function (positions, result) {
-  if (!defined(result)) {
-    result = new BoundingRectangle();
-  }
+	if (!defined(result)) {
+		result = new BoundingRectangle()
+	}
 
-  if (!defined(positions) || positions.length === 0) {
-    result.x = 0;
-    result.y = 0;
-    result.width = 0;
-    result.height = 0;
-    return result;
-  }
+	if (!defined(positions) || positions.length === 0) {
+		result.x = 0
+		result.y = 0
+		result.width = 0
+		result.height = 0
+		return result
+	}
 
-  var length = positions.length;
+	var length = positions.length
 
-  var minimumX = positions[0].x;
-  var minimumY = positions[0].y;
+	var minimumX = positions[0].x
+	var minimumY = positions[0].y
 
-  var maximumX = positions[0].x;
-  var maximumY = positions[0].y;
+	var maximumX = positions[0].x
+	var maximumY = positions[0].y
 
-  for (var i = 1; i < length; i++) {
-    var p = positions[i];
-    var x = p.x;
-    var y = p.y;
+	for (var i = 1; i < length; i++) {
+		var p = positions[i]
+		var x = p.x
+		var y = p.y
 
-    minimumX = Math.min(x, minimumX);
-    maximumX = Math.max(x, maximumX);
-    minimumY = Math.min(y, minimumY);
-    maximumY = Math.max(y, maximumY);
-  }
+		minimumX = Math.min(x, minimumX)
+		maximumX = Math.max(x, maximumX)
+		minimumY = Math.min(y, minimumY)
+		maximumY = Math.max(y, maximumY)
+	}
 
-  result.x = minimumX;
-  result.y = minimumY;
-  result.width = maximumX - minimumX;
-  result.height = maximumY - minimumY;
-  return result;
-};
+	result.x = minimumX
+	result.y = minimumY
+	result.width = maximumX - minimumX
+	result.height = maximumY - minimumY
+	return result
+}
 
-var defaultProjection = new GeographicProjection();
-var fromRectangleLowerLeft = new Cartographic();
-var fromRectangleUpperRight = new Cartographic();
+var defaultProjection = new GeographicProjection()
+var fromRectangleLowerLeft = new Cartographic()
+var fromRectangleUpperRight = new Cartographic()
 /**
  * Computes a bounding rectangle from a rectangle.
  *
@@ -165,35 +165,35 @@ var fromRectangleUpperRight = new Cartographic();
  * @returns {BoundingRectangle} The modified result parameter or a new BoundingRectangle instance if one was not provided.
  */
 BoundingRectangle.fromRectangle = function (rectangle, projection, result) {
-  if (!defined(result)) {
-    result = new BoundingRectangle();
-  }
+	if (!defined(result)) {
+		result = new BoundingRectangle()
+	}
 
-  if (!defined(rectangle)) {
-    result.x = 0;
-    result.y = 0;
-    result.width = 0;
-    result.height = 0;
-    return result;
-  }
+	if (!defined(rectangle)) {
+		result.x = 0
+		result.y = 0
+		result.width = 0
+		result.height = 0
+		return result
+	}
 
-  projection = defaultValue(projection, defaultProjection);
+	projection = defaultValue(projection, defaultProjection)
 
-  var lowerLeft = projection.project(
-    Rectangle.southwest(rectangle, fromRectangleLowerLeft)
-  );
-  var upperRight = projection.project(
-    Rectangle.northeast(rectangle, fromRectangleUpperRight)
-  );
+	var lowerLeft = projection.project(
+		Rectangle.southwest(rectangle, fromRectangleLowerLeft),
+	)
+	var upperRight = projection.project(
+		Rectangle.northeast(rectangle, fromRectangleUpperRight),
+	)
 
-  Cartesian2.subtract(upperRight, lowerLeft, upperRight);
+	Cartesian2.subtract(upperRight, lowerLeft, upperRight)
 
-  result.x = lowerLeft.x;
-  result.y = lowerLeft.y;
-  result.width = upperRight.x;
-  result.height = upperRight.y;
-  return result;
-};
+	result.x = lowerLeft.x
+	result.y = lowerLeft.y
+	result.width = upperRight.x
+	result.height = upperRight.y
+	return result
+}
 
 /**
  * Duplicates a BoundingRectangle instance.
@@ -203,25 +203,25 @@ BoundingRectangle.fromRectangle = function (rectangle, projection, result) {
  * @returns {BoundingRectangle} The modified result parameter or a new BoundingRectangle instance if one was not provided. (Returns undefined if rectangle is undefined)
  */
 BoundingRectangle.clone = function (rectangle, result) {
-  if (!defined(rectangle)) {
-    return undefined;
-  }
+	if (!defined(rectangle)) {
+		return undefined
+	}
 
-  if (!defined(result)) {
-    return new BoundingRectangle(
-      rectangle.x,
-      rectangle.y,
-      rectangle.width,
-      rectangle.height
-    );
-  }
+	if (!defined(result)) {
+		return new BoundingRectangle(
+			rectangle.x,
+			rectangle.y,
+			rectangle.width,
+			rectangle.height,
+		)
+	}
 
-  result.x = rectangle.x;
-  result.y = rectangle.y;
-  result.width = rectangle.width;
-  result.height = rectangle.height;
-  return result;
-};
+	result.x = rectangle.x
+	result.y = rectangle.y
+	result.width = rectangle.width
+	result.height = rectangle.height
+	return result
+}
 
 /**
  * Computes a bounding rectangle that is the union of the left and right bounding rectangles.
@@ -232,26 +232,26 @@ BoundingRectangle.clone = function (rectangle, result) {
  * @returns {BoundingRectangle} The modified result parameter or a new BoundingRectangle instance if one was not provided.
  */
 BoundingRectangle.union = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = new BoundingRectangle();
-  }
+	if (!defined(result)) {
+		result = new BoundingRectangle()
+	}
 
-  var lowerLeftX = Math.min(left.x, right.x);
-  var lowerLeftY = Math.min(left.y, right.y);
-  var upperRightX = Math.max(left.x + left.width, right.x + right.width);
-  var upperRightY = Math.max(left.y + left.height, right.y + right.height);
+	var lowerLeftX = Math.min(left.x, right.x)
+	var lowerLeftY = Math.min(left.y, right.y)
+	var upperRightX = Math.max(left.x + left.width, right.x + right.width)
+	var upperRightY = Math.max(left.y + left.height, right.y + right.height)
 
-  result.x = lowerLeftX;
-  result.y = lowerLeftY;
-  result.width = upperRightX - lowerLeftX;
-  result.height = upperRightY - lowerLeftY;
-  return result;
-};
+	result.x = lowerLeftX
+	result.y = lowerLeftY
+	result.width = upperRightX - lowerLeftX
+	result.height = upperRightY - lowerLeftY
+	return result
+}
 
 /**
  * Computes a bounding rectangle by enlarging the provided rectangle until it contains the provided point.
@@ -262,32 +262,32 @@ BoundingRectangle.union = function (left, right, result) {
  * @returns {BoundingRectangle} The modified result parameter or a new BoundingRectangle instance if one was not provided.
  */
 BoundingRectangle.expand = function (rectangle, point, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("rectangle", rectangle);
-  Check.typeOf.object("point", point);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('rectangle', rectangle)
+	Check.typeOf.object('point', point)
+	//>>includeEnd('debug');
 
-  result = BoundingRectangle.clone(rectangle, result);
+	result = BoundingRectangle.clone(rectangle, result)
 
-  var width = point.x - result.x;
-  var height = point.y - result.y;
+	var width = point.x - result.x
+	var height = point.y - result.y
 
-  if (width > result.width) {
-    result.width = width;
-  } else if (width < 0) {
-    result.width -= width;
-    result.x = point.x;
-  }
+	if (width > result.width) {
+		result.width = width
+	} else if (width < 0) {
+		result.width -= width
+		result.x = point.x
+	}
 
-  if (height > result.height) {
-    result.height = height;
-  } else if (height < 0) {
-    result.height -= height;
-    result.y = point.y;
-  }
+	if (height > result.height) {
+		result.height = height
+	} else if (height < 0) {
+		result.height -= height
+		result.y = point.y
+	}
 
-  return result;
-};
+	return result
+}
 
 /**
  * Determines if two rectangles intersect.
@@ -297,28 +297,28 @@ BoundingRectangle.expand = function (rectangle, point, result) {
  * @returns {Intersect} <code>Intersect.INTESECTING</code> if the rectangles intersect, <code>Intersect.OUTSIDE</code> otherwise.
  */
 BoundingRectangle.intersect = function (left, right) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	//>>includeEnd('debug');
 
-  var leftX = left.x;
-  var leftY = left.y;
-  var rightX = right.x;
-  var rightY = right.y;
-  if (
-    !(
-      leftX > rightX + right.width ||
-      leftX + left.width < rightX ||
-      leftY + left.height < rightY ||
-      leftY > rightY + right.height
-    )
-  ) {
-    return Intersect.INTERSECTING;
-  }
+	var leftX = left.x
+	var leftY = left.y
+	var rightX = right.x
+	var rightY = right.y
+	if (
+		!(
+			leftX > rightX + right.width ||
+			leftX + left.width < rightX ||
+			leftY + left.height < rightY ||
+			leftY > rightY + right.height
+		)
+	) {
+		return Intersect.INTERSECTING
+	}
 
-  return Intersect.OUTSIDE;
-};
+	return Intersect.OUTSIDE
+}
 
 /**
  * Compares the provided BoundingRectangles componentwise and returns
@@ -329,16 +329,16 @@ BoundingRectangle.intersect = function (left, right) {
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
 BoundingRectangle.equals = function (left, right) {
-  return (
-    left === right ||
-    (defined(left) &&
-      defined(right) &&
-      left.x === right.x &&
-      left.y === right.y &&
-      left.width === right.width &&
-      left.height === right.height)
-  );
-};
+	return (
+		left === right ||
+		(defined(left) &&
+			defined(right) &&
+			left.x === right.x &&
+			left.y === right.y &&
+			left.width === right.width &&
+			left.height === right.height)
+	)
+}
 
 /**
  * Duplicates this BoundingRectangle instance.
@@ -347,8 +347,8 @@ BoundingRectangle.equals = function (left, right) {
  * @returns {BoundingRectangle} The modified result parameter or a new BoundingRectangle instance if one was not provided.
  */
 BoundingRectangle.prototype.clone = function (result) {
-  return BoundingRectangle.clone(this, result);
-};
+	return BoundingRectangle.clone(this, result)
+}
 
 /**
  * Determines if this rectangle intersects with another.
@@ -357,8 +357,8 @@ BoundingRectangle.prototype.clone = function (result) {
  * @returns {Intersect} <code>Intersect.INTESECTING</code> if the rectangles intersect, <code>Intersect.OUTSIDE</code> otherwise.
  */
 BoundingRectangle.prototype.intersect = function (right) {
-  return BoundingRectangle.intersect(this, right);
-};
+	return BoundingRectangle.intersect(this, right)
+}
 
 /**
  * Compares this BoundingRectangle against the provided BoundingRectangle componentwise and returns
@@ -368,6 +368,6 @@ BoundingRectangle.prototype.intersect = function (right) {
  * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
  */
 BoundingRectangle.prototype.equals = function (right) {
-  return BoundingRectangle.equals(this, right);
-};
-export default BoundingRectangle;
+	return BoundingRectangle.equals(this, right)
+}
+export default BoundingRectangle

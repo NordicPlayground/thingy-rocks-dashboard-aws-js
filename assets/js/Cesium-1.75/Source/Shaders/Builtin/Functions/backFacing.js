@@ -12,4 +12,4 @@ bool czm_backFacing()\n\
     // !gl_FrontFacing doesn't work as expected on Mac/Intel so use the more verbose form instead. See https://github.com/CesiumGS/cesium/pull/8494.\n\
     return gl_FrontFacing == false;\n\
 }\n\
-";
+"

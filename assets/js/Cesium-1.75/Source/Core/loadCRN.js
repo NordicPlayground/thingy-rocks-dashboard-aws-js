@@ -1,14 +1,14 @@
-import when from "../ThirdParty/when.js";
-import CompressedTextureBuffer from "./CompressedTextureBuffer.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import Resource from "./Resource.js";
-import TaskProcessor from "./TaskProcessor.js";
+import when from '../ThirdParty/when.js'
+import CompressedTextureBuffer from './CompressedTextureBuffer.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import Resource from './Resource.js'
+import TaskProcessor from './TaskProcessor.js'
 
 var transcodeTaskProcessor = new TaskProcessor(
-  "transcodeCRNToDXT",
-  Number.POSITIVE_INFINITY
-);
+	'transcodeCRNToDXT',
+	Number.POSITIVE_INFINITY,
+)
 
 /**
  * Asynchronously loads and parses the given URL to a CRN file or parses the raw binary data of a CRN file.
@@ -41,50 +41,50 @@ var transcodeTaskProcessor = new TaskProcessor(
  * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
  */
 function loadCRN(resourceOrUrlOrBuffer) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(resourceOrUrlOrBuffer)) {
-    throw new DeveloperError("resourceOrUrlOrBuffer is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(resourceOrUrlOrBuffer)) {
+		throw new DeveloperError('resourceOrUrlOrBuffer is required.')
+	}
+	//>>includeEnd('debug');
 
-  var loadPromise;
-  if (
-    resourceOrUrlOrBuffer instanceof ArrayBuffer ||
-    ArrayBuffer.isView(resourceOrUrlOrBuffer)
-  ) {
-    loadPromise = when.resolve(resourceOrUrlOrBuffer);
-  } else {
-    var resource = Resource.createIfNeeded(resourceOrUrlOrBuffer);
-    loadPromise = resource.fetchArrayBuffer();
-  }
+	var loadPromise
+	if (
+		resourceOrUrlOrBuffer instanceof ArrayBuffer ||
+		ArrayBuffer.isView(resourceOrUrlOrBuffer)
+	) {
+		loadPromise = when.resolve(resourceOrUrlOrBuffer)
+	} else {
+		var resource = Resource.createIfNeeded(resourceOrUrlOrBuffer)
+		loadPromise = resource.fetchArrayBuffer()
+	}
 
-  if (!defined(loadPromise)) {
-    return undefined;
-  }
+	if (!defined(loadPromise)) {
+		return undefined
+	}
 
-  return loadPromise
-    .then(function (data) {
-      if (!defined(data)) {
-        return;
-      }
-      var transferrableObjects = [];
-      if (data instanceof ArrayBuffer) {
-        transferrableObjects.push(data);
-      } else if (
-        data.byteOffset === 0 &&
-        data.byteLength === data.buffer.byteLength
-      ) {
-        transferrableObjects.push(data.buffer);
-      } else {
-        // data is a view of an array buffer. need to copy so it is transferrable to web worker
-        data = data.slice(0, data.length);
-        transferrableObjects.push(data.buffer);
-      }
+	return loadPromise
+		.then(function (data) {
+			if (!defined(data)) {
+				return
+			}
+			var transferrableObjects = []
+			if (data instanceof ArrayBuffer) {
+				transferrableObjects.push(data)
+			} else if (
+				data.byteOffset === 0 &&
+				data.byteLength === data.buffer.byteLength
+			) {
+				transferrableObjects.push(data.buffer)
+			} else {
+				// data is a view of an array buffer. need to copy so it is transferrable to web worker
+				data = data.slice(0, data.length)
+				transferrableObjects.push(data.buffer)
+			}
 
-      return transcodeTaskProcessor.scheduleTask(data, transferrableObjects);
-    })
-    .then(function (compressedTextureBuffer) {
-      return CompressedTextureBuffer.clone(compressedTextureBuffer);
-    });
+			return transcodeTaskProcessor.scheduleTask(data, transferrableObjects)
+		})
+		.then(function (compressedTextureBuffer) {
+			return CompressedTextureBuffer.clone(compressedTextureBuffer)
+		})
 }
-export default loadCRN;
+export default loadCRN

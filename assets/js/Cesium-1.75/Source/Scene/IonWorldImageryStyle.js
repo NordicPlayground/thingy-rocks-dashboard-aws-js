@@ -6,28 +6,28 @@
  * @enum {Number}
  */
 var IonWorldImageryStyle = {
-  /**
-   * Aerial imagery.
-   *
-   * @type {Number}
-   * @constant
-   */
-  AERIAL: 2,
+	/**
+	 * Aerial imagery.
+	 *
+	 * @type {Number}
+	 * @constant
+	 */
+	AERIAL: 2,
 
-  /**
-   * Aerial imagery with a road overlay.
-   *
-   * @type {Number}
-   * @constant
-   */
-  AERIAL_WITH_LABELS: 3,
+	/**
+	 * Aerial imagery with a road overlay.
+	 *
+	 * @type {Number}
+	 * @constant
+	 */
+	AERIAL_WITH_LABELS: 3,
 
-  /**
-   * Roads without additional imagery.
-   *
-   * @type {Number}
-   * @constant
-   */
-  ROAD: 4,
-};
-export default Object.freeze(IonWorldImageryStyle);
+	/**
+	 * Roads without additional imagery.
+	 *
+	 * @type {Number}
+	 * @constant
+	 */
+	ROAD: 4,
+}
+export default Object.freeze(IonWorldImageryStyle)

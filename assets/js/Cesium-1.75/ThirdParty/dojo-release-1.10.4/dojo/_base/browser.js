@@ -1,19 +1,19 @@
-if(require.has){
-	require.has.add("config-selectorEngine", "acme");
+if (require.has) {
+	require.has.add('config-selectorEngine', 'acme')
 }
 define([
-	"../ready",
-	"./kernel",
-	"./connect", // until we decide if connect is going back into non-browser environments
-	"./unload",
-	"./window",
-	"./event",
-	"./html",
-	"./NodeList",
-	"../query",
-	"./xhr",
-	"./fx"], function(dojo){
-
+	'../ready',
+	'./kernel',
+	'./connect', // until we decide if connect is going back into non-browser environments
+	'./unload',
+	'./window',
+	'./event',
+	'./html',
+	'./NodeList',
+	'../query',
+	'./xhr',
+	'./fx',
+], function (dojo) {
 	// module:
 	//		dojo/_base/browser
 
@@ -24,5 +24,5 @@ define([
 	};
 	=====*/
 
-	return dojo;
-});
+	return dojo
+})

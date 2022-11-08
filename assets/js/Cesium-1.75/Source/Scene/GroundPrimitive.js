@@ -1,27 +1,27 @@
-import ApproximateTerrainHeights from "../Core/ApproximateTerrainHeights.js";
-import BoundingSphere from "../Core/BoundingSphere.js";
-import Cartesian3 from "../Core/Cartesian3.js";
-import Cartographic from "../Core/Cartographic.js";
-import Check from "../Core/Check.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import destroyObject from "../Core/destroyObject.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import GeometryInstance from "../Core/GeometryInstance.js";
-import OrientedBoundingBox from "../Core/OrientedBoundingBox.js";
-import Rectangle from "../Core/Rectangle.js";
-import when from "../ThirdParty/when.js";
-import ClassificationPrimitive from "./ClassificationPrimitive.js";
-import ClassificationType from "./ClassificationType.js";
-import PerInstanceColorAppearance from "./PerInstanceColorAppearance.js";
-import SceneMode from "./SceneMode.js";
-import ShadowVolumeAppearance from "./ShadowVolumeAppearance.js";
+import ApproximateTerrainHeights from '../Core/ApproximateTerrainHeights.js'
+import BoundingSphere from '../Core/BoundingSphere.js'
+import Cartesian3 from '../Core/Cartesian3.js'
+import Cartographic from '../Core/Cartographic.js'
+import Check from '../Core/Check.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import destroyObject from '../Core/destroyObject.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import GeometryInstance from '../Core/GeometryInstance.js'
+import OrientedBoundingBox from '../Core/OrientedBoundingBox.js'
+import Rectangle from '../Core/Rectangle.js'
+import when from '../ThirdParty/when.js'
+import ClassificationPrimitive from './ClassificationPrimitive.js'
+import ClassificationType from './ClassificationType.js'
+import PerInstanceColorAppearance from './PerInstanceColorAppearance.js'
+import SceneMode from './SceneMode.js'
+import ShadowVolumeAppearance from './ShadowVolumeAppearance.js'
 
 var GroundPrimitiveUniformMap = {
-  u_globeMinimumAltitude: function () {
-    return 55000.0;
-  },
-};
+	u_globeMinimumAltitude: function () {
+		return 55000.0
+	},
+}
 
 /**
  * A ground primitive represents geometry draped over terrain or 3D Tiles in the {@link Scene}.
@@ -112,268 +112,268 @@ var GroundPrimitiveUniformMap = {
  * @see Appearance
  */
 function GroundPrimitive(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  var appearance = options.appearance;
-  var geometryInstances = options.geometryInstances;
-  if (!defined(appearance) && defined(geometryInstances)) {
-    var geometryInstancesArray = Array.isArray(geometryInstances)
-      ? geometryInstances
-      : [geometryInstances];
-    var geometryInstanceCount = geometryInstancesArray.length;
-    for (var i = 0; i < geometryInstanceCount; i++) {
-      var attributes = geometryInstancesArray[i].attributes;
-      if (defined(attributes) && defined(attributes.color)) {
-        appearance = new PerInstanceColorAppearance({
-          flat: true,
-        });
-        break;
-      }
-    }
-  }
-  /**
-   * The {@link Appearance} used to shade this primitive. Each geometry
-   * instance is shaded with the same appearance.  Some appearances, like
-   * {@link PerInstanceColorAppearance} allow giving each instance unique
-   * properties.
-   *
-   * @type Appearance
-   *
-   * @default undefined
-   */
-  this.appearance = appearance;
+	var appearance = options.appearance
+	var geometryInstances = options.geometryInstances
+	if (!defined(appearance) && defined(geometryInstances)) {
+		var geometryInstancesArray = Array.isArray(geometryInstances)
+			? geometryInstances
+			: [geometryInstances]
+		var geometryInstanceCount = geometryInstancesArray.length
+		for (var i = 0; i < geometryInstanceCount; i++) {
+			var attributes = geometryInstancesArray[i].attributes
+			if (defined(attributes) && defined(attributes.color)) {
+				appearance = new PerInstanceColorAppearance({
+					flat: true,
+				})
+				break
+			}
+		}
+	}
+	/**
+	 * The {@link Appearance} used to shade this primitive. Each geometry
+	 * instance is shaded with the same appearance.  Some appearances, like
+	 * {@link PerInstanceColorAppearance} allow giving each instance unique
+	 * properties.
+	 *
+	 * @type Appearance
+	 *
+	 * @default undefined
+	 */
+	this.appearance = appearance
 
-  /**
-   * The geometry instances rendered with this primitive.  This may
-   * be <code>undefined</code> if <code>options.releaseGeometryInstances</code>
-   * is <code>true</code> when the primitive is constructed.
-   * <p>
-   * Changing this property after the primitive is rendered has no effect.
-   * </p>
-   *
-   * @readonly
-   * @type {Array|GeometryInstance}
-   *
-   * @default undefined
-   */
-  this.geometryInstances = options.geometryInstances;
-  /**
-   * Determines if the primitive will be shown.  This affects all geometry
-   * instances in the primitive.
-   *
-   * @type {Boolean}
-   *
-   * @default true
-   */
-  this.show = defaultValue(options.show, true);
-  /**
-   * Determines whether terrain, 3D Tiles or both will be classified.
-   *
-   * @type {ClassificationType}
-   *
-   * @default ClassificationType.BOTH
-   */
-  this.classificationType = defaultValue(
-    options.classificationType,
-    ClassificationType.BOTH
-  );
-  /**
-   * This property is for debugging only; it is not for production use nor is it optimized.
-   * <p>
-   * Draws the bounding sphere for each draw command in the primitive.
-   * </p>
-   *
-   * @type {Boolean}
-   *
-   * @default false
-   */
-  this.debugShowBoundingVolume = defaultValue(
-    options.debugShowBoundingVolume,
-    false
-  );
+	/**
+	 * The geometry instances rendered with this primitive.  This may
+	 * be <code>undefined</code> if <code>options.releaseGeometryInstances</code>
+	 * is <code>true</code> when the primitive is constructed.
+	 * <p>
+	 * Changing this property after the primitive is rendered has no effect.
+	 * </p>
+	 *
+	 * @readonly
+	 * @type {Array|GeometryInstance}
+	 *
+	 * @default undefined
+	 */
+	this.geometryInstances = options.geometryInstances
+	/**
+	 * Determines if the primitive will be shown.  This affects all geometry
+	 * instances in the primitive.
+	 *
+	 * @type {Boolean}
+	 *
+	 * @default true
+	 */
+	this.show = defaultValue(options.show, true)
+	/**
+	 * Determines whether terrain, 3D Tiles or both will be classified.
+	 *
+	 * @type {ClassificationType}
+	 *
+	 * @default ClassificationType.BOTH
+	 */
+	this.classificationType = defaultValue(
+		options.classificationType,
+		ClassificationType.BOTH,
+	)
+	/**
+	 * This property is for debugging only; it is not for production use nor is it optimized.
+	 * <p>
+	 * Draws the bounding sphere for each draw command in the primitive.
+	 * </p>
+	 *
+	 * @type {Boolean}
+	 *
+	 * @default false
+	 */
+	this.debugShowBoundingVolume = defaultValue(
+		options.debugShowBoundingVolume,
+		false,
+	)
 
-  /**
-   * This property is for debugging only; it is not for production use nor is it optimized.
-   * <p>
-   * Draws the shadow volume for each geometry in the primitive.
-   * </p>
-   *
-   * @type {Boolean}
-   *
-   * @default false
-   */
-  this.debugShowShadowVolume = defaultValue(
-    options.debugShowShadowVolume,
-    false
-  );
+	/**
+	 * This property is for debugging only; it is not for production use nor is it optimized.
+	 * <p>
+	 * Draws the shadow volume for each geometry in the primitive.
+	 * </p>
+	 *
+	 * @type {Boolean}
+	 *
+	 * @default false
+	 */
+	this.debugShowShadowVolume = defaultValue(
+		options.debugShowShadowVolume,
+		false,
+	)
 
-  this._boundingVolumes = [];
-  this._boundingVolumes2D = [];
+	this._boundingVolumes = []
+	this._boundingVolumes2D = []
 
-  this._ready = false;
-  this._readyPromise = when.defer();
+	this._ready = false
+	this._readyPromise = when.defer()
 
-  this._primitive = undefined;
+	this._primitive = undefined
 
-  this._maxHeight = undefined;
-  this._minHeight = undefined;
+	this._maxHeight = undefined
+	this._minHeight = undefined
 
-  this._maxTerrainHeight = ApproximateTerrainHeights._defaultMaxTerrainHeight;
-  this._minTerrainHeight = ApproximateTerrainHeights._defaultMinTerrainHeight;
+	this._maxTerrainHeight = ApproximateTerrainHeights._defaultMaxTerrainHeight
+	this._minTerrainHeight = ApproximateTerrainHeights._defaultMinTerrainHeight
 
-  this._boundingSpheresKeys = [];
-  this._boundingSpheres = [];
+	this._boundingSpheresKeys = []
+	this._boundingSpheres = []
 
-  this._useFragmentCulling = false;
-  // Used when inserting in an OrderedPrimitiveCollection
-  this._zIndex = undefined;
+	this._useFragmentCulling = false
+	// Used when inserting in an OrderedPrimitiveCollection
+	this._zIndex = undefined
 
-  var that = this;
-  this._classificationPrimitiveOptions = {
-    geometryInstances: undefined,
-    appearance: undefined,
-    vertexCacheOptimize: defaultValue(options.vertexCacheOptimize, false),
-    interleave: defaultValue(options.interleave, false),
-    releaseGeometryInstances: defaultValue(
-      options.releaseGeometryInstances,
-      true
-    ),
-    allowPicking: defaultValue(options.allowPicking, true),
-    asynchronous: defaultValue(options.asynchronous, true),
-    compressVertices: defaultValue(options.compressVertices, true),
-    _createBoundingVolumeFunction: undefined,
-    _updateAndQueueCommandsFunction: undefined,
-    _pickPrimitive: that,
-    _extruded: true,
-    _uniformMap: GroundPrimitiveUniformMap,
-  };
+	var that = this
+	this._classificationPrimitiveOptions = {
+		geometryInstances: undefined,
+		appearance: undefined,
+		vertexCacheOptimize: defaultValue(options.vertexCacheOptimize, false),
+		interleave: defaultValue(options.interleave, false),
+		releaseGeometryInstances: defaultValue(
+			options.releaseGeometryInstances,
+			true,
+		),
+		allowPicking: defaultValue(options.allowPicking, true),
+		asynchronous: defaultValue(options.asynchronous, true),
+		compressVertices: defaultValue(options.compressVertices, true),
+		_createBoundingVolumeFunction: undefined,
+		_updateAndQueueCommandsFunction: undefined,
+		_pickPrimitive: that,
+		_extruded: true,
+		_uniformMap: GroundPrimitiveUniformMap,
+	}
 }
 
 Object.defineProperties(GroundPrimitive.prototype, {
-  /**
-   * When <code>true</code>, geometry vertices are optimized for the pre and post-vertex-shader caches.
-   *
-   * @memberof GroundPrimitive.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   *
-   * @default true
-   */
-  vertexCacheOptimize: {
-    get: function () {
-      return this._classificationPrimitiveOptions.vertexCacheOptimize;
-    },
-  },
+	/**
+	 * When <code>true</code>, geometry vertices are optimized for the pre and post-vertex-shader caches.
+	 *
+	 * @memberof GroundPrimitive.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 *
+	 * @default true
+	 */
+	vertexCacheOptimize: {
+		get: function () {
+			return this._classificationPrimitiveOptions.vertexCacheOptimize
+		},
+	},
 
-  /**
-   * Determines if geometry vertex attributes are interleaved, which can slightly improve rendering performance.
-   *
-   * @memberof GroundPrimitive.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   *
-   * @default false
-   */
-  interleave: {
-    get: function () {
-      return this._classificationPrimitiveOptions.interleave;
-    },
-  },
+	/**
+	 * Determines if geometry vertex attributes are interleaved, which can slightly improve rendering performance.
+	 *
+	 * @memberof GroundPrimitive.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 *
+	 * @default false
+	 */
+	interleave: {
+		get: function () {
+			return this._classificationPrimitiveOptions.interleave
+		},
+	},
 
-  /**
-   * When <code>true</code>, the primitive does not keep a reference to the input <code>geometryInstances</code> to save memory.
-   *
-   * @memberof GroundPrimitive.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   *
-   * @default true
-   */
-  releaseGeometryInstances: {
-    get: function () {
-      return this._classificationPrimitiveOptions.releaseGeometryInstances;
-    },
-  },
+	/**
+	 * When <code>true</code>, the primitive does not keep a reference to the input <code>geometryInstances</code> to save memory.
+	 *
+	 * @memberof GroundPrimitive.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 *
+	 * @default true
+	 */
+	releaseGeometryInstances: {
+		get: function () {
+			return this._classificationPrimitiveOptions.releaseGeometryInstances
+		},
+	},
 
-  /**
-   * When <code>true</code>, each geometry instance will only be pickable with {@link Scene#pick}.  When <code>false</code>, GPU memory is saved.
-   *
-   * @memberof GroundPrimitive.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   *
-   * @default true
-   */
-  allowPicking: {
-    get: function () {
-      return this._classificationPrimitiveOptions.allowPicking;
-    },
-  },
+	/**
+	 * When <code>true</code>, each geometry instance will only be pickable with {@link Scene#pick}.  When <code>false</code>, GPU memory is saved.
+	 *
+	 * @memberof GroundPrimitive.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 *
+	 * @default true
+	 */
+	allowPicking: {
+		get: function () {
+			return this._classificationPrimitiveOptions.allowPicking
+		},
+	},
 
-  /**
-   * Determines if the geometry instances will be created and batched on a web worker.
-   *
-   * @memberof GroundPrimitive.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   *
-   * @default true
-   */
-  asynchronous: {
-    get: function () {
-      return this._classificationPrimitiveOptions.asynchronous;
-    },
-  },
+	/**
+	 * Determines if the geometry instances will be created and batched on a web worker.
+	 *
+	 * @memberof GroundPrimitive.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 *
+	 * @default true
+	 */
+	asynchronous: {
+		get: function () {
+			return this._classificationPrimitiveOptions.asynchronous
+		},
+	},
 
-  /**
-   * When <code>true</code>, geometry vertices are compressed, which will save memory.
-   *
-   * @memberof GroundPrimitive.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   *
-   * @default true
-   */
-  compressVertices: {
-    get: function () {
-      return this._classificationPrimitiveOptions.compressVertices;
-    },
-  },
+	/**
+	 * When <code>true</code>, geometry vertices are compressed, which will save memory.
+	 *
+	 * @memberof GroundPrimitive.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 *
+	 * @default true
+	 */
+	compressVertices: {
+		get: function () {
+			return this._classificationPrimitiveOptions.compressVertices
+		},
+	},
 
-  /**
-   * Determines if the primitive is complete and ready to render.  If this property is
-   * true, the primitive will be rendered the next time that {@link GroundPrimitive#update}
-   * is called.
-   *
-   * @memberof GroundPrimitive.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   */
-  ready: {
-    get: function () {
-      return this._ready;
-    },
-  },
+	/**
+	 * Determines if the primitive is complete and ready to render.  If this property is
+	 * true, the primitive will be rendered the next time that {@link GroundPrimitive#update}
+	 * is called.
+	 *
+	 * @memberof GroundPrimitive.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	ready: {
+		get: function () {
+			return this._ready
+		},
+	},
 
-  /**
-   * Gets a promise that resolves when the primitive is ready to render.
-   * @memberof GroundPrimitive.prototype
-   * @type {Promise.<GroundPrimitive>}
-   * @readonly
-   */
-  readyPromise: {
-    get: function () {
-      return this._readyPromise.promise;
-    },
-  },
-});
+	/**
+	 * Gets a promise that resolves when the primitive is ready to render.
+	 * @memberof GroundPrimitive.prototype
+	 * @type {Promise.<GroundPrimitive>}
+	 * @readonly
+	 */
+	readyPromise: {
+		get: function () {
+			return this._readyPromise.promise
+		},
+	},
+})
 
 /**
  * Determines if GroundPrimitive rendering is supported.
@@ -382,303 +382,299 @@ Object.defineProperties(GroundPrimitive.prototype, {
  * @param {Scene} scene The scene.
  * @returns {Boolean} <code>true</code> if GroundPrimitives are supported; otherwise, returns <code>false</code>
  */
-GroundPrimitive.isSupported = ClassificationPrimitive.isSupported;
+GroundPrimitive.isSupported = ClassificationPrimitive.isSupported
 
 function getComputeMaximumHeightFunction(primitive) {
-  return function (granularity, ellipsoid) {
-    var r = ellipsoid.maximumRadius;
-    var delta = r / Math.cos(granularity * 0.5) - r;
-    return primitive._maxHeight + delta;
-  };
+	return function (granularity, ellipsoid) {
+		var r = ellipsoid.maximumRadius
+		var delta = r / Math.cos(granularity * 0.5) - r
+		return primitive._maxHeight + delta
+	}
 }
 
 function getComputeMinimumHeightFunction(primitive) {
-  return function (granularity, ellipsoid) {
-    return primitive._minHeight;
-  };
+	return function (granularity, ellipsoid) {
+		return primitive._minHeight
+	}
 }
 
-var scratchBVCartesianHigh = new Cartesian3();
-var scratchBVCartesianLow = new Cartesian3();
-var scratchBVCartesian = new Cartesian3();
-var scratchBVCartographic = new Cartographic();
-var scratchBVRectangle = new Rectangle();
+var scratchBVCartesianHigh = new Cartesian3()
+var scratchBVCartesianLow = new Cartesian3()
+var scratchBVCartesian = new Cartesian3()
+var scratchBVCartographic = new Cartographic()
+var scratchBVRectangle = new Rectangle()
 
 function getRectangle(frameState, geometry) {
-  var ellipsoid = frameState.mapProjection.ellipsoid;
+	var ellipsoid = frameState.mapProjection.ellipsoid
 
-  if (
-    !defined(geometry.attributes) ||
-    !defined(geometry.attributes.position3DHigh)
-  ) {
-    if (defined(geometry.rectangle)) {
-      return geometry.rectangle;
-    }
+	if (
+		!defined(geometry.attributes) ||
+		!defined(geometry.attributes.position3DHigh)
+	) {
+		if (defined(geometry.rectangle)) {
+			return geometry.rectangle
+		}
 
-    return undefined;
-  }
+		return undefined
+	}
 
-  var highPositions = geometry.attributes.position3DHigh.values;
-  var lowPositions = geometry.attributes.position3DLow.values;
-  var length = highPositions.length;
+	var highPositions = geometry.attributes.position3DHigh.values
+	var lowPositions = geometry.attributes.position3DLow.values
+	var length = highPositions.length
 
-  var minLat = Number.POSITIVE_INFINITY;
-  var minLon = Number.POSITIVE_INFINITY;
-  var maxLat = Number.NEGATIVE_INFINITY;
-  var maxLon = Number.NEGATIVE_INFINITY;
+	var minLat = Number.POSITIVE_INFINITY
+	var minLon = Number.POSITIVE_INFINITY
+	var maxLat = Number.NEGATIVE_INFINITY
+	var maxLon = Number.NEGATIVE_INFINITY
 
-  for (var i = 0; i < length; i += 3) {
-    var highPosition = Cartesian3.unpack(
-      highPositions,
-      i,
-      scratchBVCartesianHigh
-    );
-    var lowPosition = Cartesian3.unpack(lowPositions, i, scratchBVCartesianLow);
+	for (var i = 0; i < length; i += 3) {
+		var highPosition = Cartesian3.unpack(
+			highPositions,
+			i,
+			scratchBVCartesianHigh,
+		)
+		var lowPosition = Cartesian3.unpack(lowPositions, i, scratchBVCartesianLow)
 
-    var position = Cartesian3.add(
-      highPosition,
-      lowPosition,
-      scratchBVCartesian
-    );
-    var cartographic = ellipsoid.cartesianToCartographic(
-      position,
-      scratchBVCartographic
-    );
+		var position = Cartesian3.add(highPosition, lowPosition, scratchBVCartesian)
+		var cartographic = ellipsoid.cartesianToCartographic(
+			position,
+			scratchBVCartographic,
+		)
 
-    var latitude = cartographic.latitude;
-    var longitude = cartographic.longitude;
+		var latitude = cartographic.latitude
+		var longitude = cartographic.longitude
 
-    minLat = Math.min(minLat, latitude);
-    minLon = Math.min(minLon, longitude);
-    maxLat = Math.max(maxLat, latitude);
-    maxLon = Math.max(maxLon, longitude);
-  }
+		minLat = Math.min(minLat, latitude)
+		minLon = Math.min(minLon, longitude)
+		maxLat = Math.max(maxLat, latitude)
+		maxLon = Math.max(maxLon, longitude)
+	}
 
-  var rectangle = scratchBVRectangle;
-  rectangle.north = maxLat;
-  rectangle.south = minLat;
-  rectangle.east = maxLon;
-  rectangle.west = minLon;
+	var rectangle = scratchBVRectangle
+	rectangle.north = maxLat
+	rectangle.south = minLat
+	rectangle.east = maxLon
+	rectangle.west = minLon
 
-  return rectangle;
+	return rectangle
 }
 
 function setMinMaxTerrainHeights(primitive, rectangle, ellipsoid) {
-  var result = ApproximateTerrainHeights.getMinimumMaximumHeights(
-    rectangle,
-    ellipsoid
-  );
+	var result = ApproximateTerrainHeights.getMinimumMaximumHeights(
+		rectangle,
+		ellipsoid,
+	)
 
-  primitive._minTerrainHeight = result.minimumTerrainHeight;
-  primitive._maxTerrainHeight = result.maximumTerrainHeight;
+	primitive._minTerrainHeight = result.minimumTerrainHeight
+	primitive._maxTerrainHeight = result.maximumTerrainHeight
 }
 
 function createBoundingVolume(groundPrimitive, frameState, geometry) {
-  var ellipsoid = frameState.mapProjection.ellipsoid;
-  var rectangle = getRectangle(frameState, geometry);
+	var ellipsoid = frameState.mapProjection.ellipsoid
+	var rectangle = getRectangle(frameState, geometry)
 
-  var obb = OrientedBoundingBox.fromRectangle(
-    rectangle,
-    groundPrimitive._minHeight,
-    groundPrimitive._maxHeight,
-    ellipsoid
-  );
-  groundPrimitive._boundingVolumes.push(obb);
+	var obb = OrientedBoundingBox.fromRectangle(
+		rectangle,
+		groundPrimitive._minHeight,
+		groundPrimitive._maxHeight,
+		ellipsoid,
+	)
+	groundPrimitive._boundingVolumes.push(obb)
 
-  if (!frameState.scene3DOnly) {
-    var projection = frameState.mapProjection;
-    var boundingVolume = BoundingSphere.fromRectangleWithHeights2D(
-      rectangle,
-      projection,
-      groundPrimitive._maxHeight,
-      groundPrimitive._minHeight
-    );
-    Cartesian3.fromElements(
-      boundingVolume.center.z,
-      boundingVolume.center.x,
-      boundingVolume.center.y,
-      boundingVolume.center
-    );
+	if (!frameState.scene3DOnly) {
+		var projection = frameState.mapProjection
+		var boundingVolume = BoundingSphere.fromRectangleWithHeights2D(
+			rectangle,
+			projection,
+			groundPrimitive._maxHeight,
+			groundPrimitive._minHeight,
+		)
+		Cartesian3.fromElements(
+			boundingVolume.center.z,
+			boundingVolume.center.x,
+			boundingVolume.center.y,
+			boundingVolume.center,
+		)
 
-    groundPrimitive._boundingVolumes2D.push(boundingVolume);
-  }
+		groundPrimitive._boundingVolumes2D.push(boundingVolume)
+	}
 }
 
 function boundingVolumeIndex(commandIndex, length) {
-  return Math.floor((commandIndex % length) / 2);
+	return Math.floor((commandIndex % length) / 2)
 }
 
 function updateAndQueueRenderCommand(
-  groundPrimitive,
-  command,
-  frameState,
-  modelMatrix,
-  cull,
-  boundingVolume,
-  debugShowBoundingVolume
+	groundPrimitive,
+	command,
+	frameState,
+	modelMatrix,
+	cull,
+	boundingVolume,
+	debugShowBoundingVolume,
 ) {
-  // Use derived appearance command for 2D if needed
-  var classificationPrimitive = groundPrimitive._primitive;
-  if (
-    frameState.mode !== SceneMode.SCENE3D &&
-    command.shaderProgram === classificationPrimitive._spColor &&
-    classificationPrimitive._needs2DShader
-  ) {
-    command = command.derivedCommands.appearance2D;
-  }
+	// Use derived appearance command for 2D if needed
+	var classificationPrimitive = groundPrimitive._primitive
+	if (
+		frameState.mode !== SceneMode.SCENE3D &&
+		command.shaderProgram === classificationPrimitive._spColor &&
+		classificationPrimitive._needs2DShader
+	) {
+		command = command.derivedCommands.appearance2D
+	}
 
-  command.owner = groundPrimitive;
-  command.modelMatrix = modelMatrix;
-  command.boundingVolume = boundingVolume;
-  command.cull = cull;
-  command.debugShowBoundingVolume = debugShowBoundingVolume;
+	command.owner = groundPrimitive
+	command.modelMatrix = modelMatrix
+	command.boundingVolume = boundingVolume
+	command.cull = cull
+	command.debugShowBoundingVolume = debugShowBoundingVolume
 
-  frameState.commandList.push(command);
+	frameState.commandList.push(command)
 }
 
 function updateAndQueuePickCommand(
-  groundPrimitive,
-  command,
-  frameState,
-  modelMatrix,
-  cull,
-  boundingVolume
+	groundPrimitive,
+	command,
+	frameState,
+	modelMatrix,
+	cull,
+	boundingVolume,
 ) {
-  // Use derived pick command for 2D if needed
-  var classificationPrimitive = groundPrimitive._primitive;
-  if (
-    frameState.mode !== SceneMode.SCENE3D &&
-    command.shaderProgram === classificationPrimitive._spPick &&
-    classificationPrimitive._needs2DShader
-  ) {
-    command = command.derivedCommands.pick2D;
-  }
+	// Use derived pick command for 2D if needed
+	var classificationPrimitive = groundPrimitive._primitive
+	if (
+		frameState.mode !== SceneMode.SCENE3D &&
+		command.shaderProgram === classificationPrimitive._spPick &&
+		classificationPrimitive._needs2DShader
+	) {
+		command = command.derivedCommands.pick2D
+	}
 
-  command.owner = groundPrimitive;
-  command.modelMatrix = modelMatrix;
-  command.boundingVolume = boundingVolume;
-  command.cull = cull;
+	command.owner = groundPrimitive
+	command.modelMatrix = modelMatrix
+	command.boundingVolume = boundingVolume
+	command.cull = cull
 
-  frameState.commandList.push(command);
+	frameState.commandList.push(command)
 }
 
 function updateAndQueueCommands(
-  groundPrimitive,
-  frameState,
-  colorCommands,
-  pickCommands,
-  modelMatrix,
-  cull,
-  debugShowBoundingVolume,
-  twoPasses
+	groundPrimitive,
+	frameState,
+	colorCommands,
+	pickCommands,
+	modelMatrix,
+	cull,
+	debugShowBoundingVolume,
+	twoPasses,
 ) {
-  var boundingVolumes;
-  if (frameState.mode === SceneMode.SCENE3D) {
-    boundingVolumes = groundPrimitive._boundingVolumes;
-  } else {
-    boundingVolumes = groundPrimitive._boundingVolumes2D;
-  }
+	var boundingVolumes
+	if (frameState.mode === SceneMode.SCENE3D) {
+		boundingVolumes = groundPrimitive._boundingVolumes
+	} else {
+		boundingVolumes = groundPrimitive._boundingVolumes2D
+	}
 
-  var classificationType = groundPrimitive.classificationType;
-  var queueTerrainCommands =
-    classificationType !== ClassificationType.CESIUM_3D_TILE;
-  var queue3DTilesCommands = classificationType !== ClassificationType.TERRAIN;
+	var classificationType = groundPrimitive.classificationType
+	var queueTerrainCommands =
+		classificationType !== ClassificationType.CESIUM_3D_TILE
+	var queue3DTilesCommands = classificationType !== ClassificationType.TERRAIN
 
-  var passes = frameState.passes;
-  var classificationPrimitive = groundPrimitive._primitive;
+	var passes = frameState.passes
+	var classificationPrimitive = groundPrimitive._primitive
 
-  var i;
-  var boundingVolume;
-  var command;
+	var i
+	var boundingVolume
+	var command
 
-  if (passes.render) {
-    var colorLength = colorCommands.length;
+	if (passes.render) {
+		var colorLength = colorCommands.length
 
-    for (i = 0; i < colorLength; ++i) {
-      boundingVolume = boundingVolumes[boundingVolumeIndex(i, colorLength)];
-      if (queueTerrainCommands) {
-        command = colorCommands[i];
-        updateAndQueueRenderCommand(
-          groundPrimitive,
-          command,
-          frameState,
-          modelMatrix,
-          cull,
-          boundingVolume,
-          debugShowBoundingVolume
-        );
-      }
-      if (queue3DTilesCommands) {
-        command = colorCommands[i].derivedCommands.tileset;
-        updateAndQueueRenderCommand(
-          groundPrimitive,
-          command,
-          frameState,
-          modelMatrix,
-          cull,
-          boundingVolume,
-          debugShowBoundingVolume
-        );
-      }
-    }
+		for (i = 0; i < colorLength; ++i) {
+			boundingVolume = boundingVolumes[boundingVolumeIndex(i, colorLength)]
+			if (queueTerrainCommands) {
+				command = colorCommands[i]
+				updateAndQueueRenderCommand(
+					groundPrimitive,
+					command,
+					frameState,
+					modelMatrix,
+					cull,
+					boundingVolume,
+					debugShowBoundingVolume,
+				)
+			}
+			if (queue3DTilesCommands) {
+				command = colorCommands[i].derivedCommands.tileset
+				updateAndQueueRenderCommand(
+					groundPrimitive,
+					command,
+					frameState,
+					modelMatrix,
+					cull,
+					boundingVolume,
+					debugShowBoundingVolume,
+				)
+			}
+		}
 
-    if (frameState.invertClassification) {
-      var ignoreShowCommands = classificationPrimitive._commandsIgnoreShow;
-      var ignoreShowCommandsLength = ignoreShowCommands.length;
-      for (i = 0; i < ignoreShowCommandsLength; ++i) {
-        boundingVolume = boundingVolumes[i];
-        command = ignoreShowCommands[i];
-        updateAndQueueRenderCommand(
-          groundPrimitive,
-          command,
-          frameState,
-          modelMatrix,
-          cull,
-          boundingVolume,
-          debugShowBoundingVolume
-        );
-      }
-    }
-  }
+		if (frameState.invertClassification) {
+			var ignoreShowCommands = classificationPrimitive._commandsIgnoreShow
+			var ignoreShowCommandsLength = ignoreShowCommands.length
+			for (i = 0; i < ignoreShowCommandsLength; ++i) {
+				boundingVolume = boundingVolumes[i]
+				command = ignoreShowCommands[i]
+				updateAndQueueRenderCommand(
+					groundPrimitive,
+					command,
+					frameState,
+					modelMatrix,
+					cull,
+					boundingVolume,
+					debugShowBoundingVolume,
+				)
+			}
+		}
+	}
 
-  if (passes.pick) {
-    var pickLength = pickCommands.length;
+	if (passes.pick) {
+		var pickLength = pickCommands.length
 
-    var pickOffsets;
-    if (!groundPrimitive._useFragmentCulling) {
-      // Must be using pick offsets
-      pickOffsets = classificationPrimitive._primitive._pickOffsets;
-    }
-    for (i = 0; i < pickLength; ++i) {
-      boundingVolume = boundingVolumes[boundingVolumeIndex(i, pickLength)];
-      if (!groundPrimitive._useFragmentCulling) {
-        var pickOffset = pickOffsets[boundingVolumeIndex(i, pickLength)];
-        boundingVolume = boundingVolumes[pickOffset.index];
-      }
-      if (queueTerrainCommands) {
-        command = pickCommands[i];
-        updateAndQueuePickCommand(
-          groundPrimitive,
-          command,
-          frameState,
-          modelMatrix,
-          cull,
-          boundingVolume
-        );
-      }
-      if (queue3DTilesCommands) {
-        command = pickCommands[i].derivedCommands.tileset;
-        updateAndQueuePickCommand(
-          groundPrimitive,
-          command,
-          frameState,
-          modelMatrix,
-          cull,
-          boundingVolume
-        );
-      }
-    }
-  }
+		var pickOffsets
+		if (!groundPrimitive._useFragmentCulling) {
+			// Must be using pick offsets
+			pickOffsets = classificationPrimitive._primitive._pickOffsets
+		}
+		for (i = 0; i < pickLength; ++i) {
+			boundingVolume = boundingVolumes[boundingVolumeIndex(i, pickLength)]
+			if (!groundPrimitive._useFragmentCulling) {
+				var pickOffset = pickOffsets[boundingVolumeIndex(i, pickLength)]
+				boundingVolume = boundingVolumes[pickOffset.index]
+			}
+			if (queueTerrainCommands) {
+				command = pickCommands[i]
+				updateAndQueuePickCommand(
+					groundPrimitive,
+					command,
+					frameState,
+					modelMatrix,
+					cull,
+					boundingVolume,
+				)
+			}
+			if (queue3DTilesCommands) {
+				command = pickCommands[i].derivedCommands.tileset
+				updateAndQueuePickCommand(
+					groundPrimitive,
+					command,
+					frameState,
+					modelMatrix,
+					cull,
+					boundingVolume,
+				)
+			}
+		}
+	}
 }
 
 /**
@@ -689,8 +685,8 @@ function updateAndQueueCommands(
  *
  */
 GroundPrimitive.initializeTerrainHeights = function () {
-  return ApproximateTerrainHeights.initialize();
-};
+	return ApproximateTerrainHeights.initialize()
+}
 
 /**
  * Called when {@link Viewer} or {@link CesiumWidget} render the scene to
@@ -705,224 +701,226 @@ GroundPrimitive.initializeTerrainHeights = function () {
  * @exception {DeveloperError} Appearance and material have a uniform with the same name.
  */
 GroundPrimitive.prototype.update = function (frameState) {
-  if (!defined(this._primitive) && !defined(this.geometryInstances)) {
-    return;
-  }
+	if (!defined(this._primitive) && !defined(this.geometryInstances)) {
+		return
+	}
 
-  if (!ApproximateTerrainHeights.initialized) {
-    //>>includeStart('debug', pragmas.debug);
-    if (!this.asynchronous) {
-      throw new DeveloperError(
-        "For synchronous GroundPrimitives, you must call GroundPrimitive.initializeTerrainHeights() and wait for the returned promise to resolve."
-      );
-    }
-    //>>includeEnd('debug');
+	if (!ApproximateTerrainHeights.initialized) {
+		//>>includeStart('debug', pragmas.debug);
+		if (!this.asynchronous) {
+			throw new DeveloperError(
+				'For synchronous GroundPrimitives, you must call GroundPrimitive.initializeTerrainHeights() and wait for the returned promise to resolve.',
+			)
+		}
+		//>>includeEnd('debug');
 
-    GroundPrimitive.initializeTerrainHeights();
-    return;
-  }
+		GroundPrimitive.initializeTerrainHeights()
+		return
+	}
 
-  var that = this;
-  var primitiveOptions = this._classificationPrimitiveOptions;
+	var that = this
+	var primitiveOptions = this._classificationPrimitiveOptions
 
-  if (!defined(this._primitive)) {
-    var ellipsoid = frameState.mapProjection.ellipsoid;
+	if (!defined(this._primitive)) {
+		var ellipsoid = frameState.mapProjection.ellipsoid
 
-    var instance;
-    var geometry;
-    var instanceType;
+		var instance
+		var geometry
+		var instanceType
 
-    var instances = Array.isArray(this.geometryInstances)
-      ? this.geometryInstances
-      : [this.geometryInstances];
-    var length = instances.length;
-    var groundInstances = new Array(length);
+		var instances = Array.isArray(this.geometryInstances)
+			? this.geometryInstances
+			: [this.geometryInstances]
+		var length = instances.length
+		var groundInstances = new Array(length)
 
-    var i;
-    var rectangle;
-    for (i = 0; i < length; ++i) {
-      instance = instances[i];
-      geometry = instance.geometry;
-      var instanceRectangle = getRectangle(frameState, geometry);
-      if (!defined(rectangle)) {
-        rectangle = Rectangle.clone(instanceRectangle);
-      } else if (defined(instanceRectangle)) {
-        Rectangle.union(rectangle, instanceRectangle, rectangle);
-      }
+		var i
+		var rectangle
+		for (i = 0; i < length; ++i) {
+			instance = instances[i]
+			geometry = instance.geometry
+			var instanceRectangle = getRectangle(frameState, geometry)
+			if (!defined(rectangle)) {
+				rectangle = Rectangle.clone(instanceRectangle)
+			} else if (defined(instanceRectangle)) {
+				Rectangle.union(rectangle, instanceRectangle, rectangle)
+			}
 
-      var id = instance.id;
-      if (defined(id) && defined(instanceRectangle)) {
-        var boundingSphere = ApproximateTerrainHeights.getBoundingSphere(
-          instanceRectangle,
-          ellipsoid
-        );
-        this._boundingSpheresKeys.push(id);
-        this._boundingSpheres.push(boundingSphere);
-      }
+			var id = instance.id
+			if (defined(id) && defined(instanceRectangle)) {
+				var boundingSphere = ApproximateTerrainHeights.getBoundingSphere(
+					instanceRectangle,
+					ellipsoid,
+				)
+				this._boundingSpheresKeys.push(id)
+				this._boundingSpheres.push(boundingSphere)
+			}
 
-      instanceType = geometry.constructor;
-      if (!defined(instanceType) || !defined(instanceType.createShadowVolume)) {
-        //>>includeStart('debug', pragmas.debug);
-        throw new DeveloperError(
-          "Not all of the geometry instances have GroundPrimitive support."
-        );
-        //>>includeEnd('debug');
-      }
-    }
+			instanceType = geometry.constructor
+			if (!defined(instanceType) || !defined(instanceType.createShadowVolume)) {
+				//>>includeStart('debug', pragmas.debug);
+				throw new DeveloperError(
+					'Not all of the geometry instances have GroundPrimitive support.',
+				)
+				//>>includeEnd('debug');
+			}
+		}
 
-    // Now compute the min/max heights for the primitive
-    setMinMaxTerrainHeights(this, rectangle, ellipsoid);
-    var exaggeration = frameState.terrainExaggeration;
-    this._minHeight = this._minTerrainHeight * exaggeration;
-    this._maxHeight = this._maxTerrainHeight * exaggeration;
+		// Now compute the min/max heights for the primitive
+		setMinMaxTerrainHeights(this, rectangle, ellipsoid)
+		var exaggeration = frameState.terrainExaggeration
+		this._minHeight = this._minTerrainHeight * exaggeration
+		this._maxHeight = this._maxTerrainHeight * exaggeration
 
-    var useFragmentCulling = GroundPrimitive._supportsMaterials(
-      frameState.context
-    );
-    this._useFragmentCulling = useFragmentCulling;
+		var useFragmentCulling = GroundPrimitive._supportsMaterials(
+			frameState.context,
+		)
+		this._useFragmentCulling = useFragmentCulling
 
-    if (useFragmentCulling) {
-      // Determine whether to add spherical or planar extent attributes for computing texture coordinates.
-      // This depends on the size of the GeometryInstances.
-      var attributes;
-      var usePlanarExtents = true;
-      for (i = 0; i < length; ++i) {
-        instance = instances[i];
-        geometry = instance.geometry;
-        rectangle = getRectangle(frameState, geometry);
-        if (ShadowVolumeAppearance.shouldUseSphericalCoordinates(rectangle)) {
-          usePlanarExtents = false;
-          break;
-        }
-      }
+		if (useFragmentCulling) {
+			// Determine whether to add spherical or planar extent attributes for computing texture coordinates.
+			// This depends on the size of the GeometryInstances.
+			var attributes
+			var usePlanarExtents = true
+			for (i = 0; i < length; ++i) {
+				instance = instances[i]
+				geometry = instance.geometry
+				rectangle = getRectangle(frameState, geometry)
+				if (ShadowVolumeAppearance.shouldUseSphericalCoordinates(rectangle)) {
+					usePlanarExtents = false
+					break
+				}
+			}
 
-      for (i = 0; i < length; ++i) {
-        instance = instances[i];
-        geometry = instance.geometry;
-        instanceType = geometry.constructor;
+			for (i = 0; i < length; ++i) {
+				instance = instances[i]
+				geometry = instance.geometry
+				instanceType = geometry.constructor
 
-        var boundingRectangle = getRectangle(frameState, geometry);
-        var textureCoordinateRotationPoints =
-          geometry.textureCoordinateRotationPoints;
+				var boundingRectangle = getRectangle(frameState, geometry)
+				var textureCoordinateRotationPoints =
+					geometry.textureCoordinateRotationPoints
 
-        if (usePlanarExtents) {
-          attributes = ShadowVolumeAppearance.getPlanarTextureCoordinateAttributes(
-            boundingRectangle,
-            textureCoordinateRotationPoints,
-            ellipsoid,
-            frameState.mapProjection,
-            this._maxHeight
-          );
-        } else {
-          attributes = ShadowVolumeAppearance.getSphericalExtentGeometryInstanceAttributes(
-            boundingRectangle,
-            textureCoordinateRotationPoints,
-            ellipsoid,
-            frameState.mapProjection
-          );
-        }
+				if (usePlanarExtents) {
+					attributes =
+						ShadowVolumeAppearance.getPlanarTextureCoordinateAttributes(
+							boundingRectangle,
+							textureCoordinateRotationPoints,
+							ellipsoid,
+							frameState.mapProjection,
+							this._maxHeight,
+						)
+				} else {
+					attributes =
+						ShadowVolumeAppearance.getSphericalExtentGeometryInstanceAttributes(
+							boundingRectangle,
+							textureCoordinateRotationPoints,
+							ellipsoid,
+							frameState.mapProjection,
+						)
+				}
 
-        var instanceAttributes = instance.attributes;
-        for (var attributeKey in instanceAttributes) {
-          if (instanceAttributes.hasOwnProperty(attributeKey)) {
-            attributes[attributeKey] = instanceAttributes[attributeKey];
-          }
-        }
+				var instanceAttributes = instance.attributes
+				for (var attributeKey in instanceAttributes) {
+					if (instanceAttributes.hasOwnProperty(attributeKey)) {
+						attributes[attributeKey] = instanceAttributes[attributeKey]
+					}
+				}
 
-        groundInstances[i] = new GeometryInstance({
-          geometry: instanceType.createShadowVolume(
-            geometry,
-            getComputeMinimumHeightFunction(this),
-            getComputeMaximumHeightFunction(this)
-          ),
-          attributes: attributes,
-          id: instance.id,
-        });
-      }
-    } else {
-      // ClassificationPrimitive will check if the colors are all the same if it detects lack of fragment culling attributes
-      for (i = 0; i < length; ++i) {
-        instance = instances[i];
-        geometry = instance.geometry;
-        instanceType = geometry.constructor;
-        groundInstances[i] = new GeometryInstance({
-          geometry: instanceType.createShadowVolume(
-            geometry,
-            getComputeMinimumHeightFunction(this),
-            getComputeMaximumHeightFunction(this)
-          ),
-          attributes: instance.attributes,
-          id: instance.id,
-        });
-      }
-    }
+				groundInstances[i] = new GeometryInstance({
+					geometry: instanceType.createShadowVolume(
+						geometry,
+						getComputeMinimumHeightFunction(this),
+						getComputeMaximumHeightFunction(this),
+					),
+					attributes: attributes,
+					id: instance.id,
+				})
+			}
+		} else {
+			// ClassificationPrimitive will check if the colors are all the same if it detects lack of fragment culling attributes
+			for (i = 0; i < length; ++i) {
+				instance = instances[i]
+				geometry = instance.geometry
+				instanceType = geometry.constructor
+				groundInstances[i] = new GeometryInstance({
+					geometry: instanceType.createShadowVolume(
+						geometry,
+						getComputeMinimumHeightFunction(this),
+						getComputeMaximumHeightFunction(this),
+					),
+					attributes: instance.attributes,
+					id: instance.id,
+				})
+			}
+		}
 
-    primitiveOptions.geometryInstances = groundInstances;
-    primitiveOptions.appearance = this.appearance;
+		primitiveOptions.geometryInstances = groundInstances
+		primitiveOptions.appearance = this.appearance
 
-    primitiveOptions._createBoundingVolumeFunction = function (
-      frameState,
-      geometry
-    ) {
-      createBoundingVolume(that, frameState, geometry);
-    };
-    primitiveOptions._updateAndQueueCommandsFunction = function (
-      primitive,
-      frameState,
-      colorCommands,
-      pickCommands,
-      modelMatrix,
-      cull,
-      debugShowBoundingVolume,
-      twoPasses
-    ) {
-      updateAndQueueCommands(
-        that,
-        frameState,
-        colorCommands,
-        pickCommands,
-        modelMatrix,
-        cull,
-        debugShowBoundingVolume,
-        twoPasses
-      );
-    };
+		primitiveOptions._createBoundingVolumeFunction = function (
+			frameState,
+			geometry,
+		) {
+			createBoundingVolume(that, frameState, geometry)
+		}
+		primitiveOptions._updateAndQueueCommandsFunction = function (
+			primitive,
+			frameState,
+			colorCommands,
+			pickCommands,
+			modelMatrix,
+			cull,
+			debugShowBoundingVolume,
+			twoPasses,
+		) {
+			updateAndQueueCommands(
+				that,
+				frameState,
+				colorCommands,
+				pickCommands,
+				modelMatrix,
+				cull,
+				debugShowBoundingVolume,
+				twoPasses,
+			)
+		}
 
-    this._primitive = new ClassificationPrimitive(primitiveOptions);
-    this._primitive.readyPromise.then(function (primitive) {
-      that._ready = true;
+		this._primitive = new ClassificationPrimitive(primitiveOptions)
+		this._primitive.readyPromise.then(function (primitive) {
+			that._ready = true
 
-      if (that.releaseGeometryInstances) {
-        that.geometryInstances = undefined;
-      }
+			if (that.releaseGeometryInstances) {
+				that.geometryInstances = undefined
+			}
 
-      var error = primitive._error;
-      if (!defined(error)) {
-        that._readyPromise.resolve(that);
-      } else {
-        that._readyPromise.reject(error);
-      }
-    });
-  }
+			var error = primitive._error
+			if (!defined(error)) {
+				that._readyPromise.resolve(that)
+			} else {
+				that._readyPromise.reject(error)
+			}
+		})
+	}
 
-  this._primitive.appearance = this.appearance;
-  this._primitive.show = this.show;
-  this._primitive.debugShowShadowVolume = this.debugShowShadowVolume;
-  this._primitive.debugShowBoundingVolume = this.debugShowBoundingVolume;
-  this._primitive.update(frameState);
-};
+	this._primitive.appearance = this.appearance
+	this._primitive.show = this.show
+	this._primitive.debugShowShadowVolume = this.debugShowShadowVolume
+	this._primitive.debugShowBoundingVolume = this.debugShowBoundingVolume
+	this._primitive.update(frameState)
+}
 
 /**
  * @private
  */
 GroundPrimitive.prototype.getBoundingSphere = function (id) {
-  var index = this._boundingSpheresKeys.indexOf(id);
-  if (index !== -1) {
-    return this._boundingSpheres[index];
-  }
+	var index = this._boundingSpheresKeys.indexOf(id)
+	if (index !== -1) {
+		return this._boundingSpheres[index]
+	}
 
-  return undefined;
-};
+	return undefined
+}
 
 /**
  * Returns the modifiable per-instance attributes for a {@link GeometryInstance}.
@@ -938,15 +936,15 @@ GroundPrimitive.prototype.getBoundingSphere = function (id) {
  * attributes.show = Cesium.ShowGeometryInstanceAttribute.toValue(true);
  */
 GroundPrimitive.prototype.getGeometryInstanceAttributes = function (id) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(this._primitive)) {
-    throw new DeveloperError(
-      "must call update before calling getGeometryInstanceAttributes"
-    );
-  }
-  //>>includeEnd('debug');
-  return this._primitive.getGeometryInstanceAttributes(id);
-};
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(this._primitive)) {
+		throw new DeveloperError(
+			'must call update before calling getGeometryInstanceAttributes',
+		)
+	}
+	//>>includeEnd('debug');
+	return this._primitive.getGeometryInstanceAttributes(id)
+}
 
 /**
  * Returns true if this object was destroyed; otherwise, false.
@@ -960,8 +958,8 @@ GroundPrimitive.prototype.getGeometryInstanceAttributes = function (id) {
  * @see GroundPrimitive#destroy
  */
 GroundPrimitive.prototype.isDestroyed = function () {
-  return false;
-};
+	return false
+}
 
 /**
  * Destroys the WebGL resources held by this object.  Destroying an object allows for deterministic
@@ -980,9 +978,9 @@ GroundPrimitive.prototype.isDestroyed = function () {
  * @see GroundPrimitive#isDestroyed
  */
 GroundPrimitive.prototype.destroy = function () {
-  this._primitive = this._primitive && this._primitive.destroy();
-  return destroyObject(this);
-};
+	this._primitive = this._primitive && this._primitive.destroy()
+	return destroyObject(this)
+}
 
 /**
  * Exposed for testing.
@@ -992,8 +990,8 @@ GroundPrimitive.prototype.destroy = function () {
  * @private
  */
 GroundPrimitive._supportsMaterials = function (context) {
-  return context.depthTexture;
-};
+	return context.depthTexture
+}
 
 /**
  * Checks if the given Scene supports materials on GroundPrimitives.
@@ -1003,10 +1001,10 @@ GroundPrimitive._supportsMaterials = function (context) {
  * @returns {Boolean} Whether or not the current scene supports materials on GroundPrimitives.
  */
 GroundPrimitive.supportsMaterials = function (scene) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("scene", scene);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('scene', scene)
+	//>>includeEnd('debug');
 
-  return GroundPrimitive._supportsMaterials(scene.frameState.context);
-};
-export default GroundPrimitive;
+	return GroundPrimitive._supportsMaterials(scene.frameState.context)
+}
+export default GroundPrimitive

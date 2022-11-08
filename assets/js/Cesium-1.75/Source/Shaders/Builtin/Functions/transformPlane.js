@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Transforms a plane.\n\
  * \n\
  * @name czm_transformPlane\n\
@@ -14,4 +14,4 @@ vec4 czm_transformPlane(vec4 plane, mat4 transform) {\n\
     float normalMagnitude = length(transformedPlane.xyz);\n\
     return transformedPlane / normalMagnitude;\n\
 }\n\
-";
+'

@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform sampler2D image;\n\
+export default 'uniform sampler2D image;\n\
 \n\
 czm_material czm_getMaterial(czm_materialInput materialInput)\n\
 {\n\
@@ -10,4 +10,4 @@ czm_material czm_getMaterial(czm_materialInput materialInput)\n\
     material.alpha = rampColor.a;\n\
     return material;\n\
 }\n\
-";
+'

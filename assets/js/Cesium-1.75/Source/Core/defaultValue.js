@@ -12,10 +12,10 @@
  * param = Cesium.defaultValue(param, 'default');
  */
 function defaultValue(a, b) {
-  if (a !== undefined && a !== null) {
-    return a;
-  }
-  return b;
+	if (a !== undefined && a !== null) {
+		return a
+	}
+	return b
 }
 
 /**
@@ -24,6 +24,6 @@ function defaultValue(a, b) {
  * @type {Object}
  * @memberof defaultValue
  */
-defaultValue.EMPTY_OBJECT = Object.freeze({});
+defaultValue.EMPTY_OBJECT = Object.freeze({})
 
-export default defaultValue;
+export default defaultValue

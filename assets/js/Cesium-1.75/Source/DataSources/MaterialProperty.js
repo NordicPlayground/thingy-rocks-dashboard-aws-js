@@ -1,7 +1,7 @@
-import Color from "../Core/Color.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Material from "../Scene/Material.js";
+import Color from '../Core/Color.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Material from '../Scene/Material.js'
 
 /**
  * The interface for all {@link Property} objects that represent {@link Material} uniforms.
@@ -20,34 +20,34 @@ import Material from "../Scene/Material.js";
  * @see StripeMaterialProperty
  */
 function MaterialProperty() {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 Object.defineProperties(MaterialProperty.prototype, {
-  /**
-   * Gets a value indicating if this property is constant.  A property is considered
-   * constant if getValue always returns the same result for the current definition.
-   * @memberof MaterialProperty.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   */
-  isConstant: {
-    get: DeveloperError.throwInstantiationError,
-  },
-  /**
-   * Gets the event that is raised whenever the definition of this property changes.
-   * The definition is considered to have changed if a call to getValue would return
-   * a different result for the same time.
-   * @memberof MaterialProperty.prototype
-   *
-   * @type {Event}
-   * @readonly
-   */
-  definitionChanged: {
-    get: DeveloperError.throwInstantiationError,
-  },
-});
+	/**
+	 * Gets a value indicating if this property is constant.  A property is considered
+	 * constant if getValue always returns the same result for the current definition.
+	 * @memberof MaterialProperty.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	isConstant: {
+		get: DeveloperError.throwInstantiationError,
+	},
+	/**
+	 * Gets the event that is raised whenever the definition of this property changes.
+	 * The definition is considered to have changed if a call to getValue would return
+	 * a different result for the same time.
+	 * @memberof MaterialProperty.prototype
+	 *
+	 * @type {Event}
+	 * @readonly
+	 */
+	definitionChanged: {
+		get: DeveloperError.throwInstantiationError,
+	},
+})
 
 /**
  * Gets the {@link Material} type at the provided time.
@@ -56,7 +56,7 @@ Object.defineProperties(MaterialProperty.prototype, {
  * @param {JulianDate} time The time for which to retrieve the type.
  * @returns {String} The type of material.
  */
-MaterialProperty.prototype.getType = DeveloperError.throwInstantiationError;
+MaterialProperty.prototype.getType = DeveloperError.throwInstantiationError
 
 /**
  * Gets the value of the property at the provided time.
@@ -66,7 +66,7 @@ MaterialProperty.prototype.getType = DeveloperError.throwInstantiationError;
  * @param {Object} [result] The object to store the value into, if omitted, a new instance is created and returned.
  * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
  */
-MaterialProperty.prototype.getValue = DeveloperError.throwInstantiationError;
+MaterialProperty.prototype.getValue = DeveloperError.throwInstantiationError
 
 /**
  * Compares this property to the provided property and returns
@@ -76,30 +76,30 @@ MaterialProperty.prototype.getValue = DeveloperError.throwInstantiationError;
  * @param {Property} [other] The other property.
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
-MaterialProperty.prototype.equals = DeveloperError.throwInstantiationError;
+MaterialProperty.prototype.equals = DeveloperError.throwInstantiationError
 
 /**
  * @private
  */
 MaterialProperty.getValue = function (time, materialProperty, material) {
-  var type;
+	var type
 
-  if (defined(materialProperty)) {
-    type = materialProperty.getType(time);
-    if (defined(type)) {
-      if (!defined(material) || material.type !== type) {
-        material = Material.fromType(type);
-      }
-      materialProperty.getValue(time, material.uniforms);
-      return material;
-    }
-  }
+	if (defined(materialProperty)) {
+		type = materialProperty.getType(time)
+		if (defined(type)) {
+			if (!defined(material) || material.type !== type) {
+				material = Material.fromType(type)
+			}
+			materialProperty.getValue(time, material.uniforms)
+			return material
+		}
+	}
 
-  if (!defined(material) || material.type !== Material.ColorType) {
-    material = Material.fromType(Material.ColorType);
-  }
-  Color.clone(Color.WHITE, material.uniforms.color);
+	if (!defined(material) || material.type !== Material.ColorType) {
+		material = Material.fromType(Material.ColorType)
+	}
+	Color.clone(Color.WHITE, material.uniforms.color)
 
-  return material;
-};
-export default MaterialProperty;
+	return material
+}
+export default MaterialProperty

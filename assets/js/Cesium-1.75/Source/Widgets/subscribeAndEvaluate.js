@@ -1,4 +1,4 @@
-import knockout from "../ThirdParty/knockout.js";
+import knockout from '../ThirdParty/knockout.js'
 
 /**
  * Subscribe to a Knockout observable ES5 property, and immediately fire
@@ -16,15 +16,15 @@ import knockout from "../ThirdParty/knockout.js";
  * @returns The subscription object from Knockout which can be used to dispose the subscription later.
  */
 function subscribeAndEvaluate(
-  owner,
-  observablePropertyName,
-  callback,
-  target,
-  event
+	owner,
+	observablePropertyName,
+	callback,
+	target,
+	event,
 ) {
-  callback.call(target, owner[observablePropertyName]);
-  return knockout
-    .getObservable(owner, observablePropertyName)
-    .subscribe(callback, target, event);
+	callback.call(target, owner[observablePropertyName])
+	return knockout
+		.getObservable(owner, observablePropertyName)
+		.subscribe(callback, target, event)
 }
-export default subscribeAndEvaluate;
+export default subscribeAndEvaluate

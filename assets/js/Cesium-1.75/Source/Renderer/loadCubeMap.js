@@ -1,9 +1,9 @@
-import Check from "../Core/Check.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Resource from "../Core/Resource.js";
-import when from "../ThirdParty/when.js";
-import CubeMap from "./CubeMap.js";
+import Check from '../Core/Check.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Resource from '../Core/Resource.js'
+import when from '../ThirdParty/when.js'
+import CubeMap from './CubeMap.js'
 
 /**
  * Asynchronously loads six images and creates a cube map.  Returns a promise that
@@ -39,54 +39,54 @@ import CubeMap from "./CubeMap.js";
  * @private
  */
 function loadCubeMap(context, urls) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("context", context);
-  if (
-    !defined(urls) ||
-    !defined(urls.positiveX) ||
-    !defined(urls.negativeX) ||
-    !defined(urls.positiveY) ||
-    !defined(urls.negativeY) ||
-    !defined(urls.positiveZ) ||
-    !defined(urls.negativeZ)
-  ) {
-    throw new DeveloperError(
-      "urls is required and must have positiveX, negativeX, positiveY, negativeY, positiveZ, and negativeZ properties."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('context', context)
+	if (
+		!defined(urls) ||
+		!defined(urls.positiveX) ||
+		!defined(urls.negativeX) ||
+		!defined(urls.positiveY) ||
+		!defined(urls.negativeY) ||
+		!defined(urls.positiveZ) ||
+		!defined(urls.negativeZ)
+	) {
+		throw new DeveloperError(
+			'urls is required and must have positiveX, negativeX, positiveY, negativeY, positiveZ, and negativeZ properties.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  // PERFORMANCE_IDEA: Given the size of some cube maps, we should consider tiling them, which
-  // would prevent hiccups when uploading, for example, six 4096x4096 textures to the GPU.
-  //
-  // Also, it is perhaps acceptable to use the context here in the callbacks, but
-  // ideally, we would do it in the primitive's update function.
-  var flipOptions = {
-    flipY: true,
-    preferImageBitmap: true,
-  };
+	// PERFORMANCE_IDEA: Given the size of some cube maps, we should consider tiling them, which
+	// would prevent hiccups when uploading, for example, six 4096x4096 textures to the GPU.
+	//
+	// Also, it is perhaps acceptable to use the context here in the callbacks, but
+	// ideally, we would do it in the primitive's update function.
+	var flipOptions = {
+		flipY: true,
+		preferImageBitmap: true,
+	}
 
-  var facePromises = [
-    Resource.createIfNeeded(urls.positiveX).fetchImage(flipOptions),
-    Resource.createIfNeeded(urls.negativeX).fetchImage(flipOptions),
-    Resource.createIfNeeded(urls.positiveY).fetchImage(flipOptions),
-    Resource.createIfNeeded(urls.negativeY).fetchImage(flipOptions),
-    Resource.createIfNeeded(urls.positiveZ).fetchImage(flipOptions),
-    Resource.createIfNeeded(urls.negativeZ).fetchImage(flipOptions),
-  ];
+	var facePromises = [
+		Resource.createIfNeeded(urls.positiveX).fetchImage(flipOptions),
+		Resource.createIfNeeded(urls.negativeX).fetchImage(flipOptions),
+		Resource.createIfNeeded(urls.positiveY).fetchImage(flipOptions),
+		Resource.createIfNeeded(urls.negativeY).fetchImage(flipOptions),
+		Resource.createIfNeeded(urls.positiveZ).fetchImage(flipOptions),
+		Resource.createIfNeeded(urls.negativeZ).fetchImage(flipOptions),
+	]
 
-  return when.all(facePromises, function (images) {
-    return new CubeMap({
-      context: context,
-      source: {
-        positiveX: images[0],
-        negativeX: images[1],
-        positiveY: images[2],
-        negativeY: images[3],
-        positiveZ: images[4],
-        negativeZ: images[5],
-      },
-    });
-  });
+	return when.all(facePromises, function (images) {
+		return new CubeMap({
+			context: context,
+			source: {
+				positiveX: images[0],
+				negativeX: images[1],
+				positiveY: images[2],
+				negativeY: images[3],
+				positiveZ: images[4],
+				negativeZ: images[5],
+			},
+		})
+	})
 }
-export default loadCubeMap;
+export default loadCubeMap

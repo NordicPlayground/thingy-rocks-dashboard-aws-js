@@ -5,26 +5,26 @@
  * @constructor
  */
 function Queue() {
-  this._array = [];
-  this._offset = 0;
-  this._length = 0;
+	this._array = []
+	this._offset = 0
+	this._length = 0
 }
 
 Object.defineProperties(Queue.prototype, {
-  /**
-   * The length of the queue.
-   *
-   * @memberof Queue.prototype
-   *
-   * @type {Number}
-   * @readonly
-   */
-  length: {
-    get: function () {
-      return this._length;
-    },
-  },
-});
+	/**
+	 * The length of the queue.
+	 *
+	 * @memberof Queue.prototype
+	 *
+	 * @type {Number}
+	 * @readonly
+	 */
+	length: {
+		get: function () {
+			return this._length
+		},
+	},
+})
 
 /**
  * Enqueues the specified item.
@@ -32,9 +32,9 @@ Object.defineProperties(Queue.prototype, {
  * @param {*} item The item to enqueue.
  */
 Queue.prototype.enqueue = function (item) {
-  this._array.push(item);
-  this._length++;
-};
+	this._array.push(item)
+	this._length++
+}
 
 /**
  * Dequeues an item.  Returns undefined if the queue is empty.
@@ -42,27 +42,27 @@ Queue.prototype.enqueue = function (item) {
  * @returns {*} The the dequeued item.
  */
 Queue.prototype.dequeue = function () {
-  if (this._length === 0) {
-    return undefined;
-  }
+	if (this._length === 0) {
+		return undefined
+	}
 
-  var array = this._array;
-  var offset = this._offset;
-  var item = array[offset];
-  array[offset] = undefined;
+	var array = this._array
+	var offset = this._offset
+	var item = array[offset]
+	array[offset] = undefined
 
-  offset++;
-  if (offset > 10 && offset * 2 > array.length) {
-    //compact array
-    this._array = array.slice(offset);
-    offset = 0;
-  }
+	offset++
+	if (offset > 10 && offset * 2 > array.length) {
+		//compact array
+		this._array = array.slice(offset)
+		offset = 0
+	}
 
-  this._offset = offset;
-  this._length--;
+	this._offset = offset
+	this._length--
 
-  return item;
-};
+	return item
+}
 
 /**
  * Returns the item at the front of the queue.  Returns undefined if the queue is empty.
@@ -70,12 +70,12 @@ Queue.prototype.dequeue = function () {
  * @returns {*} The item at the front of the queue.
  */
 Queue.prototype.peek = function () {
-  if (this._length === 0) {
-    return undefined;
-  }
+	if (this._length === 0) {
+		return undefined
+	}
 
-  return this._array[this._offset];
-};
+	return this._array[this._offset]
+}
 
 /**
  * Check whether this queue contains the specified item.
@@ -83,15 +83,15 @@ Queue.prototype.peek = function () {
  * @param {*} item The item to search for.
  */
 Queue.prototype.contains = function (item) {
-  return this._array.indexOf(item) !== -1;
-};
+	return this._array.indexOf(item) !== -1
+}
 
 /**
  * Remove all items from the queue.
  */
 Queue.prototype.clear = function () {
-  this._array.length = this._offset = this._length = 0;
-};
+	this._array.length = this._offset = this._length = 0
+}
 
 /**
  * Sort the items in the queue in-place.
@@ -99,14 +99,14 @@ Queue.prototype.clear = function () {
  * @param {Queue.Comparator} compareFunction A function that defines the sort order.
  */
 Queue.prototype.sort = function (compareFunction) {
-  if (this._offset > 0) {
-    //compact array
-    this._array = this._array.slice(this._offset);
-    this._offset = 0;
-  }
+	if (this._offset > 0) {
+		//compact array
+		this._array = this._array.slice(this._offset)
+		this._offset = 0
+	}
 
-  this._array.sort(compareFunction);
-};
+	this._array.sort(compareFunction)
+}
 
 /**
  * A function used to compare two items while sorting a queue.
@@ -123,4 +123,4 @@ Queue.prototype.sort = function (compareFunction) {
  *     return a - b;
  * }
  */
-export default Queue;
+export default Queue

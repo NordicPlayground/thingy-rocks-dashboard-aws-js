@@ -1,5 +1,5 @@
-import Color from "../Core/Color.js";
-import defined from "../Core/defined.js";
+import Color from '../Core/Color.js'
+import defined from '../Core/defined.js'
 
 /**
  * A feature of a {@link Cesium3DTileset}.
@@ -37,110 +37,110 @@ import defined from "../Core/defined.js";
  * }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
  */
 function Cesium3DTileFeature(content, batchId) {
-  this._content = content;
-  this._batchId = batchId;
-  this._color = undefined; // for calling getColor
+	this._content = content
+	this._batchId = batchId
+	this._color = undefined // for calling getColor
 }
 
 Object.defineProperties(Cesium3DTileFeature.prototype, {
-  /**
-   * Gets or sets if the feature will be shown. This is set for all features
-   * when a style's show is evaluated.
-   *
-   * @memberof Cesium3DTileFeature.prototype
-   *
-   * @type {Boolean}
-   *
-   * @default true
-   */
-  show: {
-    get: function () {
-      return this._content.batchTable.getShow(this._batchId);
-    },
-    set: function (value) {
-      this._content.batchTable.setShow(this._batchId, value);
-    },
-  },
+	/**
+	 * Gets or sets if the feature will be shown. This is set for all features
+	 * when a style's show is evaluated.
+	 *
+	 * @memberof Cesium3DTileFeature.prototype
+	 *
+	 * @type {Boolean}
+	 *
+	 * @default true
+	 */
+	show: {
+		get: function () {
+			return this._content.batchTable.getShow(this._batchId)
+		},
+		set: function (value) {
+			this._content.batchTable.setShow(this._batchId, value)
+		},
+	},
 
-  /**
-   * Gets or sets the highlight color multiplied with the feature's color.  When
-   * this is white, the feature's color is not changed. This is set for all features
-   * when a style's color is evaluated.
-   *
-   * @memberof Cesium3DTileFeature.prototype
-   *
-   * @type {Color}
-   *
-   * @default {@link Color.WHITE}
-   */
-  color: {
-    get: function () {
-      if (!defined(this._color)) {
-        this._color = new Color();
-      }
-      return this._content.batchTable.getColor(this._batchId, this._color);
-    },
-    set: function (value) {
-      this._content.batchTable.setColor(this._batchId, value);
-    },
-  },
+	/**
+	 * Gets or sets the highlight color multiplied with the feature's color.  When
+	 * this is white, the feature's color is not changed. This is set for all features
+	 * when a style's color is evaluated.
+	 *
+	 * @memberof Cesium3DTileFeature.prototype
+	 *
+	 * @type {Color}
+	 *
+	 * @default {@link Color.WHITE}
+	 */
+	color: {
+		get: function () {
+			if (!defined(this._color)) {
+				this._color = new Color()
+			}
+			return this._content.batchTable.getColor(this._batchId, this._color)
+		},
+		set: function (value) {
+			this._content.batchTable.setColor(this._batchId, value)
+		},
+	},
 
-  /**
-   * Gets the content of the tile containing the feature.
-   *
-   * @memberof Cesium3DTileFeature.prototype
-   *
-   * @type {Cesium3DTileContent}
-   *
-   * @readonly
-   * @private
-   */
-  content: {
-    get: function () {
-      return this._content;
-    },
-  },
+	/**
+	 * Gets the content of the tile containing the feature.
+	 *
+	 * @memberof Cesium3DTileFeature.prototype
+	 *
+	 * @type {Cesium3DTileContent}
+	 *
+	 * @readonly
+	 * @private
+	 */
+	content: {
+		get: function () {
+			return this._content
+		},
+	},
 
-  /**
-   * Gets the tileset containing the feature.
-   *
-   * @memberof Cesium3DTileFeature.prototype
-   *
-   * @type {Cesium3DTileset}
-   *
-   * @readonly
-   */
-  tileset: {
-    get: function () {
-      return this._content.tileset;
-    },
-  },
+	/**
+	 * Gets the tileset containing the feature.
+	 *
+	 * @memberof Cesium3DTileFeature.prototype
+	 *
+	 * @type {Cesium3DTileset}
+	 *
+	 * @readonly
+	 */
+	tileset: {
+		get: function () {
+			return this._content.tileset
+		},
+	},
 
-  /**
-   * All objects returned by {@link Scene#pick} have a <code>primitive</code> property. This returns
-   * the tileset containing the feature.
-   *
-   * @memberof Cesium3DTileFeature.prototype
-   *
-   * @type {Cesium3DTileset}
-   *
-   * @readonly
-   */
-  primitive: {
-    get: function () {
-      return this._content.tileset;
-    },
-  },
+	/**
+	 * All objects returned by {@link Scene#pick} have a <code>primitive</code> property. This returns
+	 * the tileset containing the feature.
+	 *
+	 * @memberof Cesium3DTileFeature.prototype
+	 *
+	 * @type {Cesium3DTileset}
+	 *
+	 * @readonly
+	 */
+	primitive: {
+		get: function () {
+			return this._content.tileset
+		},
+	},
 
-  /**
-   * @private
-   */
-  pickId: {
-    get: function () {
-      return this._content.batchTable.getPickColor(this._batchId);
-    },
-  },
-});
+	/**
+	 * @private
+	 */
+	pickId: {
+		get: function () {
+			return this._content.batchTable.getPickColor(this._batchId)
+		},
+	},
+})
 
 /**
  * Returns whether the feature contains this property. This includes properties from this feature's
@@ -152,8 +152,8 @@ Object.defineProperties(Cesium3DTileFeature.prototype, {
  * @returns {Boolean} Whether the feature contains this property.
  */
 Cesium3DTileFeature.prototype.hasProperty = function (name) {
-  return this._content.batchTable.hasProperty(this._batchId, name);
-};
+	return this._content.batchTable.hasProperty(this._batchId, name)
+}
 
 /**
  * Returns an array of property names for the feature. This includes properties from this feature's
@@ -165,8 +165,8 @@ Cesium3DTileFeature.prototype.hasProperty = function (name) {
  * @returns {String[]} The names of the feature's properties.
  */
 Cesium3DTileFeature.prototype.getPropertyNames = function (results) {
-  return this._content.batchTable.getPropertyNames(this._batchId, results);
-};
+	return this._content.batchTable.getPropertyNames(this._batchId, results)
+}
 
 /**
  * Returns a copy of the value of the feature's property with the given name. This includes properties from this feature's
@@ -187,8 +187,8 @@ Cesium3DTileFeature.prototype.getPropertyNames = function (results) {
  * }
  */
 Cesium3DTileFeature.prototype.getProperty = function (name) {
-  return this._content.batchTable.getProperty(this._batchId, name);
-};
+	return this._content.batchTable.getProperty(this._batchId, name)
+}
 
 /**
  * Sets the value of the feature's property with the given name.
@@ -214,13 +214,13 @@ Cesium3DTileFeature.prototype.getProperty = function (name) {
  * }
  */
 Cesium3DTileFeature.prototype.setProperty = function (name, value) {
-  this._content.batchTable.setProperty(this._batchId, name, value);
+	this._content.batchTable.setProperty(this._batchId, name, value)
 
-  // PERFORMANCE_IDEA: Probably overkill, but maybe only mark the tile dirty if the
-  // property is in one of the style's expressions or - if it can be done quickly -
-  // if the new property value changed the result of an expression.
-  this._content.featurePropertiesDirty = true;
-};
+	// PERFORMANCE_IDEA: Probably overkill, but maybe only mark the tile dirty if the
+	// property is in one of the style's expressions or - if it can be done quickly -
+	// if the new property value changed the result of an expression.
+	this._content.featurePropertiesDirty = true
+}
 
 /**
  * Returns whether the feature's class name equals <code>className</code>. Unlike {@link Cesium3DTileFeature#isClass}
@@ -235,8 +235,8 @@ Cesium3DTileFeature.prototype.setProperty = function (name, value) {
  * @private
  */
 Cesium3DTileFeature.prototype.isExactClass = function (className) {
-  return this._content.batchTable.isExactClass(this._batchId, className);
-};
+	return this._content.batchTable.isExactClass(this._batchId, className)
+}
 
 /**
  * Returns whether the feature's class or any inherited classes are named <code>className</code>.
@@ -250,8 +250,8 @@ Cesium3DTileFeature.prototype.isExactClass = function (className) {
  * @private
  */
 Cesium3DTileFeature.prototype.isClass = function (className) {
-  return this._content.batchTable.isClass(this._batchId, className);
-};
+	return this._content.batchTable.isClass(this._batchId, className)
+}
 
 /**
  * Returns the feature's class name.
@@ -264,6 +264,6 @@ Cesium3DTileFeature.prototype.isClass = function (className) {
  * @private
  */
 Cesium3DTileFeature.prototype.getExactClassName = function () {
-  return this._content.batchTable.getExactClassName(this._batchId);
-};
-export default Cesium3DTileFeature;
+	return this._content.batchTable.getExactClassName(this._batchId)
+}
+export default Cesium3DTileFeature

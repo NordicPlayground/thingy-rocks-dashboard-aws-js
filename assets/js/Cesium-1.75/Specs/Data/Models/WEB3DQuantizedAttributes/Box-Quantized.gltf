@@ -18,22 +18,8 @@
       "extensions": {
         "WEB3D_quantized_attributes": {
           "decodeMatrix": [
-            0.000015259021896696422,
-            0,
-            0,
-            0,
-            0,
-            0.000015259021896696422,
-            0,
-            0,
-            0,
-            0,
-            0.000015259021896696422,
-            0,
-            -0.5,
-            -0.5,
-            -0.5,
-            1
+            0.000015259021896696422, 0, 0, 0, 0, 0.000015259021896696422, 0, 0,
+            0, 0, 0.000015259021896696422, 0, -0.5, -0.5, -0.5, 1
           ],
           "decodedMin": [-0.5, -0.5, -0.5],
           "decodedMax": [0.5, 0.5, 0.5]
@@ -50,22 +36,8 @@
       "extensions": {
         "WEB3D_quantized_attributes": {
           "decodeMatrix": [
-            0.000030518043793392844,
-            0,
-            0,
-            0,
-            0,
-            0.000030518043793392844,
-            0,
-            0,
-            0,
-            0,
-            0.000030518043793392844,
-            0,
-            -1,
-            -1,
-            -1,
-            1
+            0.000030518043793392844, 0, 0, 0, 0, 0.000030518043793392844, 0, 0,
+            0, 0, 0.000030518043793392844, 0, -1, -1, -1, 1
           ]
         }
       }
@@ -102,27 +74,15 @@
       "uri": "data:application/octet-stream;base64,AAABAAIAAwACAAEABAAFAAYABwAGAAUACAAJAAoACwAKAAkADAANAA4ADwAOAA0AEAARABIAEwASABEAFAAVABYAFwAWABUAAAAAAP////8AAP//AAD///////////////8AAP//AAAAAP////8AAAAAAAAAAAAA//////////8AAP///////wAA//8AAAAAAAD/////////////AAD//wAA/////wAAAAAAAP//AAD/////AAAAAAAAAAD//wAAAAAAAAAAAAD//wAA//8AAAAA/////wAA/3//f////3//f////3//f////3//f////38AAP9//38AAP9//38AAP9//38AAP9/////f/9/////f/9/////f/9/////f/9//3////9//3////9//3////9//3////9/AAD/f/9/AAD/f/9/AAD/f/9/AAD/f/9//3//fwAA/3//fwAA/3//fwAA/3//fwAA"
     }
   },
-  "extensionsUsed": [
-    "WEB3D_quantized_attributes"
-  ],
+  "extensionsUsed": ["WEB3D_quantized_attributes"],
   "materials": {
     "Effect-Red": {
       "name": "Red",
       "technique": "technique0",
       "values": {
-        "diffuse": [
-          0.8,
-          0,
-          0,
-          1
-        ],
+        "diffuse": [0.8, 0, 0, 1],
         "shininess": 256,
-        "specular": [
-          0.2,
-          0.2,
-          0.2,
-          1
-        ]
+        "specular": [0.2, 0.2, 0.2, 1]
       }
     }
   },
@@ -145,60 +105,19 @@
   "nodes": {
     "Geometry-mesh002Node": {
       "children": [],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
-      "meshes": [
-        "Geometry-mesh002"
-      ],
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      "meshes": ["Geometry-mesh002"],
       "name": "Mesh"
     },
     "node_1": {
-      "children": [
-        "Geometry-mesh002Node"
-      ],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        -1,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
+      "children": ["Geometry-mesh002Node"],
+      "matrix": [1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       "name": "Y_UP_Transform"
     }
   },
   "programs": {
     "program_0": {
-      "attributes": [
-        "a_normal",
-        "a_position"
-      ],
+      "attributes": ["a_normal", "a_position"],
       "fragmentShader": "Box0FS",
       "vertexShader": "Box0VS"
     }
@@ -206,9 +125,7 @@
   "scene": "defaultScene",
   "scenes": {
     "defaultScene": {
-      "nodes": [
-        "node_1"
-      ]
+      "nodes": ["node_1"]
     }
   },
   "shaders": {
@@ -261,10 +178,7 @@
       },
       "program": "program_0",
       "states": {
-        "enable": [
-          2929,
-          2884
-        ]
+        "enable": [2929, 2884]
       },
       "uniforms": {
         "u_diffuse": "diffuse",

@@ -7,16 +7,8 @@
       "componentType": 5126,
       "count": 24,
       "type": "VEC3",
-      "min": [
-        1215011.25,
-        -4736310,
-        4081601.25
-      ],
-      "max": [
-        1215012.625,
-        -4736308.5,
-        4081602.75
-      ]
+      "min": [1215011.25, -4736310, 4081601.25],
+      "max": [1215012.625, -4736308.5, 4081602.75]
     },
     "accessor_normal": {
       "bufferView": "bufferView_0",
@@ -25,16 +17,8 @@
       "componentType": 5126,
       "count": 24,
       "type": "VEC3",
-      "min": [
-        -0.968635618686676,
-        -0.7415555715560913,
-        -0.7655670642852783
-      ],
-      "max": [
-        0.968635618686676,
-        0.7415555715560913,
-        0.7655670642852783
-      ]
+      "min": [-0.968635618686676, -0.7415555715560913, -0.7655670642852783],
+      "max": [0.968635618686676, 0.7415555715560913, 0.7655670642852783]
     },
     "accessor_uv": {
       "bufferView": "bufferView_0",
@@ -43,14 +27,8 @@
       "componentType": 5126,
       "count": 24,
       "type": "VEC2",
-      "min": [
-        0,
-        0
-      ],
-      "max": [
-        1,
-        1
-      ]
+      "min": [0, 0],
+      "max": [1, 1]
     },
     "accessor_index_0": {
       "bufferView": "bufferView_1",
@@ -59,12 +37,8 @@
       "componentType": 5123,
       "count": 36,
       "type": "SCALAR",
-      "min": [
-        0
-      ],
-      "max": [
-        23
-      ]
+      "min": [0],
+      "max": [23]
     }
   },
   "asset": {
@@ -97,39 +71,17 @@
       "target": 34963
     }
   },
-  "extensionsRequired": [
-    "KHR_materials_common"
-  ],
+  "extensionsRequired": ["KHR_materials_common"],
   "images": {},
   "materials": {
     "material_0": {
       "extensions": {},
       "technique": "technique0",
       "values": {
-        "ambient": [
-          0.1,
-          0.1,
-          0.1,
-          1
-        ],
-        "diffuse": [
-          1,
-          1,
-          1,
-          1
-        ],
-        "emission": [
-          0,
-          0,
-          0,
-          1
-        ],
-        "specular": [
-          0,
-          0,
-          0,
-          1
-        ],
+        "ambient": [0.1, 0.1, 0.1, 1],
+        "diffuse": [1, 1, 1, 1],
+        "emission": [0, 0, 0, 1],
+        "specular": [0, 0, 0, 1],
         "shininess": 0,
         "transparency": 1
       }
@@ -154,50 +106,12 @@
   "nodes": {
     "rootNode": {
       "children": [],
-      "meshes": [
-        "mesh"
-      ],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1
-      ]
+      "meshes": ["mesh"],
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
     },
     "node_transform": {
-      "children": [
-        "rootNode"
-      ],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        -1,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
+      "children": ["rootNode"],
+      "matrix": [1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       "name": "Y_UP_Transform"
     }
   },
@@ -205,9 +119,7 @@
   "scene": "scene",
   "scenes": {
     "scene": {
-      "nodes": [
-        "node_transform"
-      ]
+      "nodes": ["node_transform"]
     }
   },
   "textures": {},
@@ -215,11 +127,7 @@
   "cameras": {},
   "programs": {
     "program0": {
-      "attributes": [
-        "a_position",
-        "a_normal",
-        "a_texcoord_0"
-      ],
+      "attributes": ["a_position", "a_normal", "a_texcoord_0"],
       "fragmentShader": "fragmentShader0",
       "vertexShader": "vertexShader0"
     }
@@ -289,10 +197,7 @@
       },
       "program": "program0",
       "states": {
-        "enable": [
-          2884,
-          2929
-        ]
+        "enable": [2884, 2929]
       },
       "uniforms": {
         "u_modelViewMatrix": "modelViewMatrix",

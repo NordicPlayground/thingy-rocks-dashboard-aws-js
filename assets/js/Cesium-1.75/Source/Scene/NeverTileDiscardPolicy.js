@@ -13,8 +13,8 @@ function NeverTileDiscardPolicy(options) {}
  * @returns {Boolean} True if the discard policy is ready to process images; otherwise, false.
  */
 NeverTileDiscardPolicy.prototype.isReady = function () {
-  return true;
-};
+	return true
+}
 
 /**
  * Given a tile image, decide whether to discard that image.
@@ -23,6 +23,6 @@ NeverTileDiscardPolicy.prototype.isReady = function () {
  * @returns {Boolean} True if the image should be discarded; otherwise, false.
  */
 NeverTileDiscardPolicy.prototype.shouldDiscardImage = function (image) {
-  return false;
-};
-export default NeverTileDiscardPolicy;
+	return false
+}
+export default NeverTileDiscardPolicy

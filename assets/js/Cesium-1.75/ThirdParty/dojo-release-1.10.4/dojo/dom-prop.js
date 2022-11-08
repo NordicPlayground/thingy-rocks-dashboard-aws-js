@@ -1,5 +1,13 @@
-define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-style", "./dom-construct", "./_base/connect"],
-		function(exports, dojo, has, lang, dom, style, ctr, conn){
+define([
+	'exports',
+	'./_base/kernel',
+	'./sniff',
+	'./_base/lang',
+	'./dom',
+	'./dom-style',
+	'./dom-construct',
+	'./_base/connect',
+], function (exports, dojo, has, lang, dom, style, ctr, conn) {
 	// module:
 	//		dojo/dom-prop
 	// summary:
@@ -12,44 +20,49 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-
 	// =============================
 
 	// helper to connect events
-	var _evtHdlrMap = {}, _ctr = 0, _attrId = dojo._scopeName + "attrid";
-	has.add('dom-textContent', function (global, doc, element) { return 'textContent' in element; });
+	var _evtHdlrMap = {},
+		_ctr = 0,
+		_attrId = dojo._scopeName + 'attrid'
+	has.add('dom-textContent', function (global, doc, element) {
+		return 'textContent' in element
+	})
 
 	exports.names = {
 		// properties renamed to avoid clashes with reserved words
-		"class": "className",
-		"for": "htmlFor",
+		class: 'className',
+		for: 'htmlFor',
 		// properties written as camelCase
-		tabindex: "tabIndex",
-		readonly: "readOnly",
-		colspan: "colSpan",
-		frameborder: "frameBorder",
-		rowspan: "rowSpan",
-		textcontent: "textContent",
-		valuetype: "valueType"
-	};
-	
-	function getText(/*DOMNode*/node){
+		tabindex: 'tabIndex',
+		readonly: 'readOnly',
+		colspan: 'colSpan',
+		frameborder: 'frameBorder',
+		rowspan: 'rowSpan',
+		textcontent: 'textContent',
+		valuetype: 'valueType',
+	}
+
+	function getText(/*DOMNode*/ node) {
 		// summary:
 		//		recursion method for get('textContent') to use. Gets text value for a node.
 		// description:
 		//		Juse uses nodedValue so things like <br/> tags do not end up in
 		//		the text as any sort of line return.
-		var text = "", ch = node.childNodes;
-		for(var i = 0, n; n = ch[i]; i++){
+		var text = '',
+			ch = node.childNodes
+		for (var i = 0, n; (n = ch[i]); i++) {
 			//Skip comments.
-			if(n.nodeType != 8){
-				if(n.nodeType == 1){
-					text += getText(n);
-				}else{
-					text += n.nodeValue;
+			if (n.nodeType != 8) {
+				if (n.nodeType == 1) {
+					text += getText(n)
+				} else {
+					text += n.nodeValue
 				}
 			}
 		}
-		return text;
+		return text
 	}
 
-	exports.get = function getProp(/*DOMNode|String*/ node, /*String*/ name){
+	exports.get = function getProp(/*DOMNode|String*/ node, /*String*/ name) {
 		// summary:
 		//		Gets a property on an HTML element.
 		// description:
@@ -70,17 +83,22 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-
 		//	|		domProp.get("nodeId", "foo");
 		//	|	});
 
-		node = dom.byId(node);
-		var lc = name.toLowerCase(), propName = exports.names[lc] || name;
-		
-		if(propName == "textContent" && !has("dom-textContent")){
-			return getText(node);
-		}
-		
-		return node[propName];	// Anything
-	};
+		node = dom.byId(node)
+		var lc = name.toLowerCase(),
+			propName = exports.names[lc] || name
 
-	exports.set = function setProp(/*DOMNode|String*/ node, /*String|Object*/ name, /*String?*/ value){
+		if (propName == 'textContent' && !has('dom-textContent')) {
+			return getText(node)
+		}
+
+		return node[propName] // Anything
+	}
+
+	exports.set = function setProp(
+		/*DOMNode|String*/ node,
+		/*String|Object*/ name,
+		/*String?*/ value,
+	) {
 		// summary:
 		//		Sets a property on an HTML element.
 		// description:
@@ -121,68 +139,83 @@ define(["exports", "./_base/kernel", "./sniff", "./_base/lang", "./dom", "./dom-
 		//	|		});
 		//	|	});
 
-		node = dom.byId(node);
-		var l = arguments.length;
-		if(l == 2 && typeof name != "string"){ // inline'd type check
+		node = dom.byId(node)
+		var l = arguments.length
+		if (l == 2 && typeof name != 'string') {
+			// inline'd type check
 			// the object form of setter: the 2nd argument is a dictionary
-			for(var x in name){
-				exports.set(node, x, name[x]);
+			for (var x in name) {
+				exports.set(node, x, name[x])
 			}
-			return node; // DomNode
+			return node // DomNode
 		}
-		var lc = name.toLowerCase(), propName = exports.names[lc] || name;
-		if(propName == "style" && typeof value != "string"){ // inline'd type check
+		var lc = name.toLowerCase(),
+			propName = exports.names[lc] || name
+		if (propName == 'style' && typeof value != 'string') {
+			// inline'd type check
 			// special case: setting a style
-			style.set(node, value);
-			return node; // DomNode
+			style.set(node, value)
+			return node // DomNode
 		}
-		if(propName == "innerHTML"){
+		if (propName == 'innerHTML') {
 			// special case: assigning HTML
 			// the hash lists elements with read-only innerHTML on IE
-			if(has("ie") && node.tagName.toLowerCase() in {col: 1, colgroup: 1,
-						table: 1, tbody: 1, tfoot: 1, thead: 1, tr: 1, title: 1}){
-				ctr.empty(node);
-				node.appendChild(ctr.toDom(value, node.ownerDocument));
-			}else{
-				node[propName] = value;
+			if (
+				has('ie') &&
+				node.tagName.toLowerCase() in
+					{
+						col: 1,
+						colgroup: 1,
+						table: 1,
+						tbody: 1,
+						tfoot: 1,
+						thead: 1,
+						tr: 1,
+						title: 1,
+					}
+			) {
+				ctr.empty(node)
+				node.appendChild(ctr.toDom(value, node.ownerDocument))
+			} else {
+				node[propName] = value
 			}
-			return node; // DomNode
+			return node // DomNode
 		}
-		if(propName == "textContent" && !has("dom-textContent")) {
-			ctr.empty(node);
-			node.appendChild(node.ownerDocument.createTextNode(value));
-			return node;
+		if (propName == 'textContent' && !has('dom-textContent')) {
+			ctr.empty(node)
+			node.appendChild(node.ownerDocument.createTextNode(value))
+			return node
 		}
-		if(lang.isFunction(value)){
+		if (lang.isFunction(value)) {
 			// special case: assigning an event handler
 			// clobber if we can
-			var attrId = node[_attrId];
-			if(!attrId){
-				attrId = _ctr++;
-				node[_attrId] = attrId;
+			var attrId = node[_attrId]
+			if (!attrId) {
+				attrId = _ctr++
+				node[_attrId] = attrId
 			}
-			if(!_evtHdlrMap[attrId]){
-				_evtHdlrMap[attrId] = {};
+			if (!_evtHdlrMap[attrId]) {
+				_evtHdlrMap[attrId] = {}
 			}
-			var h = _evtHdlrMap[attrId][propName];
-			if(h){
+			var h = _evtHdlrMap[attrId][propName]
+			if (h) {
 				//h.remove();
-				conn.disconnect(h);
-			}else{
-				try{
-					delete node[propName];
-				}catch(e){}
+				conn.disconnect(h)
+			} else {
+				try {
+					delete node[propName]
+				} catch (e) {}
 			}
 			// ensure that event objects are normalized, etc.
-			if(value){
+			if (value) {
 				//_evtHdlrMap[attrId][propName] = on(node, propName, value);
-				_evtHdlrMap[attrId][propName] = conn.connect(node, propName, value);
-			}else{
-				node[propName] = null;
+				_evtHdlrMap[attrId][propName] = conn.connect(node, propName, value)
+			} else {
+				node[propName] = null
 			}
-			return node; // DomNode
+			return node // DomNode
 		}
-		node[propName] = value;
-		return node;	// DomNode
-	};
-});
+		node[propName] = value
+		return node // DomNode
+	}
+})

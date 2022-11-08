@@ -1,4 +1,4 @@
-import WebGLConstants from "../Core/WebGLConstants.js";
+import WebGLConstants from '../Core/WebGLConstants.js'
 
 /**
  * Enumerates all possible filters used when magnifying WebGL textures.
@@ -8,21 +8,21 @@ import WebGLConstants from "../Core/WebGLConstants.js";
  * @see TextureMinificationFilter
  */
 var TextureMagnificationFilter = {
-  /**
-   * Samples the texture by returning the closest pixel.
-   *
-   * @type {Number}
-   * @constant
-   */
-  NEAREST: WebGLConstants.NEAREST,
-  /**
-   * Samples the texture through bi-linear interpolation of the four nearest pixels. This produces smoother results than <code>NEAREST</code> filtering.
-   *
-   * @type {Number}
-   * @constant
-   */
-  LINEAR: WebGLConstants.LINEAR,
-};
+	/**
+	 * Samples the texture by returning the closest pixel.
+	 *
+	 * @type {Number}
+	 * @constant
+	 */
+	NEAREST: WebGLConstants.NEAREST,
+	/**
+	 * Samples the texture through bi-linear interpolation of the four nearest pixels. This produces smoother results than <code>NEAREST</code> filtering.
+	 *
+	 * @type {Number}
+	 * @constant
+	 */
+	LINEAR: WebGLConstants.LINEAR,
+}
 
 /**
  * Validates the given <code>textureMinificationFilter</code> with respect to the possible enum values.
@@ -32,10 +32,10 @@ var TextureMagnificationFilter = {
  * @private
  */
 TextureMagnificationFilter.validate = function (textureMagnificationFilter) {
-  return (
-    textureMagnificationFilter === TextureMagnificationFilter.NEAREST ||
-    textureMagnificationFilter === TextureMagnificationFilter.LINEAR
-  );
-};
+	return (
+		textureMagnificationFilter === TextureMagnificationFilter.NEAREST ||
+		textureMagnificationFilter === TextureMagnificationFilter.LINEAR
+	)
+}
 
-export default Object.freeze(TextureMagnificationFilter);
+export default Object.freeze(TextureMagnificationFilter)

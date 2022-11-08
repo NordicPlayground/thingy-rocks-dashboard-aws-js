@@ -18,16 +18,8 @@
     {
       "componentType": 5126,
       "count": 24,
-      "max": [
-        0.5,
-        0.5,
-        0.5
-      ],
-      "min": [
-        -0.5,
-        -0.5,
-        -0.5
-      ],
+      "max": [0.5, 0.5, 0.5],
+      "min": [-0.5, -0.5, -0.5],
       "type": "VEC3"
     },
     {
@@ -59,19 +51,12 @@
       "name": "Default",
       "pbrMetallicRoughness": {
         "baseColorFactor": [
-          0.800000011920929,
-          0.800000011920929,
-          0.800000011920929,
-          1
+          0.800000011920929, 0.800000011920929, 0.800000011920929, 1
         ],
         "metallicFactor": 0.100000001490116,
         "roughnessFactor": 0.990000005960464
       },
-      "emissiveFactor": [
-        0,
-        0,
-        0
-      ],
+      "emissiveFactor": [0, 0, 0],
       "alphaMode": "OPAQUE",
       "doubleSided": false
     }
@@ -107,86 +92,30 @@
   ],
   "nodes": [
     {
-      "children": [
-        1,
-        2,
-        3
-      ],
+      "children": [1, 2, 3],
       "name": "RootNode",
-      "rotation": [
-        0,
-        0,
-        0,
-        1
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ]
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "translation": [0, 0, 0]
     },
     {
       "name": "Mesh",
-      "rotation": [
-        0,
-        0,
-        0,
-        1
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ]
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "translation": [0, 0, 0]
     },
     {
       "mesh": 0,
       "name": "Cube",
-      "rotation": [
-        0,
-        0,
-        0,
-        1
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ]
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "translation": [0, 0, 0]
     },
     {
       "name": "Texture Group",
-      "rotation": [
-        0,
-        0,
-        0,
-        1
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ],
-      "translation": [
-        0,
-        0,
-        0
-      ]
+      "rotation": [0, 0, 0, 1],
+      "scale": [1, 1, 1],
+      "translation": [0, 0, 0]
     }
   ],
   "samplers": [
@@ -199,15 +128,9 @@
   "scenes": [
     {
       "name": "Root Scene",
-      "nodes": [
-        0
-      ]
+      "nodes": [0]
     }
   ],
-  "extensionsRequired": [
-    "KHR_draco_mesh_compression"
-  ],
-  "extensionsUsed": [
-    "KHR_draco_mesh_compression"
-  ]
+  "extensionsRequired": ["KHR_draco_mesh_compression"],
+  "extensionsUsed": ["KHR_draco_mesh_compression"]
 }

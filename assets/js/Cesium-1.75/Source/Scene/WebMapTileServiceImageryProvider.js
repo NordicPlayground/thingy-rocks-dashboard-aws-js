@@ -1,21 +1,21 @@
-import combine from "../Core/combine.js";
-import Credit from "../Core/Credit.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Event from "../Core/Event.js";
-import Rectangle from "../Core/Rectangle.js";
-import Resource from "../Core/Resource.js";
-import WebMercatorTilingScheme from "../Core/WebMercatorTilingScheme.js";
-import when from "../ThirdParty/when.js";
-import ImageryProvider from "./ImageryProvider.js";
-import TimeDynamicImagery from "./TimeDynamicImagery.js";
+import combine from '../Core/combine.js'
+import Credit from '../Core/Credit.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Event from '../Core/Event.js'
+import Rectangle from '../Core/Rectangle.js'
+import Resource from '../Core/Resource.js'
+import WebMercatorTilingScheme from '../Core/WebMercatorTilingScheme.js'
+import when from '../ThirdParty/when.js'
+import ImageryProvider from './ImageryProvider.js'
+import TimeDynamicImagery from './TimeDynamicImagery.js'
 
 var defaultParameters = Object.freeze({
-  service: "WMTS",
-  version: "1.0.0",
-  request: "GetTile",
-});
+	service: 'WMTS',
+	version: '1.0.0',
+	request: 'GetTile',
+})
 
 /**
  * @typedef {Object} WebMapTileServiceImageryProvider.ConstructorOptions
@@ -115,509 +115,509 @@ var defaultParameters = Object.freeze({
  * @see UrlTemplateImageryProvider
  */
 function WebMapTileServiceImageryProvider(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(options.url)) {
-    throw new DeveloperError("options.url is required.");
-  }
-  if (!defined(options.layer)) {
-    throw new DeveloperError("options.layer is required.");
-  }
-  if (!defined(options.style)) {
-    throw new DeveloperError("options.style is required.");
-  }
-  if (!defined(options.tileMatrixSetID)) {
-    throw new DeveloperError("options.tileMatrixSetID is required.");
-  }
-  if (defined(options.times) && !defined(options.clock)) {
-    throw new DeveloperError(
-      "options.times was specified, so options.clock is required."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(options.url)) {
+		throw new DeveloperError('options.url is required.')
+	}
+	if (!defined(options.layer)) {
+		throw new DeveloperError('options.layer is required.')
+	}
+	if (!defined(options.style)) {
+		throw new DeveloperError('options.style is required.')
+	}
+	if (!defined(options.tileMatrixSetID)) {
+		throw new DeveloperError('options.tileMatrixSetID is required.')
+	}
+	if (defined(options.times) && !defined(options.clock)) {
+		throw new DeveloperError(
+			'options.times was specified, so options.clock is required.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  /**
-   * The default alpha blending value of this provider, with 0.0 representing fully transparent and
-   * 1.0 representing fully opaque.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultAlpha = undefined;
+	/**
+	 * The default alpha blending value of this provider, with 0.0 representing fully transparent and
+	 * 1.0 representing fully opaque.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultAlpha = undefined
 
-  /**
-   * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-   * 1.0 representing fully opaque.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultNightAlpha = undefined;
+	/**
+	 * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
+	 * 1.0 representing fully opaque.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultNightAlpha = undefined
 
-  /**
-   * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-   * 1.0 representing fully opaque.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultDayAlpha = undefined;
+	/**
+	 * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
+	 * 1.0 representing fully opaque.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultDayAlpha = undefined
 
-  /**
-   * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
-   * makes the imagery darker while greater than 1.0 makes it brighter.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultBrightness = undefined;
+	/**
+	 * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
+	 * makes the imagery darker while greater than 1.0 makes it brighter.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultBrightness = undefined
 
-  /**
-   * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
-   * the contrast while greater than 1.0 increases it.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultContrast = undefined;
+	/**
+	 * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
+	 * the contrast while greater than 1.0 increases it.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultContrast = undefined
 
-  /**
-   * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultHue = undefined;
+	/**
+	 * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultHue = undefined
 
-  /**
-   * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
-   * saturation while greater than 1.0 increases it.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultSaturation = undefined;
+	/**
+	 * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
+	 * saturation while greater than 1.0 increases it.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultSaturation = undefined
 
-  /**
-   * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultGamma = undefined;
+	/**
+	 * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultGamma = undefined
 
-  /**
-   * The default texture minification filter to apply to this provider.
-   *
-   * @type {TextureMinificationFilter}
-   * @default undefined
-   */
-  this.defaultMinificationFilter = undefined;
+	/**
+	 * The default texture minification filter to apply to this provider.
+	 *
+	 * @type {TextureMinificationFilter}
+	 * @default undefined
+	 */
+	this.defaultMinificationFilter = undefined
 
-  /**
-   * The default texture magnification filter to apply to this provider.
-   *
-   * @type {TextureMagnificationFilter}
-   * @default undefined
-   */
-  this.defaultMagnificationFilter = undefined;
+	/**
+	 * The default texture magnification filter to apply to this provider.
+	 *
+	 * @type {TextureMagnificationFilter}
+	 * @default undefined
+	 */
+	this.defaultMagnificationFilter = undefined
 
-  var resource = Resource.createIfNeeded(options.url);
+	var resource = Resource.createIfNeeded(options.url)
 
-  var style = options.style;
-  var tileMatrixSetID = options.tileMatrixSetID;
-  var url = resource.url;
-  if (url.indexOf("{") >= 0) {
-    var templateValues = {
-      style: style,
-      Style: style,
-      TileMatrixSet: tileMatrixSetID,
-    };
+	var style = options.style
+	var tileMatrixSetID = options.tileMatrixSetID
+	var url = resource.url
+	if (url.indexOf('{') >= 0) {
+		var templateValues = {
+			style: style,
+			Style: style,
+			TileMatrixSet: tileMatrixSetID,
+		}
 
-    resource.setTemplateValues(templateValues);
-    this._useKvp = false;
-  } else {
-    resource.setQueryParameters(defaultParameters);
-    this._useKvp = true;
-  }
+		resource.setTemplateValues(templateValues)
+		this._useKvp = false
+	} else {
+		resource.setQueryParameters(defaultParameters)
+		this._useKvp = true
+	}
 
-  this._resource = resource;
-  this._layer = options.layer;
-  this._style = style;
-  this._tileMatrixSetID = tileMatrixSetID;
-  this._tileMatrixLabels = options.tileMatrixLabels;
-  this._format = defaultValue(options.format, "image/jpeg");
-  this._tileDiscardPolicy = options.tileDiscardPolicy;
+	this._resource = resource
+	this._layer = options.layer
+	this._style = style
+	this._tileMatrixSetID = tileMatrixSetID
+	this._tileMatrixLabels = options.tileMatrixLabels
+	this._format = defaultValue(options.format, 'image/jpeg')
+	this._tileDiscardPolicy = options.tileDiscardPolicy
 
-  this._tilingScheme = defined(options.tilingScheme)
-    ? options.tilingScheme
-    : new WebMercatorTilingScheme({ ellipsoid: options.ellipsoid });
-  this._tileWidth = defaultValue(options.tileWidth, 256);
-  this._tileHeight = defaultValue(options.tileHeight, 256);
+	this._tilingScheme = defined(options.tilingScheme)
+		? options.tilingScheme
+		: new WebMercatorTilingScheme({ ellipsoid: options.ellipsoid })
+	this._tileWidth = defaultValue(options.tileWidth, 256)
+	this._tileHeight = defaultValue(options.tileHeight, 256)
 
-  this._minimumLevel = defaultValue(options.minimumLevel, 0);
-  this._maximumLevel = options.maximumLevel;
+	this._minimumLevel = defaultValue(options.minimumLevel, 0)
+	this._maximumLevel = options.maximumLevel
 
-  this._rectangle = defaultValue(
-    options.rectangle,
-    this._tilingScheme.rectangle
-  );
-  this._dimensions = options.dimensions;
+	this._rectangle = defaultValue(
+		options.rectangle,
+		this._tilingScheme.rectangle,
+	)
+	this._dimensions = options.dimensions
 
-  var that = this;
-  this._reload = undefined;
-  if (defined(options.times)) {
-    this._timeDynamicImagery = new TimeDynamicImagery({
-      clock: options.clock,
-      times: options.times,
-      requestImageFunction: function (x, y, level, request, interval) {
-        return requestImage(that, x, y, level, request, interval);
-      },
-      reloadFunction: function () {
-        if (defined(that._reload)) {
-          that._reload();
-        }
-      },
-    });
-  }
+	var that = this
+	this._reload = undefined
+	if (defined(options.times)) {
+		this._timeDynamicImagery = new TimeDynamicImagery({
+			clock: options.clock,
+			times: options.times,
+			requestImageFunction: function (x, y, level, request, interval) {
+				return requestImage(that, x, y, level, request, interval)
+			},
+			reloadFunction: function () {
+				if (defined(that._reload)) {
+					that._reload()
+				}
+			},
+		})
+	}
 
-  this._readyPromise = when.resolve(true);
+	this._readyPromise = when.resolve(true)
 
-  // Check the number of tiles at the minimum level.  If it's more than four,
-  // throw an exception, because starting at the higher minimum
-  // level will cause too many tiles to be downloaded and rendered.
-  var swTile = this._tilingScheme.positionToTileXY(
-    Rectangle.southwest(this._rectangle),
-    this._minimumLevel
-  );
-  var neTile = this._tilingScheme.positionToTileXY(
-    Rectangle.northeast(this._rectangle),
-    this._minimumLevel
-  );
-  var tileCount =
-    (Math.abs(neTile.x - swTile.x) + 1) * (Math.abs(neTile.y - swTile.y) + 1);
-  //>>includeStart('debug', pragmas.debug);
-  if (tileCount > 4) {
-    throw new DeveloperError(
-      "The imagery provider's rectangle and minimumLevel indicate that there are " +
-        tileCount +
-        " tiles at the minimum level. Imagery providers with more than four tiles at the minimum level are not supported."
-    );
-  }
-  //>>includeEnd('debug');
+	// Check the number of tiles at the minimum level.  If it's more than four,
+	// throw an exception, because starting at the higher minimum
+	// level will cause too many tiles to be downloaded and rendered.
+	var swTile = this._tilingScheme.positionToTileXY(
+		Rectangle.southwest(this._rectangle),
+		this._minimumLevel,
+	)
+	var neTile = this._tilingScheme.positionToTileXY(
+		Rectangle.northeast(this._rectangle),
+		this._minimumLevel,
+	)
+	var tileCount =
+		(Math.abs(neTile.x - swTile.x) + 1) * (Math.abs(neTile.y - swTile.y) + 1)
+	//>>includeStart('debug', pragmas.debug);
+	if (tileCount > 4) {
+		throw new DeveloperError(
+			"The imagery provider's rectangle and minimumLevel indicate that there are " +
+				tileCount +
+				' tiles at the minimum level. Imagery providers with more than four tiles at the minimum level are not supported.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  this._errorEvent = new Event();
+	this._errorEvent = new Event()
 
-  var credit = options.credit;
-  this._credit = typeof credit === "string" ? new Credit(credit) : credit;
+	var credit = options.credit
+	this._credit = typeof credit === 'string' ? new Credit(credit) : credit
 
-  this._subdomains = options.subdomains;
-  if (Array.isArray(this._subdomains)) {
-    this._subdomains = this._subdomains.slice();
-  } else if (defined(this._subdomains) && this._subdomains.length > 0) {
-    this._subdomains = this._subdomains.split("");
-  } else {
-    this._subdomains = ["a", "b", "c"];
-  }
+	this._subdomains = options.subdomains
+	if (Array.isArray(this._subdomains)) {
+		this._subdomains = this._subdomains.slice()
+	} else if (defined(this._subdomains) && this._subdomains.length > 0) {
+		this._subdomains = this._subdomains.split('')
+	} else {
+		this._subdomains = ['a', 'b', 'c']
+	}
 }
 
 function requestImage(imageryProvider, col, row, level, request, interval) {
-  var labels = imageryProvider._tileMatrixLabels;
-  var tileMatrix = defined(labels) ? labels[level] : level.toString();
-  var subdomains = imageryProvider._subdomains;
-  var staticDimensions = imageryProvider._dimensions;
-  var dynamicIntervalData = defined(interval) ? interval.data : undefined;
+	var labels = imageryProvider._tileMatrixLabels
+	var tileMatrix = defined(labels) ? labels[level] : level.toString()
+	var subdomains = imageryProvider._subdomains
+	var staticDimensions = imageryProvider._dimensions
+	var dynamicIntervalData = defined(interval) ? interval.data : undefined
 
-  var resource;
-  if (!imageryProvider._useKvp) {
-    var templateValues = {
-      TileMatrix: tileMatrix,
-      TileRow: row.toString(),
-      TileCol: col.toString(),
-      s: subdomains[(col + row + level) % subdomains.length],
-    };
+	var resource
+	if (!imageryProvider._useKvp) {
+		var templateValues = {
+			TileMatrix: tileMatrix,
+			TileRow: row.toString(),
+			TileCol: col.toString(),
+			s: subdomains[(col + row + level) % subdomains.length],
+		}
 
-    resource = imageryProvider._resource.getDerivedResource({
-      request: request,
-    });
-    resource.setTemplateValues(templateValues);
+		resource = imageryProvider._resource.getDerivedResource({
+			request: request,
+		})
+		resource.setTemplateValues(templateValues)
 
-    if (defined(staticDimensions)) {
-      resource.setTemplateValues(staticDimensions);
-    }
+		if (defined(staticDimensions)) {
+			resource.setTemplateValues(staticDimensions)
+		}
 
-    if (defined(dynamicIntervalData)) {
-      resource.setTemplateValues(dynamicIntervalData);
-    }
-  } else {
-    // build KVP request
-    var query = {};
-    query.tilematrix = tileMatrix;
-    query.layer = imageryProvider._layer;
-    query.style = imageryProvider._style;
-    query.tilerow = row;
-    query.tilecol = col;
-    query.tilematrixset = imageryProvider._tileMatrixSetID;
-    query.format = imageryProvider._format;
+		if (defined(dynamicIntervalData)) {
+			resource.setTemplateValues(dynamicIntervalData)
+		}
+	} else {
+		// build KVP request
+		var query = {}
+		query.tilematrix = tileMatrix
+		query.layer = imageryProvider._layer
+		query.style = imageryProvider._style
+		query.tilerow = row
+		query.tilecol = col
+		query.tilematrixset = imageryProvider._tileMatrixSetID
+		query.format = imageryProvider._format
 
-    if (defined(staticDimensions)) {
-      query = combine(query, staticDimensions);
-    }
+		if (defined(staticDimensions)) {
+			query = combine(query, staticDimensions)
+		}
 
-    if (defined(dynamicIntervalData)) {
-      query = combine(query, dynamicIntervalData);
-    }
-    resource = imageryProvider._resource.getDerivedResource({
-      queryParameters: query,
-      request: request,
-    });
-  }
+		if (defined(dynamicIntervalData)) {
+			query = combine(query, dynamicIntervalData)
+		}
+		resource = imageryProvider._resource.getDerivedResource({
+			queryParameters: query,
+			request: request,
+		})
+	}
 
-  return ImageryProvider.loadImage(imageryProvider, resource);
+	return ImageryProvider.loadImage(imageryProvider, resource)
 }
 
 Object.defineProperties(WebMapTileServiceImageryProvider.prototype, {
-  /**
-   * Gets the URL of the service hosting the imagery.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {String}
-   * @readonly
-   */
-  url: {
-    get: function () {
-      return this._resource.url;
-    },
-  },
+	/**
+	 * Gets the URL of the service hosting the imagery.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {String}
+	 * @readonly
+	 */
+	url: {
+		get: function () {
+			return this._resource.url
+		},
+	},
 
-  /**
-   * Gets the proxy used by this provider.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Proxy}
-   * @readonly
-   */
-  proxy: {
-    get: function () {
-      return this._resource.proxy;
-    },
-  },
+	/**
+	 * Gets the proxy used by this provider.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Proxy}
+	 * @readonly
+	 */
+	proxy: {
+		get: function () {
+			return this._resource.proxy
+		},
+	},
 
-  /**
-   * Gets the width of each tile, in pixels. This function should
-   * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Number}
-   * @readonly
-   */
-  tileWidth: {
-    get: function () {
-      return this._tileWidth;
-    },
-  },
+	/**
+	 * Gets the width of each tile, in pixels. This function should
+	 * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	tileWidth: {
+		get: function () {
+			return this._tileWidth
+		},
+	},
 
-  /**
-   * Gets the height of each tile, in pixels.  This function should
-   * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Number}
-   * @readonly
-   */
-  tileHeight: {
-    get: function () {
-      return this._tileHeight;
-    },
-  },
+	/**
+	 * Gets the height of each tile, in pixels.  This function should
+	 * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	tileHeight: {
+		get: function () {
+			return this._tileHeight
+		},
+	},
 
-  /**
-   * Gets the maximum level-of-detail that can be requested.  This function should
-   * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Number|undefined}
-   * @readonly
-   */
-  maximumLevel: {
-    get: function () {
-      return this._maximumLevel;
-    },
-  },
+	/**
+	 * Gets the maximum level-of-detail that can be requested.  This function should
+	 * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Number|undefined}
+	 * @readonly
+	 */
+	maximumLevel: {
+		get: function () {
+			return this._maximumLevel
+		},
+	},
 
-  /**
-   * Gets the minimum level-of-detail that can be requested.  This function should
-   * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Number}
-   * @readonly
-   */
-  minimumLevel: {
-    get: function () {
-      return this._minimumLevel;
-    },
-  },
+	/**
+	 * Gets the minimum level-of-detail that can be requested.  This function should
+	 * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	minimumLevel: {
+		get: function () {
+			return this._minimumLevel
+		},
+	},
 
-  /**
-   * Gets the tiling scheme used by this provider.  This function should
-   * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {TilingScheme}
-   * @readonly
-   */
-  tilingScheme: {
-    get: function () {
-      return this._tilingScheme;
-    },
-  },
+	/**
+	 * Gets the tiling scheme used by this provider.  This function should
+	 * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {TilingScheme}
+	 * @readonly
+	 */
+	tilingScheme: {
+		get: function () {
+			return this._tilingScheme
+		},
+	},
 
-  /**
-   * Gets the rectangle, in radians, of the imagery provided by this instance.  This function should
-   * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Rectangle}
-   * @readonly
-   */
-  rectangle: {
-    get: function () {
-      return this._rectangle;
-    },
-  },
+	/**
+	 * Gets the rectangle, in radians, of the imagery provided by this instance.  This function should
+	 * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Rectangle}
+	 * @readonly
+	 */
+	rectangle: {
+		get: function () {
+			return this._rectangle
+		},
+	},
 
-  /**
-   * Gets the tile discard policy.  If not undefined, the discard policy is responsible
-   * for filtering out "missing" tiles via its shouldDiscardImage function.  If this function
-   * returns undefined, no tiles are filtered.  This function should
-   * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {TileDiscardPolicy}
-   * @readonly
-   */
-  tileDiscardPolicy: {
-    get: function () {
-      return this._tileDiscardPolicy;
-    },
-  },
+	/**
+	 * Gets the tile discard policy.  If not undefined, the discard policy is responsible
+	 * for filtering out "missing" tiles via its shouldDiscardImage function.  If this function
+	 * returns undefined, no tiles are filtered.  This function should
+	 * not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {TileDiscardPolicy}
+	 * @readonly
+	 */
+	tileDiscardPolicy: {
+		get: function () {
+			return this._tileDiscardPolicy
+		},
+	},
 
-  /**
-   * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
-   * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
-   * are passed an instance of {@link TileProviderError}.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Event}
-   * @readonly
-   */
-  errorEvent: {
-    get: function () {
-      return this._errorEvent;
-    },
-  },
+	/**
+	 * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
+	 * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
+	 * are passed an instance of {@link TileProviderError}.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Event}
+	 * @readonly
+	 */
+	errorEvent: {
+		get: function () {
+			return this._errorEvent
+		},
+	},
 
-  /**
-   * Gets the mime type of images returned by this imagery provider.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {String}
-   * @readonly
-   */
-  format: {
-    get: function () {
-      return this._format;
-    },
-  },
+	/**
+	 * Gets the mime type of images returned by this imagery provider.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {String}
+	 * @readonly
+	 */
+	format: {
+		get: function () {
+			return this._format
+		},
+	},
 
-  /**
-   * Gets a value indicating whether or not the provider is ready for use.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Boolean}
-   * @readonly
-   */
-  ready: {
-    value: true,
-  },
+	/**
+	 * Gets a value indicating whether or not the provider is ready for use.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	ready: {
+		value: true,
+	},
 
-  /**
-   * Gets a promise that resolves to true when the provider is ready for use.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Promise.<Boolean>}
-   * @readonly
-   */
-  readyPromise: {
-    get: function () {
-      return this._readyPromise;
-    },
-  },
+	/**
+	 * Gets a promise that resolves to true when the provider is ready for use.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Promise.<Boolean>}
+	 * @readonly
+	 */
+	readyPromise: {
+		get: function () {
+			return this._readyPromise
+		},
+	},
 
-  /**
-   * Gets the credit to display when this imagery provider is active.  Typically this is used to credit
-   * the source of the imagery.  This function should not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Credit}
-   * @readonly
-   */
-  credit: {
-    get: function () {
-      return this._credit;
-    },
-  },
+	/**
+	 * Gets the credit to display when this imagery provider is active.  Typically this is used to credit
+	 * the source of the imagery.  This function should not be called before {@link WebMapTileServiceImageryProvider#ready} returns true.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Credit}
+	 * @readonly
+	 */
+	credit: {
+		get: function () {
+			return this._credit
+		},
+	},
 
-  /**
-   * Gets a value indicating whether or not the images provided by this imagery provider
-   * include an alpha channel.  If this property is false, an alpha channel, if present, will
-   * be ignored.  If this property is true, any images without an alpha channel will be treated
-   * as if their alpha is 1.0 everywhere.  When this property is false, memory usage
-   * and texture upload time are reduced.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Boolean}
-   * @readonly
-   */
-  hasAlphaChannel: {
-    get: function () {
-      return true;
-    },
-  },
-  /**
-   * Gets or sets a clock that is used to get keep the time used for time dynamic parameters.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Clock}
-   */
-  clock: {
-    get: function () {
-      return this._timeDynamicImagery.clock;
-    },
-    set: function (value) {
-      this._timeDynamicImagery.clock = value;
-    },
-  },
-  /**
-   * Gets or sets a time interval collection that is used to get time dynamic parameters. The data of each
-   * TimeInterval is an object containing the keys and values of the properties that are used during
-   * tile requests.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {TimeIntervalCollection}
-   */
-  times: {
-    get: function () {
-      return this._timeDynamicImagery.times;
-    },
-    set: function (value) {
-      this._timeDynamicImagery.times = value;
-    },
-  },
-  /**
-   * Gets or sets an object that contains static dimensions and their values.
-   * @memberof WebMapTileServiceImageryProvider.prototype
-   * @type {Object}
-   */
-  dimensions: {
-    get: function () {
-      return this._dimensions;
-    },
-    set: function (value) {
-      if (this._dimensions !== value) {
-        this._dimensions = value;
-        if (defined(this._reload)) {
-          this._reload();
-        }
-      }
-    },
-  },
-});
+	/**
+	 * Gets a value indicating whether or not the images provided by this imagery provider
+	 * include an alpha channel.  If this property is false, an alpha channel, if present, will
+	 * be ignored.  If this property is true, any images without an alpha channel will be treated
+	 * as if their alpha is 1.0 everywhere.  When this property is false, memory usage
+	 * and texture upload time are reduced.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	hasAlphaChannel: {
+		get: function () {
+			return true
+		},
+	},
+	/**
+	 * Gets or sets a clock that is used to get keep the time used for time dynamic parameters.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Clock}
+	 */
+	clock: {
+		get: function () {
+			return this._timeDynamicImagery.clock
+		},
+		set: function (value) {
+			this._timeDynamicImagery.clock = value
+		},
+	},
+	/**
+	 * Gets or sets a time interval collection that is used to get time dynamic parameters. The data of each
+	 * TimeInterval is an object containing the keys and values of the properties that are used during
+	 * tile requests.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {TimeIntervalCollection}
+	 */
+	times: {
+		get: function () {
+			return this._timeDynamicImagery.times
+		},
+		set: function (value) {
+			this._timeDynamicImagery.times = value
+		},
+	},
+	/**
+	 * Gets or sets an object that contains static dimensions and their values.
+	 * @memberof WebMapTileServiceImageryProvider.prototype
+	 * @type {Object}
+	 */
+	dimensions: {
+		get: function () {
+			return this._dimensions
+		},
+		set: function (value) {
+			if (this._dimensions !== value) {
+				this._dimensions = value
+				if (defined(this._reload)) {
+					this._reload()
+				}
+			}
+		},
+	},
+})
 
 /**
  * Gets the credits to be displayed when a given tile is displayed.
@@ -630,12 +630,12 @@ Object.defineProperties(WebMapTileServiceImageryProvider.prototype, {
  * @exception {DeveloperError} <code>getTileCredits</code> must not be called before the imagery provider is ready.
  */
 WebMapTileServiceImageryProvider.prototype.getTileCredits = function (
-  x,
-  y,
-  level
+	x,
+	y,
+	level,
 ) {
-  return undefined;
-};
+	return undefined
+}
 
 /**
  * Requests the image for a given tile.  This function should
@@ -653,33 +653,33 @@ WebMapTileServiceImageryProvider.prototype.getTileCredits = function (
  * @exception {DeveloperError} <code>requestImage</code> must not be called before the imagery provider is ready.
  */
 WebMapTileServiceImageryProvider.prototype.requestImage = function (
-  x,
-  y,
-  level,
-  request
+	x,
+	y,
+	level,
+	request,
 ) {
-  var result;
-  var timeDynamicImagery = this._timeDynamicImagery;
-  var currentInterval;
+	var result
+	var timeDynamicImagery = this._timeDynamicImagery
+	var currentInterval
 
-  // Try and load from cache
-  if (defined(timeDynamicImagery)) {
-    currentInterval = timeDynamicImagery.currentInterval;
-    result = timeDynamicImagery.getFromCache(x, y, level, request);
-  }
+	// Try and load from cache
+	if (defined(timeDynamicImagery)) {
+		currentInterval = timeDynamicImagery.currentInterval
+		result = timeDynamicImagery.getFromCache(x, y, level, request)
+	}
 
-  // Couldn't load from cache
-  if (!defined(result)) {
-    result = requestImage(this, x, y, level, request, currentInterval);
-  }
+	// Couldn't load from cache
+	if (!defined(result)) {
+		result = requestImage(this, x, y, level, request, currentInterval)
+	}
 
-  // If we are approaching an interval, preload this tile in the next interval
-  if (defined(result) && defined(timeDynamicImagery)) {
-    timeDynamicImagery.checkApproachingInterval(x, y, level, request);
-  }
+	// If we are approaching an interval, preload this tile in the next interval
+	if (defined(result) && defined(timeDynamicImagery)) {
+		timeDynamicImagery.checkApproachingInterval(x, y, level, request)
+	}
 
-  return result;
-};
+	return result
+}
 
 /**
  * Picking features is not currently supported by this imagery provider, so this function simply returns
@@ -696,12 +696,12 @@ WebMapTileServiceImageryProvider.prototype.requestImage = function (
  *                   It may also be undefined if picking is not supported.
  */
 WebMapTileServiceImageryProvider.prototype.pickFeatures = function (
-  x,
-  y,
-  level,
-  longitude,
-  latitude
+	x,
+	y,
+	level,
+	longitude,
+	latitude,
 ) {
-  return undefined;
-};
-export default WebMapTileServiceImageryProvider;
+	return undefined
+}
+export default WebMapTileServiceImageryProvider

@@ -1,16 +1,15 @@
-define([], function(){
-
+define([], function () {
 	// module:
 	//		dijit/_BidiMixin
 
 	// UCC - constants that will be used by bidi support.
 	var bidi_const = {
-		LRM : '\u200E',
-		LRE : '\u202A',
-		PDF : '\u202C',
-		RLM : '\u200f',
-		RLE : '\u202B'
-	};
+		LRM: '\u200E',
+		LRE: '\u202A',
+		PDF: '\u202C',
+		RLM: '\u200f',
+		RLE: '\u202B',
+	}
 
 	return {
 		// summary:
@@ -34,9 +33,9 @@ define([], function(){
 		//		3. "auto" - contextual the direction of a text defined by first strong letter.
 		//
 		//		By default is as the page direction.
-		textDir: "",
+		textDir: '',
 
-		getTextDir: function(/*String*/ text){
+		getTextDir: function (/*String*/ text) {
 			// summary:
 			//		Gets the right direction of text.
 			// description:
@@ -45,10 +44,10 @@ define([], function(){
 			//		for checking the value, and defining the direction.
 			// tags:
 			//		protected.
-			return this.textDir == "auto" ? this._checkContextual(text) : this.textDir;
+			return this.textDir == 'auto' ? this._checkContextual(text) : this.textDir
 		},
 
-		_checkContextual: function(text){
+		_checkContextual: function (text) {
 			// summary:
 			//		Finds the first strong (directional) character, return ltr if isLatin
 			//		or rtl if isBidiChar.
@@ -56,12 +55,23 @@ define([], function(){
 			//		private.
 
 			// look for strong (directional) characters
-			var fdc = /[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(text);
+			var fdc =
+				/[A-Za-z\u05d0-\u065f\u066a-\u06ef\u06fa-\u07ff\ufb1d-\ufdff\ufe70-\ufefc]/.exec(
+					text,
+				)
 			// if found return the direction that defined by the character, else return widgets dir as defult.
-			return fdc ? ( fdc[0] <= 'z' ? "ltr" : "rtl" ) : this.dir ? this.dir : this.isLeftToRight() ? "ltr" : "rtl";
+			return fdc
+				? fdc[0] <= 'z'
+					? 'ltr'
+					: 'rtl'
+				: this.dir
+				? this.dir
+				: this.isLeftToRight()
+				? 'ltr'
+				: 'rtl'
 		},
 
-		applyTextDir: function(/*DOMNode*/ element, /*String?*/ text){
+		applyTextDir: function (/*DOMNode*/ element, /*String?*/ text) {
 			// summary:
 			//		Set element.dir according to this.textDir, assuming this.textDir has a value.
 			// element:
@@ -76,27 +86,29 @@ define([], function(){
 			// tags:
 			//		protected.
 
-			if(this.textDir){
-				var textDir = this.textDir;
-				if(textDir == "auto"){
+			if (this.textDir) {
+				var textDir = this.textDir
+				if (textDir == 'auto') {
 					// convert "auto" to either "ltr" or "rtl"
-					if(typeof text === "undefined"){
+					if (typeof text === 'undefined') {
 						// text not specified, get text from element
-						var tagName = element.tagName.toLowerCase();
-						text = (tagName == "input" || tagName == "textarea") ? element.value :
-							element.innerText || element.textContent || "";
+						var tagName = element.tagName.toLowerCase()
+						text =
+							tagName == 'input' || tagName == 'textarea'
+								? element.value
+								: element.innerText || element.textContent || ''
 					}
-					textDir = this._checkContextual(text);
+					textDir = this._checkContextual(text)
 				}
 
-				if(element.dir != textDir){
+				if (element.dir != textDir) {
 					// set element's dir to match textDir, but not when textDir is null and not when it already matches
-					element.dir = textDir;
+					element.dir = textDir
 				}
 			}
 		},
 
-		enforceTextDirWithUcc: function(option, text){
+		enforceTextDirWithUcc: function (option, text) {
 			// summary:
 			//		Wraps by UCC (Unicode control characters) option's text according to this.textDir
 			// option:
@@ -110,17 +122,22 @@ define([], function(){
 			//		should be aligned following GUI direction). IE8 and Opera11.10 completely ignore dir setting for `<option>`.
 			//		Therefore the only solution is to use UCC (Unicode  control characters) to display the text in correct orientation.
 			//		This function saves the original text value for later restoration if needed, for example if the textDir will change etc.
-			if(this.textDir){
-				if(option){
-					option.originalText = text;
+			if (this.textDir) {
+				if (option) {
+					option.originalText = text
 				}
-				var dir = this.textDir == "auto" ? this._checkContextual(text) : this.textDir;
-				return (dir == "ltr" ? bidi_const.LRE : bidi_const.RLE ) + text + bidi_const.PDF;
+				var dir =
+					this.textDir == 'auto' ? this._checkContextual(text) : this.textDir
+				return (
+					(dir == 'ltr' ? bidi_const.LRE : bidi_const.RLE) +
+					text +
+					bidi_const.PDF
+				)
 			}
-			return text;
+			return text
 		},
 
-		restoreOriginalText: function(origObj){
+		restoreOriginalText: function (origObj) {
 			// summary:
 			//		Restores the text of origObj, if needed, after enforceTextDirWithUcc, e.g. set("textDir", textDir).
 			// origObj:
@@ -128,32 +145,32 @@ define([], function(){
 			// description:
 			//		Sets the text of origObj to origObj.originalText, which is the original text, without the UCCs.
 			//		The function than removes the originalText from origObj!
-			if(origObj.originalText){
-				origObj.text = origObj.originalText;
-				delete origObj.originalText;
+			if (origObj.originalText) {
+				origObj.text = origObj.originalText
+				delete origObj.originalText
 			}
-			return origObj;
+			return origObj
 		},
 
-		_setTextDirAttr: function(/*String*/ textDir){
+		_setTextDirAttr: function (/*String*/ textDir) {
 			// summary:
 			//		Setter for textDir.
 			// description:
 			//		Users shouldn't call this function; they should be calling
 			//		set('textDir', value)
-			if(!this._created || this.textDir != textDir){
-				this._set("textDir", textDir);
-				var node = null;
-				if(this.displayNode){
-					node = this.displayNode;
-					this.displayNode.align = this.dir == "rtl" ? "right" : "left";
-				}else{
-					node = this.textDirNode || this.focusNode || this.textbox;
+			if (!this._created || this.textDir != textDir) {
+				this._set('textDir', textDir)
+				var node = null
+				if (this.displayNode) {
+					node = this.displayNode
+					this.displayNode.align = this.dir == 'rtl' ? 'right' : 'left'
+				} else {
+					node = this.textDirNode || this.focusNode || this.textbox
 				}
-				if(node){
-					this.applyTextDir(node);
+				if (node) {
+					this.applyTextDir(node)
 				}
 			}
-		}
-	};
-});
+		},
+	}
+})

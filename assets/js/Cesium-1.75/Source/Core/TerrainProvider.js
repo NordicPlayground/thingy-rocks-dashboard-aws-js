@@ -1,7 +1,7 @@
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import IndexDatatype from "./IndexDatatype.js";
-import CesiumMath from "./Math.js";
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import IndexDatatype from './IndexDatatype.js'
+import CesiumMath from './Math.js'
 
 /**
  * Provides terrain or other geometry for the surface of an ellipsoid.  The surface geometry is
@@ -17,97 +17,97 @@ import CesiumMath from "./Math.js";
  * @see GoogleEarthEnterpriseTerrainProvider
  */
 function TerrainProvider() {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 Object.defineProperties(TerrainProvider.prototype, {
-  /**
-   * Gets an event that is raised when the terrain provider encounters an asynchronous error..  By subscribing
-   * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
-   * are passed an instance of {@link TileProviderError}.
-   * @memberof TerrainProvider.prototype
-   * @type {Event}
-   */
-  errorEvent: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets an event that is raised when the terrain provider encounters an asynchronous error..  By subscribing
+	 * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
+	 * are passed an instance of {@link TileProviderError}.
+	 * @memberof TerrainProvider.prototype
+	 * @type {Event}
+	 */
+	errorEvent: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets the credit to display when this terrain provider is active.  Typically this is used to credit
-   * the source of the terrain. This function should
-   * not be called before {@link TerrainProvider#ready} returns true.
-   * @memberof TerrainProvider.prototype
-   * @type {Credit}
-   */
-  credit: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets the credit to display when this terrain provider is active.  Typically this is used to credit
+	 * the source of the terrain. This function should
+	 * not be called before {@link TerrainProvider#ready} returns true.
+	 * @memberof TerrainProvider.prototype
+	 * @type {Credit}
+	 */
+	credit: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets the tiling scheme used by the provider.  This function should
-   * not be called before {@link TerrainProvider#ready} returns true.
-   * @memberof TerrainProvider.prototype
-   * @type {TilingScheme}
-   */
-  tilingScheme: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets the tiling scheme used by the provider.  This function should
+	 * not be called before {@link TerrainProvider#ready} returns true.
+	 * @memberof TerrainProvider.prototype
+	 * @type {TilingScheme}
+	 */
+	tilingScheme: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets a value indicating whether or not the provider is ready for use.
-   * @memberof TerrainProvider.prototype
-   * @type {Boolean}
-   */
-  ready: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets a value indicating whether or not the provider is ready for use.
+	 * @memberof TerrainProvider.prototype
+	 * @type {Boolean}
+	 */
+	ready: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets a promise that resolves to true when the provider is ready for use.
-   * @memberof TerrainProvider.prototype
-   * @type {Promise.<Boolean>}
-   * @readonly
-   */
-  readyPromise: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets a promise that resolves to true when the provider is ready for use.
+	 * @memberof TerrainProvider.prototype
+	 * @type {Promise.<Boolean>}
+	 * @readonly
+	 */
+	readyPromise: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets a value indicating whether or not the provider includes a water mask.  The water mask
-   * indicates which areas of the globe are water rather than land, so they can be rendered
-   * as a reflective surface with animated waves.  This function should not be
-   * called before {@link TerrainProvider#ready} returns true.
-   * @memberof TerrainProvider.prototype
-   * @type {Boolean}
-   */
-  hasWaterMask: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets a value indicating whether or not the provider includes a water mask.  The water mask
+	 * indicates which areas of the globe are water rather than land, so they can be rendered
+	 * as a reflective surface with animated waves.  This function should not be
+	 * called before {@link TerrainProvider#ready} returns true.
+	 * @memberof TerrainProvider.prototype
+	 * @type {Boolean}
+	 */
+	hasWaterMask: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets a value indicating whether or not the requested tiles include vertex normals.
-   * This function should not be called before {@link TerrainProvider#ready} returns true.
-   * @memberof TerrainProvider.prototype
-   * @type {Boolean}
-   */
-  hasVertexNormals: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets a value indicating whether or not the requested tiles include vertex normals.
+	 * This function should not be called before {@link TerrainProvider#ready} returns true.
+	 * @memberof TerrainProvider.prototype
+	 * @type {Boolean}
+	 */
+	hasVertexNormals: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets an object that can be used to determine availability of terrain from this provider, such as
-   * at points and in rectangles.  This function should not be called before
-   * {@link TerrainProvider#ready} returns true.  This property may be undefined if availability
-   * information is not available.
-   * @memberof TerrainProvider.prototype
-   * @type {TileAvailability}
-   */
-  availability: {
-    get: DeveloperError.throwInstantiationError,
-  },
-});
+	/**
+	 * Gets an object that can be used to determine availability of terrain from this provider, such as
+	 * at points and in rectangles.  This function should not be called before
+	 * {@link TerrainProvider#ready} returns true.  This property may be undefined if availability
+	 * information is not available.
+	 * @memberof TerrainProvider.prototype
+	 * @type {TileAvailability}
+	 */
+	availability: {
+		get: DeveloperError.throwInstantiationError,
+	},
+})
 
-var regularGridIndicesCache = [];
+var regularGridIndicesCache = []
 
 /**
  * Gets a list of indices for a triangle mesh representing a regular grid.  Calling
@@ -120,243 +120,238 @@ var regularGridIndicesCache = [];
  * @returns {Uint16Array|Uint32Array} The list of indices. Uint16Array gets returned for 64KB or less and Uint32Array for 4GB or less.
  */
 TerrainProvider.getRegularGridIndices = function (width, height) {
-  //>>includeStart('debug', pragmas.debug);
-  if (width * height >= CesiumMath.FOUR_GIGABYTES) {
-    throw new DeveloperError(
-      "The total number of vertices (width * height) must be less than 4,294,967,296."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (width * height >= CesiumMath.FOUR_GIGABYTES) {
+		throw new DeveloperError(
+			'The total number of vertices (width * height) must be less than 4,294,967,296.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  var byWidth = regularGridIndicesCache[width];
-  if (!defined(byWidth)) {
-    regularGridIndicesCache[width] = byWidth = [];
-  }
+	var byWidth = regularGridIndicesCache[width]
+	if (!defined(byWidth)) {
+		regularGridIndicesCache[width] = byWidth = []
+	}
 
-  var indices = byWidth[height];
-  if (!defined(indices)) {
-    if (width * height < CesiumMath.SIXTY_FOUR_KILOBYTES) {
-      indices = byWidth[height] = new Uint16Array(
-        (width - 1) * (height - 1) * 6
-      );
-    } else {
-      indices = byWidth[height] = new Uint32Array(
-        (width - 1) * (height - 1) * 6
-      );
-    }
-    addRegularGridIndices(width, height, indices, 0);
-  }
+	var indices = byWidth[height]
+	if (!defined(indices)) {
+		if (width * height < CesiumMath.SIXTY_FOUR_KILOBYTES) {
+			indices = byWidth[height] = new Uint16Array(
+				(width - 1) * (height - 1) * 6,
+			)
+		} else {
+			indices = byWidth[height] = new Uint32Array(
+				(width - 1) * (height - 1) * 6,
+			)
+		}
+		addRegularGridIndices(width, height, indices, 0)
+	}
 
-  return indices;
-};
+	return indices
+}
 
-var regularGridAndEdgeIndicesCache = [];
+var regularGridAndEdgeIndicesCache = []
 
 /**
  * @private
  */
 TerrainProvider.getRegularGridIndicesAndEdgeIndices = function (width, height) {
-  //>>includeStart('debug', pragmas.debug);
-  if (width * height >= CesiumMath.FOUR_GIGABYTES) {
-    throw new DeveloperError(
-      "The total number of vertices (width * height) must be less than 4,294,967,296."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (width * height >= CesiumMath.FOUR_GIGABYTES) {
+		throw new DeveloperError(
+			'The total number of vertices (width * height) must be less than 4,294,967,296.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  var byWidth = regularGridAndEdgeIndicesCache[width];
-  if (!defined(byWidth)) {
-    regularGridAndEdgeIndicesCache[width] = byWidth = [];
-  }
+	var byWidth = regularGridAndEdgeIndicesCache[width]
+	if (!defined(byWidth)) {
+		regularGridAndEdgeIndicesCache[width] = byWidth = []
+	}
 
-  var indicesAndEdges = byWidth[height];
-  if (!defined(indicesAndEdges)) {
-    var indices = TerrainProvider.getRegularGridIndices(width, height);
+	var indicesAndEdges = byWidth[height]
+	if (!defined(indicesAndEdges)) {
+		var indices = TerrainProvider.getRegularGridIndices(width, height)
 
-    var edgeIndices = getEdgeIndices(width, height);
-    var westIndicesSouthToNorth = edgeIndices.westIndicesSouthToNorth;
-    var southIndicesEastToWest = edgeIndices.southIndicesEastToWest;
-    var eastIndicesNorthToSouth = edgeIndices.eastIndicesNorthToSouth;
-    var northIndicesWestToEast = edgeIndices.northIndicesWestToEast;
+		var edgeIndices = getEdgeIndices(width, height)
+		var westIndicesSouthToNorth = edgeIndices.westIndicesSouthToNorth
+		var southIndicesEastToWest = edgeIndices.southIndicesEastToWest
+		var eastIndicesNorthToSouth = edgeIndices.eastIndicesNorthToSouth
+		var northIndicesWestToEast = edgeIndices.northIndicesWestToEast
 
-    indicesAndEdges = byWidth[height] = {
-      indices: indices,
-      westIndicesSouthToNorth: westIndicesSouthToNorth,
-      southIndicesEastToWest: southIndicesEastToWest,
-      eastIndicesNorthToSouth: eastIndicesNorthToSouth,
-      northIndicesWestToEast: northIndicesWestToEast,
-    };
-  }
+		indicesAndEdges = byWidth[height] = {
+			indices: indices,
+			westIndicesSouthToNorth: westIndicesSouthToNorth,
+			southIndicesEastToWest: southIndicesEastToWest,
+			eastIndicesNorthToSouth: eastIndicesNorthToSouth,
+			northIndicesWestToEast: northIndicesWestToEast,
+		}
+	}
 
-  return indicesAndEdges;
-};
+	return indicesAndEdges
+}
 
-var regularGridAndSkirtAndEdgeIndicesCache = [];
+var regularGridAndSkirtAndEdgeIndicesCache = []
 
 /**
  * @private
  */
 TerrainProvider.getRegularGridAndSkirtIndicesAndEdgeIndices = function (
-  width,
-  height
+	width,
+	height,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  if (width * height >= CesiumMath.FOUR_GIGABYTES) {
-    throw new DeveloperError(
-      "The total number of vertices (width * height) must be less than 4,294,967,296."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (width * height >= CesiumMath.FOUR_GIGABYTES) {
+		throw new DeveloperError(
+			'The total number of vertices (width * height) must be less than 4,294,967,296.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  var byWidth = regularGridAndSkirtAndEdgeIndicesCache[width];
-  if (!defined(byWidth)) {
-    regularGridAndSkirtAndEdgeIndicesCache[width] = byWidth = [];
-  }
+	var byWidth = regularGridAndSkirtAndEdgeIndicesCache[width]
+	if (!defined(byWidth)) {
+		regularGridAndSkirtAndEdgeIndicesCache[width] = byWidth = []
+	}
 
-  var indicesAndEdges = byWidth[height];
-  if (!defined(indicesAndEdges)) {
-    var gridVertexCount = width * height;
-    var gridIndexCount = (width - 1) * (height - 1) * 6;
-    var edgeVertexCount = width * 2 + height * 2;
-    var edgeIndexCount = Math.max(0, edgeVertexCount - 4) * 6;
-    var vertexCount = gridVertexCount + edgeVertexCount;
-    var indexCount = gridIndexCount + edgeIndexCount;
+	var indicesAndEdges = byWidth[height]
+	if (!defined(indicesAndEdges)) {
+		var gridVertexCount = width * height
+		var gridIndexCount = (width - 1) * (height - 1) * 6
+		var edgeVertexCount = width * 2 + height * 2
+		var edgeIndexCount = Math.max(0, edgeVertexCount - 4) * 6
+		var vertexCount = gridVertexCount + edgeVertexCount
+		var indexCount = gridIndexCount + edgeIndexCount
 
-    var edgeIndices = getEdgeIndices(width, height);
-    var westIndicesSouthToNorth = edgeIndices.westIndicesSouthToNorth;
-    var southIndicesEastToWest = edgeIndices.southIndicesEastToWest;
-    var eastIndicesNorthToSouth = edgeIndices.eastIndicesNorthToSouth;
-    var northIndicesWestToEast = edgeIndices.northIndicesWestToEast;
+		var edgeIndices = getEdgeIndices(width, height)
+		var westIndicesSouthToNorth = edgeIndices.westIndicesSouthToNorth
+		var southIndicesEastToWest = edgeIndices.southIndicesEastToWest
+		var eastIndicesNorthToSouth = edgeIndices.eastIndicesNorthToSouth
+		var northIndicesWestToEast = edgeIndices.northIndicesWestToEast
 
-    var indices = IndexDatatype.createTypedArray(vertexCount, indexCount);
-    addRegularGridIndices(width, height, indices, 0);
-    TerrainProvider.addSkirtIndices(
-      westIndicesSouthToNorth,
-      southIndicesEastToWest,
-      eastIndicesNorthToSouth,
-      northIndicesWestToEast,
-      gridVertexCount,
-      indices,
-      gridIndexCount
-    );
+		var indices = IndexDatatype.createTypedArray(vertexCount, indexCount)
+		addRegularGridIndices(width, height, indices, 0)
+		TerrainProvider.addSkirtIndices(
+			westIndicesSouthToNorth,
+			southIndicesEastToWest,
+			eastIndicesNorthToSouth,
+			northIndicesWestToEast,
+			gridVertexCount,
+			indices,
+			gridIndexCount,
+		)
 
-    indicesAndEdges = byWidth[height] = {
-      indices: indices,
-      westIndicesSouthToNorth: westIndicesSouthToNorth,
-      southIndicesEastToWest: southIndicesEastToWest,
-      eastIndicesNorthToSouth: eastIndicesNorthToSouth,
-      northIndicesWestToEast: northIndicesWestToEast,
-      indexCountWithoutSkirts: gridIndexCount,
-    };
-  }
+		indicesAndEdges = byWidth[height] = {
+			indices: indices,
+			westIndicesSouthToNorth: westIndicesSouthToNorth,
+			southIndicesEastToWest: southIndicesEastToWest,
+			eastIndicesNorthToSouth: eastIndicesNorthToSouth,
+			northIndicesWestToEast: northIndicesWestToEast,
+			indexCountWithoutSkirts: gridIndexCount,
+		}
+	}
 
-  return indicesAndEdges;
-};
+	return indicesAndEdges
+}
 
 /**
  * @private
  */
 TerrainProvider.addSkirtIndices = function (
-  westIndicesSouthToNorth,
-  southIndicesEastToWest,
-  eastIndicesNorthToSouth,
-  northIndicesWestToEast,
-  vertexCount,
-  indices,
-  offset
+	westIndicesSouthToNorth,
+	southIndicesEastToWest,
+	eastIndicesNorthToSouth,
+	northIndicesWestToEast,
+	vertexCount,
+	indices,
+	offset,
 ) {
-  var vertexIndex = vertexCount;
-  offset = addSkirtIndices(
-    westIndicesSouthToNorth,
-    vertexIndex,
-    indices,
-    offset
-  );
-  vertexIndex += westIndicesSouthToNorth.length;
-  offset = addSkirtIndices(
-    southIndicesEastToWest,
-    vertexIndex,
-    indices,
-    offset
-  );
-  vertexIndex += southIndicesEastToWest.length;
-  offset = addSkirtIndices(
-    eastIndicesNorthToSouth,
-    vertexIndex,
-    indices,
-    offset
-  );
-  vertexIndex += eastIndicesNorthToSouth.length;
-  addSkirtIndices(northIndicesWestToEast, vertexIndex, indices, offset);
-};
+	var vertexIndex = vertexCount
+	offset = addSkirtIndices(
+		westIndicesSouthToNorth,
+		vertexIndex,
+		indices,
+		offset,
+	)
+	vertexIndex += westIndicesSouthToNorth.length
+	offset = addSkirtIndices(southIndicesEastToWest, vertexIndex, indices, offset)
+	vertexIndex += southIndicesEastToWest.length
+	offset = addSkirtIndices(
+		eastIndicesNorthToSouth,
+		vertexIndex,
+		indices,
+		offset,
+	)
+	vertexIndex += eastIndicesNorthToSouth.length
+	addSkirtIndices(northIndicesWestToEast, vertexIndex, indices, offset)
+}
 
 function getEdgeIndices(width, height) {
-  var westIndicesSouthToNorth = new Array(height);
-  var southIndicesEastToWest = new Array(width);
-  var eastIndicesNorthToSouth = new Array(height);
-  var northIndicesWestToEast = new Array(width);
+	var westIndicesSouthToNorth = new Array(height)
+	var southIndicesEastToWest = new Array(width)
+	var eastIndicesNorthToSouth = new Array(height)
+	var northIndicesWestToEast = new Array(width)
 
-  var i;
-  for (i = 0; i < width; ++i) {
-    northIndicesWestToEast[i] = i;
-    southIndicesEastToWest[i] = width * height - 1 - i;
-  }
+	var i
+	for (i = 0; i < width; ++i) {
+		northIndicesWestToEast[i] = i
+		southIndicesEastToWest[i] = width * height - 1 - i
+	}
 
-  for (i = 0; i < height; ++i) {
-    eastIndicesNorthToSouth[i] = (i + 1) * width - 1;
-    westIndicesSouthToNorth[i] = (height - i - 1) * width;
-  }
+	for (i = 0; i < height; ++i) {
+		eastIndicesNorthToSouth[i] = (i + 1) * width - 1
+		westIndicesSouthToNorth[i] = (height - i - 1) * width
+	}
 
-  return {
-    westIndicesSouthToNorth: westIndicesSouthToNorth,
-    southIndicesEastToWest: southIndicesEastToWest,
-    eastIndicesNorthToSouth: eastIndicesNorthToSouth,
-    northIndicesWestToEast: northIndicesWestToEast,
-  };
+	return {
+		westIndicesSouthToNorth: westIndicesSouthToNorth,
+		southIndicesEastToWest: southIndicesEastToWest,
+		eastIndicesNorthToSouth: eastIndicesNorthToSouth,
+		northIndicesWestToEast: northIndicesWestToEast,
+	}
 }
 
 function addRegularGridIndices(width, height, indices, offset) {
-  var index = 0;
-  for (var j = 0; j < height - 1; ++j) {
-    for (var i = 0; i < width - 1; ++i) {
-      var upperLeft = index;
-      var lowerLeft = upperLeft + width;
-      var lowerRight = lowerLeft + 1;
-      var upperRight = upperLeft + 1;
+	var index = 0
+	for (var j = 0; j < height - 1; ++j) {
+		for (var i = 0; i < width - 1; ++i) {
+			var upperLeft = index
+			var lowerLeft = upperLeft + width
+			var lowerRight = lowerLeft + 1
+			var upperRight = upperLeft + 1
 
-      indices[offset++] = upperLeft;
-      indices[offset++] = lowerLeft;
-      indices[offset++] = upperRight;
-      indices[offset++] = upperRight;
-      indices[offset++] = lowerLeft;
-      indices[offset++] = lowerRight;
+			indices[offset++] = upperLeft
+			indices[offset++] = lowerLeft
+			indices[offset++] = upperRight
+			indices[offset++] = upperRight
+			indices[offset++] = lowerLeft
+			indices[offset++] = lowerRight
 
-      ++index;
-    }
-    ++index;
-  }
+			++index
+		}
+		++index
+	}
 }
 
 function addSkirtIndices(edgeIndices, vertexIndex, indices, offset) {
-  var previousIndex = edgeIndices[0];
+	var previousIndex = edgeIndices[0]
 
-  var length = edgeIndices.length;
-  for (var i = 1; i < length; ++i) {
-    var index = edgeIndices[i];
+	var length = edgeIndices.length
+	for (var i = 1; i < length; ++i) {
+		var index = edgeIndices[i]
 
-    indices[offset++] = previousIndex;
-    indices[offset++] = index;
-    indices[offset++] = vertexIndex;
+		indices[offset++] = previousIndex
+		indices[offset++] = index
+		indices[offset++] = vertexIndex
 
-    indices[offset++] = vertexIndex;
-    indices[offset++] = index;
-    indices[offset++] = vertexIndex + 1;
+		indices[offset++] = vertexIndex
+		indices[offset++] = index
+		indices[offset++] = vertexIndex + 1
 
-    previousIndex = index;
-    ++vertexIndex;
-  }
+		previousIndex = index
+		++vertexIndex
+	}
 
-  return offset;
+	return offset
 }
 
 /**
@@ -367,7 +362,7 @@ function addSkirtIndices(edgeIndices, vertexIndex, indices, offset) {
  * screen pixels between adjacent heightmap vertices and thus rendering more quickly.
  * @type {Number}
  */
-TerrainProvider.heightmapTerrainQuality = 0.25;
+TerrainProvider.heightmapTerrainQuality = 0.25
 
 /**
  * Determines an appropriate geometric error estimate when the geometry comes from a heightmap.
@@ -378,18 +373,18 @@ TerrainProvider.heightmapTerrainQuality = 0.25;
  * @returns {Number} An estimated geometric error.
  */
 TerrainProvider.getEstimatedLevelZeroGeometricErrorForAHeightmap = function (
-  ellipsoid,
-  tileImageWidth,
-  numberOfTilesAtLevelZero
+	ellipsoid,
+	tileImageWidth,
+	numberOfTilesAtLevelZero,
 ) {
-  return (
-    (ellipsoid.maximumRadius *
-      2 *
-      Math.PI *
-      TerrainProvider.heightmapTerrainQuality) /
-    (tileImageWidth * numberOfTilesAtLevelZero)
-  );
-};
+	return (
+		(ellipsoid.maximumRadius *
+			2 *
+			Math.PI *
+			TerrainProvider.heightmapTerrainQuality) /
+		(tileImageWidth * numberOfTilesAtLevelZero)
+	)
+}
 
 /**
  * Requests the geometry for a given tile.  This function should not be called before
@@ -407,7 +402,7 @@ TerrainProvider.getEstimatedLevelZeroGeometricErrorForAHeightmap = function (
  *          pending and the request will be retried later.
  */
 TerrainProvider.prototype.requestTileGeometry =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Gets the maximum geometric error allowed in a tile at a given level.  This function should not be
@@ -418,7 +413,7 @@ TerrainProvider.prototype.requestTileGeometry =
  * @returns {Number} The maximum geometric error.
  */
 TerrainProvider.prototype.getLevelMaximumGeometricError =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Determines whether data for a tile is available to be loaded.
@@ -430,7 +425,7 @@ TerrainProvider.prototype.getLevelMaximumGeometricError =
  * @returns {Boolean} Undefined if not supported by the terrain provider, otherwise true or false.
  */
 TerrainProvider.prototype.getTileDataAvailable =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Makes sure we load availability data for a tile
@@ -442,5 +437,5 @@ TerrainProvider.prototype.getTileDataAvailable =
  * @returns {undefined|Promise<void>} Undefined if nothing need to be loaded or a Promise that resolves when all required tiles are loaded
  */
 TerrainProvider.prototype.loadTileDataAvailability =
-  DeveloperError.throwInstantiationError;
-export default TerrainProvider;
+	DeveloperError.throwInstantiationError
+export default TerrainProvider

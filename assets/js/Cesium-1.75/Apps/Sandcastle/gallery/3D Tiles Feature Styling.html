@@ -177,12 +177,10 @@
             viewer.selectedEntity = undefined;
             var pickedBuilding = viewer.scene.pick(movement.position);
             if (pickedBuilding) {
-              var pickedLatitude = pickedBuilding.getProperty(
-                "cesium#latitude"
-              );
-              var pickedLongitude = pickedBuilding.getProperty(
-                "cesium#longitude"
-              );
+              var pickedLatitude =
+                pickedBuilding.getProperty("cesium#latitude");
+              var pickedLongitude =
+                pickedBuilding.getProperty("cesium#longitude");
               colorByDistanceToCoordinate(pickedLatitude, pickedLongitude);
             }
           }, Cesium.ScreenSpaceEventType.LEFT_CLICK);

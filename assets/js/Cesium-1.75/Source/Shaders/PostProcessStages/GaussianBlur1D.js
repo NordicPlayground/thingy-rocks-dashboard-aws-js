@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#define SAMPLES 8\n\
+export default '#define SAMPLES 8\n\
 \n\
 uniform float delta;\n\
 uniform float sigma;\n\
@@ -46,4 +46,4 @@ void main()\n\
 \n\
     gl_FragColor = result;\n\
 }\n\
-";
+'

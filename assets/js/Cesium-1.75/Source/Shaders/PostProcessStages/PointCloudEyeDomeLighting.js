@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#extension GL_EXT_frag_depth : enable\n\
+export default '#extension GL_EXT_frag_depth : enable\n\
 \n\
 uniform sampler2D u_pointCloud_colorGBuffer;\n\
 uniform sampler2D u_pointCloud_depthGBuffer;\n\
@@ -62,4 +62,4 @@ void main()\n\
     // Input and output depth are the same.\n\
     gl_FragDepthEXT = depthOrLogDepth;\n\
 }\n\
-";
+'

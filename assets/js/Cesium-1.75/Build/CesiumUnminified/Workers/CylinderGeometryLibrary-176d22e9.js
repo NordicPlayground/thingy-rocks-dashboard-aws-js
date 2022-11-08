@@ -21,66 +21,66 @@
  * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
  */
 
-define(['exports', './Math-850675ea'], function (exports, _Math) { 'use strict';
+define(['exports', './Math-850675ea'], function (exports, _Math) {
+	'use strict'
 
-  /**
-   * @private
-   */
-  var CylinderGeometryLibrary = {};
+	/**
+	 * @private
+	 */
+	var CylinderGeometryLibrary = {}
 
-  /**
-   * @private
-   */
-  CylinderGeometryLibrary.computePositions = function (
-    length,
-    topRadius,
-    bottomRadius,
-    slices,
-    fill
-  ) {
-    var topZ = length * 0.5;
-    var bottomZ = -topZ;
+	/**
+	 * @private
+	 */
+	CylinderGeometryLibrary.computePositions = function (
+		length,
+		topRadius,
+		bottomRadius,
+		slices,
+		fill,
+	) {
+		var topZ = length * 0.5
+		var bottomZ = -topZ
 
-    var twoSlice = slices + slices;
-    var size = fill ? 2 * twoSlice : twoSlice;
-    var positions = new Float64Array(size * 3);
-    var i;
-    var index = 0;
-    var tbIndex = 0;
-    var bottomOffset = fill ? twoSlice * 3 : 0;
-    var topOffset = fill ? (twoSlice + slices) * 3 : slices * 3;
+		var twoSlice = slices + slices
+		var size = fill ? 2 * twoSlice : twoSlice
+		var positions = new Float64Array(size * 3)
+		var i
+		var index = 0
+		var tbIndex = 0
+		var bottomOffset = fill ? twoSlice * 3 : 0
+		var topOffset = fill ? (twoSlice + slices) * 3 : slices * 3
 
-    for (i = 0; i < slices; i++) {
-      var angle = (i / slices) * _Math.CesiumMath.TWO_PI;
-      var x = Math.cos(angle);
-      var y = Math.sin(angle);
-      var bottomX = x * bottomRadius;
-      var bottomY = y * bottomRadius;
-      var topX = x * topRadius;
-      var topY = y * topRadius;
+		for (i = 0; i < slices; i++) {
+			var angle = (i / slices) * _Math.CesiumMath.TWO_PI
+			var x = Math.cos(angle)
+			var y = Math.sin(angle)
+			var bottomX = x * bottomRadius
+			var bottomY = y * bottomRadius
+			var topX = x * topRadius
+			var topY = y * topRadius
 
-      positions[tbIndex + bottomOffset] = bottomX;
-      positions[tbIndex + bottomOffset + 1] = bottomY;
-      positions[tbIndex + bottomOffset + 2] = bottomZ;
+			positions[tbIndex + bottomOffset] = bottomX
+			positions[tbIndex + bottomOffset + 1] = bottomY
+			positions[tbIndex + bottomOffset + 2] = bottomZ
 
-      positions[tbIndex + topOffset] = topX;
-      positions[tbIndex + topOffset + 1] = topY;
-      positions[tbIndex + topOffset + 2] = topZ;
-      tbIndex += 3;
-      if (fill) {
-        positions[index++] = bottomX;
-        positions[index++] = bottomY;
-        positions[index++] = bottomZ;
-        positions[index++] = topX;
-        positions[index++] = topY;
-        positions[index++] = topZ;
-      }
-    }
+			positions[tbIndex + topOffset] = topX
+			positions[tbIndex + topOffset + 1] = topY
+			positions[tbIndex + topOffset + 2] = topZ
+			tbIndex += 3
+			if (fill) {
+				positions[index++] = bottomX
+				positions[index++] = bottomY
+				positions[index++] = bottomZ
+				positions[index++] = topX
+				positions[index++] = topY
+				positions[index++] = topZ
+			}
+		}
 
-    return positions;
-  };
+		return positions
+	}
 
-  exports.CylinderGeometryLibrary = CylinderGeometryLibrary;
-
-});
+	exports.CylinderGeometryLibrary = CylinderGeometryLibrary
+})
 //# sourceMappingURL=CylinderGeometryLibrary-176d22e9.js.map

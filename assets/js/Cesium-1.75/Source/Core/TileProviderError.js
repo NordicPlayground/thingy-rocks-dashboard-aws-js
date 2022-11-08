@@ -1,6 +1,6 @@
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import formatError from "./formatError.js";
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import formatError from './formatError.js'
 
 /**
  * Provides details about an error that occurred in an {@link ImageryProvider} or a {@link TerrainProvider}.
@@ -20,68 +20,68 @@ import formatError from "./formatError.js";
  * @param {Error} [error] The error or exception that occurred, if any.
  */
 function TileProviderError(
-  provider,
-  message,
-  x,
-  y,
-  level,
-  timesRetried,
-  error
+	provider,
+	message,
+	x,
+	y,
+	level,
+	timesRetried,
+	error,
 ) {
-  /**
-   * The {@link ImageryProvider} or {@link TerrainProvider} that experienced the error.
-   * @type {ImageryProvider|TerrainProvider}
-   */
-  this.provider = provider;
+	/**
+	 * The {@link ImageryProvider} or {@link TerrainProvider} that experienced the error.
+	 * @type {ImageryProvider|TerrainProvider}
+	 */
+	this.provider = provider
 
-  /**
-   * The message describing the error.
-   * @type {String}
-   */
-  this.message = message;
+	/**
+	 * The message describing the error.
+	 * @type {String}
+	 */
+	this.message = message
 
-  /**
-   * The X coordinate of the tile that experienced the error.  If the error is not specific
-   * to a particular tile, this property will be undefined.
-   * @type {Number}
-   */
-  this.x = x;
+	/**
+	 * The X coordinate of the tile that experienced the error.  If the error is not specific
+	 * to a particular tile, this property will be undefined.
+	 * @type {Number}
+	 */
+	this.x = x
 
-  /**
-   * The Y coordinate of the tile that experienced the error.  If the error is not specific
-   * to a particular tile, this property will be undefined.
-   * @type {Number}
-   */
-  this.y = y;
+	/**
+	 * The Y coordinate of the tile that experienced the error.  If the error is not specific
+	 * to a particular tile, this property will be undefined.
+	 * @type {Number}
+	 */
+	this.y = y
 
-  /**
-   * The level-of-detail of the tile that experienced the error.  If the error is not specific
-   * to a particular tile, this property will be undefined.
-   * @type {Number}
-   */
-  this.level = level;
+	/**
+	 * The level-of-detail of the tile that experienced the error.  If the error is not specific
+	 * to a particular tile, this property will be undefined.
+	 * @type {Number}
+	 */
+	this.level = level
 
-  /**
-   * The number of times this operation has been retried.
-   * @type {Number}
-   * @default 0
-   */
-  this.timesRetried = defaultValue(timesRetried, 0);
+	/**
+	 * The number of times this operation has been retried.
+	 * @type {Number}
+	 * @default 0
+	 */
+	this.timesRetried = defaultValue(timesRetried, 0)
 
-  /**
-   * True if the failed operation should be retried; otherwise, false.  The imagery or terrain provider
-   * will set the initial value of this property before raising the event, but any listeners
-   * can change it.  The value after the last listener is invoked will be acted upon.
-   * @type {Boolean}
-   * @default false
-   */
-  this.retry = false;
+	/**
+	 * True if the failed operation should be retried; otherwise, false.  The imagery or terrain provider
+	 * will set the initial value of this property before raising the event, but any listeners
+	 * can change it.  The value after the last listener is invoked will be acted upon.
+	 * @type {Boolean}
+	 * @default false
+	 */
+	this.retry = false
 
-  /**
-   * The error or exception that occurred, if any.
-   * @type {Error}
-   */
-  this.error = error;
+	/**
+	 * The error or exception that occurred, if any.
+	 * @type {Error}
+	 */
+	this.error = error
 }
 
 /**
@@ -110,55 +110,55 @@ function TileProviderError(
  *          to track retry counts.
  */
 TileProviderError.handleError = function (
-  previousError,
-  provider,
-  event,
-  message,
-  x,
-  y,
-  level,
-  retryFunction,
-  errorDetails
+	previousError,
+	provider,
+	event,
+	message,
+	x,
+	y,
+	level,
+	retryFunction,
+	errorDetails,
 ) {
-  var error = previousError;
-  if (!defined(previousError)) {
-    error = new TileProviderError(
-      provider,
-      message,
-      x,
-      y,
-      level,
-      0,
-      errorDetails
-    );
-  } else {
-    error.provider = provider;
-    error.message = message;
-    error.x = x;
-    error.y = y;
-    error.level = level;
-    error.retry = false;
-    error.error = errorDetails;
-    ++error.timesRetried;
-  }
+	var error = previousError
+	if (!defined(previousError)) {
+		error = new TileProviderError(
+			provider,
+			message,
+			x,
+			y,
+			level,
+			0,
+			errorDetails,
+		)
+	} else {
+		error.provider = provider
+		error.message = message
+		error.x = x
+		error.y = y
+		error.level = level
+		error.retry = false
+		error.error = errorDetails
+		++error.timesRetried
+	}
 
-  if (event.numberOfListeners > 0) {
-    event.raiseEvent(error);
-  } else {
-    console.log(
-      'An error occurred in "' +
-        provider.constructor.name +
-        '": ' +
-        formatError(message)
-    );
-  }
+	if (event.numberOfListeners > 0) {
+		event.raiseEvent(error)
+	} else {
+		console.log(
+			'An error occurred in "' +
+				provider.constructor.name +
+				'": ' +
+				formatError(message),
+		)
+	}
 
-  if (error.retry && defined(retryFunction)) {
-    retryFunction();
-  }
+	if (error.retry && defined(retryFunction)) {
+		retryFunction()
+	}
 
-  return error;
-};
+	return error
+}
 
 /**
  * Handles success of an operation by resetting the retry count of a previous error, if any.  This way,
@@ -168,13 +168,13 @@ TileProviderError.handleError = function (
  *        not previously resulted in an error.
  */
 TileProviderError.handleSuccess = function (previousError) {
-  if (defined(previousError)) {
-    previousError.timesRetried = -1;
-  }
-};
+	if (defined(previousError)) {
+		previousError.timesRetried = -1
+	}
+}
 
 /**
  * A function that will be called to retry the operation.
  * @callback TileProviderError.RetryFunction
  */
-export default TileProviderError;
+export default TileProviderError

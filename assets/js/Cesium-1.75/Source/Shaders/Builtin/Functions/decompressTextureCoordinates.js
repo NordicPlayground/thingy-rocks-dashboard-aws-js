@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Decompresses texture coordinates that were packed into a single float.\n\
  *\n\
  * @name czm_decompressTextureCoordinates\n\
@@ -16,4 +16,4 @@ export default "/**\n\
     float sty = (encoded - xZeroTo4095 * 4096.0) / 4095.0;\n\
     return vec2(stx, sty);\n\
  }\n\
-";
+'

@@ -19,7 +19,6 @@
   width: 0;
   background-color: transparent;
   /* so the INPUT doesn't obscure the border in rtl+a11y */
-
 }
 /* Padding for the input area of TextBox based widgets, and corresponding padding for the
  * down arrow button and the placeholder.   placeholder is explicitly listed  because
@@ -69,10 +68,22 @@
 }
 .claro .dijitTextBoxHover {
   background-color: #e5f2fe;
-  background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
-  background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
-  background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
-  background-image: linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -moz-linear-gradient(
+    rgba(127, 127, 127, 0.2) 0%,
+    rgba(127, 127, 127, 0) 2px
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(127, 127, 127, 0.2) 0%,
+    rgba(127, 127, 127, 0) 2px
+  );
+  background-image: -o-linear-gradient(
+    rgba(127, 127, 127, 0.2) 0%,
+    rgba(127, 127, 127, 0) 2px
+  );
+  background-image: linear-gradient(
+    rgba(127, 127, 127, 0.2) 0%,
+    rgba(127, 127, 127, 0) 2px
+  );
 }
 /* error state */
 .claro .dijitSelectError,
@@ -93,10 +104,22 @@
 }
 .claro .dijitTextBoxFocused {
   background-color: #ffffff;
-  background-image: -moz-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
-  background-image: -webkit-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
-  background-image: -o-linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
-  background-image: linear-gradient(rgba(127, 127, 127, 0.2) 0%, rgba(127, 127, 127, 0) 2px);
+  background-image: -moz-linear-gradient(
+    rgba(127, 127, 127, 0.2) 0%,
+    rgba(127, 127, 127, 0) 2px
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(127, 127, 127, 0.2) 0%,
+    rgba(127, 127, 127, 0) 2px
+  );
+  background-image: -o-linear-gradient(
+    rgba(127, 127, 127, 0.2) 0%,
+    rgba(127, 127, 127, 0) 2px
+  );
+  background-image: linear-gradient(
+    rgba(127, 127, 127, 0.2) 0%,
+    rgba(127, 127, 127, 0) 2px
+  );
 }
 .claro .dijitTextBoxFocused .dijitInputContainer {
   background: #ffffff;
@@ -165,10 +188,22 @@
   background-color: #efefef;
   background-image: url("../images/standardGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
 }
 /* Arrow "hover" effect:
@@ -190,10 +225,26 @@
   background-color: #7dbdfa;
   background-image: url("../images/activeGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
   padding: 1px;
 }
@@ -219,9 +270,17 @@
   height: 0;
   width: 0;
 }
-.dj_borderbox .claro .dijitComboBox .dijitHasDropDownOpen .dijitArrowButtonInner {
+.dj_borderbox
+  .claro
+  .dijitComboBox
+  .dijitHasDropDownOpen
+  .dijitArrowButtonInner {
   width: 18px;
 }
-.dj_borderbox .claro .dijitComboBoxFocused .dijitHasDropDownOpen .dijitArrowButtonInner {
+.dj_borderbox
+  .claro
+  .dijitComboBoxFocused
+  .dijitHasDropDownOpen
+  .dijitArrowButtonInner {
   width: 16px;
 }

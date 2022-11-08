@@ -1,26 +1,26 @@
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import FeatureDetection from "./FeatureDetection.js";
-import CesiumMath from "./Math.js";
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import FeatureDetection from './FeatureDetection.js'
+import CesiumMath from './Math.js'
 
 function hue2rgb(m1, m2, h) {
-  if (h < 0) {
-    h += 1;
-  }
-  if (h > 1) {
-    h -= 1;
-  }
-  if (h * 6 < 1) {
-    return m1 + (m2 - m1) * 6 * h;
-  }
-  if (h * 2 < 1) {
-    return m2;
-  }
-  if (h * 3 < 2) {
-    return m1 + (m2 - m1) * (2 / 3 - h) * 6;
-  }
-  return m1;
+	if (h < 0) {
+		h += 1
+	}
+	if (h > 1) {
+		h -= 1
+	}
+	if (h * 6 < 1) {
+		return m1 + (m2 - m1) * 6 * h
+	}
+	if (h * 2 < 1) {
+		return m2
+	}
+	if (h * 3 < 2) {
+		return m1 + (m2 - m1) * (2 / 3 - h) * 6
+	}
+	return m1
 }
 
 /**
@@ -37,30 +37,30 @@ function hue2rgb(m1, m2, h) {
  * @see Packable
  */
 function Color(red, green, blue, alpha) {
-  /**
-   * The red component.
-   * @type {Number}
-   * @default 1.0
-   */
-  this.red = defaultValue(red, 1.0);
-  /**
-   * The green component.
-   * @type {Number}
-   * @default 1.0
-   */
-  this.green = defaultValue(green, 1.0);
-  /**
-   * The blue component.
-   * @type {Number}
-   * @default 1.0
-   */
-  this.blue = defaultValue(blue, 1.0);
-  /**
-   * The alpha component.
-   * @type {Number}
-   * @default 1.0
-   */
-  this.alpha = defaultValue(alpha, 1.0);
+	/**
+	 * The red component.
+	 * @type {Number}
+	 * @default 1.0
+	 */
+	this.red = defaultValue(red, 1.0)
+	/**
+	 * The green component.
+	 * @type {Number}
+	 * @default 1.0
+	 */
+	this.green = defaultValue(green, 1.0)
+	/**
+	 * The blue component.
+	 * @type {Number}
+	 * @default 1.0
+	 */
+	this.blue = defaultValue(blue, 1.0)
+	/**
+	 * The alpha component.
+	 * @type {Number}
+	 * @default 1.0
+	 */
+	this.alpha = defaultValue(alpha, 1.0)
 }
 
 /**
@@ -72,20 +72,20 @@ function Color(red, green, blue, alpha) {
  * @returns {Color} The modified result parameter or a new Color instance if one was not provided.
  */
 Color.fromCartesian4 = function (cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    return new Color(cartesian.x, cartesian.y, cartesian.z, cartesian.w);
-  }
+	if (!defined(result)) {
+		return new Color(cartesian.x, cartesian.y, cartesian.z, cartesian.w)
+	}
 
-  result.red = cartesian.x;
-  result.green = cartesian.y;
-  result.blue = cartesian.z;
-  result.alpha = cartesian.w;
-  return result;
-};
+	result.red = cartesian.x
+	result.green = cartesian.y
+	result.blue = cartesian.z
+	result.alpha = cartesian.w
+	return result
+}
 
 /**
  * Creates a new Color specified using red, green, blue, and alpha values
@@ -99,21 +99,21 @@ Color.fromCartesian4 = function (cartesian, result) {
  * @returns {Color} The modified result parameter or a new Color instance if one was not provided.
  */
 Color.fromBytes = function (red, green, blue, alpha, result) {
-  red = Color.byteToFloat(defaultValue(red, 255.0));
-  green = Color.byteToFloat(defaultValue(green, 255.0));
-  blue = Color.byteToFloat(defaultValue(blue, 255.0));
-  alpha = Color.byteToFloat(defaultValue(alpha, 255.0));
+	red = Color.byteToFloat(defaultValue(red, 255.0))
+	green = Color.byteToFloat(defaultValue(green, 255.0))
+	blue = Color.byteToFloat(defaultValue(blue, 255.0))
+	alpha = Color.byteToFloat(defaultValue(alpha, 255.0))
 
-  if (!defined(result)) {
-    return new Color(red, green, blue, alpha);
-  }
+	if (!defined(result)) {
+		return new Color(red, green, blue, alpha)
+	}
 
-  result.red = red;
-  result.green = green;
-  result.blue = blue;
-  result.alpha = alpha;
-  return result;
-};
+	result.red = red
+	result.green = green
+	result.blue = blue
+	result.alpha = alpha
+	return result
+}
 
 /**
  * Creates a new Color that has the same red, green, and blue components
@@ -127,29 +127,29 @@ Color.fromBytes = function (red, green, blue, alpha, result) {
  * @example var translucentRed = Cesium.Color.fromAlpha(Cesium.Color.RED, 0.9);
  */
 Color.fromAlpha = function (color, alpha, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("color", color);
-  Check.typeOf.number("alpha", alpha);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('color', color)
+	Check.typeOf.number('alpha', alpha)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    return new Color(color.red, color.green, color.blue, alpha);
-  }
+	if (!defined(result)) {
+		return new Color(color.red, color.green, color.blue, alpha)
+	}
 
-  result.red = color.red;
-  result.green = color.green;
-  result.blue = color.blue;
-  result.alpha = alpha;
-  return result;
-};
+	result.red = color.red
+	result.green = color.green
+	result.blue = color.blue
+	result.alpha = alpha
+	return result
+}
 
-var scratchArrayBuffer;
-var scratchUint32Array;
-var scratchUint8Array;
+var scratchArrayBuffer
+var scratchUint32Array
+var scratchUint8Array
 if (FeatureDetection.supportsTypedArrays()) {
-  scratchArrayBuffer = new ArrayBuffer(4);
-  scratchUint32Array = new Uint32Array(scratchArrayBuffer);
-  scratchUint8Array = new Uint8Array(scratchArrayBuffer);
+	scratchArrayBuffer = new ArrayBuffer(4)
+	scratchUint32Array = new Uint32Array(scratchArrayBuffer)
+	scratchUint8Array = new Uint8Array(scratchArrayBuffer)
 }
 
 /**
@@ -166,16 +166,16 @@ if (FeatureDetection.supportsTypedArrays()) {
  * @see Color#toRgba
  */
 Color.fromRgba = function (rgba, result) {
-  // scratchUint32Array and scratchUint8Array share an underlying array buffer
-  scratchUint32Array[0] = rgba;
-  return Color.fromBytes(
-    scratchUint8Array[0],
-    scratchUint8Array[1],
-    scratchUint8Array[2],
-    scratchUint8Array[3],
-    result
-  );
-};
+	// scratchUint32Array and scratchUint8Array share an underlying array buffer
+	scratchUint32Array[0] = rgba
+	return Color.fromBytes(
+		scratchUint8Array[0],
+		scratchUint8Array[1],
+		scratchUint8Array[2],
+		scratchUint8Array[3],
+		result,
+	)
+}
 
 /**
  * Creates a Color instance from hue, saturation, and lightness.
@@ -190,39 +190,39 @@ Color.fromRgba = function (rgba, result) {
  * @see {@link http://www.w3.org/TR/css3-color/#hsl-color|CSS color values}
  */
 Color.fromHsl = function (hue, saturation, lightness, alpha, result) {
-  hue = defaultValue(hue, 0.0) % 1.0;
-  saturation = defaultValue(saturation, 0.0);
-  lightness = defaultValue(lightness, 0.0);
-  alpha = defaultValue(alpha, 1.0);
+	hue = defaultValue(hue, 0.0) % 1.0
+	saturation = defaultValue(saturation, 0.0)
+	lightness = defaultValue(lightness, 0.0)
+	alpha = defaultValue(alpha, 1.0)
 
-  var red = lightness;
-  var green = lightness;
-  var blue = lightness;
+	var red = lightness
+	var green = lightness
+	var blue = lightness
 
-  if (saturation !== 0) {
-    var m2;
-    if (lightness < 0.5) {
-      m2 = lightness * (1 + saturation);
-    } else {
-      m2 = lightness + saturation - lightness * saturation;
-    }
+	if (saturation !== 0) {
+		var m2
+		if (lightness < 0.5) {
+			m2 = lightness * (1 + saturation)
+		} else {
+			m2 = lightness + saturation - lightness * saturation
+		}
 
-    var m1 = 2.0 * lightness - m2;
-    red = hue2rgb(m1, m2, hue + 1 / 3);
-    green = hue2rgb(m1, m2, hue);
-    blue = hue2rgb(m1, m2, hue - 1 / 3);
-  }
+		var m1 = 2.0 * lightness - m2
+		red = hue2rgb(m1, m2, hue + 1 / 3)
+		green = hue2rgb(m1, m2, hue)
+		blue = hue2rgb(m1, m2, hue - 1 / 3)
+	}
 
-  if (!defined(result)) {
-    return new Color(red, green, blue, alpha);
-  }
+	if (!defined(result)) {
+		return new Color(red, green, blue, alpha)
+	}
 
-  result.red = red;
-  result.green = green;
-  result.blue = blue;
-  result.alpha = alpha;
-  return result;
-};
+	result.red = red
+	result.green = green
+	result.blue = blue
+	result.alpha = alpha
+	return result
+}
 
 /**
  * Creates a random color using the provided options. For reproducible random colors, you should
@@ -269,92 +269,94 @@ Color.fromHsl = function (hue, saturation, lightness, alpha, result) {
  * });
  */
 Color.fromRandom = function (options, result) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  var red = options.red;
-  if (!defined(red)) {
-    var minimumRed = defaultValue(options.minimumRed, 0);
-    var maximumRed = defaultValue(options.maximumRed, 1.0);
+	var red = options.red
+	if (!defined(red)) {
+		var minimumRed = defaultValue(options.minimumRed, 0)
+		var maximumRed = defaultValue(options.maximumRed, 1.0)
 
-    //>>includeStart('debug', pragmas.debug);
-    Check.typeOf.number.lessThanOrEquals("minimumRed", minimumRed, maximumRed);
-    //>>includeEnd('debug');
+		//>>includeStart('debug', pragmas.debug);
+		Check.typeOf.number.lessThanOrEquals('minimumRed', minimumRed, maximumRed)
+		//>>includeEnd('debug');
 
-    red =
-      minimumRed + CesiumMath.nextRandomNumber() * (maximumRed - minimumRed);
-  }
+		red = minimumRed + CesiumMath.nextRandomNumber() * (maximumRed - minimumRed)
+	}
 
-  var green = options.green;
-  if (!defined(green)) {
-    var minimumGreen = defaultValue(options.minimumGreen, 0);
-    var maximumGreen = defaultValue(options.maximumGreen, 1.0);
+	var green = options.green
+	if (!defined(green)) {
+		var minimumGreen = defaultValue(options.minimumGreen, 0)
+		var maximumGreen = defaultValue(options.maximumGreen, 1.0)
 
-    //>>includeStart('debug', pragmas.debug);
-    Check.typeOf.number.lessThanOrEquals(
-      "minimumGreen",
-      minimumGreen,
-      maximumGreen
-    );
-    //>>includeEnd('debug');
-    green =
-      minimumGreen +
-      CesiumMath.nextRandomNumber() * (maximumGreen - minimumGreen);
-  }
+		//>>includeStart('debug', pragmas.debug);
+		Check.typeOf.number.lessThanOrEquals(
+			'minimumGreen',
+			minimumGreen,
+			maximumGreen,
+		)
+		//>>includeEnd('debug');
+		green =
+			minimumGreen +
+			CesiumMath.nextRandomNumber() * (maximumGreen - minimumGreen)
+	}
 
-  var blue = options.blue;
-  if (!defined(blue)) {
-    var minimumBlue = defaultValue(options.minimumBlue, 0);
-    var maximumBlue = defaultValue(options.maximumBlue, 1.0);
+	var blue = options.blue
+	if (!defined(blue)) {
+		var minimumBlue = defaultValue(options.minimumBlue, 0)
+		var maximumBlue = defaultValue(options.maximumBlue, 1.0)
 
-    //>>includeStart('debug', pragmas.debug);
-    Check.typeOf.number.lessThanOrEquals(
-      "minimumBlue",
-      minimumBlue,
-      maximumBlue
-    );
-    //>>includeEnd('debug');
+		//>>includeStart('debug', pragmas.debug);
+		Check.typeOf.number.lessThanOrEquals(
+			'minimumBlue',
+			minimumBlue,
+			maximumBlue,
+		)
+		//>>includeEnd('debug');
 
-    blue =
-      minimumBlue + CesiumMath.nextRandomNumber() * (maximumBlue - minimumBlue);
-  }
+		blue =
+			minimumBlue + CesiumMath.nextRandomNumber() * (maximumBlue - minimumBlue)
+	}
 
-  var alpha = options.alpha;
-  if (!defined(alpha)) {
-    var minimumAlpha = defaultValue(options.minimumAlpha, 0);
-    var maximumAlpha = defaultValue(options.maximumAlpha, 1.0);
+	var alpha = options.alpha
+	if (!defined(alpha)) {
+		var minimumAlpha = defaultValue(options.minimumAlpha, 0)
+		var maximumAlpha = defaultValue(options.maximumAlpha, 1.0)
 
-    //>>includeStart('debug', pragmas.debug);
-    Check.typeOf.number.lessThanOrEquals(
-      "minumumAlpha",
-      minimumAlpha,
-      maximumAlpha
-    );
-    //>>includeEnd('debug');
+		//>>includeStart('debug', pragmas.debug);
+		Check.typeOf.number.lessThanOrEquals(
+			'minumumAlpha',
+			minimumAlpha,
+			maximumAlpha,
+		)
+		//>>includeEnd('debug');
 
-    alpha =
-      minimumAlpha +
-      CesiumMath.nextRandomNumber() * (maximumAlpha - minimumAlpha);
-  }
+		alpha =
+			minimumAlpha +
+			CesiumMath.nextRandomNumber() * (maximumAlpha - minimumAlpha)
+	}
 
-  if (!defined(result)) {
-    return new Color(red, green, blue, alpha);
-  }
+	if (!defined(result)) {
+		return new Color(red, green, blue, alpha)
+	}
 
-  result.red = red;
-  result.green = green;
-  result.blue = blue;
-  result.alpha = alpha;
-  return result;
-};
+	result.red = red
+	result.green = green
+	result.blue = blue
+	result.alpha = alpha
+	return result
+}
 
 //#rgba
-var rgbaMatcher = /^#([0-9a-f])([0-9a-f])([0-9a-f])([0-9a-f])?$/i;
+var rgbaMatcher = /^#([0-9a-f])([0-9a-f])([0-9a-f])([0-9a-f])?$/i
 //#rrggbbaa
-var rrggbbaaMatcher = /^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?$/i;
+var rrggbbaaMatcher =
+	/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})?$/i
 //rgb(), rgba(), or rgb%()
-var rgbParenthesesMatcher = /^rgba?\(\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)(?:\s*,\s*([0-9.]+))?\s*\)$/i;
+var rgbParenthesesMatcher =
+	/^rgba?\(\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)\s*,\s*([0-9.]+%?)(?:\s*,\s*([0-9.]+))?\s*\)$/i
 //hsl() or hsla()
-var hslParenthesesMatcher = /^hsla?\(\s*([0-9.]+)\s*,\s*([0-9.]+%)\s*,\s*([0-9.]+%)(?:\s*,\s*([0-9.]+))?\s*\)$/i;
+var hslParenthesesMatcher =
+	/^hsla?\(\s*([0-9.]+)\s*,\s*([0-9.]+%)\s*,\s*([0-9.]+%)(?:\s*,\s*([0-9.]+))?\s*\)$/i
 
 /**
  * Creates a Color instance from a CSS color value.
@@ -371,73 +373,73 @@ var hslParenthesesMatcher = /^hsla?\(\s*([0-9.]+)\s*,\s*([0-9.]+%)\s*,\s*([0-9.]
  * @see {@link http://www.w3.org/TR/css3-color|CSS color values}
  */
 Color.fromCssColorString = function (color, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.string("color", color);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.string('color', color)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = new Color();
-  }
+	if (!defined(result)) {
+		result = new Color()
+	}
 
-  // Remove all whitespaces from the color string
-  color = color.replace(/\s/g, "");
+	// Remove all whitespaces from the color string
+	color = color.replace(/\s/g, '')
 
-  var namedColor = Color[color.toUpperCase()];
-  if (defined(namedColor)) {
-    Color.clone(namedColor, result);
-    return result;
-  }
+	var namedColor = Color[color.toUpperCase()]
+	if (defined(namedColor)) {
+		Color.clone(namedColor, result)
+		return result
+	}
 
-  var matches = rgbaMatcher.exec(color);
-  if (matches !== null) {
-    result.red = parseInt(matches[1], 16) / 15;
-    result.green = parseInt(matches[2], 16) / 15.0;
-    result.blue = parseInt(matches[3], 16) / 15.0;
-    result.alpha = parseInt(defaultValue(matches[4], "f"), 16) / 15.0;
-    return result;
-  }
+	var matches = rgbaMatcher.exec(color)
+	if (matches !== null) {
+		result.red = parseInt(matches[1], 16) / 15
+		result.green = parseInt(matches[2], 16) / 15.0
+		result.blue = parseInt(matches[3], 16) / 15.0
+		result.alpha = parseInt(defaultValue(matches[4], 'f'), 16) / 15.0
+		return result
+	}
 
-  matches = rrggbbaaMatcher.exec(color);
-  if (matches !== null) {
-    result.red = parseInt(matches[1], 16) / 255.0;
-    result.green = parseInt(matches[2], 16) / 255.0;
-    result.blue = parseInt(matches[3], 16) / 255.0;
-    result.alpha = parseInt(defaultValue(matches[4], "ff"), 16) / 255.0;
-    return result;
-  }
+	matches = rrggbbaaMatcher.exec(color)
+	if (matches !== null) {
+		result.red = parseInt(matches[1], 16) / 255.0
+		result.green = parseInt(matches[2], 16) / 255.0
+		result.blue = parseInt(matches[3], 16) / 255.0
+		result.alpha = parseInt(defaultValue(matches[4], 'ff'), 16) / 255.0
+		return result
+	}
 
-  matches = rgbParenthesesMatcher.exec(color);
-  if (matches !== null) {
-    result.red =
-      parseFloat(matches[1]) / ("%" === matches[1].substr(-1) ? 100.0 : 255.0);
-    result.green =
-      parseFloat(matches[2]) / ("%" === matches[2].substr(-1) ? 100.0 : 255.0);
-    result.blue =
-      parseFloat(matches[3]) / ("%" === matches[3].substr(-1) ? 100.0 : 255.0);
-    result.alpha = parseFloat(defaultValue(matches[4], "1.0"));
-    return result;
-  }
+	matches = rgbParenthesesMatcher.exec(color)
+	if (matches !== null) {
+		result.red =
+			parseFloat(matches[1]) / ('%' === matches[1].substr(-1) ? 100.0 : 255.0)
+		result.green =
+			parseFloat(matches[2]) / ('%' === matches[2].substr(-1) ? 100.0 : 255.0)
+		result.blue =
+			parseFloat(matches[3]) / ('%' === matches[3].substr(-1) ? 100.0 : 255.0)
+		result.alpha = parseFloat(defaultValue(matches[4], '1.0'))
+		return result
+	}
 
-  matches = hslParenthesesMatcher.exec(color);
-  if (matches !== null) {
-    return Color.fromHsl(
-      parseFloat(matches[1]) / 360.0,
-      parseFloat(matches[2]) / 100.0,
-      parseFloat(matches[3]) / 100.0,
-      parseFloat(defaultValue(matches[4], "1.0")),
-      result
-    );
-  }
+	matches = hslParenthesesMatcher.exec(color)
+	if (matches !== null) {
+		return Color.fromHsl(
+			parseFloat(matches[1]) / 360.0,
+			parseFloat(matches[2]) / 100.0,
+			parseFloat(matches[3]) / 100.0,
+			parseFloat(defaultValue(matches[4], '1.0')),
+			result,
+		)
+	}
 
-  result = undefined;
-  return result;
-};
+	result = undefined
+	return result
+}
 
 /**
  * The number of elements used to pack the object into an array.
  * @type {Number}
  */
-Color.packedLength = 4;
+Color.packedLength = 4
 
 /**
  * Stores the provided instance into the provided array.
@@ -449,19 +451,19 @@ Color.packedLength = 4;
  * @returns {Number[]} The array that was packed into
  */
 Color.pack = function (value, array, startingIndex) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("value", value);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('value', value)
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
-  array[startingIndex++] = value.red;
-  array[startingIndex++] = value.green;
-  array[startingIndex++] = value.blue;
-  array[startingIndex] = value.alpha;
+	startingIndex = defaultValue(startingIndex, 0)
+	array[startingIndex++] = value.red
+	array[startingIndex++] = value.green
+	array[startingIndex++] = value.blue
+	array[startingIndex] = value.alpha
 
-  return array;
-};
+	return array
+}
 
 /**
  * Retrieves an instance from a packed array.
@@ -472,20 +474,20 @@ Color.pack = function (value, array, startingIndex) {
  * @returns {Color} The modified result parameter or a new Color instance if one was not provided.
  */
 Color.unpack = function (array, startingIndex, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
-  if (!defined(result)) {
-    result = new Color();
-  }
-  result.red = array[startingIndex++];
-  result.green = array[startingIndex++];
-  result.blue = array[startingIndex++];
-  result.alpha = array[startingIndex];
-  return result;
-};
+	startingIndex = defaultValue(startingIndex, 0)
+	if (!defined(result)) {
+		result = new Color()
+	}
+	result.red = array[startingIndex++]
+	result.green = array[startingIndex++]
+	result.blue = array[startingIndex++]
+	result.alpha = array[startingIndex]
+	return result
+}
 
 /**
  * Converts a 'byte' color component in the range of 0 to 255 into
@@ -495,8 +497,8 @@ Color.unpack = function (array, startingIndex, result) {
  * @returns {Number} The converted number.
  */
 Color.byteToFloat = function (number) {
-  return number / 255.0;
-};
+	return number / 255.0
+}
 
 /**
  * Converts a 'float' color component in the range of 0 to 1.0 into
@@ -506,8 +508,8 @@ Color.byteToFloat = function (number) {
  * @returns {Number} The converted number.
  */
 Color.floatToByte = function (number) {
-  return number === 1.0 ? 255.0 : (number * 256.0) | 0;
-};
+	return number === 1.0 ? 255.0 : (number * 256.0) | 0
+}
 
 /**
  * Duplicates a Color.
@@ -517,18 +519,18 @@ Color.floatToByte = function (number) {
  * @returns {Color} The modified result parameter or a new instance if result was undefined. (Returns undefined if color is undefined)
  */
 Color.clone = function (color, result) {
-  if (!defined(color)) {
-    return undefined;
-  }
-  if (!defined(result)) {
-    return new Color(color.red, color.green, color.blue, color.alpha);
-  }
-  result.red = color.red;
-  result.green = color.green;
-  result.blue = color.blue;
-  result.alpha = color.alpha;
-  return result;
-};
+	if (!defined(color)) {
+		return undefined
+	}
+	if (!defined(result)) {
+		return new Color(color.red, color.green, color.blue, color.alpha)
+	}
+	result.red = color.red
+	result.green = color.green
+	result.blue = color.blue
+	result.alpha = color.alpha
+	return result
+}
 
 /**
  * Returns true if the first Color equals the second color.
@@ -538,28 +540,28 @@ Color.clone = function (color, result) {
  * @returns {Boolean} <code>true</code> if the Colors are equal; otherwise, <code>false</code>.
  */
 Color.equals = function (left, right) {
-  return (
-    left === right || //
-    (defined(left) && //
-      defined(right) && //
-      left.red === right.red && //
-      left.green === right.green && //
-      left.blue === right.blue && //
-      left.alpha === right.alpha)
-  );
-};
+	return (
+		left === right || //
+		(defined(left) && //
+			defined(right) && //
+			left.red === right.red && //
+			left.green === right.green && //
+			left.blue === right.blue && //
+			left.alpha === right.alpha)
+	)
+}
 
 /**
  * @private
  */
 Color.equalsArray = function (color, array, offset) {
-  return (
-    color.red === array[offset] &&
-    color.green === array[offset + 1] &&
-    color.blue === array[offset + 2] &&
-    color.alpha === array[offset + 3]
-  );
-};
+	return (
+		color.red === array[offset] &&
+		color.green === array[offset + 1] &&
+		color.blue === array[offset + 2] &&
+		color.alpha === array[offset + 3]
+	)
+}
 
 /**
  * Returns a duplicate of a Color instance.
@@ -568,8 +570,8 @@ Color.equalsArray = function (color, array, offset) {
  * @returns {Color} The modified result parameter or a new instance if result was undefined.
  */
 Color.prototype.clone = function (result) {
-  return Color.clone(this, result);
-};
+	return Color.clone(this, result)
+}
 
 /**
  * Returns true if this Color equals other.
@@ -578,8 +580,8 @@ Color.prototype.clone = function (result) {
  * @returns {Boolean} <code>true</code> if the Colors are equal; otherwise, <code>false</code>.
  */
 Color.prototype.equals = function (other) {
-  return Color.equals(this, other);
-};
+	return Color.equals(this, other)
+}
 
 /**
  * Returns <code>true</code> if this Color equals other componentwise within the specified epsilon.
@@ -589,15 +591,15 @@ Color.prototype.equals = function (other) {
  * @returns {Boolean} <code>true</code> if the Colors are equal within the specified epsilon; otherwise, <code>false</code>.
  */
 Color.prototype.equalsEpsilon = function (other, epsilon) {
-  return (
-    this === other || //
-    (defined(other) && //
-      Math.abs(this.red - other.red) <= epsilon && //
-      Math.abs(this.green - other.green) <= epsilon && //
-      Math.abs(this.blue - other.blue) <= epsilon && //
-      Math.abs(this.alpha - other.alpha) <= epsilon)
-  );
-};
+	return (
+		this === other || //
+		(defined(other) && //
+			Math.abs(this.red - other.red) <= epsilon && //
+			Math.abs(this.green - other.green) <= epsilon && //
+			Math.abs(this.blue - other.blue) <= epsilon && //
+			Math.abs(this.alpha - other.alpha) <= epsilon)
+	)
+}
 
 /**
  * Creates a string representing this Color in the format '(red, green, blue, alpha)'.
@@ -605,18 +607,18 @@ Color.prototype.equalsEpsilon = function (other, epsilon) {
  * @returns {String} A string representing this Color in the format '(red, green, blue, alpha)'.
  */
 Color.prototype.toString = function () {
-  return (
-    "(" +
-    this.red +
-    ", " +
-    this.green +
-    ", " +
-    this.blue +
-    ", " +
-    this.alpha +
-    ")"
-  );
-};
+	return (
+		'(' +
+		this.red +
+		', ' +
+		this.green +
+		', ' +
+		this.blue +
+		', ' +
+		this.alpha +
+		')'
+	)
+}
 
 /**
  * Creates a string containing the CSS color value for this color.
@@ -626,14 +628,14 @@ Color.prototype.toString = function () {
  * @see {@link http://www.w3.org/TR/css3-color/#rgba-color|CSS RGB or RGBA color values}
  */
 Color.prototype.toCssColorString = function () {
-  var red = Color.floatToByte(this.red);
-  var green = Color.floatToByte(this.green);
-  var blue = Color.floatToByte(this.blue);
-  if (this.alpha === 1) {
-    return "rgb(" + red + "," + green + "," + blue + ")";
-  }
-  return "rgba(" + red + "," + green + "," + blue + "," + this.alpha + ")";
-};
+	var red = Color.floatToByte(this.red)
+	var green = Color.floatToByte(this.green)
+	var blue = Color.floatToByte(this.blue)
+	if (this.alpha === 1) {
+		return 'rgb(' + red + ',' + green + ',' + blue + ')'
+	}
+	return 'rgba(' + red + ',' + green + ',' + blue + ',' + this.alpha + ')'
+}
 
 /**
  * Creates a string containing CSS hex string color value for this color.
@@ -641,27 +643,27 @@ Color.prototype.toCssColorString = function () {
  * @returns {String} The CSS hex string equivalent of this color.
  */
 Color.prototype.toCssHexString = function () {
-  var r = Color.floatToByte(this.red).toString(16);
-  if (r.length < 2) {
-    r = "0" + r;
-  }
-  var g = Color.floatToByte(this.green).toString(16);
-  if (g.length < 2) {
-    g = "0" + g;
-  }
-  var b = Color.floatToByte(this.blue).toString(16);
-  if (b.length < 2) {
-    b = "0" + b;
-  }
-  if (this.alpha < 1) {
-    var hexAlpha = Color.floatToByte(this.alpha).toString(16);
-    if (hexAlpha.length < 2) {
-      hexAlpha = "0" + hexAlpha;
-    }
-    return "#" + r + g + b + hexAlpha;
-  }
-  return "#" + r + g + b;
-};
+	var r = Color.floatToByte(this.red).toString(16)
+	if (r.length < 2) {
+		r = '0' + r
+	}
+	var g = Color.floatToByte(this.green).toString(16)
+	if (g.length < 2) {
+		g = '0' + g
+	}
+	var b = Color.floatToByte(this.blue).toString(16)
+	if (b.length < 2) {
+		b = '0' + b
+	}
+	if (this.alpha < 1) {
+		var hexAlpha = Color.floatToByte(this.alpha).toString(16)
+		if (hexAlpha.length < 2) {
+			hexAlpha = '0' + hexAlpha
+		}
+		return '#' + r + g + b + hexAlpha
+	}
+	return '#' + r + g + b
+}
 
 /**
  * Converts this color to an array of red, green, blue, and alpha values
@@ -671,20 +673,20 @@ Color.prototype.toCssHexString = function () {
  * @returns {Number[]} The modified result parameter or a new instance if result was undefined.
  */
 Color.prototype.toBytes = function (result) {
-  var red = Color.floatToByte(this.red);
-  var green = Color.floatToByte(this.green);
-  var blue = Color.floatToByte(this.blue);
-  var alpha = Color.floatToByte(this.alpha);
+	var red = Color.floatToByte(this.red)
+	var green = Color.floatToByte(this.green)
+	var blue = Color.floatToByte(this.blue)
+	var alpha = Color.floatToByte(this.alpha)
 
-  if (!defined(result)) {
-    return [red, green, blue, alpha];
-  }
-  result[0] = red;
-  result[1] = green;
-  result[2] = blue;
-  result[3] = alpha;
-  return result;
-};
+	if (!defined(result)) {
+		return [red, green, blue, alpha]
+	}
+	result[0] = red
+	result[1] = green
+	result[2] = blue
+	result[3] = alpha
+	return result
+}
 
 /**
  * Converts this color to a single numeric unsigned 32-bit RGBA value, using the endianness
@@ -699,13 +701,13 @@ Color.prototype.toBytes = function (result) {
  * @see Color.fromRgba
  */
 Color.prototype.toRgba = function () {
-  // scratchUint32Array and scratchUint8Array share an underlying array buffer
-  scratchUint8Array[0] = Color.floatToByte(this.red);
-  scratchUint8Array[1] = Color.floatToByte(this.green);
-  scratchUint8Array[2] = Color.floatToByte(this.blue);
-  scratchUint8Array[3] = Color.floatToByte(this.alpha);
-  return scratchUint32Array[0];
-};
+	// scratchUint32Array and scratchUint8Array share an underlying array buffer
+	scratchUint8Array[0] = Color.floatToByte(this.red)
+	scratchUint8Array[1] = Color.floatToByte(this.green)
+	scratchUint8Array[2] = Color.floatToByte(this.blue)
+	scratchUint8Array[3] = Color.floatToByte(this.alpha)
+	return scratchUint32Array[0]
+}
 
 /**
  * Brightens this color by the provided magnitude.
@@ -718,19 +720,19 @@ Color.prototype.toRgba = function () {
  * var brightBlue = Cesium.Color.BLUE.brighten(0.5, new Cesium.Color());
  */
 Color.prototype.brighten = function (magnitude, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number("magnitude", magnitude);
-  Check.typeOf.number.greaterThanOrEquals("magnitude", magnitude, 0.0);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number('magnitude', magnitude)
+	Check.typeOf.number.greaterThanOrEquals('magnitude', magnitude, 0.0)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  magnitude = 1.0 - magnitude;
-  result.red = 1.0 - (1.0 - this.red) * magnitude;
-  result.green = 1.0 - (1.0 - this.green) * magnitude;
-  result.blue = 1.0 - (1.0 - this.blue) * magnitude;
-  result.alpha = this.alpha;
-  return result;
-};
+	magnitude = 1.0 - magnitude
+	result.red = 1.0 - (1.0 - this.red) * magnitude
+	result.green = 1.0 - (1.0 - this.green) * magnitude
+	result.blue = 1.0 - (1.0 - this.blue) * magnitude
+	result.alpha = this.alpha
+	return result
+}
 
 /**
  * Darkens this color by the provided magnitude.
@@ -743,19 +745,19 @@ Color.prototype.brighten = function (magnitude, result) {
  * var darkBlue = Cesium.Color.BLUE.darken(0.5, new Cesium.Color());
  */
 Color.prototype.darken = function (magnitude, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number("magnitude", magnitude);
-  Check.typeOf.number.greaterThanOrEquals("magnitude", magnitude, 0.0);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number('magnitude', magnitude)
+	Check.typeOf.number.greaterThanOrEquals('magnitude', magnitude, 0.0)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  magnitude = 1.0 - magnitude;
-  result.red = this.red * magnitude;
-  result.green = this.green * magnitude;
-  result.blue = this.blue * magnitude;
-  result.alpha = this.alpha;
-  return result;
-};
+	magnitude = 1.0 - magnitude
+	result.red = this.red * magnitude
+	result.green = this.green * magnitude
+	result.blue = this.blue * magnitude
+	result.alpha = this.alpha
+	return result
+}
 
 /**
  * Creates a new Color that has the same red, green, and blue components
@@ -768,8 +770,8 @@ Color.prototype.darken = function (magnitude, result) {
  * @example var translucentRed = Cesium.Color.RED.withAlpha(0.9);
  */
 Color.prototype.withAlpha = function (alpha, result) {
-  return Color.fromAlpha(this, alpha, result);
-};
+	return Color.fromAlpha(this, alpha, result)
+}
 
 /**
  * Computes the componentwise sum of two Colors.
@@ -780,18 +782,18 @@ Color.prototype.withAlpha = function (alpha, result) {
  * @returns {Color} The modified result parameter.
  */
 Color.add = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.red = left.red + right.red;
-  result.green = left.green + right.green;
-  result.blue = left.blue + right.blue;
-  result.alpha = left.alpha + right.alpha;
-  return result;
-};
+	result.red = left.red + right.red
+	result.green = left.green + right.green
+	result.blue = left.blue + right.blue
+	result.alpha = left.alpha + right.alpha
+	return result
+}
 
 /**
  * Computes the componentwise difference of two Colors.
@@ -802,18 +804,18 @@ Color.add = function (left, right, result) {
  * @returns {Color} The modified result parameter.
  */
 Color.subtract = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.red = left.red - right.red;
-  result.green = left.green - right.green;
-  result.blue = left.blue - right.blue;
-  result.alpha = left.alpha - right.alpha;
-  return result;
-};
+	result.red = left.red - right.red
+	result.green = left.green - right.green
+	result.blue = left.blue - right.blue
+	result.alpha = left.alpha - right.alpha
+	return result
+}
 
 /**
  * Computes the componentwise product of two Colors.
@@ -824,18 +826,18 @@ Color.subtract = function (left, right, result) {
  * @returns {Color} The modified result parameter.
  */
 Color.multiply = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.red = left.red * right.red;
-  result.green = left.green * right.green;
-  result.blue = left.blue * right.blue;
-  result.alpha = left.alpha * right.alpha;
-  return result;
-};
+	result.red = left.red * right.red
+	result.green = left.green * right.green
+	result.blue = left.blue * right.blue
+	result.alpha = left.alpha * right.alpha
+	return result
+}
 
 /**
  * Computes the componentwise quotient of two Colors.
@@ -846,18 +848,18 @@ Color.multiply = function (left, right, result) {
  * @returns {Color} The modified result parameter.
  */
 Color.divide = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.red = left.red / right.red;
-  result.green = left.green / right.green;
-  result.blue = left.blue / right.blue;
-  result.alpha = left.alpha / right.alpha;
-  return result;
-};
+	result.red = left.red / right.red
+	result.green = left.green / right.green
+	result.blue = left.blue / right.blue
+	result.alpha = left.alpha / right.alpha
+	return result
+}
 
 /**
  * Computes the componentwise modulus of two Colors.
@@ -868,18 +870,18 @@ Color.divide = function (left, right, result) {
  * @returns {Color} The modified result parameter.
  */
 Color.mod = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.red = left.red % right.red;
-  result.green = left.green % right.green;
-  result.blue = left.blue % right.blue;
-  result.alpha = left.alpha % right.alpha;
-  return result;
-};
+	result.red = left.red % right.red
+	result.green = left.green % right.green
+	result.blue = left.blue % right.blue
+	result.alpha = left.alpha % right.alpha
+	return result
+}
 
 /**
  * Computes the linear interpolation or extrapolation at t between the provided colors.
@@ -891,19 +893,19 @@ Color.mod = function (left, right, result) {
  * @returns {Color} The modified result parameter.
  */
 Color.lerp = function (start, end, t, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("start", start);
-  Check.typeOf.object("end", end);
-  Check.typeOf.number("t", t);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('start', start)
+	Check.typeOf.object('end', end)
+	Check.typeOf.number('t', t)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.red = CesiumMath.lerp(start.red, end.red, t);
-  result.green = CesiumMath.lerp(start.green, end.green, t);
-  result.blue = CesiumMath.lerp(start.blue, end.blue, t);
-  result.alpha = CesiumMath.lerp(start.alpha, end.alpha, t);
-  return result;
-};
+	result.red = CesiumMath.lerp(start.red, end.red, t)
+	result.green = CesiumMath.lerp(start.green, end.green, t)
+	result.blue = CesiumMath.lerp(start.blue, end.blue, t)
+	result.alpha = CesiumMath.lerp(start.alpha, end.alpha, t)
+	return result
+}
 
 /**
  * Multiplies the provided Color componentwise by the provided scalar.
@@ -914,18 +916,18 @@ Color.lerp = function (start, end, t, result) {
  * @returns {Color} The modified result parameter.
  */
 Color.multiplyByScalar = function (color, scalar, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("color", color);
-  Check.typeOf.number("scalar", scalar);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('color', color)
+	Check.typeOf.number('scalar', scalar)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.red = color.red * scalar;
-  result.green = color.green * scalar;
-  result.blue = color.blue * scalar;
-  result.alpha = color.alpha * scalar;
-  return result;
-};
+	result.red = color.red * scalar
+	result.green = color.green * scalar
+	result.blue = color.blue * scalar
+	result.alpha = color.alpha * scalar
+	return result
+}
 
 /**
  * Divides the provided Color componentwise by the provided scalar.
@@ -936,18 +938,18 @@ Color.multiplyByScalar = function (color, scalar, result) {
  * @returns {Color} The modified result parameter.
  */
 Color.divideByScalar = function (color, scalar, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("color", color);
-  Check.typeOf.number("scalar", scalar);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('color', color)
+	Check.typeOf.number('scalar', scalar)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.red = color.red / scalar;
-  result.green = color.green / scalar;
-  result.blue = color.blue / scalar;
-  result.alpha = color.alpha / scalar;
-  return result;
-};
+	result.red = color.red / scalar
+	result.green = color.green / scalar
+	result.blue = color.blue / scalar
+	result.alpha = color.alpha / scalar
+	return result
+}
 
 /**
  * An immutable Color instance initialized to CSS color #F0F8FF
@@ -956,7 +958,7 @@ Color.divideByScalar = function (color, scalar, result) {
  * @constant
  * @type {Color}
  */
-Color.ALICEBLUE = Object.freeze(Color.fromCssColorString("#F0F8FF"));
+Color.ALICEBLUE = Object.freeze(Color.fromCssColorString('#F0F8FF'))
 
 /**
  * An immutable Color instance initialized to CSS color #FAEBD7
@@ -965,7 +967,7 @@ Color.ALICEBLUE = Object.freeze(Color.fromCssColorString("#F0F8FF"));
  * @constant
  * @type {Color}
  */
-Color.ANTIQUEWHITE = Object.freeze(Color.fromCssColorString("#FAEBD7"));
+Color.ANTIQUEWHITE = Object.freeze(Color.fromCssColorString('#FAEBD7'))
 
 /**
  * An immutable Color instance initialized to CSS color #00FFFF
@@ -974,7 +976,7 @@ Color.ANTIQUEWHITE = Object.freeze(Color.fromCssColorString("#FAEBD7"));
  * @constant
  * @type {Color}
  */
-Color.AQUA = Object.freeze(Color.fromCssColorString("#00FFFF"));
+Color.AQUA = Object.freeze(Color.fromCssColorString('#00FFFF'))
 
 /**
  * An immutable Color instance initialized to CSS color #7FFFD4
@@ -983,7 +985,7 @@ Color.AQUA = Object.freeze(Color.fromCssColorString("#00FFFF"));
  * @constant
  * @type {Color}
  */
-Color.AQUAMARINE = Object.freeze(Color.fromCssColorString("#7FFFD4"));
+Color.AQUAMARINE = Object.freeze(Color.fromCssColorString('#7FFFD4'))
 
 /**
  * An immutable Color instance initialized to CSS color #F0FFFF
@@ -992,7 +994,7 @@ Color.AQUAMARINE = Object.freeze(Color.fromCssColorString("#7FFFD4"));
  * @constant
  * @type {Color}
  */
-Color.AZURE = Object.freeze(Color.fromCssColorString("#F0FFFF"));
+Color.AZURE = Object.freeze(Color.fromCssColorString('#F0FFFF'))
 
 /**
  * An immutable Color instance initialized to CSS color #F5F5DC
@@ -1001,7 +1003,7 @@ Color.AZURE = Object.freeze(Color.fromCssColorString("#F0FFFF"));
  * @constant
  * @type {Color}
  */
-Color.BEIGE = Object.freeze(Color.fromCssColorString("#F5F5DC"));
+Color.BEIGE = Object.freeze(Color.fromCssColorString('#F5F5DC'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFE4C4
@@ -1010,7 +1012,7 @@ Color.BEIGE = Object.freeze(Color.fromCssColorString("#F5F5DC"));
  * @constant
  * @type {Color}
  */
-Color.BISQUE = Object.freeze(Color.fromCssColorString("#FFE4C4"));
+Color.BISQUE = Object.freeze(Color.fromCssColorString('#FFE4C4'))
 
 /**
  * An immutable Color instance initialized to CSS color #000000
@@ -1019,7 +1021,7 @@ Color.BISQUE = Object.freeze(Color.fromCssColorString("#FFE4C4"));
  * @constant
  * @type {Color}
  */
-Color.BLACK = Object.freeze(Color.fromCssColorString("#000000"));
+Color.BLACK = Object.freeze(Color.fromCssColorString('#000000'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFEBCD
@@ -1028,7 +1030,7 @@ Color.BLACK = Object.freeze(Color.fromCssColorString("#000000"));
  * @constant
  * @type {Color}
  */
-Color.BLANCHEDALMOND = Object.freeze(Color.fromCssColorString("#FFEBCD"));
+Color.BLANCHEDALMOND = Object.freeze(Color.fromCssColorString('#FFEBCD'))
 
 /**
  * An immutable Color instance initialized to CSS color #0000FF
@@ -1037,7 +1039,7 @@ Color.BLANCHEDALMOND = Object.freeze(Color.fromCssColorString("#FFEBCD"));
  * @constant
  * @type {Color}
  */
-Color.BLUE = Object.freeze(Color.fromCssColorString("#0000FF"));
+Color.BLUE = Object.freeze(Color.fromCssColorString('#0000FF'))
 
 /**
  * An immutable Color instance initialized to CSS color #8A2BE2
@@ -1046,7 +1048,7 @@ Color.BLUE = Object.freeze(Color.fromCssColorString("#0000FF"));
  * @constant
  * @type {Color}
  */
-Color.BLUEVIOLET = Object.freeze(Color.fromCssColorString("#8A2BE2"));
+Color.BLUEVIOLET = Object.freeze(Color.fromCssColorString('#8A2BE2'))
 
 /**
  * An immutable Color instance initialized to CSS color #A52A2A
@@ -1055,7 +1057,7 @@ Color.BLUEVIOLET = Object.freeze(Color.fromCssColorString("#8A2BE2"));
  * @constant
  * @type {Color}
  */
-Color.BROWN = Object.freeze(Color.fromCssColorString("#A52A2A"));
+Color.BROWN = Object.freeze(Color.fromCssColorString('#A52A2A'))
 
 /**
  * An immutable Color instance initialized to CSS color #DEB887
@@ -1064,7 +1066,7 @@ Color.BROWN = Object.freeze(Color.fromCssColorString("#A52A2A"));
  * @constant
  * @type {Color}
  */
-Color.BURLYWOOD = Object.freeze(Color.fromCssColorString("#DEB887"));
+Color.BURLYWOOD = Object.freeze(Color.fromCssColorString('#DEB887'))
 
 /**
  * An immutable Color instance initialized to CSS color #5F9EA0
@@ -1073,7 +1075,7 @@ Color.BURLYWOOD = Object.freeze(Color.fromCssColorString("#DEB887"));
  * @constant
  * @type {Color}
  */
-Color.CADETBLUE = Object.freeze(Color.fromCssColorString("#5F9EA0"));
+Color.CADETBLUE = Object.freeze(Color.fromCssColorString('#5F9EA0'))
 /**
  * An immutable Color instance initialized to CSS color #7FFF00
  * <span class="colorSwath" style="background: #7FFF00;"></span>
@@ -1081,7 +1083,7 @@ Color.CADETBLUE = Object.freeze(Color.fromCssColorString("#5F9EA0"));
  * @constant
  * @type {Color}
  */
-Color.CHARTREUSE = Object.freeze(Color.fromCssColorString("#7FFF00"));
+Color.CHARTREUSE = Object.freeze(Color.fromCssColorString('#7FFF00'))
 
 /**
  * An immutable Color instance initialized to CSS color #D2691E
@@ -1090,7 +1092,7 @@ Color.CHARTREUSE = Object.freeze(Color.fromCssColorString("#7FFF00"));
  * @constant
  * @type {Color}
  */
-Color.CHOCOLATE = Object.freeze(Color.fromCssColorString("#D2691E"));
+Color.CHOCOLATE = Object.freeze(Color.fromCssColorString('#D2691E'))
 
 /**
  * An immutable Color instance initialized to CSS color #FF7F50
@@ -1099,7 +1101,7 @@ Color.CHOCOLATE = Object.freeze(Color.fromCssColorString("#D2691E"));
  * @constant
  * @type {Color}
  */
-Color.CORAL = Object.freeze(Color.fromCssColorString("#FF7F50"));
+Color.CORAL = Object.freeze(Color.fromCssColorString('#FF7F50'))
 
 /**
  * An immutable Color instance initialized to CSS color #6495ED
@@ -1108,7 +1110,7 @@ Color.CORAL = Object.freeze(Color.fromCssColorString("#FF7F50"));
  * @constant
  * @type {Color}
  */
-Color.CORNFLOWERBLUE = Object.freeze(Color.fromCssColorString("#6495ED"));
+Color.CORNFLOWERBLUE = Object.freeze(Color.fromCssColorString('#6495ED'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFF8DC
@@ -1117,7 +1119,7 @@ Color.CORNFLOWERBLUE = Object.freeze(Color.fromCssColorString("#6495ED"));
  * @constant
  * @type {Color}
  */
-Color.CORNSILK = Object.freeze(Color.fromCssColorString("#FFF8DC"));
+Color.CORNSILK = Object.freeze(Color.fromCssColorString('#FFF8DC'))
 
 /**
  * An immutable Color instance initialized to CSS color #DC143C
@@ -1126,7 +1128,7 @@ Color.CORNSILK = Object.freeze(Color.fromCssColorString("#FFF8DC"));
  * @constant
  * @type {Color}
  */
-Color.CRIMSON = Object.freeze(Color.fromCssColorString("#DC143C"));
+Color.CRIMSON = Object.freeze(Color.fromCssColorString('#DC143C'))
 
 /**
  * An immutable Color instance initialized to CSS color #00FFFF
@@ -1135,7 +1137,7 @@ Color.CRIMSON = Object.freeze(Color.fromCssColorString("#DC143C"));
  * @constant
  * @type {Color}
  */
-Color.CYAN = Object.freeze(Color.fromCssColorString("#00FFFF"));
+Color.CYAN = Object.freeze(Color.fromCssColorString('#00FFFF'))
 
 /**
  * An immutable Color instance initialized to CSS color #00008B
@@ -1144,7 +1146,7 @@ Color.CYAN = Object.freeze(Color.fromCssColorString("#00FFFF"));
  * @constant
  * @type {Color}
  */
-Color.DARKBLUE = Object.freeze(Color.fromCssColorString("#00008B"));
+Color.DARKBLUE = Object.freeze(Color.fromCssColorString('#00008B'))
 
 /**
  * An immutable Color instance initialized to CSS color #008B8B
@@ -1153,7 +1155,7 @@ Color.DARKBLUE = Object.freeze(Color.fromCssColorString("#00008B"));
  * @constant
  * @type {Color}
  */
-Color.DARKCYAN = Object.freeze(Color.fromCssColorString("#008B8B"));
+Color.DARKCYAN = Object.freeze(Color.fromCssColorString('#008B8B'))
 
 /**
  * An immutable Color instance initialized to CSS color #B8860B
@@ -1162,7 +1164,7 @@ Color.DARKCYAN = Object.freeze(Color.fromCssColorString("#008B8B"));
  * @constant
  * @type {Color}
  */
-Color.DARKGOLDENROD = Object.freeze(Color.fromCssColorString("#B8860B"));
+Color.DARKGOLDENROD = Object.freeze(Color.fromCssColorString('#B8860B'))
 
 /**
  * An immutable Color instance initialized to CSS color #A9A9A9
@@ -1171,7 +1173,7 @@ Color.DARKGOLDENROD = Object.freeze(Color.fromCssColorString("#B8860B"));
  * @constant
  * @type {Color}
  */
-Color.DARKGRAY = Object.freeze(Color.fromCssColorString("#A9A9A9"));
+Color.DARKGRAY = Object.freeze(Color.fromCssColorString('#A9A9A9'))
 
 /**
  * An immutable Color instance initialized to CSS color #006400
@@ -1180,7 +1182,7 @@ Color.DARKGRAY = Object.freeze(Color.fromCssColorString("#A9A9A9"));
  * @constant
  * @type {Color}
  */
-Color.DARKGREEN = Object.freeze(Color.fromCssColorString("#006400"));
+Color.DARKGREEN = Object.freeze(Color.fromCssColorString('#006400'))
 
 /**
  * An immutable Color instance initialized to CSS color #A9A9A9
@@ -1189,7 +1191,7 @@ Color.DARKGREEN = Object.freeze(Color.fromCssColorString("#006400"));
  * @constant
  * @type {Color}
  */
-Color.DARKGREY = Color.DARKGRAY;
+Color.DARKGREY = Color.DARKGRAY
 
 /**
  * An immutable Color instance initialized to CSS color #BDB76B
@@ -1198,7 +1200,7 @@ Color.DARKGREY = Color.DARKGRAY;
  * @constant
  * @type {Color}
  */
-Color.DARKKHAKI = Object.freeze(Color.fromCssColorString("#BDB76B"));
+Color.DARKKHAKI = Object.freeze(Color.fromCssColorString('#BDB76B'))
 
 /**
  * An immutable Color instance initialized to CSS color #8B008B
@@ -1207,7 +1209,7 @@ Color.DARKKHAKI = Object.freeze(Color.fromCssColorString("#BDB76B"));
  * @constant
  * @type {Color}
  */
-Color.DARKMAGENTA = Object.freeze(Color.fromCssColorString("#8B008B"));
+Color.DARKMAGENTA = Object.freeze(Color.fromCssColorString('#8B008B'))
 
 /**
  * An immutable Color instance initialized to CSS color #556B2F
@@ -1216,7 +1218,7 @@ Color.DARKMAGENTA = Object.freeze(Color.fromCssColorString("#8B008B"));
  * @constant
  * @type {Color}
  */
-Color.DARKOLIVEGREEN = Object.freeze(Color.fromCssColorString("#556B2F"));
+Color.DARKOLIVEGREEN = Object.freeze(Color.fromCssColorString('#556B2F'))
 
 /**
  * An immutable Color instance initialized to CSS color #FF8C00
@@ -1225,7 +1227,7 @@ Color.DARKOLIVEGREEN = Object.freeze(Color.fromCssColorString("#556B2F"));
  * @constant
  * @type {Color}
  */
-Color.DARKORANGE = Object.freeze(Color.fromCssColorString("#FF8C00"));
+Color.DARKORANGE = Object.freeze(Color.fromCssColorString('#FF8C00'))
 
 /**
  * An immutable Color instance initialized to CSS color #9932CC
@@ -1234,7 +1236,7 @@ Color.DARKORANGE = Object.freeze(Color.fromCssColorString("#FF8C00"));
  * @constant
  * @type {Color}
  */
-Color.DARKORCHID = Object.freeze(Color.fromCssColorString("#9932CC"));
+Color.DARKORCHID = Object.freeze(Color.fromCssColorString('#9932CC'))
 
 /**
  * An immutable Color instance initialized to CSS color #8B0000
@@ -1243,7 +1245,7 @@ Color.DARKORCHID = Object.freeze(Color.fromCssColorString("#9932CC"));
  * @constant
  * @type {Color}
  */
-Color.DARKRED = Object.freeze(Color.fromCssColorString("#8B0000"));
+Color.DARKRED = Object.freeze(Color.fromCssColorString('#8B0000'))
 
 /**
  * An immutable Color instance initialized to CSS color #E9967A
@@ -1252,7 +1254,7 @@ Color.DARKRED = Object.freeze(Color.fromCssColorString("#8B0000"));
  * @constant
  * @type {Color}
  */
-Color.DARKSALMON = Object.freeze(Color.fromCssColorString("#E9967A"));
+Color.DARKSALMON = Object.freeze(Color.fromCssColorString('#E9967A'))
 
 /**
  * An immutable Color instance initialized to CSS color #8FBC8F
@@ -1261,7 +1263,7 @@ Color.DARKSALMON = Object.freeze(Color.fromCssColorString("#E9967A"));
  * @constant
  * @type {Color}
  */
-Color.DARKSEAGREEN = Object.freeze(Color.fromCssColorString("#8FBC8F"));
+Color.DARKSEAGREEN = Object.freeze(Color.fromCssColorString('#8FBC8F'))
 
 /**
  * An immutable Color instance initialized to CSS color #483D8B
@@ -1270,7 +1272,7 @@ Color.DARKSEAGREEN = Object.freeze(Color.fromCssColorString("#8FBC8F"));
  * @constant
  * @type {Color}
  */
-Color.DARKSLATEBLUE = Object.freeze(Color.fromCssColorString("#483D8B"));
+Color.DARKSLATEBLUE = Object.freeze(Color.fromCssColorString('#483D8B'))
 
 /**
  * An immutable Color instance initialized to CSS color #2F4F4F
@@ -1279,7 +1281,7 @@ Color.DARKSLATEBLUE = Object.freeze(Color.fromCssColorString("#483D8B"));
  * @constant
  * @type {Color}
  */
-Color.DARKSLATEGRAY = Object.freeze(Color.fromCssColorString("#2F4F4F"));
+Color.DARKSLATEGRAY = Object.freeze(Color.fromCssColorString('#2F4F4F'))
 
 /**
  * An immutable Color instance initialized to CSS color #2F4F4F
@@ -1288,7 +1290,7 @@ Color.DARKSLATEGRAY = Object.freeze(Color.fromCssColorString("#2F4F4F"));
  * @constant
  * @type {Color}
  */
-Color.DARKSLATEGREY = Color.DARKSLATEGRAY;
+Color.DARKSLATEGREY = Color.DARKSLATEGRAY
 
 /**
  * An immutable Color instance initialized to CSS color #00CED1
@@ -1297,7 +1299,7 @@ Color.DARKSLATEGREY = Color.DARKSLATEGRAY;
  * @constant
  * @type {Color}
  */
-Color.DARKTURQUOISE = Object.freeze(Color.fromCssColorString("#00CED1"));
+Color.DARKTURQUOISE = Object.freeze(Color.fromCssColorString('#00CED1'))
 
 /**
  * An immutable Color instance initialized to CSS color #9400D3
@@ -1306,7 +1308,7 @@ Color.DARKTURQUOISE = Object.freeze(Color.fromCssColorString("#00CED1"));
  * @constant
  * @type {Color}
  */
-Color.DARKVIOLET = Object.freeze(Color.fromCssColorString("#9400D3"));
+Color.DARKVIOLET = Object.freeze(Color.fromCssColorString('#9400D3'))
 
 /**
  * An immutable Color instance initialized to CSS color #FF1493
@@ -1315,7 +1317,7 @@ Color.DARKVIOLET = Object.freeze(Color.fromCssColorString("#9400D3"));
  * @constant
  * @type {Color}
  */
-Color.DEEPPINK = Object.freeze(Color.fromCssColorString("#FF1493"));
+Color.DEEPPINK = Object.freeze(Color.fromCssColorString('#FF1493'))
 
 /**
  * An immutable Color instance initialized to CSS color #00BFFF
@@ -1324,7 +1326,7 @@ Color.DEEPPINK = Object.freeze(Color.fromCssColorString("#FF1493"));
  * @constant
  * @type {Color}
  */
-Color.DEEPSKYBLUE = Object.freeze(Color.fromCssColorString("#00BFFF"));
+Color.DEEPSKYBLUE = Object.freeze(Color.fromCssColorString('#00BFFF'))
 
 /**
  * An immutable Color instance initialized to CSS color #696969
@@ -1333,7 +1335,7 @@ Color.DEEPSKYBLUE = Object.freeze(Color.fromCssColorString("#00BFFF"));
  * @constant
  * @type {Color}
  */
-Color.DIMGRAY = Object.freeze(Color.fromCssColorString("#696969"));
+Color.DIMGRAY = Object.freeze(Color.fromCssColorString('#696969'))
 
 /**
  * An immutable Color instance initialized to CSS color #696969
@@ -1342,7 +1344,7 @@ Color.DIMGRAY = Object.freeze(Color.fromCssColorString("#696969"));
  * @constant
  * @type {Color}
  */
-Color.DIMGREY = Color.DIMGRAY;
+Color.DIMGREY = Color.DIMGRAY
 
 /**
  * An immutable Color instance initialized to CSS color #1E90FF
@@ -1351,7 +1353,7 @@ Color.DIMGREY = Color.DIMGRAY;
  * @constant
  * @type {Color}
  */
-Color.DODGERBLUE = Object.freeze(Color.fromCssColorString("#1E90FF"));
+Color.DODGERBLUE = Object.freeze(Color.fromCssColorString('#1E90FF'))
 
 /**
  * An immutable Color instance initialized to CSS color #B22222
@@ -1360,7 +1362,7 @@ Color.DODGERBLUE = Object.freeze(Color.fromCssColorString("#1E90FF"));
  * @constant
  * @type {Color}
  */
-Color.FIREBRICK = Object.freeze(Color.fromCssColorString("#B22222"));
+Color.FIREBRICK = Object.freeze(Color.fromCssColorString('#B22222'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFFAF0
@@ -1369,7 +1371,7 @@ Color.FIREBRICK = Object.freeze(Color.fromCssColorString("#B22222"));
  * @constant
  * @type {Color}
  */
-Color.FLORALWHITE = Object.freeze(Color.fromCssColorString("#FFFAF0"));
+Color.FLORALWHITE = Object.freeze(Color.fromCssColorString('#FFFAF0'))
 
 /**
  * An immutable Color instance initialized to CSS color #228B22
@@ -1378,7 +1380,7 @@ Color.FLORALWHITE = Object.freeze(Color.fromCssColorString("#FFFAF0"));
  * @constant
  * @type {Color}
  */
-Color.FORESTGREEN = Object.freeze(Color.fromCssColorString("#228B22"));
+Color.FORESTGREEN = Object.freeze(Color.fromCssColorString('#228B22'))
 
 /**
  * An immutable Color instance initialized to CSS color #FF00FF
@@ -1387,7 +1389,7 @@ Color.FORESTGREEN = Object.freeze(Color.fromCssColorString("#228B22"));
  * @constant
  * @type {Color}
  */
-Color.FUCHSIA = Object.freeze(Color.fromCssColorString("#FF00FF"));
+Color.FUCHSIA = Object.freeze(Color.fromCssColorString('#FF00FF'))
 
 /**
  * An immutable Color instance initialized to CSS color #DCDCDC
@@ -1396,7 +1398,7 @@ Color.FUCHSIA = Object.freeze(Color.fromCssColorString("#FF00FF"));
  * @constant
  * @type {Color}
  */
-Color.GAINSBORO = Object.freeze(Color.fromCssColorString("#DCDCDC"));
+Color.GAINSBORO = Object.freeze(Color.fromCssColorString('#DCDCDC'))
 
 /**
  * An immutable Color instance initialized to CSS color #F8F8FF
@@ -1405,7 +1407,7 @@ Color.GAINSBORO = Object.freeze(Color.fromCssColorString("#DCDCDC"));
  * @constant
  * @type {Color}
  */
-Color.GHOSTWHITE = Object.freeze(Color.fromCssColorString("#F8F8FF"));
+Color.GHOSTWHITE = Object.freeze(Color.fromCssColorString('#F8F8FF'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFD700
@@ -1414,7 +1416,7 @@ Color.GHOSTWHITE = Object.freeze(Color.fromCssColorString("#F8F8FF"));
  * @constant
  * @type {Color}
  */
-Color.GOLD = Object.freeze(Color.fromCssColorString("#FFD700"));
+Color.GOLD = Object.freeze(Color.fromCssColorString('#FFD700'))
 
 /**
  * An immutable Color instance initialized to CSS color #DAA520
@@ -1423,7 +1425,7 @@ Color.GOLD = Object.freeze(Color.fromCssColorString("#FFD700"));
  * @constant
  * @type {Color}
  */
-Color.GOLDENROD = Object.freeze(Color.fromCssColorString("#DAA520"));
+Color.GOLDENROD = Object.freeze(Color.fromCssColorString('#DAA520'))
 
 /**
  * An immutable Color instance initialized to CSS color #808080
@@ -1432,7 +1434,7 @@ Color.GOLDENROD = Object.freeze(Color.fromCssColorString("#DAA520"));
  * @constant
  * @type {Color}
  */
-Color.GRAY = Object.freeze(Color.fromCssColorString("#808080"));
+Color.GRAY = Object.freeze(Color.fromCssColorString('#808080'))
 
 /**
  * An immutable Color instance initialized to CSS color #008000
@@ -1441,7 +1443,7 @@ Color.GRAY = Object.freeze(Color.fromCssColorString("#808080"));
  * @constant
  * @type {Color}
  */
-Color.GREEN = Object.freeze(Color.fromCssColorString("#008000"));
+Color.GREEN = Object.freeze(Color.fromCssColorString('#008000'))
 
 /**
  * An immutable Color instance initialized to CSS color #ADFF2F
@@ -1450,7 +1452,7 @@ Color.GREEN = Object.freeze(Color.fromCssColorString("#008000"));
  * @constant
  * @type {Color}
  */
-Color.GREENYELLOW = Object.freeze(Color.fromCssColorString("#ADFF2F"));
+Color.GREENYELLOW = Object.freeze(Color.fromCssColorString('#ADFF2F'))
 
 /**
  * An immutable Color instance initialized to CSS color #808080
@@ -1459,7 +1461,7 @@ Color.GREENYELLOW = Object.freeze(Color.fromCssColorString("#ADFF2F"));
  * @constant
  * @type {Color}
  */
-Color.GREY = Color.GRAY;
+Color.GREY = Color.GRAY
 
 /**
  * An immutable Color instance initialized to CSS color #F0FFF0
@@ -1468,7 +1470,7 @@ Color.GREY = Color.GRAY;
  * @constant
  * @type {Color}
  */
-Color.HONEYDEW = Object.freeze(Color.fromCssColorString("#F0FFF0"));
+Color.HONEYDEW = Object.freeze(Color.fromCssColorString('#F0FFF0'))
 
 /**
  * An immutable Color instance initialized to CSS color #FF69B4
@@ -1477,7 +1479,7 @@ Color.HONEYDEW = Object.freeze(Color.fromCssColorString("#F0FFF0"));
  * @constant
  * @type {Color}
  */
-Color.HOTPINK = Object.freeze(Color.fromCssColorString("#FF69B4"));
+Color.HOTPINK = Object.freeze(Color.fromCssColorString('#FF69B4'))
 
 /**
  * An immutable Color instance initialized to CSS color #CD5C5C
@@ -1486,7 +1488,7 @@ Color.HOTPINK = Object.freeze(Color.fromCssColorString("#FF69B4"));
  * @constant
  * @type {Color}
  */
-Color.INDIANRED = Object.freeze(Color.fromCssColorString("#CD5C5C"));
+Color.INDIANRED = Object.freeze(Color.fromCssColorString('#CD5C5C'))
 
 /**
  * An immutable Color instance initialized to CSS color #4B0082
@@ -1495,7 +1497,7 @@ Color.INDIANRED = Object.freeze(Color.fromCssColorString("#CD5C5C"));
  * @constant
  * @type {Color}
  */
-Color.INDIGO = Object.freeze(Color.fromCssColorString("#4B0082"));
+Color.INDIGO = Object.freeze(Color.fromCssColorString('#4B0082'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFFFF0
@@ -1504,7 +1506,7 @@ Color.INDIGO = Object.freeze(Color.fromCssColorString("#4B0082"));
  * @constant
  * @type {Color}
  */
-Color.IVORY = Object.freeze(Color.fromCssColorString("#FFFFF0"));
+Color.IVORY = Object.freeze(Color.fromCssColorString('#FFFFF0'))
 
 /**
  * An immutable Color instance initialized to CSS color #F0E68C
@@ -1513,7 +1515,7 @@ Color.IVORY = Object.freeze(Color.fromCssColorString("#FFFFF0"));
  * @constant
  * @type {Color}
  */
-Color.KHAKI = Object.freeze(Color.fromCssColorString("#F0E68C"));
+Color.KHAKI = Object.freeze(Color.fromCssColorString('#F0E68C'))
 
 /**
  * An immutable Color instance initialized to CSS color #E6E6FA
@@ -1522,7 +1524,7 @@ Color.KHAKI = Object.freeze(Color.fromCssColorString("#F0E68C"));
  * @constant
  * @type {Color}
  */
-Color.LAVENDER = Object.freeze(Color.fromCssColorString("#E6E6FA"));
+Color.LAVENDER = Object.freeze(Color.fromCssColorString('#E6E6FA'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFF0F5
@@ -1531,7 +1533,7 @@ Color.LAVENDER = Object.freeze(Color.fromCssColorString("#E6E6FA"));
  * @constant
  * @type {Color}
  */
-Color.LAVENDAR_BLUSH = Object.freeze(Color.fromCssColorString("#FFF0F5"));
+Color.LAVENDAR_BLUSH = Object.freeze(Color.fromCssColorString('#FFF0F5'))
 
 /**
  * An immutable Color instance initialized to CSS color #7CFC00
@@ -1540,7 +1542,7 @@ Color.LAVENDAR_BLUSH = Object.freeze(Color.fromCssColorString("#FFF0F5"));
  * @constant
  * @type {Color}
  */
-Color.LAWNGREEN = Object.freeze(Color.fromCssColorString("#7CFC00"));
+Color.LAWNGREEN = Object.freeze(Color.fromCssColorString('#7CFC00'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFFACD
@@ -1549,7 +1551,7 @@ Color.LAWNGREEN = Object.freeze(Color.fromCssColorString("#7CFC00"));
  * @constant
  * @type {Color}
  */
-Color.LEMONCHIFFON = Object.freeze(Color.fromCssColorString("#FFFACD"));
+Color.LEMONCHIFFON = Object.freeze(Color.fromCssColorString('#FFFACD'))
 
 /**
  * An immutable Color instance initialized to CSS color #ADD8E6
@@ -1558,7 +1560,7 @@ Color.LEMONCHIFFON = Object.freeze(Color.fromCssColorString("#FFFACD"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTBLUE = Object.freeze(Color.fromCssColorString("#ADD8E6"));
+Color.LIGHTBLUE = Object.freeze(Color.fromCssColorString('#ADD8E6'))
 
 /**
  * An immutable Color instance initialized to CSS color #F08080
@@ -1567,7 +1569,7 @@ Color.LIGHTBLUE = Object.freeze(Color.fromCssColorString("#ADD8E6"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTCORAL = Object.freeze(Color.fromCssColorString("#F08080"));
+Color.LIGHTCORAL = Object.freeze(Color.fromCssColorString('#F08080'))
 
 /**
  * An immutable Color instance initialized to CSS color #E0FFFF
@@ -1576,7 +1578,7 @@ Color.LIGHTCORAL = Object.freeze(Color.fromCssColorString("#F08080"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTCYAN = Object.freeze(Color.fromCssColorString("#E0FFFF"));
+Color.LIGHTCYAN = Object.freeze(Color.fromCssColorString('#E0FFFF'))
 
 /**
  * An immutable Color instance initialized to CSS color #FAFAD2
@@ -1585,7 +1587,7 @@ Color.LIGHTCYAN = Object.freeze(Color.fromCssColorString("#E0FFFF"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTGOLDENRODYELLOW = Object.freeze(Color.fromCssColorString("#FAFAD2"));
+Color.LIGHTGOLDENRODYELLOW = Object.freeze(Color.fromCssColorString('#FAFAD2'))
 
 /**
  * An immutable Color instance initialized to CSS color #D3D3D3
@@ -1594,7 +1596,7 @@ Color.LIGHTGOLDENRODYELLOW = Object.freeze(Color.fromCssColorString("#FAFAD2"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTGRAY = Object.freeze(Color.fromCssColorString("#D3D3D3"));
+Color.LIGHTGRAY = Object.freeze(Color.fromCssColorString('#D3D3D3'))
 
 /**
  * An immutable Color instance initialized to CSS color #90EE90
@@ -1603,7 +1605,7 @@ Color.LIGHTGRAY = Object.freeze(Color.fromCssColorString("#D3D3D3"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTGREEN = Object.freeze(Color.fromCssColorString("#90EE90"));
+Color.LIGHTGREEN = Object.freeze(Color.fromCssColorString('#90EE90'))
 
 /**
  * An immutable Color instance initialized to CSS color #D3D3D3
@@ -1612,7 +1614,7 @@ Color.LIGHTGREEN = Object.freeze(Color.fromCssColorString("#90EE90"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTGREY = Color.LIGHTGRAY;
+Color.LIGHTGREY = Color.LIGHTGRAY
 
 /**
  * An immutable Color instance initialized to CSS color #FFB6C1
@@ -1621,7 +1623,7 @@ Color.LIGHTGREY = Color.LIGHTGRAY;
  * @constant
  * @type {Color}
  */
-Color.LIGHTPINK = Object.freeze(Color.fromCssColorString("#FFB6C1"));
+Color.LIGHTPINK = Object.freeze(Color.fromCssColorString('#FFB6C1'))
 
 /**
  * An immutable Color instance initialized to CSS color #20B2AA
@@ -1630,7 +1632,7 @@ Color.LIGHTPINK = Object.freeze(Color.fromCssColorString("#FFB6C1"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTSEAGREEN = Object.freeze(Color.fromCssColorString("#20B2AA"));
+Color.LIGHTSEAGREEN = Object.freeze(Color.fromCssColorString('#20B2AA'))
 
 /**
  * An immutable Color instance initialized to CSS color #87CEFA
@@ -1639,7 +1641,7 @@ Color.LIGHTSEAGREEN = Object.freeze(Color.fromCssColorString("#20B2AA"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTSKYBLUE = Object.freeze(Color.fromCssColorString("#87CEFA"));
+Color.LIGHTSKYBLUE = Object.freeze(Color.fromCssColorString('#87CEFA'))
 
 /**
  * An immutable Color instance initialized to CSS color #778899
@@ -1648,7 +1650,7 @@ Color.LIGHTSKYBLUE = Object.freeze(Color.fromCssColorString("#87CEFA"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTSLATEGRAY = Object.freeze(Color.fromCssColorString("#778899"));
+Color.LIGHTSLATEGRAY = Object.freeze(Color.fromCssColorString('#778899'))
 
 /**
  * An immutable Color instance initialized to CSS color #778899
@@ -1657,7 +1659,7 @@ Color.LIGHTSLATEGRAY = Object.freeze(Color.fromCssColorString("#778899"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTSLATEGREY = Color.LIGHTSLATEGRAY;
+Color.LIGHTSLATEGREY = Color.LIGHTSLATEGRAY
 
 /**
  * An immutable Color instance initialized to CSS color #B0C4DE
@@ -1666,7 +1668,7 @@ Color.LIGHTSLATEGREY = Color.LIGHTSLATEGRAY;
  * @constant
  * @type {Color}
  */
-Color.LIGHTSTEELBLUE = Object.freeze(Color.fromCssColorString("#B0C4DE"));
+Color.LIGHTSTEELBLUE = Object.freeze(Color.fromCssColorString('#B0C4DE'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFFFE0
@@ -1675,7 +1677,7 @@ Color.LIGHTSTEELBLUE = Object.freeze(Color.fromCssColorString("#B0C4DE"));
  * @constant
  * @type {Color}
  */
-Color.LIGHTYELLOW = Object.freeze(Color.fromCssColorString("#FFFFE0"));
+Color.LIGHTYELLOW = Object.freeze(Color.fromCssColorString('#FFFFE0'))
 
 /**
  * An immutable Color instance initialized to CSS color #00FF00
@@ -1684,7 +1686,7 @@ Color.LIGHTYELLOW = Object.freeze(Color.fromCssColorString("#FFFFE0"));
  * @constant
  * @type {Color}
  */
-Color.LIME = Object.freeze(Color.fromCssColorString("#00FF00"));
+Color.LIME = Object.freeze(Color.fromCssColorString('#00FF00'))
 
 /**
  * An immutable Color instance initialized to CSS color #32CD32
@@ -1693,7 +1695,7 @@ Color.LIME = Object.freeze(Color.fromCssColorString("#00FF00"));
  * @constant
  * @type {Color}
  */
-Color.LIMEGREEN = Object.freeze(Color.fromCssColorString("#32CD32"));
+Color.LIMEGREEN = Object.freeze(Color.fromCssColorString('#32CD32'))
 
 /**
  * An immutable Color instance initialized to CSS color #FAF0E6
@@ -1702,7 +1704,7 @@ Color.LIMEGREEN = Object.freeze(Color.fromCssColorString("#32CD32"));
  * @constant
  * @type {Color}
  */
-Color.LINEN = Object.freeze(Color.fromCssColorString("#FAF0E6"));
+Color.LINEN = Object.freeze(Color.fromCssColorString('#FAF0E6'))
 
 /**
  * An immutable Color instance initialized to CSS color #FF00FF
@@ -1711,7 +1713,7 @@ Color.LINEN = Object.freeze(Color.fromCssColorString("#FAF0E6"));
  * @constant
  * @type {Color}
  */
-Color.MAGENTA = Object.freeze(Color.fromCssColorString("#FF00FF"));
+Color.MAGENTA = Object.freeze(Color.fromCssColorString('#FF00FF'))
 
 /**
  * An immutable Color instance initialized to CSS color #800000
@@ -1720,7 +1722,7 @@ Color.MAGENTA = Object.freeze(Color.fromCssColorString("#FF00FF"));
  * @constant
  * @type {Color}
  */
-Color.MAROON = Object.freeze(Color.fromCssColorString("#800000"));
+Color.MAROON = Object.freeze(Color.fromCssColorString('#800000'))
 
 /**
  * An immutable Color instance initialized to CSS color #66CDAA
@@ -1729,7 +1731,7 @@ Color.MAROON = Object.freeze(Color.fromCssColorString("#800000"));
  * @constant
  * @type {Color}
  */
-Color.MEDIUMAQUAMARINE = Object.freeze(Color.fromCssColorString("#66CDAA"));
+Color.MEDIUMAQUAMARINE = Object.freeze(Color.fromCssColorString('#66CDAA'))
 
 /**
  * An immutable Color instance initialized to CSS color #0000CD
@@ -1738,7 +1740,7 @@ Color.MEDIUMAQUAMARINE = Object.freeze(Color.fromCssColorString("#66CDAA"));
  * @constant
  * @type {Color}
  */
-Color.MEDIUMBLUE = Object.freeze(Color.fromCssColorString("#0000CD"));
+Color.MEDIUMBLUE = Object.freeze(Color.fromCssColorString('#0000CD'))
 
 /**
  * An immutable Color instance initialized to CSS color #BA55D3
@@ -1747,7 +1749,7 @@ Color.MEDIUMBLUE = Object.freeze(Color.fromCssColorString("#0000CD"));
  * @constant
  * @type {Color}
  */
-Color.MEDIUMORCHID = Object.freeze(Color.fromCssColorString("#BA55D3"));
+Color.MEDIUMORCHID = Object.freeze(Color.fromCssColorString('#BA55D3'))
 
 /**
  * An immutable Color instance initialized to CSS color #9370DB
@@ -1756,7 +1758,7 @@ Color.MEDIUMORCHID = Object.freeze(Color.fromCssColorString("#BA55D3"));
  * @constant
  * @type {Color}
  */
-Color.MEDIUMPURPLE = Object.freeze(Color.fromCssColorString("#9370DB"));
+Color.MEDIUMPURPLE = Object.freeze(Color.fromCssColorString('#9370DB'))
 
 /**
  * An immutable Color instance initialized to CSS color #3CB371
@@ -1765,7 +1767,7 @@ Color.MEDIUMPURPLE = Object.freeze(Color.fromCssColorString("#9370DB"));
  * @constant
  * @type {Color}
  */
-Color.MEDIUMSEAGREEN = Object.freeze(Color.fromCssColorString("#3CB371"));
+Color.MEDIUMSEAGREEN = Object.freeze(Color.fromCssColorString('#3CB371'))
 
 /**
  * An immutable Color instance initialized to CSS color #7B68EE
@@ -1774,7 +1776,7 @@ Color.MEDIUMSEAGREEN = Object.freeze(Color.fromCssColorString("#3CB371"));
  * @constant
  * @type {Color}
  */
-Color.MEDIUMSLATEBLUE = Object.freeze(Color.fromCssColorString("#7B68EE"));
+Color.MEDIUMSLATEBLUE = Object.freeze(Color.fromCssColorString('#7B68EE'))
 
 /**
  * An immutable Color instance initialized to CSS color #00FA9A
@@ -1783,7 +1785,7 @@ Color.MEDIUMSLATEBLUE = Object.freeze(Color.fromCssColorString("#7B68EE"));
  * @constant
  * @type {Color}
  */
-Color.MEDIUMSPRINGGREEN = Object.freeze(Color.fromCssColorString("#00FA9A"));
+Color.MEDIUMSPRINGGREEN = Object.freeze(Color.fromCssColorString('#00FA9A'))
 
 /**
  * An immutable Color instance initialized to CSS color #48D1CC
@@ -1792,7 +1794,7 @@ Color.MEDIUMSPRINGGREEN = Object.freeze(Color.fromCssColorString("#00FA9A"));
  * @constant
  * @type {Color}
  */
-Color.MEDIUMTURQUOISE = Object.freeze(Color.fromCssColorString("#48D1CC"));
+Color.MEDIUMTURQUOISE = Object.freeze(Color.fromCssColorString('#48D1CC'))
 
 /**
  * An immutable Color instance initialized to CSS color #C71585
@@ -1801,7 +1803,7 @@ Color.MEDIUMTURQUOISE = Object.freeze(Color.fromCssColorString("#48D1CC"));
  * @constant
  * @type {Color}
  */
-Color.MEDIUMVIOLETRED = Object.freeze(Color.fromCssColorString("#C71585"));
+Color.MEDIUMVIOLETRED = Object.freeze(Color.fromCssColorString('#C71585'))
 
 /**
  * An immutable Color instance initialized to CSS color #191970
@@ -1810,7 +1812,7 @@ Color.MEDIUMVIOLETRED = Object.freeze(Color.fromCssColorString("#C71585"));
  * @constant
  * @type {Color}
  */
-Color.MIDNIGHTBLUE = Object.freeze(Color.fromCssColorString("#191970"));
+Color.MIDNIGHTBLUE = Object.freeze(Color.fromCssColorString('#191970'))
 
 /**
  * An immutable Color instance initialized to CSS color #F5FFFA
@@ -1819,7 +1821,7 @@ Color.MIDNIGHTBLUE = Object.freeze(Color.fromCssColorString("#191970"));
  * @constant
  * @type {Color}
  */
-Color.MINTCREAM = Object.freeze(Color.fromCssColorString("#F5FFFA"));
+Color.MINTCREAM = Object.freeze(Color.fromCssColorString('#F5FFFA'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFE4E1
@@ -1828,7 +1830,7 @@ Color.MINTCREAM = Object.freeze(Color.fromCssColorString("#F5FFFA"));
  * @constant
  * @type {Color}
  */
-Color.MISTYROSE = Object.freeze(Color.fromCssColorString("#FFE4E1"));
+Color.MISTYROSE = Object.freeze(Color.fromCssColorString('#FFE4E1'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFE4B5
@@ -1837,7 +1839,7 @@ Color.MISTYROSE = Object.freeze(Color.fromCssColorString("#FFE4E1"));
  * @constant
  * @type {Color}
  */
-Color.MOCCASIN = Object.freeze(Color.fromCssColorString("#FFE4B5"));
+Color.MOCCASIN = Object.freeze(Color.fromCssColorString('#FFE4B5'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFDEAD
@@ -1846,7 +1848,7 @@ Color.MOCCASIN = Object.freeze(Color.fromCssColorString("#FFE4B5"));
  * @constant
  * @type {Color}
  */
-Color.NAVAJOWHITE = Object.freeze(Color.fromCssColorString("#FFDEAD"));
+Color.NAVAJOWHITE = Object.freeze(Color.fromCssColorString('#FFDEAD'))
 
 /**
  * An immutable Color instance initialized to CSS color #000080
@@ -1855,7 +1857,7 @@ Color.NAVAJOWHITE = Object.freeze(Color.fromCssColorString("#FFDEAD"));
  * @constant
  * @type {Color}
  */
-Color.NAVY = Object.freeze(Color.fromCssColorString("#000080"));
+Color.NAVY = Object.freeze(Color.fromCssColorString('#000080'))
 
 /**
  * An immutable Color instance initialized to CSS color #FDF5E6
@@ -1864,7 +1866,7 @@ Color.NAVY = Object.freeze(Color.fromCssColorString("#000080"));
  * @constant
  * @type {Color}
  */
-Color.OLDLACE = Object.freeze(Color.fromCssColorString("#FDF5E6"));
+Color.OLDLACE = Object.freeze(Color.fromCssColorString('#FDF5E6'))
 
 /**
  * An immutable Color instance initialized to CSS color #808000
@@ -1873,7 +1875,7 @@ Color.OLDLACE = Object.freeze(Color.fromCssColorString("#FDF5E6"));
  * @constant
  * @type {Color}
  */
-Color.OLIVE = Object.freeze(Color.fromCssColorString("#808000"));
+Color.OLIVE = Object.freeze(Color.fromCssColorString('#808000'))
 
 /**
  * An immutable Color instance initialized to CSS color #6B8E23
@@ -1882,7 +1884,7 @@ Color.OLIVE = Object.freeze(Color.fromCssColorString("#808000"));
  * @constant
  * @type {Color}
  */
-Color.OLIVEDRAB = Object.freeze(Color.fromCssColorString("#6B8E23"));
+Color.OLIVEDRAB = Object.freeze(Color.fromCssColorString('#6B8E23'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFA500
@@ -1891,7 +1893,7 @@ Color.OLIVEDRAB = Object.freeze(Color.fromCssColorString("#6B8E23"));
  * @constant
  * @type {Color}
  */
-Color.ORANGE = Object.freeze(Color.fromCssColorString("#FFA500"));
+Color.ORANGE = Object.freeze(Color.fromCssColorString('#FFA500'))
 
 /**
  * An immutable Color instance initialized to CSS color #FF4500
@@ -1900,7 +1902,7 @@ Color.ORANGE = Object.freeze(Color.fromCssColorString("#FFA500"));
  * @constant
  * @type {Color}
  */
-Color.ORANGERED = Object.freeze(Color.fromCssColorString("#FF4500"));
+Color.ORANGERED = Object.freeze(Color.fromCssColorString('#FF4500'))
 
 /**
  * An immutable Color instance initialized to CSS color #DA70D6
@@ -1909,7 +1911,7 @@ Color.ORANGERED = Object.freeze(Color.fromCssColorString("#FF4500"));
  * @constant
  * @type {Color}
  */
-Color.ORCHID = Object.freeze(Color.fromCssColorString("#DA70D6"));
+Color.ORCHID = Object.freeze(Color.fromCssColorString('#DA70D6'))
 
 /**
  * An immutable Color instance initialized to CSS color #EEE8AA
@@ -1918,7 +1920,7 @@ Color.ORCHID = Object.freeze(Color.fromCssColorString("#DA70D6"));
  * @constant
  * @type {Color}
  */
-Color.PALEGOLDENROD = Object.freeze(Color.fromCssColorString("#EEE8AA"));
+Color.PALEGOLDENROD = Object.freeze(Color.fromCssColorString('#EEE8AA'))
 
 /**
  * An immutable Color instance initialized to CSS color #98FB98
@@ -1927,7 +1929,7 @@ Color.PALEGOLDENROD = Object.freeze(Color.fromCssColorString("#EEE8AA"));
  * @constant
  * @type {Color}
  */
-Color.PALEGREEN = Object.freeze(Color.fromCssColorString("#98FB98"));
+Color.PALEGREEN = Object.freeze(Color.fromCssColorString('#98FB98'))
 
 /**
  * An immutable Color instance initialized to CSS color #AFEEEE
@@ -1936,7 +1938,7 @@ Color.PALEGREEN = Object.freeze(Color.fromCssColorString("#98FB98"));
  * @constant
  * @type {Color}
  */
-Color.PALETURQUOISE = Object.freeze(Color.fromCssColorString("#AFEEEE"));
+Color.PALETURQUOISE = Object.freeze(Color.fromCssColorString('#AFEEEE'))
 
 /**
  * An immutable Color instance initialized to CSS color #DB7093
@@ -1945,7 +1947,7 @@ Color.PALETURQUOISE = Object.freeze(Color.fromCssColorString("#AFEEEE"));
  * @constant
  * @type {Color}
  */
-Color.PALEVIOLETRED = Object.freeze(Color.fromCssColorString("#DB7093"));
+Color.PALEVIOLETRED = Object.freeze(Color.fromCssColorString('#DB7093'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFEFD5
@@ -1954,7 +1956,7 @@ Color.PALEVIOLETRED = Object.freeze(Color.fromCssColorString("#DB7093"));
  * @constant
  * @type {Color}
  */
-Color.PAPAYAWHIP = Object.freeze(Color.fromCssColorString("#FFEFD5"));
+Color.PAPAYAWHIP = Object.freeze(Color.fromCssColorString('#FFEFD5'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFDAB9
@@ -1963,7 +1965,7 @@ Color.PAPAYAWHIP = Object.freeze(Color.fromCssColorString("#FFEFD5"));
  * @constant
  * @type {Color}
  */
-Color.PEACHPUFF = Object.freeze(Color.fromCssColorString("#FFDAB9"));
+Color.PEACHPUFF = Object.freeze(Color.fromCssColorString('#FFDAB9'))
 
 /**
  * An immutable Color instance initialized to CSS color #CD853F
@@ -1972,7 +1974,7 @@ Color.PEACHPUFF = Object.freeze(Color.fromCssColorString("#FFDAB9"));
  * @constant
  * @type {Color}
  */
-Color.PERU = Object.freeze(Color.fromCssColorString("#CD853F"));
+Color.PERU = Object.freeze(Color.fromCssColorString('#CD853F'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFC0CB
@@ -1981,7 +1983,7 @@ Color.PERU = Object.freeze(Color.fromCssColorString("#CD853F"));
  * @constant
  * @type {Color}
  */
-Color.PINK = Object.freeze(Color.fromCssColorString("#FFC0CB"));
+Color.PINK = Object.freeze(Color.fromCssColorString('#FFC0CB'))
 
 /**
  * An immutable Color instance initialized to CSS color #DDA0DD
@@ -1990,7 +1992,7 @@ Color.PINK = Object.freeze(Color.fromCssColorString("#FFC0CB"));
  * @constant
  * @type {Color}
  */
-Color.PLUM = Object.freeze(Color.fromCssColorString("#DDA0DD"));
+Color.PLUM = Object.freeze(Color.fromCssColorString('#DDA0DD'))
 
 /**
  * An immutable Color instance initialized to CSS color #B0E0E6
@@ -1999,7 +2001,7 @@ Color.PLUM = Object.freeze(Color.fromCssColorString("#DDA0DD"));
  * @constant
  * @type {Color}
  */
-Color.POWDERBLUE = Object.freeze(Color.fromCssColorString("#B0E0E6"));
+Color.POWDERBLUE = Object.freeze(Color.fromCssColorString('#B0E0E6'))
 
 /**
  * An immutable Color instance initialized to CSS color #800080
@@ -2008,7 +2010,7 @@ Color.POWDERBLUE = Object.freeze(Color.fromCssColorString("#B0E0E6"));
  * @constant
  * @type {Color}
  */
-Color.PURPLE = Object.freeze(Color.fromCssColorString("#800080"));
+Color.PURPLE = Object.freeze(Color.fromCssColorString('#800080'))
 
 /**
  * An immutable Color instance initialized to CSS color #FF0000
@@ -2017,7 +2019,7 @@ Color.PURPLE = Object.freeze(Color.fromCssColorString("#800080"));
  * @constant
  * @type {Color}
  */
-Color.RED = Object.freeze(Color.fromCssColorString("#FF0000"));
+Color.RED = Object.freeze(Color.fromCssColorString('#FF0000'))
 
 /**
  * An immutable Color instance initialized to CSS color #BC8F8F
@@ -2026,7 +2028,7 @@ Color.RED = Object.freeze(Color.fromCssColorString("#FF0000"));
  * @constant
  * @type {Color}
  */
-Color.ROSYBROWN = Object.freeze(Color.fromCssColorString("#BC8F8F"));
+Color.ROSYBROWN = Object.freeze(Color.fromCssColorString('#BC8F8F'))
 
 /**
  * An immutable Color instance initialized to CSS color #4169E1
@@ -2035,7 +2037,7 @@ Color.ROSYBROWN = Object.freeze(Color.fromCssColorString("#BC8F8F"));
  * @constant
  * @type {Color}
  */
-Color.ROYALBLUE = Object.freeze(Color.fromCssColorString("#4169E1"));
+Color.ROYALBLUE = Object.freeze(Color.fromCssColorString('#4169E1'))
 
 /**
  * An immutable Color instance initialized to CSS color #8B4513
@@ -2044,7 +2046,7 @@ Color.ROYALBLUE = Object.freeze(Color.fromCssColorString("#4169E1"));
  * @constant
  * @type {Color}
  */
-Color.SADDLEBROWN = Object.freeze(Color.fromCssColorString("#8B4513"));
+Color.SADDLEBROWN = Object.freeze(Color.fromCssColorString('#8B4513'))
 
 /**
  * An immutable Color instance initialized to CSS color #FA8072
@@ -2053,7 +2055,7 @@ Color.SADDLEBROWN = Object.freeze(Color.fromCssColorString("#8B4513"));
  * @constant
  * @type {Color}
  */
-Color.SALMON = Object.freeze(Color.fromCssColorString("#FA8072"));
+Color.SALMON = Object.freeze(Color.fromCssColorString('#FA8072'))
 
 /**
  * An immutable Color instance initialized to CSS color #F4A460
@@ -2062,7 +2064,7 @@ Color.SALMON = Object.freeze(Color.fromCssColorString("#FA8072"));
  * @constant
  * @type {Color}
  */
-Color.SANDYBROWN = Object.freeze(Color.fromCssColorString("#F4A460"));
+Color.SANDYBROWN = Object.freeze(Color.fromCssColorString('#F4A460'))
 
 /**
  * An immutable Color instance initialized to CSS color #2E8B57
@@ -2071,7 +2073,7 @@ Color.SANDYBROWN = Object.freeze(Color.fromCssColorString("#F4A460"));
  * @constant
  * @type {Color}
  */
-Color.SEAGREEN = Object.freeze(Color.fromCssColorString("#2E8B57"));
+Color.SEAGREEN = Object.freeze(Color.fromCssColorString('#2E8B57'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFF5EE
@@ -2080,7 +2082,7 @@ Color.SEAGREEN = Object.freeze(Color.fromCssColorString("#2E8B57"));
  * @constant
  * @type {Color}
  */
-Color.SEASHELL = Object.freeze(Color.fromCssColorString("#FFF5EE"));
+Color.SEASHELL = Object.freeze(Color.fromCssColorString('#FFF5EE'))
 
 /**
  * An immutable Color instance initialized to CSS color #A0522D
@@ -2089,7 +2091,7 @@ Color.SEASHELL = Object.freeze(Color.fromCssColorString("#FFF5EE"));
  * @constant
  * @type {Color}
  */
-Color.SIENNA = Object.freeze(Color.fromCssColorString("#A0522D"));
+Color.SIENNA = Object.freeze(Color.fromCssColorString('#A0522D'))
 
 /**
  * An immutable Color instance initialized to CSS color #C0C0C0
@@ -2098,7 +2100,7 @@ Color.SIENNA = Object.freeze(Color.fromCssColorString("#A0522D"));
  * @constant
  * @type {Color}
  */
-Color.SILVER = Object.freeze(Color.fromCssColorString("#C0C0C0"));
+Color.SILVER = Object.freeze(Color.fromCssColorString('#C0C0C0'))
 
 /**
  * An immutable Color instance initialized to CSS color #87CEEB
@@ -2107,7 +2109,7 @@ Color.SILVER = Object.freeze(Color.fromCssColorString("#C0C0C0"));
  * @constant
  * @type {Color}
  */
-Color.SKYBLUE = Object.freeze(Color.fromCssColorString("#87CEEB"));
+Color.SKYBLUE = Object.freeze(Color.fromCssColorString('#87CEEB'))
 
 /**
  * An immutable Color instance initialized to CSS color #6A5ACD
@@ -2116,7 +2118,7 @@ Color.SKYBLUE = Object.freeze(Color.fromCssColorString("#87CEEB"));
  * @constant
  * @type {Color}
  */
-Color.SLATEBLUE = Object.freeze(Color.fromCssColorString("#6A5ACD"));
+Color.SLATEBLUE = Object.freeze(Color.fromCssColorString('#6A5ACD'))
 
 /**
  * An immutable Color instance initialized to CSS color #708090
@@ -2125,7 +2127,7 @@ Color.SLATEBLUE = Object.freeze(Color.fromCssColorString("#6A5ACD"));
  * @constant
  * @type {Color}
  */
-Color.SLATEGRAY = Object.freeze(Color.fromCssColorString("#708090"));
+Color.SLATEGRAY = Object.freeze(Color.fromCssColorString('#708090'))
 
 /**
  * An immutable Color instance initialized to CSS color #708090
@@ -2134,7 +2136,7 @@ Color.SLATEGRAY = Object.freeze(Color.fromCssColorString("#708090"));
  * @constant
  * @type {Color}
  */
-Color.SLATEGREY = Color.SLATEGRAY;
+Color.SLATEGREY = Color.SLATEGRAY
 
 /**
  * An immutable Color instance initialized to CSS color #FFFAFA
@@ -2143,7 +2145,7 @@ Color.SLATEGREY = Color.SLATEGRAY;
  * @constant
  * @type {Color}
  */
-Color.SNOW = Object.freeze(Color.fromCssColorString("#FFFAFA"));
+Color.SNOW = Object.freeze(Color.fromCssColorString('#FFFAFA'))
 
 /**
  * An immutable Color instance initialized to CSS color #00FF7F
@@ -2152,7 +2154,7 @@ Color.SNOW = Object.freeze(Color.fromCssColorString("#FFFAFA"));
  * @constant
  * @type {Color}
  */
-Color.SPRINGGREEN = Object.freeze(Color.fromCssColorString("#00FF7F"));
+Color.SPRINGGREEN = Object.freeze(Color.fromCssColorString('#00FF7F'))
 
 /**
  * An immutable Color instance initialized to CSS color #4682B4
@@ -2161,7 +2163,7 @@ Color.SPRINGGREEN = Object.freeze(Color.fromCssColorString("#00FF7F"));
  * @constant
  * @type {Color}
  */
-Color.STEELBLUE = Object.freeze(Color.fromCssColorString("#4682B4"));
+Color.STEELBLUE = Object.freeze(Color.fromCssColorString('#4682B4'))
 
 /**
  * An immutable Color instance initialized to CSS color #D2B48C
@@ -2170,7 +2172,7 @@ Color.STEELBLUE = Object.freeze(Color.fromCssColorString("#4682B4"));
  * @constant
  * @type {Color}
  */
-Color.TAN = Object.freeze(Color.fromCssColorString("#D2B48C"));
+Color.TAN = Object.freeze(Color.fromCssColorString('#D2B48C'))
 
 /**
  * An immutable Color instance initialized to CSS color #008080
@@ -2179,7 +2181,7 @@ Color.TAN = Object.freeze(Color.fromCssColorString("#D2B48C"));
  * @constant
  * @type {Color}
  */
-Color.TEAL = Object.freeze(Color.fromCssColorString("#008080"));
+Color.TEAL = Object.freeze(Color.fromCssColorString('#008080'))
 
 /**
  * An immutable Color instance initialized to CSS color #D8BFD8
@@ -2188,7 +2190,7 @@ Color.TEAL = Object.freeze(Color.fromCssColorString("#008080"));
  * @constant
  * @type {Color}
  */
-Color.THISTLE = Object.freeze(Color.fromCssColorString("#D8BFD8"));
+Color.THISTLE = Object.freeze(Color.fromCssColorString('#D8BFD8'))
 
 /**
  * An immutable Color instance initialized to CSS color #FF6347
@@ -2197,7 +2199,7 @@ Color.THISTLE = Object.freeze(Color.fromCssColorString("#D8BFD8"));
  * @constant
  * @type {Color}
  */
-Color.TOMATO = Object.freeze(Color.fromCssColorString("#FF6347"));
+Color.TOMATO = Object.freeze(Color.fromCssColorString('#FF6347'))
 
 /**
  * An immutable Color instance initialized to CSS color #40E0D0
@@ -2206,7 +2208,7 @@ Color.TOMATO = Object.freeze(Color.fromCssColorString("#FF6347"));
  * @constant
  * @type {Color}
  */
-Color.TURQUOISE = Object.freeze(Color.fromCssColorString("#40E0D0"));
+Color.TURQUOISE = Object.freeze(Color.fromCssColorString('#40E0D0'))
 
 /**
  * An immutable Color instance initialized to CSS color #EE82EE
@@ -2215,7 +2217,7 @@ Color.TURQUOISE = Object.freeze(Color.fromCssColorString("#40E0D0"));
  * @constant
  * @type {Color}
  */
-Color.VIOLET = Object.freeze(Color.fromCssColorString("#EE82EE"));
+Color.VIOLET = Object.freeze(Color.fromCssColorString('#EE82EE'))
 
 /**
  * An immutable Color instance initialized to CSS color #F5DEB3
@@ -2224,7 +2226,7 @@ Color.VIOLET = Object.freeze(Color.fromCssColorString("#EE82EE"));
  * @constant
  * @type {Color}
  */
-Color.WHEAT = Object.freeze(Color.fromCssColorString("#F5DEB3"));
+Color.WHEAT = Object.freeze(Color.fromCssColorString('#F5DEB3'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFFFFF
@@ -2233,7 +2235,7 @@ Color.WHEAT = Object.freeze(Color.fromCssColorString("#F5DEB3"));
  * @constant
  * @type {Color}
  */
-Color.WHITE = Object.freeze(Color.fromCssColorString("#FFFFFF"));
+Color.WHITE = Object.freeze(Color.fromCssColorString('#FFFFFF'))
 
 /**
  * An immutable Color instance initialized to CSS color #F5F5F5
@@ -2242,7 +2244,7 @@ Color.WHITE = Object.freeze(Color.fromCssColorString("#FFFFFF"));
  * @constant
  * @type {Color}
  */
-Color.WHITESMOKE = Object.freeze(Color.fromCssColorString("#F5F5F5"));
+Color.WHITESMOKE = Object.freeze(Color.fromCssColorString('#F5F5F5'))
 
 /**
  * An immutable Color instance initialized to CSS color #FFFF00
@@ -2251,7 +2253,7 @@ Color.WHITESMOKE = Object.freeze(Color.fromCssColorString("#F5F5F5"));
  * @constant
  * @type {Color}
  */
-Color.YELLOW = Object.freeze(Color.fromCssColorString("#FFFF00"));
+Color.YELLOW = Object.freeze(Color.fromCssColorString('#FFFF00'))
 
 /**
  * An immutable Color instance initialized to CSS color #9ACD32
@@ -2260,7 +2262,7 @@ Color.YELLOW = Object.freeze(Color.fromCssColorString("#FFFF00"));
  * @constant
  * @type {Color}
  */
-Color.YELLOWGREEN = Object.freeze(Color.fromCssColorString("#9ACD32"));
+Color.YELLOWGREEN = Object.freeze(Color.fromCssColorString('#9ACD32'))
 
 /**
  * An immutable Color instance initialized to CSS transparent.
@@ -2269,5 +2271,5 @@ Color.YELLOWGREEN = Object.freeze(Color.fromCssColorString("#9ACD32"));
  * @constant
  * @type {Color}
  */
-Color.TRANSPARENT = Object.freeze(new Color(0, 0, 0, 0));
-export default Color;
+Color.TRANSPARENT = Object.freeze(new Color(0, 0, 0, 0))
+export default Color

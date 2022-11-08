@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "attribute vec3 position3DHigh;\n\
+export default 'attribute vec3 position3DHigh;\n\
 attribute vec3 position3DLow;\n\
 \n\
 attribute vec4 startHiAndForwardOffsetX;\n\
@@ -33,8 +33,8 @@ varying vec2 v_alignedPlaneDistances;\n\
 varying float v_texcoordT;\n\
 #endif\n\
 \n\
-// Morphing planes using SLERP or NLERP doesn't seem to work, so instead draw the material directly on the shadow volume.\n\
-// Morph views are from very far away and aren't meant to be used precisely, so this should be sufficient.\n\
+// Morphing planes using SLERP or NLERP doesn\'t seem to work, so instead draw the material directly on the shadow volume.\n\
+// Morph views are from very far away and aren\'t meant to be used precisely, so this should be sufficient.\n\
 void main()\n\
 {\n\
     v_batchId = batchId;\n\
@@ -113,8 +113,8 @@ void main()\n\
     v_texcoordNormalizationAndHalfWidth.z = halfWidth;\n\
 #endif\n\
 \n\
-    // Compute a normal along which to \"push\" the position out, extending the miter depending on view distance.\n\
-    // Position has already been \"pushed\" by unit length along miter normal, and miter normals are encoded in the planes.\n\
+    // Compute a normal along which to "push" the position out, extending the miter depending on view distance.\n\
+    // Position has already been "pushed" by unit length along miter normal, and miter normals are encoded in the planes.\n\
     // Decode the normal to use at this specific vertex, push the position back, and then push to where it needs to be.\n\
     // Since this is morphing, compute both 3D and 2D positions and then blend.\n\
 \n\
@@ -124,7 +124,7 @@ void main()\n\
     float absStartPlaneDistance = abs(czm_planeDistance(startPlane3D, positionEc3D.xyz));\n\
     float absEndPlaneDistance = abs(czm_planeDistance(endPlane3D, positionEc3D.xyz));\n\
     vec3 planeDirection = czm_branchFreeTernary(absStartPlaneDistance < absEndPlaneDistance, startPlane3D.xyz, endPlane3D.xyz);\n\
-    vec3 upOrDown = normalize(cross(rightPlane3D.xyz, planeDirection)); // Points \"up\" for start plane, \"down\" at end plane.\n\
+    vec3 upOrDown = normalize(cross(rightPlane3D.xyz, planeDirection)); // Points "up" for start plane, "down" at end plane.\n\
     vec3 normalEC = normalize(cross(planeDirection, upOrDown));         // In practice, the opposite seems to work too.\n\
 \n\
     // Nudge the top vertex upwards to prevent flickering\n\
@@ -133,10 +133,10 @@ void main()\n\
     geodeticSurfaceNormal *= MAX_TERRAIN_HEIGHT;\n\
     positionEc3D.xyz += geodeticSurfaceNormal;\n\
 \n\
-    // Determine if this vertex is on the \"left\" or \"right\"\n\
+    // Determine if this vertex is on the "left" or "right"\n\
     normalEC *= sign(endNormalAndTextureCoordinateNormalizationX.w);\n\
 \n\
-    // A \"perfect\" implementation would push along normals according to the angle against forward.\n\
+    // A "perfect" implementation would push along normals according to the angle against forward.\n\
     // In practice, just pushing the normal out by halfWidth is sufficient for morph views.\n\
     positionEc3D.xyz += halfWidth * max(0.0, czm_metersPerPixel(positionEc3D)) * normalEC; // prevent artifacts when czm_metersPerPixel is negative (behind camera)\n\
 \n\
@@ -146,7 +146,7 @@ void main()\n\
     absStartPlaneDistance = abs(czm_planeDistance(startPlane2D, positionEc2D.xyz));\n\
     absEndPlaneDistance = abs(czm_planeDistance(endPlane2D, positionEc2D.xyz));\n\
     planeDirection = czm_branchFreeTernary(absStartPlaneDistance < absEndPlaneDistance, startPlane2D.xyz, endPlane2D.xyz);\n\
-    upOrDown = normalize(cross(rightPlane2D.xyz, planeDirection)); // Points \"up\" for start plane, \"down\" at end plane.\n\
+    upOrDown = normalize(cross(rightPlane2D.xyz, planeDirection)); // Points "up" for start plane, "down" at end plane.\n\
     normalEC = normalize(cross(planeDirection, upOrDown));         // In practice, the opposite seems to work too.\n\
 \n\
     // Nudge the top vertex upwards to prevent flickering\n\
@@ -155,14 +155,14 @@ void main()\n\
     geodeticSurfaceNormal *= MAX_TERRAIN_HEIGHT;\n\
     positionEc2D.xyz += geodeticSurfaceNormal;\n\
 \n\
-    // Determine if this vertex is on the \"left\" or \"right\"\n\
+    // Determine if this vertex is on the "left" or "right"\n\
     normalEC *= sign(texcoordNormalization2D.x);\n\
 #ifndef PER_INSTANCE_COLOR\n\
-    // Use vertex's sidedness to compute its texture coordinate.\n\
+    // Use vertex\'s sidedness to compute its texture coordinate.\n\
     v_texcoordT = clamp(sign(texcoordNormalization2D.x), 0.0, 1.0);\n\
 #endif\n\
 \n\
-    // A \"perfect\" implementation would push along normals according to the angle against forward.\n\
+    // A "perfect" implementation would push along normals according to the angle against forward.\n\
     // In practice, just pushing the normal out by halfWidth is sufficient for morph views.\n\
     positionEc2D.xyz += halfWidth * max(0.0, czm_metersPerPixel(positionEc2D)) * normalEC; // prevent artifacts when czm_metersPerPixel is negative (behind camera)\n\
 \n\
@@ -176,4 +176,4 @@ void main()\n\
     v_polylineAngle = czm_fastApproximateAtan(approxLineDirection.x, approxLineDirection.y);\n\
 #endif\n\
 }\n\
-";
+'

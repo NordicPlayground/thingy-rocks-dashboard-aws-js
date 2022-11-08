@@ -623,4 +623,4 @@ vec4 computeWaterColor(vec3 positionEyeCoordinates, vec2 textureCoordinates, mat
 }\n\
 \n\
 #endif // #ifdef SHOW_REFLECTIVE_OCEAN\n\
-";
+"

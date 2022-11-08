@@ -1,15 +1,15 @@
-import Cartesian2 from "./Cartesian2.js";
-import Cartesian3 from "./Cartesian3.js";
-import Check from "./Check.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import Cartesian2 from './Cartesian2.js'
+import Cartesian3 from './Cartesian3.js'
+import Check from './Check.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Contains functions for operating on 2D triangles.
  *
  * @namespace Intersections2D
  */
-var Intersections2D = {};
+var Intersections2D = {}
 
 /**
  * Splits a 2D triangle at given axis-aligned threshold value and returns the resulting
@@ -38,181 +38,181 @@ var Intersections2D = {};
  * // result === [2, 0, -1, 1, 0, 0.25, -1, 1, 2, 0.5]
  */
 Intersections2D.clipTriangleAtAxisAlignedThreshold = function (
-  threshold,
-  keepAbove,
-  u0,
-  u1,
-  u2,
-  result
+	threshold,
+	keepAbove,
+	u0,
+	u1,
+	u2,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(threshold)) {
-    throw new DeveloperError("threshold is required.");
-  }
-  if (!defined(keepAbove)) {
-    throw new DeveloperError("keepAbove is required.");
-  }
-  if (!defined(u0)) {
-    throw new DeveloperError("u0 is required.");
-  }
-  if (!defined(u1)) {
-    throw new DeveloperError("u1 is required.");
-  }
-  if (!defined(u2)) {
-    throw new DeveloperError("u2 is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(threshold)) {
+		throw new DeveloperError('threshold is required.')
+	}
+	if (!defined(keepAbove)) {
+		throw new DeveloperError('keepAbove is required.')
+	}
+	if (!defined(u0)) {
+		throw new DeveloperError('u0 is required.')
+	}
+	if (!defined(u1)) {
+		throw new DeveloperError('u1 is required.')
+	}
+	if (!defined(u2)) {
+		throw new DeveloperError('u2 is required.')
+	}
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = [];
-  } else {
-    result.length = 0;
-  }
+	if (!defined(result)) {
+		result = []
+	} else {
+		result.length = 0
+	}
 
-  var u0Behind;
-  var u1Behind;
-  var u2Behind;
-  if (keepAbove) {
-    u0Behind = u0 < threshold;
-    u1Behind = u1 < threshold;
-    u2Behind = u2 < threshold;
-  } else {
-    u0Behind = u0 > threshold;
-    u1Behind = u1 > threshold;
-    u2Behind = u2 > threshold;
-  }
+	var u0Behind
+	var u1Behind
+	var u2Behind
+	if (keepAbove) {
+		u0Behind = u0 < threshold
+		u1Behind = u1 < threshold
+		u2Behind = u2 < threshold
+	} else {
+		u0Behind = u0 > threshold
+		u1Behind = u1 > threshold
+		u2Behind = u2 > threshold
+	}
 
-  var numBehind = u0Behind + u1Behind + u2Behind;
+	var numBehind = u0Behind + u1Behind + u2Behind
 
-  var u01Ratio;
-  var u02Ratio;
-  var u12Ratio;
-  var u10Ratio;
-  var u20Ratio;
-  var u21Ratio;
+	var u01Ratio
+	var u02Ratio
+	var u12Ratio
+	var u10Ratio
+	var u20Ratio
+	var u21Ratio
 
-  if (numBehind === 1) {
-    if (u0Behind) {
-      u01Ratio = (threshold - u0) / (u1 - u0);
-      u02Ratio = (threshold - u0) / (u2 - u0);
+	if (numBehind === 1) {
+		if (u0Behind) {
+			u01Ratio = (threshold - u0) / (u1 - u0)
+			u02Ratio = (threshold - u0) / (u2 - u0)
 
-      result.push(1);
+			result.push(1)
 
-      result.push(2);
+			result.push(2)
 
-      if (u02Ratio !== 1.0) {
-        result.push(-1);
-        result.push(0);
-        result.push(2);
-        result.push(u02Ratio);
-      }
+			if (u02Ratio !== 1.0) {
+				result.push(-1)
+				result.push(0)
+				result.push(2)
+				result.push(u02Ratio)
+			}
 
-      if (u01Ratio !== 1.0) {
-        result.push(-1);
-        result.push(0);
-        result.push(1);
-        result.push(u01Ratio);
-      }
-    } else if (u1Behind) {
-      u12Ratio = (threshold - u1) / (u2 - u1);
-      u10Ratio = (threshold - u1) / (u0 - u1);
+			if (u01Ratio !== 1.0) {
+				result.push(-1)
+				result.push(0)
+				result.push(1)
+				result.push(u01Ratio)
+			}
+		} else if (u1Behind) {
+			u12Ratio = (threshold - u1) / (u2 - u1)
+			u10Ratio = (threshold - u1) / (u0 - u1)
 
-      result.push(2);
+			result.push(2)
 
-      result.push(0);
+			result.push(0)
 
-      if (u10Ratio !== 1.0) {
-        result.push(-1);
-        result.push(1);
-        result.push(0);
-        result.push(u10Ratio);
-      }
+			if (u10Ratio !== 1.0) {
+				result.push(-1)
+				result.push(1)
+				result.push(0)
+				result.push(u10Ratio)
+			}
 
-      if (u12Ratio !== 1.0) {
-        result.push(-1);
-        result.push(1);
-        result.push(2);
-        result.push(u12Ratio);
-      }
-    } else if (u2Behind) {
-      u20Ratio = (threshold - u2) / (u0 - u2);
-      u21Ratio = (threshold - u2) / (u1 - u2);
+			if (u12Ratio !== 1.0) {
+				result.push(-1)
+				result.push(1)
+				result.push(2)
+				result.push(u12Ratio)
+			}
+		} else if (u2Behind) {
+			u20Ratio = (threshold - u2) / (u0 - u2)
+			u21Ratio = (threshold - u2) / (u1 - u2)
 
-      result.push(0);
+			result.push(0)
 
-      result.push(1);
+			result.push(1)
 
-      if (u21Ratio !== 1.0) {
-        result.push(-1);
-        result.push(2);
-        result.push(1);
-        result.push(u21Ratio);
-      }
+			if (u21Ratio !== 1.0) {
+				result.push(-1)
+				result.push(2)
+				result.push(1)
+				result.push(u21Ratio)
+			}
 
-      if (u20Ratio !== 1.0) {
-        result.push(-1);
-        result.push(2);
-        result.push(0);
-        result.push(u20Ratio);
-      }
-    }
-  } else if (numBehind === 2) {
-    if (!u0Behind && u0 !== threshold) {
-      u10Ratio = (threshold - u1) / (u0 - u1);
-      u20Ratio = (threshold - u2) / (u0 - u2);
+			if (u20Ratio !== 1.0) {
+				result.push(-1)
+				result.push(2)
+				result.push(0)
+				result.push(u20Ratio)
+			}
+		}
+	} else if (numBehind === 2) {
+		if (!u0Behind && u0 !== threshold) {
+			u10Ratio = (threshold - u1) / (u0 - u1)
+			u20Ratio = (threshold - u2) / (u0 - u2)
 
-      result.push(0);
+			result.push(0)
 
-      result.push(-1);
-      result.push(1);
-      result.push(0);
-      result.push(u10Ratio);
+			result.push(-1)
+			result.push(1)
+			result.push(0)
+			result.push(u10Ratio)
 
-      result.push(-1);
-      result.push(2);
-      result.push(0);
-      result.push(u20Ratio);
-    } else if (!u1Behind && u1 !== threshold) {
-      u21Ratio = (threshold - u2) / (u1 - u2);
-      u01Ratio = (threshold - u0) / (u1 - u0);
+			result.push(-1)
+			result.push(2)
+			result.push(0)
+			result.push(u20Ratio)
+		} else if (!u1Behind && u1 !== threshold) {
+			u21Ratio = (threshold - u2) / (u1 - u2)
+			u01Ratio = (threshold - u0) / (u1 - u0)
 
-      result.push(1);
+			result.push(1)
 
-      result.push(-1);
-      result.push(2);
-      result.push(1);
-      result.push(u21Ratio);
+			result.push(-1)
+			result.push(2)
+			result.push(1)
+			result.push(u21Ratio)
 
-      result.push(-1);
-      result.push(0);
-      result.push(1);
-      result.push(u01Ratio);
-    } else if (!u2Behind && u2 !== threshold) {
-      u02Ratio = (threshold - u0) / (u2 - u0);
-      u12Ratio = (threshold - u1) / (u2 - u1);
+			result.push(-1)
+			result.push(0)
+			result.push(1)
+			result.push(u01Ratio)
+		} else if (!u2Behind && u2 !== threshold) {
+			u02Ratio = (threshold - u0) / (u2 - u0)
+			u12Ratio = (threshold - u1) / (u2 - u1)
 
-      result.push(2);
+			result.push(2)
 
-      result.push(-1);
-      result.push(0);
-      result.push(2);
-      result.push(u02Ratio);
+			result.push(-1)
+			result.push(0)
+			result.push(2)
+			result.push(u02Ratio)
 
-      result.push(-1);
-      result.push(1);
-      result.push(2);
-      result.push(u12Ratio);
-    }
-  } else if (numBehind !== 3) {
-    // Completely in front of threshold
-    result.push(0);
-    result.push(1);
-    result.push(2);
-  }
-  // else Completely behind threshold
+			result.push(-1)
+			result.push(1)
+			result.push(2)
+			result.push(u12Ratio)
+		}
+	} else if (numBehind !== 3) {
+		// Completely in front of threshold
+		result.push(0)
+		result.push(1)
+		result.push(2)
+	}
+	// else Completely behind threshold
 
-  return result;
-};
+	return result
+}
 
 /**
  * Compute the barycentric coordinates of a 2D position within a 2D triangle.
@@ -234,62 +234,62 @@ Intersections2D.clipTriangleAtAxisAlignedThreshold = function (
  * // result === new Cesium.Cartesian3(1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0);
  */
 Intersections2D.computeBarycentricCoordinates = function (
-  x,
-  y,
-  x1,
-  y1,
-  x2,
-  y2,
-  x3,
-  y3,
-  result
+	x,
+	y,
+	x1,
+	y1,
+	x2,
+	y2,
+	x3,
+	y3,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(x)) {
-    throw new DeveloperError("x is required.");
-  }
-  if (!defined(y)) {
-    throw new DeveloperError("y is required.");
-  }
-  if (!defined(x1)) {
-    throw new DeveloperError("x1 is required.");
-  }
-  if (!defined(y1)) {
-    throw new DeveloperError("y1 is required.");
-  }
-  if (!defined(x2)) {
-    throw new DeveloperError("x2 is required.");
-  }
-  if (!defined(y2)) {
-    throw new DeveloperError("y2 is required.");
-  }
-  if (!defined(x3)) {
-    throw new DeveloperError("x3 is required.");
-  }
-  if (!defined(y3)) {
-    throw new DeveloperError("y3 is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(x)) {
+		throw new DeveloperError('x is required.')
+	}
+	if (!defined(y)) {
+		throw new DeveloperError('y is required.')
+	}
+	if (!defined(x1)) {
+		throw new DeveloperError('x1 is required.')
+	}
+	if (!defined(y1)) {
+		throw new DeveloperError('y1 is required.')
+	}
+	if (!defined(x2)) {
+		throw new DeveloperError('x2 is required.')
+	}
+	if (!defined(y2)) {
+		throw new DeveloperError('y2 is required.')
+	}
+	if (!defined(x3)) {
+		throw new DeveloperError('x3 is required.')
+	}
+	if (!defined(y3)) {
+		throw new DeveloperError('y3 is required.')
+	}
+	//>>includeEnd('debug');
 
-  var x1mx3 = x1 - x3;
-  var x3mx2 = x3 - x2;
-  var y2my3 = y2 - y3;
-  var y1my3 = y1 - y3;
-  var inverseDeterminant = 1.0 / (y2my3 * x1mx3 + x3mx2 * y1my3);
-  var ymy3 = y - y3;
-  var xmx3 = x - x3;
-  var l1 = (y2my3 * xmx3 + x3mx2 * ymy3) * inverseDeterminant;
-  var l2 = (-y1my3 * xmx3 + x1mx3 * ymy3) * inverseDeterminant;
-  var l3 = 1.0 - l1 - l2;
+	var x1mx3 = x1 - x3
+	var x3mx2 = x3 - x2
+	var y2my3 = y2 - y3
+	var y1my3 = y1 - y3
+	var inverseDeterminant = 1.0 / (y2my3 * x1mx3 + x3mx2 * y1my3)
+	var ymy3 = y - y3
+	var xmx3 = x - x3
+	var l1 = (y2my3 * xmx3 + x3mx2 * ymy3) * inverseDeterminant
+	var l2 = (-y1my3 * xmx3 + x1mx3 * ymy3) * inverseDeterminant
+	var l3 = 1.0 - l1 - l2
 
-  if (defined(result)) {
-    result.x = l1;
-    result.y = l2;
-    result.z = l3;
-    return result;
-  }
-  return new Cartesian3(l1, l2, l3);
-};
+	if (defined(result)) {
+		result.x = l1
+		result.y = l2
+		result.z = l3
+		return result
+	}
+	return new Cartesian3(l1, l2, l3)
+}
 
 /**
  * Compute the intersection between 2 line segments
@@ -311,48 +311,48 @@ Intersections2D.computeBarycentricCoordinates = function (
  * // result === new Cesium.Cartesian2(0.0, 1.0);
  */
 Intersections2D.computeLineSegmentLineSegmentIntersection = function (
-  x00,
-  y00,
-  x01,
-  y01,
-  x10,
-  y10,
-  x11,
-  y11,
-  result
+	x00,
+	y00,
+	x01,
+	y01,
+	x10,
+	y10,
+	x11,
+	y11,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number("x00", x00);
-  Check.typeOf.number("y00", y00);
-  Check.typeOf.number("x01", x01);
-  Check.typeOf.number("y01", y01);
-  Check.typeOf.number("x10", x10);
-  Check.typeOf.number("y10", y10);
-  Check.typeOf.number("x11", x11);
-  Check.typeOf.number("y11", y11);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number('x00', x00)
+	Check.typeOf.number('y00', y00)
+	Check.typeOf.number('x01', x01)
+	Check.typeOf.number('y01', y01)
+	Check.typeOf.number('x10', x10)
+	Check.typeOf.number('y10', y10)
+	Check.typeOf.number('x11', x11)
+	Check.typeOf.number('y11', y11)
+	//>>includeEnd('debug');
 
-  var numerator1A = (x11 - x10) * (y00 - y10) - (y11 - y10) * (x00 - x10);
-  var numerator1B = (x01 - x00) * (y00 - y10) - (y01 - y00) * (x00 - x10);
-  var denominator1 = (y11 - y10) * (x01 - x00) - (x11 - x10) * (y01 - y00);
+	var numerator1A = (x11 - x10) * (y00 - y10) - (y11 - y10) * (x00 - x10)
+	var numerator1B = (x01 - x00) * (y00 - y10) - (y01 - y00) * (x00 - x10)
+	var denominator1 = (y11 - y10) * (x01 - x00) - (x11 - x10) * (y01 - y00)
 
-  // If denominator = 0, then lines are parallel. If denominator = 0 and both numerators are 0, then coincident
-  if (denominator1 === 0) {
-    return;
-  }
+	// If denominator = 0, then lines are parallel. If denominator = 0 and both numerators are 0, then coincident
+	if (denominator1 === 0) {
+		return
+	}
 
-  var ua1 = numerator1A / denominator1;
-  var ub1 = numerator1B / denominator1;
+	var ua1 = numerator1A / denominator1
+	var ub1 = numerator1B / denominator1
 
-  if (ua1 >= 0 && ua1 <= 1 && ub1 >= 0 && ub1 <= 1) {
-    if (!defined(result)) {
-      result = new Cartesian2();
-    }
+	if (ua1 >= 0 && ua1 <= 1 && ub1 >= 0 && ub1 <= 1) {
+		if (!defined(result)) {
+			result = new Cartesian2()
+		}
 
-    result.x = x00 + ua1 * (x01 - x00);
-    result.y = y00 + ua1 * (y01 - y00);
+		result.x = x00 + ua1 * (x01 - x00)
+		result.y = y00 + ua1 * (y01 - y00)
 
-    return result;
-  }
-};
-export default Intersections2D;
+		return result
+	}
+}
+export default Intersections2D

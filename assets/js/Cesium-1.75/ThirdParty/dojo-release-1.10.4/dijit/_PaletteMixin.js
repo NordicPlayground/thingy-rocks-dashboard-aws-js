@@ -1,21 +1,32 @@
 define([
-	"dojo/_base/declare", // declare
-	"dojo/dom-attr", // domAttr.set
-	"dojo/dom-class", // domClass.add domClass.remove
-	"dojo/dom-construct", // domConstruct.create domConstruct.place
-	"dojo/keys", // keys
-	"dojo/_base/lang", // lang.getObject
-	"dojo/on",
-	"./_CssStateMixin",
-	"./a11yclick",
-	"./focus",
-	"./typematic"
-], function(declare, domAttr, domClass, domConstruct, keys, lang, on, _CssStateMixin, a11yclick, focus, typematic){
-
+	'dojo/_base/declare', // declare
+	'dojo/dom-attr', // domAttr.set
+	'dojo/dom-class', // domClass.add domClass.remove
+	'dojo/dom-construct', // domConstruct.create domConstruct.place
+	'dojo/keys', // keys
+	'dojo/_base/lang', // lang.getObject
+	'dojo/on',
+	'./_CssStateMixin',
+	'./a11yclick',
+	'./focus',
+	'./typematic',
+], function (
+	declare,
+	domAttr,
+	domClass,
+	domConstruct,
+	keys,
+	lang,
+	on,
+	_CssStateMixin,
+	a11yclick,
+	focus,
+	typematic,
+) {
 	// module:
 	//		dijit/_PaletteMixin
 
-	var PaletteMixin = declare("dijit._PaletteMixin", _CssStateMixin, {
+	var PaletteMixin = declare('dijit._PaletteMixin', _CssStateMixin, {
 		// summary:
 		//		A keyboard accessible palette, for picking a color/emoticon/etc.
 		// description:
@@ -29,11 +40,11 @@ define([
 		//		Fraction of time used to change the typematic timer between events
 		//		1.0 means that each typematic event fires at defaultTimeout intervals
 		//		Less than 1.0 means that each typematic event fires at an increasing faster rate
-		timeoutChangeRate: 0.90,
+		timeoutChangeRate: 0.9,
 
 		// value: String
 		//		Currently selected color/emoticon/etc.
-		value: "",
+		value: '',
 
 		// _selectedCell: [private] Integer
 		//		Index of the currently selected cell. Initially, none selected
@@ -61,29 +72,32 @@ define([
 
 		// tabIndex: String
 		//		Widget tab index.
-		tabIndex: "0",
+		tabIndex: '0',
 
 		// cellClass: [protected] String
 		//		CSS class applied to each cell in the palette
-		cellClass: "dijitPaletteCell",
+		cellClass: 'dijitPaletteCell',
 
 		// dyeClass: [protected] Constructor
 		//		Constructor for Object created for each cell of the palette.
 		//		dyeClass should implement the dijit/_PaletteMixin.__Dye interface.
 		dyeClass: null,
 
-		_dyeFactory: function(value /*===== , row, col, title =====*/){
+		_dyeFactory: function (value /*===== , row, col, title =====*/) {
 			// summary:
 			//		Return instance of dijit.Dye for specified cell of palette
 			// tags:
 			//		extension
 
 			// Remove string support for 2.0
-			var dyeClassObj = typeof this.dyeClass == "string" ? lang.getObject(this.dyeClass) : this.dyeClass;
-			return new dyeClassObj(value);
+			var dyeClassObj =
+				typeof this.dyeClass == 'string'
+					? lang.getObject(this.dyeClass)
+					: this.dyeClass
+			return new dyeClassObj(value)
 		},
 
-		_preparePalette: function(choices, titles){
+		_preparePalette: function (choices, titles) {
 			// summary:
 			//		Subclass must call _preparePalette() from postCreate(), passing in the tooltip
 			//		for each cell
@@ -92,37 +106,45 @@ define([
 			// titles: String[]
 			//		Localized tooltip for each cell
 
-			this._cells = [];
-			var url = this._blankGif;
+			this._cells = []
+			var url = this._blankGif
 
-			this.own(on(this.gridNode, a11yclick, lang.hitch(this, "_onCellClick")));
+			this.own(on(this.gridNode, a11yclick, lang.hitch(this, '_onCellClick')))
 
-			for(var row = 0; row < choices.length; row++){
-				var rowNode = domConstruct.create("tr", {tabIndex: "-1", role: "row"}, this.gridNode);
-				for(var col = 0; col < choices[row].length; col++){
-					var value = choices[row][col];
-					if(value){
-						var cellObject = this._dyeFactory(value, row, col, titles[value]);
+			for (var row = 0; row < choices.length; row++) {
+				var rowNode = domConstruct.create(
+					'tr',
+					{ tabIndex: '-1', role: 'row' },
+					this.gridNode,
+				)
+				for (var col = 0; col < choices[row].length; col++) {
+					var value = choices[row][col]
+					if (value) {
+						var cellObject = this._dyeFactory(value, row, col, titles[value])
 
-						var cellNode = domConstruct.create("td", {
-							"class": this.cellClass,
-							tabIndex: "-1",
-							title: titles[value],
-							role: "gridcell"
-						}, rowNode);
+						var cellNode = domConstruct.create(
+							'td',
+							{
+								class: this.cellClass,
+								tabIndex: '-1',
+								title: titles[value],
+								role: 'gridcell',
+							},
+							rowNode,
+						)
 
 						// prepare cell inner structure
-						cellObject.fillCell(cellNode, url);
+						cellObject.fillCell(cellNode, url)
 
-						cellNode.idx = this._cells.length;
+						cellNode.idx = this._cells.length
 
 						// save cell info into _cells
-						this._cells.push({node: cellNode, dye: cellObject});
+						this._cells.push({ node: cellNode, dye: cellObject })
 					}
 				}
 			}
-			this._xDim = choices[0].length;
-			this._yDim = choices.length;
+			this._xDim = choices[0].length
+			this._yDim = choices.length
 
 			// Now set all events
 			// The palette itself is navigated to with the tab key on the keyboard
@@ -136,43 +158,48 @@ define([
 				DOWN_ARROW: this._xDim,
 				// Right and left move the index by 1.
 				RIGHT_ARROW: this.isLeftToRight() ? 1 : -1,
-				LEFT_ARROW: this.isLeftToRight() ? -1 : 1
-			};
-			for(var key in keyIncrementMap){
+				LEFT_ARROW: this.isLeftToRight() ? -1 : 1,
+			}
+			for (var key in keyIncrementMap) {
 				this.own(
 					typematic.addKeyListener(
 						this.domNode,
-						{keyCode: keys[key], ctrlKey: false, altKey: false, shiftKey: false},
+						{
+							keyCode: keys[key],
+							ctrlKey: false,
+							altKey: false,
+							shiftKey: false,
+						},
 						this,
-						function(){
-							var increment = keyIncrementMap[key];
-							return function(count){
-								this._navigateByKey(increment, count);
-							};
-						}(),
+						(function () {
+							var increment = keyIncrementMap[key]
+							return function (count) {
+								this._navigateByKey(increment, count)
+							}
+						})(),
 						this.timeoutChangeRate,
-						this.defaultTimeout
-					)
-				);
+						this.defaultTimeout,
+					),
+				)
 			}
 		},
 
-		postCreate: function(){
-			this.inherited(arguments);
+		postCreate: function () {
+			this.inherited(arguments)
 
 			// Set initial navigable node.
-			this._setCurrent(this._cells[0].node);
+			this._setCurrent(this._cells[0].node)
 		},
 
-		focus: function(){
+		focus: function () {
 			// summary:
 			//		Focus this widget.  Puts focus on the most recently focused cell.
 
 			// The cell already has tabIndex set, just need to set CSS and focus it
-			focus.focus(this._currentFocus);
+			focus.focus(this._currentFocus)
 		},
 
-		_onCellClick: function(/*Event*/ evt){
+		_onCellClick: function (/*Event*/ evt) {
 			// summary:
 			//		Handler for click, enter key & space key. Selects the cell.
 			// evt:
@@ -180,31 +207,32 @@ define([
 			// tags:
 			//		private
 
-			var target = evt.target;
+			var target = evt.target
 
 			// Find TD associated with click event.   For ColorPalette user likely clicked IMG inside of TD
-			while(target.tagName != "TD"){
-				if(!target.parentNode || target == this.gridNode){    // probably can never happen, but just in case
-					return;
+			while (target.tagName != 'TD') {
+				if (!target.parentNode || target == this.gridNode) {
+					// probably can never happen, but just in case
+					return
 				}
-				target = target.parentNode;
+				target = target.parentNode
 			}
 
-			var value = this._getDye(target).getValue();
+			var value = this._getDye(target).getValue()
 
 			// First focus the clicked cell, and then send onChange() notification.
 			// onChange() (via _setValueAttr) must be after the focus call, because
 			// it may trigger a refocus to somewhere else (like the Editor content area), and that
 			// second focus should win.
-			this._setCurrent(target);
-			focus.focus(target);
-			this._setValueAttr(value, true);
+			this._setCurrent(target)
+			focus.focus(target)
+			this._setValueAttr(value, true)
 
-			evt.stopPropagation();
-			evt.preventDefault();
+			evt.stopPropagation()
+			evt.preventDefault()
 		},
 
-		_setCurrent: function(/*DomNode*/ node){
+		_setCurrent: function (/*DomNode*/ node) {
 			// summary:
 			//		Sets which node is the focused cell.
 			// description:
@@ -216,19 +244,19 @@ define([
 			//		should focus the cell in a setTimeout().
 			// tags:
 			//		protected
-			if("_currentFocus" in this){
+			if ('_currentFocus' in this) {
 				// Remove tabIndex on old cell
-				domAttr.set(this._currentFocus, "tabIndex", "-1");
+				domAttr.set(this._currentFocus, 'tabIndex', '-1')
 			}
 
 			// Set tabIndex of new cell
-			this._currentFocus = node;
-			if(node){
-				domAttr.set(node, "tabIndex", this.tabIndex);
+			this._currentFocus = node
+			if (node) {
+				domAttr.set(node, 'tabIndex', this.tabIndex)
 			}
 		},
 
-		_setValueAttr: function(value, priorityChange){
+		_setValueAttr: function (value, priorityChange) {
 			// summary:
 			//		This selects a cell. It triggers the onChange event.
 			// value: String
@@ -240,38 +268,41 @@ define([
 			//		onChange event.
 
 			// clear old selected cell
-			if(this._selectedCell >= 0){
-				domClass.remove(this._cells[this._selectedCell].node, this.cellClass + "Selected");
+			if (this._selectedCell >= 0) {
+				domClass.remove(
+					this._cells[this._selectedCell].node,
+					this.cellClass + 'Selected',
+				)
 			}
-			this._selectedCell = -1;
+			this._selectedCell = -1
 
 			// search for cell matching specified value
-			if(value){
-				for(var i = 0; i < this._cells.length; i++){
-					if(value == this._cells[i].dye.getValue()){
-						this._selectedCell = i;
-						domClass.add(this._cells[i].node, this.cellClass + "Selected");
-						break;
+			if (value) {
+				for (var i = 0; i < this._cells.length; i++) {
+					if (value == this._cells[i].dye.getValue()) {
+						this._selectedCell = i
+						domClass.add(this._cells[i].node, this.cellClass + 'Selected')
+						break
 					}
 				}
 			}
 
 			// record new value, or null if no matching cell
-			this._set("value", this._selectedCell >= 0 ? value : null);
+			this._set('value', this._selectedCell >= 0 ? value : null)
 
-			if(priorityChange || priorityChange === undefined){
-				this.onChange(value);
+			if (priorityChange || priorityChange === undefined) {
+				this.onChange(value)
 			}
 		},
 
-		onChange: function(/*===== value =====*/){
+		onChange: function (/*===== value =====*/) {
 			// summary:
 			//		Callback when a cell is selected.
 			// value: String
 			//		Value corresponding to cell.
 		},
 
-		_navigateByKey: function(increment, typeCount){
+		_navigateByKey: function (increment, typeCount) {
 			// summary:
 			//		This is the callback for typematic.
 			//		It changes the focus and the highlighed cell.
@@ -283,28 +314,28 @@ define([
 			//		private
 
 			// typecount == -1 means the key is released.
-			if(typeCount == -1){
-				return;
+			if (typeCount == -1) {
+				return
 			}
 
-			var newFocusIndex = this._currentFocus.idx + increment;
-			if(newFocusIndex < this._cells.length && newFocusIndex > -1){
-				var focusNode = this._cells[newFocusIndex].node;
-				this._setCurrent(focusNode);
+			var newFocusIndex = this._currentFocus.idx + increment
+			if (newFocusIndex < this._cells.length && newFocusIndex > -1) {
+				var focusNode = this._cells[newFocusIndex].node
+				this._setCurrent(focusNode)
 
 				// Actually focus the node, for the benefit of screen readers.
 				// Use defer because IE doesn't like changing focus inside of an event handler
-				this.defer(lang.hitch(focus, "focus", focusNode));
+				this.defer(lang.hitch(focus, 'focus', focusNode))
 			}
 		},
 
-		_getDye: function(/*DomNode*/ cell){
+		_getDye: function (/*DomNode*/ cell) {
 			// summary:
 			//		Get JS object for given cell DOMNode
 
-			return this._cells[cell.idx].dye;
-		}
-	});
+			return this._cells[cell.idx].dye
+		},
+	})
 
 	/*=====
 	 PaletteMixin.__Dye = declare("dijit.Dye", null, {
@@ -335,5 +366,5 @@ define([
 	 });
 	 =====*/
 
-	return PaletteMixin;
-});
+	return PaletteMixin
+})

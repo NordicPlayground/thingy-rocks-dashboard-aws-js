@@ -14,16 +14,8 @@
       "byteStride": 12,
       "componentType": 5126,
       "count": 24,
-      "max": [
-        0.5,
-        0.5,
-        0.5
-      ],
-      "min": [
-        -0.5,
-        -0.5,
-        -0.5
-      ],
+      "max": [0.5, 0.5, 0.5],
+      "min": [-0.5, -0.5, -0.5],
       "type": "VEC3"
     },
     "accessor_27": {
@@ -36,22 +28,8 @@
       "extensions": {
         "WEB3D_quantized_attributes": {
           "decodeMatrix": [
-            0.000015259021896696422,
-            0,
-            0,
-            0,
-            0,
-            0.000015259021896696422,
-            0,
-            0,
-            0,
-            0,
-            0.000015259021896696422,
-            0,
-            0,
-            0,
-            0,
-            1
+            0.000015259021896696422, 0, 0, 0, 0, 0.000015259021896696422, 0, 0,
+            0, 0, 0.000015259021896696422, 0, 0, 0, 0, 1
           ]
         }
       }
@@ -88,9 +66,7 @@
       "uri": "data:application/octet-stream;base64,AAABAAIAAwACAAEABAAFAAYABwAGAAUACAAJAAoACwAKAAkADAANAA4ADwAOAA0AEAARABIAEwASABEAFAAVABYAFwAWABUAAAAAvwAAAL8AAAA/AAAAPwAAAL8AAAA/AAAAvwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAPwAAAL8AAAA/AAAAvwAAAL8AAAA/AAAAPwAAAL8AAAC/AAAAvwAAAL8AAAC/AAAAPwAAAD8AAAA/AAAAPwAAAL8AAAA/AAAAPwAAAD8AAAC/AAAAPwAAAL8AAAC/AAAAvwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAvwAAAD8AAAC/AAAAPwAAAD8AAAC/AAAAvwAAAL8AAAA/AAAAvwAAAD8AAAA/AAAAvwAAAL8AAAC/AAAAvwAAAD8AAAC/AAAAvwAAAL8AAAC/AAAAvwAAAD8AAAC/AAAAPwAAAL8AAAC/AAAAPwAAAD8AAAC///8AAAAA//8AAAAA//8AAAAA//8AAAAA////fwAA////fwAA////fwAA////fwAA/////wAA/////wAA/////wAA/////wAAAAD//wAAAAD//wAAAAD//wAAAAD//wAAAAAAAP//AAAAAP//AAAAAP//AAAAAP//SksAAIGCSksAAIGCSksAAIGCSksAAIGC"
     }
   },
-  "extensionsUsed": [
-    "WEB3D_quantized_attributes"
-  ],
+  "extensionsUsed": ["WEB3D_quantized_attributes"],
   "materials": {
     "Effect-Red": {
       "name": "Red",
@@ -117,60 +93,19 @@
   "nodes": {
     "Geometry-mesh002Node": {
       "children": [],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
-      "meshes": [
-        "Geometry-mesh002"
-      ],
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      "meshes": ["Geometry-mesh002"],
       "name": "Mesh"
     },
     "node_1": {
-      "children": [
-        "Geometry-mesh002Node"
-      ],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        -1,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
+      "children": ["Geometry-mesh002Node"],
+      "matrix": [1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       "name": "Y_UP_Transform"
     }
   },
   "programs": {
     "program_0": {
-      "attributes": [
-        "a_position",
-        "a_color"
-      ],
+      "attributes": ["a_position", "a_color"],
       "fragmentShader": "Box0FS",
       "vertexShader": "Box0VS"
     }
@@ -178,9 +113,7 @@
   "scene": "defaultScene",
   "scenes": {
     "defaultScene": {
-      "nodes": [
-        "node_1"
-      ]
+      "nodes": ["node_1"]
     }
   },
   "shaders": {
@@ -220,10 +153,7 @@
       },
       "program": "program_0",
       "states": {
-        "enable": [
-          2929,
-          2884
-        ],
+        "enable": [2929, 2884],
         "disable": []
       },
       "uniforms": {

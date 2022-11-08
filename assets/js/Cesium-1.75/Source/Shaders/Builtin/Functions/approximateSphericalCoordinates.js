@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Approximately computes spherical coordinates given a normal.\n\
  * Uses approximate inverse trigonometry for speed and consistency,\n\
  * since inverse trigonometry can differ from vendor-to-vendor and when compared with the CPU.\n\
@@ -17,4 +17,4 @@ vec2 czm_approximateSphericalCoordinates(vec3 normal) {\n\
     float longitudeApproximation = czm_fastApproximateAtan(normal.x, normal.y);\n\
     return vec2(latitudeApproximation, longitudeApproximation);\n\
 }\n\
-";
+'

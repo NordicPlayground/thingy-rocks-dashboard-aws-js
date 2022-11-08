@@ -8,6 +8,6 @@ dojo.tests = {
 };
 =====*/
 
-load("dojo.js");
-load("tests/runner.js");
-tests.run();
+load('dojo.js')
+load('tests/runner.js')
+tests.run()

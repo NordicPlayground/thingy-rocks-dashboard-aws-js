@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "attribute vec3 position3DHigh;\n\
+export default 'attribute vec3 position3DHigh;\n\
 attribute vec3 position3DLow;\n\
 \n\
 // In 2D and in 3D, texture coordinate normalization component signs encodes:\n\
@@ -98,8 +98,8 @@ void main()\n\
     v_color = czm_batchTable_color(batchId);\n\
 #endif // PER_INSTANCE_COLOR\n\
 \n\
-    // Compute a normal along which to \"push\" the position out, extending the miter depending on view distance.\n\
-    // Position has already been \"pushed\" by unit length along miter normal, and miter normals are encoded in the planes.\n\
+    // Compute a normal along which to "push" the position out, extending the miter depending on view distance.\n\
+    // Position has already been "pushed" by unit length along miter normal, and miter normals are encoded in the planes.\n\
     // Decode the normal to use at this specific vertex, push the position back, and then push to where it needs to be.\n\
     vec4 positionRelativeToEye = czm_computePosition();\n\
 \n\
@@ -108,7 +108,7 @@ void main()\n\
     float absStartPlaneDistance = abs(czm_planeDistance(startPlaneEC, positionEC.xyz));\n\
     float absEndPlaneDistance = abs(czm_planeDistance(endPlaneEC, positionEC.xyz));\n\
     vec3 planeDirection = czm_branchFreeTernary(absStartPlaneDistance < absEndPlaneDistance, startPlaneEC.xyz, endPlaneEC.xyz);\n\
-    vec3 upOrDown = normalize(cross(v_rightPlaneEC.xyz, planeDirection)); // Points \"up\" for start plane, \"down\" at end plane.\n\
+    vec3 upOrDown = normalize(cross(v_rightPlaneEC.xyz, planeDirection)); // Points "up" for start plane, "down" at end plane.\n\
     vec3 normalEC = normalize(cross(planeDirection, upOrDown));           // In practice, the opposite seems to work too.\n\
 \n\
     // Extrude bottom vertices downward for far view distances, like for GroundPrimitives\n\
@@ -124,16 +124,16 @@ void main()\n\
     // Make volumes about double pixel width for a conservative fit - in practice the\n\
     // extra cost here is minimal compared to the loose volume heights.\n\
     //\n\
-    // N = normalEC (guaranteed \"right-facing\")\n\
+    // N = normalEC (guaranteed "right-facing")\n\
     // R = rightEC\n\
     // p = angle between N and R\n\
     // w = distance to push along R if R == N\n\
     // d = distance to push along N\n\
     //\n\
     //   N   R\n\
-    //  { \ p| }      * cos(p) = dot(N, R) = w / d\n\
-    //  d\ \ |  |w    * d = w / dot(N, R)\n\
-    //    { \| }\n\
+    //  {  p| }      * cos(p) = dot(N, R) = w / d\n\
+    //  d  |  |w    * d = w / dot(N, R)\n\
+    //    { | }\n\
     //       o---------- polyline segment ---->\n\
     //\n\
     float width = czm_batchTable_width(batchId);\n\
@@ -150,7 +150,7 @@ void main()\n\
     width = width * max(0.0, czm_metersPerPixel(positionEC)); // width = distance to push along R\n\
     width = width / dot(normalEC, v_rightPlaneEC.xyz); // width = distance to push along N\n\
 \n\
-    // Determine if this vertex is on the \"left\" or \"right\"\n\
+    // Determine if this vertex is on the "left" or "right"\n\
 #ifdef COLUMBUS_VIEW_2D\n\
         normalEC *= sign(texcoordNormalization2D.x);\n\
 #else\n\
@@ -167,4 +167,4 @@ void main()\n\
     v_polylineAngle = czm_fastApproximateAtan(approxLineDirection.x, approxLineDirection.y);\n\
 #endif\n\
 }\n\
-";
+'

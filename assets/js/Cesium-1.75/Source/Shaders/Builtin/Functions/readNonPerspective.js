@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Reads a value previously transformed with {@link czm_writeNonPerspective}\n\
  * by dividing it by `w`, the value used in the perspective divide.\n\
  * This function is intended to be called in a fragment shader to access a\n\
@@ -30,4 +30,4 @@ vec3 czm_readNonPerspective(vec3 value, float oneOverW) {\n\
 vec4 czm_readNonPerspective(vec4 value, float oneOverW) {\n\
     return value * oneOverW;\n\
 }\n\
-";
+'

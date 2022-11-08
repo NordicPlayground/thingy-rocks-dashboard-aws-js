@@ -1,4 +1,4 @@
-import DeveloperError from "./DeveloperError.js";
+import DeveloperError from './DeveloperError.js'
 
 /**
  * @typedef {Object} GeocoderService.Result
@@ -25,5 +25,5 @@ function GeocoderService() {}
  * @param {GeocodeType} [type=GeocodeType.SEARCH] The type of geocode to perform.
  * @returns {Promise<GeocoderService.Result[]>}
  */
-GeocoderService.prototype.geocode = DeveloperError.throwInstantiationError;
-export default GeocoderService;
+GeocoderService.prototype.geocode = DeveloperError.throwInstantiationError
+export default GeocoderService

@@ -55,8 +55,7 @@
               cartographicDegrees: [-77, 37, 0],
             },
             model: {
-              gltf:
-                "../../SampleData/models/CesiumMilkTruck/CesiumMilkTruck.glb",
+              gltf: "../../SampleData/models/CesiumMilkTruck/CesiumMilkTruck.glb",
             },
           },
         ];
@@ -131,9 +130,8 @@
                 viewer.dataSources
                   .add(dataSourcePromise)
                   .then(function (dataSource) {
-                    viewer.trackedEntity = dataSource.entities.getById(
-                      "truck model"
-                    );
+                    viewer.trackedEntity =
+                      dataSource.entities.getById("truck model");
                   });
               },
             },

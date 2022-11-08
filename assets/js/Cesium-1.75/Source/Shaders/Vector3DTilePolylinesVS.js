@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "attribute vec4 currentPosition;\n\
+export default 'attribute vec4 currentPosition;\n\
 attribute vec4 previousPosition;\n\
 attribute vec4 nextPosition;\n\
 attribute vec2 expandAndWidth;\n\
@@ -21,4 +21,4 @@ void main()\n\
     vec4 positionWC = getPolylineWindowCoordinatesEC(p, prev, next, expandDir, width, usePrev, angle);\n\
     gl_Position = czm_viewportOrthographic * positionWC;\n\
 }\n\
-";
+'

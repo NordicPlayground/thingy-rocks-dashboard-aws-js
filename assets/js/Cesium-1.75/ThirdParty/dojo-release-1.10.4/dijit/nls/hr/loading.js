@@ -1,6 +1,4 @@
-define(
-({
-	loadingState: "Učitavanje...",
-	errorState: "Žao nam je, došlo je do greške"
+define({
+	loadingState: 'Učitavanje...',
+	errorState: 'Žao nam je, došlo je do greške',
 })
-);

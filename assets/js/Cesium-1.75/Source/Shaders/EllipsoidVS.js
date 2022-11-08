@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "attribute vec3 position;\n\
+export default 'attribute vec3 position;\n\
 \n\
 uniform vec3 u_radii;\n\
 \n\
@@ -27,4 +27,4 @@ void main()\n\
 \n\
     czm_vertexLogDepth();\n\
 }\n\
-";
+'

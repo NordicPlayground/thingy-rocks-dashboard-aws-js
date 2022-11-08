@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Compositing for Weighted Blended Order-Independent Transparency. See:\n\
  * - http://jcgt.org/published/0002/02/09/\n\
  * - http://casual-effects.blogspot.com/2014/03/weighted-blended-order-independent.html\n\
@@ -30,4 +30,4 @@ void main()\n\
         gl_FragColor.a = 1.0;\n\
     }\n\
 }\n\
-";
+'

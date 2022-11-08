@@ -1,29 +1,38 @@
 define([
-	"require",
-	"dojo/_base/declare", // declare
-	"dojo/dom-attr", // domAttr.set
-	"dojo/has",		// has("dijit-legacy-requires")
-	"dojo/query", // query
-	"dojo/ready",
-	"./ToggleButton",
-	"./_CheckBoxMixin",
-	"dojo/text!./templates/CheckBox.html",
-	"dojo/NodeList-dom", // NodeList.addClass/removeClass
-	"../a11yclick"	// template uses ondijitclick
-], function(require, declare, domAttr, has, query, ready, ToggleButton, _CheckBoxMixin, template){
-
+	'require',
+	'dojo/_base/declare', // declare
+	'dojo/dom-attr', // domAttr.set
+	'dojo/has', // has("dijit-legacy-requires")
+	'dojo/query', // query
+	'dojo/ready',
+	'./ToggleButton',
+	'./_CheckBoxMixin',
+	'dojo/text!./templates/CheckBox.html',
+	'dojo/NodeList-dom', // NodeList.addClass/removeClass
+	'../a11yclick', // template uses ondijitclick
+], function (
+	require,
+	declare,
+	domAttr,
+	has,
+	query,
+	ready,
+	ToggleButton,
+	_CheckBoxMixin,
+	template,
+) {
 	// module:
 	//		dijit/form/CheckBox
 
 	// Back compat w/1.6, remove for 2.0
-	if(has("dijit-legacy-requires")){
-		ready(0, function(){
-			var requires = ["dijit/form/RadioButton"];
-			require(requires);	// use indirection so modules not rolled into a build
-		});
+	if (has('dijit-legacy-requires')) {
+		ready(0, function () {
+			var requires = ['dijit/form/RadioButton']
+			require(requires) // use indirection so modules not rolled into a build
+		})
 	}
 
-	return declare("dijit.form.CheckBox", [ToggleButton, _CheckBoxMixin], {
+	return declare('dijit.form.CheckBox', [ToggleButton, _CheckBoxMixin], {
 		// summary:
 		//		Same as an HTML checkbox, but with fancy styling.
 		//
@@ -44,9 +53,12 @@ define([
 
 		templateString: template,
 
-		baseClass: "dijitCheckBox",
+		baseClass: 'dijitCheckBox',
 
-		_setValueAttr: function(/*String|Boolean*/ newValue, /*Boolean*/ priorityChange){
+		_setValueAttr: function (
+			/*String|Boolean*/ newValue,
+			/*Boolean*/ priorityChange,
+		) {
 			// summary:
 			//		Handler for value= attribute to constructor, and also calls to
 			//		set('value', val).
@@ -64,54 +76,54 @@ define([
 			//
 			//		`widget.set('value', boolean)` will change the checked state.
 
-			if(typeof newValue == "string"){
-				this.inherited(arguments);
-				newValue = true;
+			if (typeof newValue == 'string') {
+				this.inherited(arguments)
+				newValue = true
 			}
-			if(this._created){
-				this.set('checked', newValue, priorityChange);
+			if (this._created) {
+				this.set('checked', newValue, priorityChange)
 			}
 		},
-		_getValueAttr: function(){
+		_getValueAttr: function () {
 			// summary:
 			//		Hook so get('value') works.
 			// description:
 			//		If the CheckBox is checked, returns the value attribute.
 			//		Otherwise returns false.
-			return this.checked && this._get("value");
+			return this.checked && this._get('value')
 		},
 
 		// Override behavior from Button, since we don't have an iconNode or valueNode
 		_setIconClassAttr: null,
-		_setNameAttr: "focusNode",
+		_setNameAttr: 'focusNode',
 
-		postMixInProperties: function(){
-			this.inherited(arguments);
+		postMixInProperties: function () {
+			this.inherited(arguments)
 
 			// Need to set initial checked state via node.setAttribute so that form submit works
 			// and IE8 radio button tab order is preserved.
 			// domAttr.set(node, "checked", bool) doesn't work on IE until node has been attached
 			// to <body>, see #8666
-			this.checkedAttrSetting = "";
+			this.checkedAttrSetting = ''
 		},
 
-		 _fillContent: function(){
+		_fillContent: function () {
 			// Override Button::_fillContent() since it doesn't make sense for CheckBox,
 			// since CheckBox doesn't even have a container
 		},
 
-		_onFocus: function(){
-			if(this.id){
-				query("label[for='"+this.id+"']").addClass("dijitFocusedLabel");
+		_onFocus: function () {
+			if (this.id) {
+				query("label[for='" + this.id + "']").addClass('dijitFocusedLabel')
 			}
-			this.inherited(arguments);
+			this.inherited(arguments)
 		},
 
-		_onBlur: function(){
-			if(this.id){
-				query("label[for='"+this.id+"']").removeClass("dijitFocusedLabel");
+		_onBlur: function () {
+			if (this.id) {
+				query("label[for='" + this.id + "']").removeClass('dijitFocusedLabel')
 			}
-			this.inherited(arguments);
-		}
-	});
-});
+			this.inherited(arguments)
+		},
+	})
+})

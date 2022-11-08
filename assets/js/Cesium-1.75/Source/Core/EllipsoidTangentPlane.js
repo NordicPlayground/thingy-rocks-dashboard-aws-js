@@ -1,19 +1,19 @@
-import AxisAlignedBoundingBox from "./AxisAlignedBoundingBox.js";
-import Cartesian2 from "./Cartesian2.js";
-import Cartesian3 from "./Cartesian3.js";
-import Cartesian4 from "./Cartesian4.js";
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import Ellipsoid from "./Ellipsoid.js";
-import IntersectionTests from "./IntersectionTests.js";
-import Matrix4 from "./Matrix4.js";
-import Plane from "./Plane.js";
-import Ray from "./Ray.js";
-import Transforms from "./Transforms.js";
+import AxisAlignedBoundingBox from './AxisAlignedBoundingBox.js'
+import Cartesian2 from './Cartesian2.js'
+import Cartesian3 from './Cartesian3.js'
+import Cartesian4 from './Cartesian4.js'
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import Ellipsoid from './Ellipsoid.js'
+import IntersectionTests from './IntersectionTests.js'
+import Matrix4 from './Matrix4.js'
+import Plane from './Plane.js'
+import Ray from './Ray.js'
+import Transforms from './Transforms.js'
 
-var scratchCart4 = new Cartesian4();
+var scratchCart4 = new Cartesian4()
 /**
  * A plane tangent to the provided ellipsoid at the provided origin.
  * If origin is not on the surface of the ellipsoid, it's surface projection will be used.
@@ -27,110 +27,110 @@ var scratchCart4 = new Cartesian4();
  * @exception {DeveloperError} origin must not be at the center of the ellipsoid.
  */
 function EllipsoidTangentPlane(origin, ellipsoid) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("origin", origin);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('origin', origin)
+	//>>includeEnd('debug');
 
-  ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
-  origin = ellipsoid.scaleToGeodeticSurface(origin);
+	ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84)
+	origin = ellipsoid.scaleToGeodeticSurface(origin)
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(origin)) {
-    throw new DeveloperError(
-      "origin must not be at the center of the ellipsoid."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(origin)) {
+		throw new DeveloperError(
+			'origin must not be at the center of the ellipsoid.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  var eastNorthUp = Transforms.eastNorthUpToFixedFrame(origin, ellipsoid);
-  this._ellipsoid = ellipsoid;
-  this._origin = origin;
-  this._xAxis = Cartesian3.fromCartesian4(
-    Matrix4.getColumn(eastNorthUp, 0, scratchCart4)
-  );
-  this._yAxis = Cartesian3.fromCartesian4(
-    Matrix4.getColumn(eastNorthUp, 1, scratchCart4)
-  );
+	var eastNorthUp = Transforms.eastNorthUpToFixedFrame(origin, ellipsoid)
+	this._ellipsoid = ellipsoid
+	this._origin = origin
+	this._xAxis = Cartesian3.fromCartesian4(
+		Matrix4.getColumn(eastNorthUp, 0, scratchCart4),
+	)
+	this._yAxis = Cartesian3.fromCartesian4(
+		Matrix4.getColumn(eastNorthUp, 1, scratchCart4),
+	)
 
-  var normal = Cartesian3.fromCartesian4(
-    Matrix4.getColumn(eastNorthUp, 2, scratchCart4)
-  );
-  this._plane = Plane.fromPointNormal(origin, normal);
+	var normal = Cartesian3.fromCartesian4(
+		Matrix4.getColumn(eastNorthUp, 2, scratchCart4),
+	)
+	this._plane = Plane.fromPointNormal(origin, normal)
 }
 
 Object.defineProperties(EllipsoidTangentPlane.prototype, {
-  /**
-   * Gets the ellipsoid.
-   * @memberof EllipsoidTangentPlane.prototype
-   * @type {Ellipsoid}
-   */
-  ellipsoid: {
-    get: function () {
-      return this._ellipsoid;
-    },
-  },
+	/**
+	 * Gets the ellipsoid.
+	 * @memberof EllipsoidTangentPlane.prototype
+	 * @type {Ellipsoid}
+	 */
+	ellipsoid: {
+		get: function () {
+			return this._ellipsoid
+		},
+	},
 
-  /**
-   * Gets the origin.
-   * @memberof EllipsoidTangentPlane.prototype
-   * @type {Cartesian3}
-   */
-  origin: {
-    get: function () {
-      return this._origin;
-    },
-  },
+	/**
+	 * Gets the origin.
+	 * @memberof EllipsoidTangentPlane.prototype
+	 * @type {Cartesian3}
+	 */
+	origin: {
+		get: function () {
+			return this._origin
+		},
+	},
 
-  /**
-   * Gets the plane which is tangent to the ellipsoid.
-   * @memberof EllipsoidTangentPlane.prototype
-   * @readonly
-   * @type {Plane}
-   */
-  plane: {
-    get: function () {
-      return this._plane;
-    },
-  },
+	/**
+	 * Gets the plane which is tangent to the ellipsoid.
+	 * @memberof EllipsoidTangentPlane.prototype
+	 * @readonly
+	 * @type {Plane}
+	 */
+	plane: {
+		get: function () {
+			return this._plane
+		},
+	},
 
-  /**
-   * Gets the local X-axis (east) of the tangent plane.
-   * @memberof EllipsoidTangentPlane.prototype
-   * @readonly
-   * @type {Cartesian3}
-   */
-  xAxis: {
-    get: function () {
-      return this._xAxis;
-    },
-  },
+	/**
+	 * Gets the local X-axis (east) of the tangent plane.
+	 * @memberof EllipsoidTangentPlane.prototype
+	 * @readonly
+	 * @type {Cartesian3}
+	 */
+	xAxis: {
+		get: function () {
+			return this._xAxis
+		},
+	},
 
-  /**
-   * Gets the local Y-axis (north) of the tangent plane.
-   * @memberof EllipsoidTangentPlane.prototype
-   * @readonly
-   * @type {Cartesian3}
-   */
-  yAxis: {
-    get: function () {
-      return this._yAxis;
-    },
-  },
+	/**
+	 * Gets the local Y-axis (north) of the tangent plane.
+	 * @memberof EllipsoidTangentPlane.prototype
+	 * @readonly
+	 * @type {Cartesian3}
+	 */
+	yAxis: {
+		get: function () {
+			return this._yAxis
+		},
+	},
 
-  /**
-   * Gets the local Z-axis (up) of the tangent plane.
-   * @memberof EllipsoidTangentPlane.prototype
-   * @readonly
-   * @type {Cartesian3}
-   */
-  zAxis: {
-    get: function () {
-      return this._plane.normal;
-    },
-  },
-});
+	/**
+	 * Gets the local Z-axis (up) of the tangent plane.
+	 * @memberof EllipsoidTangentPlane.prototype
+	 * @readonly
+	 * @type {Cartesian3}
+	 */
+	zAxis: {
+		get: function () {
+			return this._plane.normal
+		},
+	},
+})
 
-var tmp = new AxisAlignedBoundingBox();
+var tmp = new AxisAlignedBoundingBox()
 /**
  * Creates a new instance from the provided ellipsoid and the center
  * point of the provided Cartesians.
@@ -139,16 +139,16 @@ var tmp = new AxisAlignedBoundingBox();
  * @param {Ellipsoid} [ellipsoid=Ellipsoid.WGS84] The ellipsoid to use.
  */
 EllipsoidTangentPlane.fromPoints = function (cartesians, ellipsoid) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartesians", cartesians);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartesians', cartesians)
+	//>>includeEnd('debug');
 
-  var box = AxisAlignedBoundingBox.fromPoints(cartesians, tmp);
-  return new EllipsoidTangentPlane(box.center, ellipsoid);
-};
+	var box = AxisAlignedBoundingBox.fromPoints(cartesians, tmp)
+	return new EllipsoidTangentPlane(box.center, ellipsoid)
+}
 
-var scratchProjectPointOntoPlaneRay = new Ray();
-var scratchProjectPointOntoPlaneCartesian3 = new Cartesian3();
+var scratchProjectPointOntoPlaneRay = new Ray()
+var scratchProjectPointOntoPlaneCartesian3 = new Cartesian3()
 
 /**
  * Computes the projection of the provided 3D position onto the 2D plane, radially outward from the {@link EllipsoidTangentPlane.ellipsoid} coordinate system origin.
@@ -158,49 +158,49 @@ var scratchProjectPointOntoPlaneCartesian3 = new Cartesian3();
  * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if none was provided. Undefined if there is no intersection point
  */
 EllipsoidTangentPlane.prototype.projectPointOntoPlane = function (
-  cartesian,
-  result
+	cartesian,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartesian", cartesian);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartesian', cartesian)
+	//>>includeEnd('debug');
 
-  var ray = scratchProjectPointOntoPlaneRay;
-  ray.origin = cartesian;
-  Cartesian3.normalize(cartesian, ray.direction);
+	var ray = scratchProjectPointOntoPlaneRay
+	ray.origin = cartesian
+	Cartesian3.normalize(cartesian, ray.direction)
 
-  var intersectionPoint = IntersectionTests.rayPlane(
-    ray,
-    this._plane,
-    scratchProjectPointOntoPlaneCartesian3
-  );
-  if (!defined(intersectionPoint)) {
-    Cartesian3.negate(ray.direction, ray.direction);
-    intersectionPoint = IntersectionTests.rayPlane(
-      ray,
-      this._plane,
-      scratchProjectPointOntoPlaneCartesian3
-    );
-  }
+	var intersectionPoint = IntersectionTests.rayPlane(
+		ray,
+		this._plane,
+		scratchProjectPointOntoPlaneCartesian3,
+	)
+	if (!defined(intersectionPoint)) {
+		Cartesian3.negate(ray.direction, ray.direction)
+		intersectionPoint = IntersectionTests.rayPlane(
+			ray,
+			this._plane,
+			scratchProjectPointOntoPlaneCartesian3,
+		)
+	}
 
-  if (defined(intersectionPoint)) {
-    var v = Cartesian3.subtract(
-      intersectionPoint,
-      this._origin,
-      intersectionPoint
-    );
-    var x = Cartesian3.dot(this._xAxis, v);
-    var y = Cartesian3.dot(this._yAxis, v);
+	if (defined(intersectionPoint)) {
+		var v = Cartesian3.subtract(
+			intersectionPoint,
+			this._origin,
+			intersectionPoint,
+		)
+		var x = Cartesian3.dot(this._xAxis, v)
+		var y = Cartesian3.dot(this._yAxis, v)
 
-    if (!defined(result)) {
-      return new Cartesian2(x, y);
-    }
-    result.x = x;
-    result.y = y;
-    return result;
-  }
-  return undefined;
-};
+		if (!defined(result)) {
+			return new Cartesian2(x, y)
+		}
+		result.x = x
+		result.y = y
+		return result
+	}
+	return undefined
+}
 
 /**
  * Computes the projection of the provided 3D positions onto the 2D plane (where possible), radially outward from the global origin.
@@ -213,29 +213,29 @@ EllipsoidTangentPlane.prototype.projectPointOntoPlane = function (
  * @returns {Cartesian2[]} The modified result parameter or a new array of Cartesian2 instances if none was provided.
  */
 EllipsoidTangentPlane.prototype.projectPointsOntoPlane = function (
-  cartesians,
-  result
+	cartesians,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartesians", cartesians);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartesians', cartesians)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = [];
-  }
+	if (!defined(result)) {
+		result = []
+	}
 
-  var count = 0;
-  var length = cartesians.length;
-  for (var i = 0; i < length; i++) {
-    var p = this.projectPointOntoPlane(cartesians[i], result[count]);
-    if (defined(p)) {
-      result[count] = p;
-      count++;
-    }
-  }
-  result.length = count;
-  return result;
-};
+	var count = 0
+	var length = cartesians.length
+	for (var i = 0; i < length; i++) {
+		var p = this.projectPointOntoPlane(cartesians[i], result[count])
+		if (defined(p)) {
+			result[count] = p
+			count++
+		}
+	}
+	result.length = count
+	return result
+}
 
 /**
  * Computes the projection of the provided 3D position onto the 2D plane, along the plane normal.
@@ -245,47 +245,47 @@ EllipsoidTangentPlane.prototype.projectPointsOntoPlane = function (
  * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if none was provided.
  */
 EllipsoidTangentPlane.prototype.projectPointToNearestOnPlane = function (
-  cartesian,
-  result
+	cartesian,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartesian", cartesian);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartesian', cartesian)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = new Cartesian2();
-  }
+	if (!defined(result)) {
+		result = new Cartesian2()
+	}
 
-  var ray = scratchProjectPointOntoPlaneRay;
-  ray.origin = cartesian;
-  Cartesian3.clone(this._plane.normal, ray.direction);
+	var ray = scratchProjectPointOntoPlaneRay
+	ray.origin = cartesian
+	Cartesian3.clone(this._plane.normal, ray.direction)
 
-  var intersectionPoint = IntersectionTests.rayPlane(
-    ray,
-    this._plane,
-    scratchProjectPointOntoPlaneCartesian3
-  );
-  if (!defined(intersectionPoint)) {
-    Cartesian3.negate(ray.direction, ray.direction);
-    intersectionPoint = IntersectionTests.rayPlane(
-      ray,
-      this._plane,
-      scratchProjectPointOntoPlaneCartesian3
-    );
-  }
+	var intersectionPoint = IntersectionTests.rayPlane(
+		ray,
+		this._plane,
+		scratchProjectPointOntoPlaneCartesian3,
+	)
+	if (!defined(intersectionPoint)) {
+		Cartesian3.negate(ray.direction, ray.direction)
+		intersectionPoint = IntersectionTests.rayPlane(
+			ray,
+			this._plane,
+			scratchProjectPointOntoPlaneCartesian3,
+		)
+	}
 
-  var v = Cartesian3.subtract(
-    intersectionPoint,
-    this._origin,
-    intersectionPoint
-  );
-  var x = Cartesian3.dot(this._xAxis, v);
-  var y = Cartesian3.dot(this._yAxis, v);
+	var v = Cartesian3.subtract(
+		intersectionPoint,
+		this._origin,
+		intersectionPoint,
+	)
+	var x = Cartesian3.dot(this._xAxis, v)
+	var y = Cartesian3.dot(this._yAxis, v)
 
-  result.x = x;
-  result.y = y;
-  return result;
-};
+	result.x = x
+	result.y = y
+	return result
+}
 
 /**
  * Computes the projection of the provided 3D positions onto the 2D plane, along the plane normal.
@@ -297,26 +297,26 @@ EllipsoidTangentPlane.prototype.projectPointToNearestOnPlane = function (
  * @returns {Cartesian2[]} The modified result parameter or a new array of Cartesian2 instances if none was provided. This will have the same length as <code>cartesians</code>.
  */
 EllipsoidTangentPlane.prototype.projectPointsToNearestOnPlane = function (
-  cartesians,
-  result
+	cartesians,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartesians", cartesians);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartesians', cartesians)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = [];
-  }
+	if (!defined(result)) {
+		result = []
+	}
 
-  var length = cartesians.length;
-  result.length = length;
-  for (var i = 0; i < length; i++) {
-    result[i] = this.projectPointToNearestOnPlane(cartesians[i], result[i]);
-  }
-  return result;
-};
+	var length = cartesians.length
+	result.length = length
+	for (var i = 0; i < length; i++) {
+		result[i] = this.projectPointToNearestOnPlane(cartesians[i], result[i])
+	}
+	return result
+}
 
-var projectPointsOntoEllipsoidScratch = new Cartesian3();
+var projectPointsOntoEllipsoidScratch = new Cartesian3()
 /**
  * Computes the projection of the provided 2D position onto the 3D ellipsoid.
  *
@@ -325,31 +325,31 @@ var projectPointsOntoEllipsoidScratch = new Cartesian3();
  * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if none was provided.
  */
 EllipsoidTangentPlane.prototype.projectPointOntoEllipsoid = function (
-  cartesian,
-  result
+	cartesian,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartesian", cartesian);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartesian', cartesian)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
 
-  var ellipsoid = this._ellipsoid;
-  var origin = this._origin;
-  var xAxis = this._xAxis;
-  var yAxis = this._yAxis;
-  var tmp = projectPointsOntoEllipsoidScratch;
+	var ellipsoid = this._ellipsoid
+	var origin = this._origin
+	var xAxis = this._xAxis
+	var yAxis = this._yAxis
+	var tmp = projectPointsOntoEllipsoidScratch
 
-  Cartesian3.multiplyByScalar(xAxis, cartesian.x, tmp);
-  result = Cartesian3.add(origin, tmp, result);
-  Cartesian3.multiplyByScalar(yAxis, cartesian.y, tmp);
-  Cartesian3.add(result, tmp, result);
-  ellipsoid.scaleToGeocentricSurface(result, result);
+	Cartesian3.multiplyByScalar(xAxis, cartesian.x, tmp)
+	result = Cartesian3.add(origin, tmp, result)
+	Cartesian3.multiplyByScalar(yAxis, cartesian.y, tmp)
+	Cartesian3.add(result, tmp, result)
+	ellipsoid.scaleToGeocentricSurface(result, result)
 
-  return result;
-};
+	return result
+}
 
 /**
  * Computes the projection of the provided 2D positions onto the 3D ellipsoid.
@@ -359,24 +359,24 @@ EllipsoidTangentPlane.prototype.projectPointOntoEllipsoid = function (
  * @returns {Cartesian3[]} The modified result parameter or a new array of Cartesian3 instances if none was provided.
  */
 EllipsoidTangentPlane.prototype.projectPointsOntoEllipsoid = function (
-  cartesians,
-  result
+	cartesians,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartesians", cartesians);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartesians', cartesians)
+	//>>includeEnd('debug');
 
-  var length = cartesians.length;
-  if (!defined(result)) {
-    result = new Array(length);
-  } else {
-    result.length = length;
-  }
+	var length = cartesians.length
+	if (!defined(result)) {
+		result = new Array(length)
+	} else {
+		result.length = length
+	}
 
-  for (var i = 0; i < length; ++i) {
-    result[i] = this.projectPointOntoEllipsoid(cartesians[i], result[i]);
-  }
+	for (var i = 0; i < length; ++i) {
+		result[i] = this.projectPointOntoEllipsoid(cartesians[i], result[i])
+	}
 
-  return result;
-};
-export default EllipsoidTangentPlane;
+	return result
+}
+export default EllipsoidTangentPlane

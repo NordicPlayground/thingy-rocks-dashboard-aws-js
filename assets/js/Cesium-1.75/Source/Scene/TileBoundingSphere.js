@@ -1,13 +1,13 @@
-import BoundingSphere from "../Core/BoundingSphere.js";
-import Cartesian3 from "../Core/Cartesian3.js";
-import Check from "../Core/Check.js";
-import ColorGeometryInstanceAttribute from "../Core/ColorGeometryInstanceAttribute.js";
-import GeometryInstance from "../Core/GeometryInstance.js";
-import CesiumMath from "../Core/Math.js";
-import Matrix4 from "../Core/Matrix4.js";
-import SphereOutlineGeometry from "../Core/SphereOutlineGeometry.js";
-import PerInstanceColorAppearance from "./PerInstanceColorAppearance.js";
-import Primitive from "./Primitive.js";
+import BoundingSphere from '../Core/BoundingSphere.js'
+import Cartesian3 from '../Core/Cartesian3.js'
+import Check from '../Core/Check.js'
+import ColorGeometryInstanceAttribute from '../Core/ColorGeometryInstanceAttribute.js'
+import GeometryInstance from '../Core/GeometryInstance.js'
+import CesiumMath from '../Core/Math.js'
+import Matrix4 from '../Core/Matrix4.js'
+import SphereOutlineGeometry from '../Core/SphereOutlineGeometry.js'
+import PerInstanceColorAppearance from './PerInstanceColorAppearance.js'
+import Primitive from './Primitive.js'
 
 /**
  * A tile bounding volume specified as a sphere.
@@ -20,68 +20,68 @@ import Primitive from "./Primitive.js";
  * @private
  */
 function TileBoundingSphere(center, radius) {
-  if (radius === 0) {
-    radius = CesiumMath.EPSILON7;
-  }
-  this._boundingSphere = new BoundingSphere(center, radius);
+	if (radius === 0) {
+		radius = CesiumMath.EPSILON7
+	}
+	this._boundingSphere = new BoundingSphere(center, radius)
 }
 
 Object.defineProperties(TileBoundingSphere.prototype, {
-  /**
-   * The center of the bounding sphere
-   *
-   * @memberof TileBoundingSphere.prototype
-   *
-   * @type {Cartesian3}
-   * @readonly
-   */
-  center: {
-    get: function () {
-      return this._boundingSphere.center;
-    },
-  },
+	/**
+	 * The center of the bounding sphere
+	 *
+	 * @memberof TileBoundingSphere.prototype
+	 *
+	 * @type {Cartesian3}
+	 * @readonly
+	 */
+	center: {
+		get: function () {
+			return this._boundingSphere.center
+		},
+	},
 
-  /**
-   * The radius of the bounding sphere
-   *
-   * @memberof TileBoundingSphere.prototype
-   *
-   * @type {Number}
-   * @readonly
-   */
-  radius: {
-    get: function () {
-      return this._boundingSphere.radius;
-    },
-  },
+	/**
+	 * The radius of the bounding sphere
+	 *
+	 * @memberof TileBoundingSphere.prototype
+	 *
+	 * @type {Number}
+	 * @readonly
+	 */
+	radius: {
+		get: function () {
+			return this._boundingSphere.radius
+		},
+	},
 
-  /**
-   * The underlying bounding volume
-   *
-   * @memberof TileBoundingSphere.prototype
-   *
-   * @type {Object}
-   * @readonly
-   */
-  boundingVolume: {
-    get: function () {
-      return this._boundingSphere;
-    },
-  },
-  /**
-   * The underlying bounding sphere
-   *
-   * @memberof TileBoundingSphere.prototype
-   *
-   * @type {BoundingSphere}
-   * @readonly
-   */
-  boundingSphere: {
-    get: function () {
-      return this._boundingSphere;
-    },
-  },
-});
+	/**
+	 * The underlying bounding volume
+	 *
+	 * @memberof TileBoundingSphere.prototype
+	 *
+	 * @type {Object}
+	 * @readonly
+	 */
+	boundingVolume: {
+		get: function () {
+			return this._boundingSphere
+		},
+	},
+	/**
+	 * The underlying bounding sphere
+	 *
+	 * @memberof TileBoundingSphere.prototype
+	 *
+	 * @type {BoundingSphere}
+	 * @readonly
+	 */
+	boundingSphere: {
+		get: function () {
+			return this._boundingSphere
+		},
+	},
+})
 
 /**
  * Computes the distance between this bounding sphere and the camera attached to frameState.
@@ -91,16 +91,16 @@ Object.defineProperties(TileBoundingSphere.prototype, {
  *
  */
 TileBoundingSphere.prototype.distanceToCamera = function (frameState) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("frameState", frameState);
-  //>>includeEnd('debug');
-  var boundingSphere = this._boundingSphere;
-  return Math.max(
-    0.0,
-    Cartesian3.distance(boundingSphere.center, frameState.camera.positionWC) -
-      boundingSphere.radius
-  );
-};
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('frameState', frameState)
+	//>>includeEnd('debug');
+	var boundingSphere = this._boundingSphere
+	return Math.max(
+		0.0,
+		Cartesian3.distance(boundingSphere.center, frameState.camera.positionWC) -
+			boundingSphere.radius,
+	)
+}
 
 /**
  * Determines which side of a plane this sphere is located.
@@ -112,11 +112,11 @@ TileBoundingSphere.prototype.distanceToCamera = function (frameState) {
  *                      intersects the plane.
  */
 TileBoundingSphere.prototype.intersectPlane = function (plane) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("plane", plane);
-  //>>includeEnd('debug');
-  return BoundingSphere.intersectPlane(this._boundingSphere, plane);
-};
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('plane', plane)
+	//>>includeEnd('debug');
+	return BoundingSphere.intersectPlane(this._boundingSphere, plane)
+}
 
 /**
  * Update the bounding sphere after the tile is transformed.
@@ -125,9 +125,9 @@ TileBoundingSphere.prototype.intersectPlane = function (plane) {
  * @param {Number} radius The radius of the bounding sphere.
  */
 TileBoundingSphere.prototype.update = function (center, radius) {
-  Cartesian3.clone(center, this._boundingSphere.center);
-  this._boundingSphere.radius = radius;
-};
+	Cartesian3.clone(center, this._boundingSphere.center)
+	this._boundingSphere.radius = radius
+}
 
 /**
  * Creates a debug primitive that shows the outline of the sphere.
@@ -136,32 +136,32 @@ TileBoundingSphere.prototype.update = function (center, radius) {
  * @return {Primitive}
  */
 TileBoundingSphere.prototype.createDebugVolume = function (color) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("color", color);
-  //>>includeEnd('debug');
-  var geometry = new SphereOutlineGeometry({
-    radius: this.radius,
-  });
-  var modelMatrix = Matrix4.fromTranslation(
-    this.center,
-    new Matrix4.clone(Matrix4.IDENTITY)
-  );
-  var instance = new GeometryInstance({
-    geometry: geometry,
-    id: "outline",
-    modelMatrix: modelMatrix,
-    attributes: {
-      color: ColorGeometryInstanceAttribute.fromColor(color),
-    },
-  });
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('color', color)
+	//>>includeEnd('debug');
+	var geometry = new SphereOutlineGeometry({
+		radius: this.radius,
+	})
+	var modelMatrix = Matrix4.fromTranslation(
+		this.center,
+		new Matrix4.clone(Matrix4.IDENTITY),
+	)
+	var instance = new GeometryInstance({
+		geometry: geometry,
+		id: 'outline',
+		modelMatrix: modelMatrix,
+		attributes: {
+			color: ColorGeometryInstanceAttribute.fromColor(color),
+		},
+	})
 
-  return new Primitive({
-    geometryInstances: instance,
-    appearance: new PerInstanceColorAppearance({
-      translucent: false,
-      flat: true,
-    }),
-    asynchronous: false,
-  });
-};
-export default TileBoundingSphere;
+	return new Primitive({
+		geometryInstances: instance,
+		appearance: new PerInstanceColorAppearance({
+			translucent: false,
+			flat: true,
+		}),
+		asynchronous: false,
+	})
+}
+export default TileBoundingSphere

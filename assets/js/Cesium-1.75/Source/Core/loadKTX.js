@@ -1,11 +1,11 @@
-import when from "../ThirdParty/when.js";
-import Check from "./Check.js";
-import CompressedTextureBuffer from "./CompressedTextureBuffer.js";
-import defined from "./defined.js";
-import PixelFormat from "./PixelFormat.js";
-import Resource from "./Resource.js";
-import RuntimeError from "./RuntimeError.js";
-import WebGLConstants from "./WebGLConstants.js";
+import when from '../ThirdParty/when.js'
+import Check from './Check.js'
+import CompressedTextureBuffer from './CompressedTextureBuffer.js'
+import defined from './defined.js'
+import PixelFormat from './PixelFormat.js'
+import Resource from './Resource.js'
+import RuntimeError from './RuntimeError.js'
+import WebGLConstants from './WebGLConstants.js'
 
 /**
  * Asynchronously loads and parses the given URL to a KTX file or parses the raw binary data of a KTX file.
@@ -59,216 +59,203 @@ import WebGLConstants from "./WebGLConstants.js";
  * @see {@link http://wiki.commonjs.org/wiki/Promises/A|CommonJS Promises/A}
  */
 function loadKTX(resourceOrUrlOrBuffer) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("resourceOrUrlOrBuffer", resourceOrUrlOrBuffer);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('resourceOrUrlOrBuffer', resourceOrUrlOrBuffer)
+	//>>includeEnd('debug');
 
-  var loadPromise;
-  if (
-    resourceOrUrlOrBuffer instanceof ArrayBuffer ||
-    ArrayBuffer.isView(resourceOrUrlOrBuffer)
-  ) {
-    loadPromise = when.resolve(resourceOrUrlOrBuffer);
-  } else {
-    var resource = Resource.createIfNeeded(resourceOrUrlOrBuffer);
-    loadPromise = resource.fetchArrayBuffer();
-  }
+	var loadPromise
+	if (
+		resourceOrUrlOrBuffer instanceof ArrayBuffer ||
+		ArrayBuffer.isView(resourceOrUrlOrBuffer)
+	) {
+		loadPromise = when.resolve(resourceOrUrlOrBuffer)
+	} else {
+		var resource = Resource.createIfNeeded(resourceOrUrlOrBuffer)
+		loadPromise = resource.fetchArrayBuffer()
+	}
 
-  if (!defined(loadPromise)) {
-    return undefined;
-  }
+	if (!defined(loadPromise)) {
+		return undefined
+	}
 
-  return loadPromise.then(function (data) {
-    if (defined(data)) {
-      return parseKTX(data);
-    }
-  });
+	return loadPromise.then(function (data) {
+		if (defined(data)) {
+			return parseKTX(data)
+		}
+	})
 }
 
 var fileIdentifier = [
-  0xab,
-  0x4b,
-  0x54,
-  0x58,
-  0x20,
-  0x31,
-  0x31,
-  0xbb,
-  0x0d,
-  0x0a,
-  0x1a,
-  0x0a,
-];
-var endiannessTest = 0x04030201;
+	0xab, 0x4b, 0x54, 0x58, 0x20, 0x31, 0x31, 0xbb, 0x0d, 0x0a, 0x1a, 0x0a,
+]
+var endiannessTest = 0x04030201
 var faceOrder = [
-  "positiveX",
-  "negativeX",
-  "positiveY",
-  "negativeY",
-  "positiveZ",
-  "negativeZ",
-];
+	'positiveX',
+	'negativeX',
+	'positiveY',
+	'negativeY',
+	'positiveZ',
+	'negativeZ',
+]
 
-var sizeOfUint32 = 4;
+var sizeOfUint32 = 4
 
 function parseKTX(data) {
-  var byteBuffer = new Uint8Array(data);
+	var byteBuffer = new Uint8Array(data)
 
-  var isKTX = true;
-  var i;
-  for (i = 0; i < fileIdentifier.length; ++i) {
-    if (fileIdentifier[i] !== byteBuffer[i]) {
-      isKTX = false;
-      break;
-    }
-  }
+	var isKTX = true
+	var i
+	for (i = 0; i < fileIdentifier.length; ++i) {
+		if (fileIdentifier[i] !== byteBuffer[i]) {
+			isKTX = false
+			break
+		}
+	}
 
-  if (!isKTX) {
-    throw new RuntimeError("Invalid KTX file.");
-  }
+	if (!isKTX) {
+		throw new RuntimeError('Invalid KTX file.')
+	}
 
-  var view;
-  var byteOffset;
+	var view
+	var byteOffset
 
-  if (defined(data.buffer)) {
-    view = new DataView(data.buffer);
-    byteOffset = data.byteOffset;
-  } else {
-    view = new DataView(data);
-    byteOffset = 0;
-  }
+	if (defined(data.buffer)) {
+		view = new DataView(data.buffer)
+		byteOffset = data.byteOffset
+	} else {
+		view = new DataView(data)
+		byteOffset = 0
+	}
 
-  byteOffset += 12; // skip identifier
+	byteOffset += 12 // skip identifier
 
-  var endianness = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  if (endianness !== endiannessTest) {
-    throw new RuntimeError("File is the wrong endianness.");
-  }
+	var endianness = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	if (endianness !== endiannessTest) {
+		throw new RuntimeError('File is the wrong endianness.')
+	}
 
-  var glType = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var glTypeSize = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var glFormat = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var glInternalFormat = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var glBaseInternalFormat = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var pixelWidth = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var pixelHeight = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var pixelDepth = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var numberOfArrayElements = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var numberOfFaces = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var numberOfMipmapLevels = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
-  var bytesOfKeyValueByteSize = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
+	var glType = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var glTypeSize = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var glFormat = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var glInternalFormat = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var glBaseInternalFormat = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var pixelWidth = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var pixelHeight = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var pixelDepth = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var numberOfArrayElements = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var numberOfFaces = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var numberOfMipmapLevels = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
+	var bytesOfKeyValueByteSize = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
 
-  // skip metadata
-  byteOffset += bytesOfKeyValueByteSize;
+	// skip metadata
+	byteOffset += bytesOfKeyValueByteSize
 
-  var imageSize = view.getUint32(byteOffset, true);
-  byteOffset += sizeOfUint32;
+	var imageSize = view.getUint32(byteOffset, true)
+	byteOffset += sizeOfUint32
 
-  var texture;
-  if (defined(data.buffer)) {
-    texture = new Uint8Array(data.buffer, byteOffset, imageSize);
-  } else {
-    texture = new Uint8Array(data, byteOffset, imageSize);
-  }
+	var texture
+	if (defined(data.buffer)) {
+		texture = new Uint8Array(data.buffer, byteOffset, imageSize)
+	} else {
+		texture = new Uint8Array(data, byteOffset, imageSize)
+	}
 
-  // Some tools use a sized internal format.
-  // See table 2: https://www.opengl.org/sdk/docs/man/html/glTexImage2D.xhtml
-  if (glInternalFormat === WebGLConstants.RGB8) {
-    glInternalFormat = PixelFormat.RGB;
-  } else if (glInternalFormat === WebGLConstants.RGBA8) {
-    glInternalFormat = PixelFormat.RGBA;
-  }
+	// Some tools use a sized internal format.
+	// See table 2: https://www.opengl.org/sdk/docs/man/html/glTexImage2D.xhtml
+	if (glInternalFormat === WebGLConstants.RGB8) {
+		glInternalFormat = PixelFormat.RGB
+	} else if (glInternalFormat === WebGLConstants.RGBA8) {
+		glInternalFormat = PixelFormat.RGBA
+	}
 
-  if (!PixelFormat.validate(glInternalFormat)) {
-    throw new RuntimeError("glInternalFormat is not a valid format.");
-  }
+	if (!PixelFormat.validate(glInternalFormat)) {
+		throw new RuntimeError('glInternalFormat is not a valid format.')
+	}
 
-  if (PixelFormat.isCompressedFormat(glInternalFormat)) {
-    if (glType !== 0) {
-      throw new RuntimeError(
-        "glType must be zero when the texture is compressed."
-      );
-    }
-    if (glTypeSize !== 1) {
-      throw new RuntimeError(
-        "The type size for compressed textures must be 1."
-      );
-    }
-    if (glFormat !== 0) {
-      throw new RuntimeError(
-        "glFormat must be zero when the texture is compressed."
-      );
-    }
-  } else if (glType !== WebGLConstants.UNSIGNED_BYTE) {
-    throw new RuntimeError("Only unsigned byte buffers are supported.");
-  } else if (glBaseInternalFormat !== glFormat) {
-    throw new RuntimeError(
-      "The base internal format must be the same as the format for uncompressed textures."
-    );
-  }
+	if (PixelFormat.isCompressedFormat(glInternalFormat)) {
+		if (glType !== 0) {
+			throw new RuntimeError(
+				'glType must be zero when the texture is compressed.',
+			)
+		}
+		if (glTypeSize !== 1) {
+			throw new RuntimeError('The type size for compressed textures must be 1.')
+		}
+		if (glFormat !== 0) {
+			throw new RuntimeError(
+				'glFormat must be zero when the texture is compressed.',
+			)
+		}
+	} else if (glType !== WebGLConstants.UNSIGNED_BYTE) {
+		throw new RuntimeError('Only unsigned byte buffers are supported.')
+	} else if (glBaseInternalFormat !== glFormat) {
+		throw new RuntimeError(
+			'The base internal format must be the same as the format for uncompressed textures.',
+		)
+	}
 
-  if (pixelDepth !== 0) {
-    throw new RuntimeError("3D textures are unsupported.");
-  }
+	if (pixelDepth !== 0) {
+		throw new RuntimeError('3D textures are unsupported.')
+	}
 
-  if (numberOfArrayElements !== 0) {
-    throw new RuntimeError("Texture arrays are unsupported.");
-  }
+	if (numberOfArrayElements !== 0) {
+		throw new RuntimeError('Texture arrays are unsupported.')
+	}
 
-  var offset = texture.byteOffset;
-  var mipmaps = new Array(numberOfMipmapLevels);
-  for (i = 0; i < numberOfMipmapLevels; ++i) {
-    var level = (mipmaps[i] = {});
-    for (var j = 0; j < numberOfFaces; ++j) {
-      var width = pixelWidth >> i;
-      var height = pixelHeight >> i;
-      var levelSize = PixelFormat.isCompressedFormat(glInternalFormat)
-        ? PixelFormat.compressedTextureSizeInBytes(
-            glInternalFormat,
-            width,
-            height
-          )
-        : PixelFormat.textureSizeInBytes(
-            glInternalFormat,
-            glType,
-            width,
-            height
-          );
-      var levelBuffer = new Uint8Array(texture.buffer, offset, levelSize);
-      level[faceOrder[j]] = new CompressedTextureBuffer(
-        glInternalFormat,
-        width,
-        height,
-        levelBuffer
-      );
-      offset += levelSize;
-    }
-    offset += 3 - ((offset + 3) % 4) + 4;
-  }
+	var offset = texture.byteOffset
+	var mipmaps = new Array(numberOfMipmapLevels)
+	for (i = 0; i < numberOfMipmapLevels; ++i) {
+		var level = (mipmaps[i] = {})
+		for (var j = 0; j < numberOfFaces; ++j) {
+			var width = pixelWidth >> i
+			var height = pixelHeight >> i
+			var levelSize = PixelFormat.isCompressedFormat(glInternalFormat)
+				? PixelFormat.compressedTextureSizeInBytes(
+						glInternalFormat,
+						width,
+						height,
+				  )
+				: PixelFormat.textureSizeInBytes(
+						glInternalFormat,
+						glType,
+						width,
+						height,
+				  )
+			var levelBuffer = new Uint8Array(texture.buffer, offset, levelSize)
+			level[faceOrder[j]] = new CompressedTextureBuffer(
+				glInternalFormat,
+				width,
+				height,
+				levelBuffer,
+			)
+			offset += levelSize
+		}
+		offset += 3 - ((offset + 3) % 4) + 4
+	}
 
-  var result = mipmaps;
-  if (numberOfFaces === 1) {
-    for (i = 0; i < numberOfMipmapLevels; ++i) {
-      result[i] = result[i][faceOrder[0]];
-    }
-  }
-  if (numberOfMipmapLevels === 1) {
-    result = result[0];
-  }
+	var result = mipmaps
+	if (numberOfFaces === 1) {
+		for (i = 0; i < numberOfMipmapLevels; ++i) {
+			result[i] = result[i][faceOrder[0]]
+		}
+	}
+	if (numberOfMipmapLevels === 1) {
+		result = result[0]
+	}
 
-  return result;
+	return result
 }
-export default loadKTX;
+export default loadKTX

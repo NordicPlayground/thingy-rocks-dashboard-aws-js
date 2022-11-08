@@ -1,11 +1,11 @@
-import Cartesian2 from "./Cartesian2.js";
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import Ellipsoid from "./Ellipsoid.js";
-import GeographicProjection from "./GeographicProjection.js";
-import CesiumMath from "./Math.js";
-import Rectangle from "./Rectangle.js";
+import Cartesian2 from './Cartesian2.js'
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import Ellipsoid from './Ellipsoid.js'
+import GeographicProjection from './GeographicProjection.js'
+import CesiumMath from './Math.js'
+import Rectangle from './Rectangle.js'
 
 /**
  * A tiling scheme for geometry referenced to a simple {@link GeographicProjection} where
@@ -25,55 +25,55 @@ import Rectangle from "./Rectangle.js";
  * the tile tree.
  */
 function GeographicTilingScheme(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  this._ellipsoid = defaultValue(options.ellipsoid, Ellipsoid.WGS84);
-  this._rectangle = defaultValue(options.rectangle, Rectangle.MAX_VALUE);
-  this._projection = new GeographicProjection(this._ellipsoid);
-  this._numberOfLevelZeroTilesX = defaultValue(
-    options.numberOfLevelZeroTilesX,
-    2
-  );
-  this._numberOfLevelZeroTilesY = defaultValue(
-    options.numberOfLevelZeroTilesY,
-    1
-  );
+	this._ellipsoid = defaultValue(options.ellipsoid, Ellipsoid.WGS84)
+	this._rectangle = defaultValue(options.rectangle, Rectangle.MAX_VALUE)
+	this._projection = new GeographicProjection(this._ellipsoid)
+	this._numberOfLevelZeroTilesX = defaultValue(
+		options.numberOfLevelZeroTilesX,
+		2,
+	)
+	this._numberOfLevelZeroTilesY = defaultValue(
+		options.numberOfLevelZeroTilesY,
+		1,
+	)
 }
 
 Object.defineProperties(GeographicTilingScheme.prototype, {
-  /**
-   * Gets the ellipsoid that is tiled by this tiling scheme.
-   * @memberof GeographicTilingScheme.prototype
-   * @type {Ellipsoid}
-   */
-  ellipsoid: {
-    get: function () {
-      return this._ellipsoid;
-    },
-  },
+	/**
+	 * Gets the ellipsoid that is tiled by this tiling scheme.
+	 * @memberof GeographicTilingScheme.prototype
+	 * @type {Ellipsoid}
+	 */
+	ellipsoid: {
+		get: function () {
+			return this._ellipsoid
+		},
+	},
 
-  /**
-   * Gets the rectangle, in radians, covered by this tiling scheme.
-   * @memberof GeographicTilingScheme.prototype
-   * @type {Rectangle}
-   */
-  rectangle: {
-    get: function () {
-      return this._rectangle;
-    },
-  },
+	/**
+	 * Gets the rectangle, in radians, covered by this tiling scheme.
+	 * @memberof GeographicTilingScheme.prototype
+	 * @type {Rectangle}
+	 */
+	rectangle: {
+		get: function () {
+			return this._rectangle
+		},
+	},
 
-  /**
-   * Gets the map projection used by this tiling scheme.
-   * @memberof GeographicTilingScheme.prototype
-   * @type {MapProjection}
-   */
-  projection: {
-    get: function () {
-      return this._projection;
-    },
-  },
-});
+	/**
+	 * Gets the map projection used by this tiling scheme.
+	 * @memberof GeographicTilingScheme.prototype
+	 * @type {MapProjection}
+	 */
+	projection: {
+		get: function () {
+			return this._projection
+		},
+	},
+})
 
 /**
  * Gets the total number of tiles in the X direction at a specified level-of-detail.
@@ -82,8 +82,8 @@ Object.defineProperties(GeographicTilingScheme.prototype, {
  * @returns {Number} The number of tiles in the X direction at the given level.
  */
 GeographicTilingScheme.prototype.getNumberOfXTilesAtLevel = function (level) {
-  return this._numberOfLevelZeroTilesX << level;
-};
+	return this._numberOfLevelZeroTilesX << level
+}
 
 /**
  * Gets the total number of tiles in the Y direction at a specified level-of-detail.
@@ -92,8 +92,8 @@ GeographicTilingScheme.prototype.getNumberOfXTilesAtLevel = function (level) {
  * @returns {Number} The number of tiles in the Y direction at the given level.
  */
 GeographicTilingScheme.prototype.getNumberOfYTilesAtLevel = function (level) {
-  return this._numberOfLevelZeroTilesY << level;
-};
+	return this._numberOfLevelZeroTilesY << level
+}
 
 /**
  * Transforms a rectangle specified in geodetic radians to the native coordinate system
@@ -106,28 +106,28 @@ GeographicTilingScheme.prototype.getNumberOfYTilesAtLevel = function (level) {
  *          is undefined.
  */
 GeographicTilingScheme.prototype.rectangleToNativeRectangle = function (
-  rectangle,
-  result
+	rectangle,
+	result,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("rectangle", rectangle);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('rectangle', rectangle)
+	//>>includeEnd('debug');
 
-  var west = CesiumMath.toDegrees(rectangle.west);
-  var south = CesiumMath.toDegrees(rectangle.south);
-  var east = CesiumMath.toDegrees(rectangle.east);
-  var north = CesiumMath.toDegrees(rectangle.north);
+	var west = CesiumMath.toDegrees(rectangle.west)
+	var south = CesiumMath.toDegrees(rectangle.south)
+	var east = CesiumMath.toDegrees(rectangle.east)
+	var north = CesiumMath.toDegrees(rectangle.north)
 
-  if (!defined(result)) {
-    return new Rectangle(west, south, east, north);
-  }
+	if (!defined(result)) {
+		return new Rectangle(west, south, east, north)
+	}
 
-  result.west = west;
-  result.south = south;
-  result.east = east;
-  result.north = north;
-  return result;
-};
+	result.west = west
+	result.south = south
+	result.east = east
+	result.north = north
+	return result
+}
 
 /**
  * Converts tile x, y coordinates and level to a rectangle expressed in the native coordinates
@@ -142,18 +142,18 @@ GeographicTilingScheme.prototype.rectangleToNativeRectangle = function (
  *          if 'result' is undefined.
  */
 GeographicTilingScheme.prototype.tileXYToNativeRectangle = function (
-  x,
-  y,
-  level,
-  result
+	x,
+	y,
+	level,
+	result,
 ) {
-  var rectangleRadians = this.tileXYToRectangle(x, y, level, result);
-  rectangleRadians.west = CesiumMath.toDegrees(rectangleRadians.west);
-  rectangleRadians.south = CesiumMath.toDegrees(rectangleRadians.south);
-  rectangleRadians.east = CesiumMath.toDegrees(rectangleRadians.east);
-  rectangleRadians.north = CesiumMath.toDegrees(rectangleRadians.north);
-  return rectangleRadians;
-};
+	var rectangleRadians = this.tileXYToRectangle(x, y, level, result)
+	rectangleRadians.west = CesiumMath.toDegrees(rectangleRadians.west)
+	rectangleRadians.south = CesiumMath.toDegrees(rectangleRadians.south)
+	rectangleRadians.east = CesiumMath.toDegrees(rectangleRadians.east)
+	rectangleRadians.north = CesiumMath.toDegrees(rectangleRadians.north)
+	return rectangleRadians
+}
 
 /**
  * Converts tile x, y coordinates and level to a cartographic rectangle in radians.
@@ -167,34 +167,34 @@ GeographicTilingScheme.prototype.tileXYToNativeRectangle = function (
  *          if 'result' is undefined.
  */
 GeographicTilingScheme.prototype.tileXYToRectangle = function (
-  x,
-  y,
-  level,
-  result
+	x,
+	y,
+	level,
+	result,
 ) {
-  var rectangle = this._rectangle;
+	var rectangle = this._rectangle
 
-  var xTiles = this.getNumberOfXTilesAtLevel(level);
-  var yTiles = this.getNumberOfYTilesAtLevel(level);
+	var xTiles = this.getNumberOfXTilesAtLevel(level)
+	var yTiles = this.getNumberOfYTilesAtLevel(level)
 
-  var xTileWidth = rectangle.width / xTiles;
-  var west = x * xTileWidth + rectangle.west;
-  var east = (x + 1) * xTileWidth + rectangle.west;
+	var xTileWidth = rectangle.width / xTiles
+	var west = x * xTileWidth + rectangle.west
+	var east = (x + 1) * xTileWidth + rectangle.west
 
-  var yTileHeight = rectangle.height / yTiles;
-  var north = rectangle.north - y * yTileHeight;
-  var south = rectangle.north - (y + 1) * yTileHeight;
+	var yTileHeight = rectangle.height / yTiles
+	var north = rectangle.north - y * yTileHeight
+	var south = rectangle.north - (y + 1) * yTileHeight
 
-  if (!defined(result)) {
-    result = new Rectangle(west, south, east, north);
-  }
+	if (!defined(result)) {
+		result = new Rectangle(west, south, east, north)
+	}
 
-  result.west = west;
-  result.south = south;
-  result.east = east;
-  result.north = north;
-  return result;
-};
+	result.west = west
+	result.south = south
+	result.east = east
+	result.north = north
+	return result
+}
 
 /**
  * Calculates the tile x, y coordinates of the tile containing
@@ -208,44 +208,44 @@ GeographicTilingScheme.prototype.tileXYToRectangle = function (
  *          if 'result' is undefined.
  */
 GeographicTilingScheme.prototype.positionToTileXY = function (
-  position,
-  level,
-  result
+	position,
+	level,
+	result,
 ) {
-  var rectangle = this._rectangle;
-  if (!Rectangle.contains(rectangle, position)) {
-    // outside the bounds of the tiling scheme
-    return undefined;
-  }
+	var rectangle = this._rectangle
+	if (!Rectangle.contains(rectangle, position)) {
+		// outside the bounds of the tiling scheme
+		return undefined
+	}
 
-  var xTiles = this.getNumberOfXTilesAtLevel(level);
-  var yTiles = this.getNumberOfYTilesAtLevel(level);
+	var xTiles = this.getNumberOfXTilesAtLevel(level)
+	var yTiles = this.getNumberOfYTilesAtLevel(level)
 
-  var xTileWidth = rectangle.width / xTiles;
-  var yTileHeight = rectangle.height / yTiles;
+	var xTileWidth = rectangle.width / xTiles
+	var yTileHeight = rectangle.height / yTiles
 
-  var longitude = position.longitude;
-  if (rectangle.east < rectangle.west) {
-    longitude += CesiumMath.TWO_PI;
-  }
+	var longitude = position.longitude
+	if (rectangle.east < rectangle.west) {
+		longitude += CesiumMath.TWO_PI
+	}
 
-  var xTileCoordinate = ((longitude - rectangle.west) / xTileWidth) | 0;
-  if (xTileCoordinate >= xTiles) {
-    xTileCoordinate = xTiles - 1;
-  }
+	var xTileCoordinate = ((longitude - rectangle.west) / xTileWidth) | 0
+	if (xTileCoordinate >= xTiles) {
+		xTileCoordinate = xTiles - 1
+	}
 
-  var yTileCoordinate =
-    ((rectangle.north - position.latitude) / yTileHeight) | 0;
-  if (yTileCoordinate >= yTiles) {
-    yTileCoordinate = yTiles - 1;
-  }
+	var yTileCoordinate =
+		((rectangle.north - position.latitude) / yTileHeight) | 0
+	if (yTileCoordinate >= yTiles) {
+		yTileCoordinate = yTiles - 1
+	}
 
-  if (!defined(result)) {
-    return new Cartesian2(xTileCoordinate, yTileCoordinate);
-  }
+	if (!defined(result)) {
+		return new Cartesian2(xTileCoordinate, yTileCoordinate)
+	}
 
-  result.x = xTileCoordinate;
-  result.y = yTileCoordinate;
-  return result;
-};
-export default GeographicTilingScheme;
+	result.x = xTileCoordinate
+	result.y = yTileCoordinate
+	return result
+}
+export default GeographicTilingScheme

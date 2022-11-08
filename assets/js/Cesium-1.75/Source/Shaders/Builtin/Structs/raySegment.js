@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * DOC_TBA\n\
  *\n\
  * @name czm_raySegment\n\
@@ -26,4 +26,4 @@ const czm_raySegment czm_emptyRaySegment = czm_raySegment(-czm_infinity, -czm_in
  * @glslConstant \n\
  */\n\
 const czm_raySegment czm_fullRaySegment = czm_raySegment(0.0, czm_infinity);\n\
-";
+'

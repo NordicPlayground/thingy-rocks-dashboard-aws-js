@@ -13,16 +13,8 @@
       "byteOffset": 0,
       "componentType": 5126,
       "count": 24,
-      "max": [
-        0.5,
-        0.5,
-        0.5
-      ],
-      "min": [
-        -0.5,
-        -0.5,
-        -0.5
-      ],
+      "max": [0.5, 0.5, 0.5],
+      "min": [-0.5, -0.5, -0.5],
       "type": "VEC3",
       "name": "accessor_23"
     },
@@ -31,16 +23,8 @@
       "byteOffset": 288,
       "componentType": 5126,
       "count": 24,
-      "max": [
-        1,
-        1,
-        1
-      ],
-      "min": [
-        -1,
-        -1,
-        -1
-      ],
+      "max": [1, 1, 1],
+      "min": [-1, -1, -1],
       "type": "VEC3",
       "name": "accessor_25"
     }
@@ -90,27 +74,13 @@
         "KHR_techniques_webgl": {
           "technique": 0,
           "values": {
-            "u_diffuse": [
-              0.8,
-              0,
-              0,
-              1
-            ],
+            "u_diffuse": [0.8, 0, 0, 1],
             "u_shininess": 256,
-            "u_specular": [
-              0.2,
-              0.2,
-              0.2,
-              1
-            ]
+            "u_specular": [0.2, 0.2, 0.2, 1]
           }
         }
       },
-      "emissiveFactor": [
-        0,
-        0,
-        0
-      ],
+      "emissiveFactor": [0, 0, 0],
       "alphaMode": "OPAQUE",
       "doubleSided": false
     }
@@ -137,42 +107,19 @@
       "mesh": 0
     },
     {
-      "children": [
-        0
-      ],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        -1,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
+      "children": [0],
+      "matrix": [1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       "name": "Y_UP_Transform"
     }
   ],
   "scene": 0,
   "scenes": [
     {
-      "nodes": [
-        1
-      ],
+      "nodes": [1],
       "name": "defaultScene"
     }
   ],
-  "extensionsRequired": [
-    "KHR_techniques_webgl"
-  ],
+  "extensionsRequired": ["KHR_techniques_webgl"],
   "extensions": {
     "KHR_techniques_webgl": {
       "programs": [
@@ -233,7 +180,5 @@
       ]
     }
   },
-  "extensionsUsed": [
-    "KHR_techniques_webgl"
-  ]
+  "extensionsUsed": ["KHR_techniques_webgl"]
 }

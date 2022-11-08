@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "// See:\n\
+export default '// See:\n\
 //    https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/\n\
 \n\
 vec3 czm_acesTonemapping(vec3 color) {\n\
@@ -15,4 +15,4 @@ vec3 czm_acesTonemapping(vec3 color) {\n\
 \n\
     return color;\n\
 }\n\
-";
+'

@@ -1,6 +1,6 @@
-import Uri from "../ThirdParty/Uri.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import Uri from '../ThirdParty/Uri.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Given a URI, returns the base path of the URI.
@@ -18,30 +18,30 @@ import DeveloperError from "./DeveloperError.js";
  * var basePath = Cesium.getBaseUri('/Gallery/simple.czml?value=true&example=false', true);
  */
 function getBaseUri(uri, includeQuery) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(uri)) {
-    throw new DeveloperError("uri is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(uri)) {
+		throw new DeveloperError('uri is required.')
+	}
+	//>>includeEnd('debug');
 
-  var basePath = "";
-  var i = uri.lastIndexOf("/");
-  if (i !== -1) {
-    basePath = uri.substring(0, i + 1);
-  }
+	var basePath = ''
+	var i = uri.lastIndexOf('/')
+	if (i !== -1) {
+		basePath = uri.substring(0, i + 1)
+	}
 
-  if (!includeQuery) {
-    return basePath;
-  }
+	if (!includeQuery) {
+		return basePath
+	}
 
-  uri = new Uri(uri);
-  if (defined(uri.query)) {
-    basePath += "?" + uri.query;
-  }
-  if (defined(uri.fragment)) {
-    basePath += "#" + uri.fragment;
-  }
+	uri = new Uri(uri)
+	if (defined(uri.query)) {
+		basePath += '?' + uri.query
+	}
+	if (defined(uri.fragment)) {
+		basePath += '#' + uri.fragment
+	}
 
-  return basePath;
+	return basePath
 }
-export default getBaseUri;
+export default getBaseUri

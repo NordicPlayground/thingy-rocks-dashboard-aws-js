@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "varying vec3 v_outerPositionWC;\n\
+export default 'varying vec3 v_outerPositionWC;\n\
 \n\
 #ifndef PER_FRAGMENT_ATMOSPHERE\n\
 varying vec3 v_mieColor;\n\
@@ -22,4 +22,4 @@ void main (void)\n\
 \n\
     gl_FragColor = calculateFinalColor(czm_viewerPositionWC, toCamera, lightDirection, mieColor, rayleighColor);\n\
 }\n\
-";
+'

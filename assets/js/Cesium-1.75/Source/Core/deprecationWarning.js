@@ -1,6 +1,6 @@
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import oneTimeWarning from "./oneTimeWarning.js";
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import oneTimeWarning from './oneTimeWarning.js'
 
 /**
  * Logs a deprecation message to the console.  Use this function instead of
@@ -42,12 +42,12 @@ import oneTimeWarning from "./oneTimeWarning.js";
  * @private
  */
 function deprecationWarning(identifier, message) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(identifier) || !defined(message)) {
-    throw new DeveloperError("identifier and message are required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(identifier) || !defined(message)) {
+		throw new DeveloperError('identifier and message are required.')
+	}
+	//>>includeEnd('debug');
 
-  oneTimeWarning(identifier, message);
+	oneTimeWarning(identifier, message)
 }
-export default deprecationWarning;
+export default deprecationWarning

@@ -1,8 +1,8 @@
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import JulianDate from "./JulianDate.js";
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import JulianDate from './JulianDate.js'
 
 /**
  * An interval defined by a start and a stop time; optionally including those times as part of the interval.
@@ -58,70 +58,70 @@ import JulianDate from "./JulianDate.js";
  * var containsDate = Cesium.TimeInterval.contains(timeInterval, dateToCheck);
  */
 function TimeInterval(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
-  /**
-   * Gets or sets the start time of this interval.
-   * @type {JulianDate}
-   */
-  this.start = defined(options.start)
-    ? JulianDate.clone(options.start)
-    : new JulianDate();
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
+	/**
+	 * Gets or sets the start time of this interval.
+	 * @type {JulianDate}
+	 */
+	this.start = defined(options.start)
+		? JulianDate.clone(options.start)
+		: new JulianDate()
 
-  /**
-   * Gets or sets the stop time of this interval.
-   * @type {JulianDate}
-   */
-  this.stop = defined(options.stop)
-    ? JulianDate.clone(options.stop)
-    : new JulianDate();
+	/**
+	 * Gets or sets the stop time of this interval.
+	 * @type {JulianDate}
+	 */
+	this.stop = defined(options.stop)
+		? JulianDate.clone(options.stop)
+		: new JulianDate()
 
-  /**
-   * Gets or sets the data associated with this interval.
-   * @type {*}
-   */
-  this.data = options.data;
+	/**
+	 * Gets or sets the data associated with this interval.
+	 * @type {*}
+	 */
+	this.data = options.data
 
-  /**
-   * Gets or sets whether or not the start time is included in this interval.
-   * @type {Boolean}
-   * @default true
-   */
-  this.isStartIncluded = defaultValue(options.isStartIncluded, true);
+	/**
+	 * Gets or sets whether or not the start time is included in this interval.
+	 * @type {Boolean}
+	 * @default true
+	 */
+	this.isStartIncluded = defaultValue(options.isStartIncluded, true)
 
-  /**
-   * Gets or sets whether or not the stop time is included in this interval.
-   * @type {Boolean}
-   * @default true
-   */
-  this.isStopIncluded = defaultValue(options.isStopIncluded, true);
+	/**
+	 * Gets or sets whether or not the stop time is included in this interval.
+	 * @type {Boolean}
+	 * @default true
+	 */
+	this.isStopIncluded = defaultValue(options.isStopIncluded, true)
 }
 
 Object.defineProperties(TimeInterval.prototype, {
-  /**
-   * Gets whether or not this interval is empty.
-   * @memberof TimeInterval.prototype
-   * @type {Boolean}
-   * @readonly
-   */
-  isEmpty: {
-    get: function () {
-      var stopComparedToStart = JulianDate.compare(this.stop, this.start);
-      return (
-        stopComparedToStart < 0 ||
-        (stopComparedToStart === 0 &&
-          (!this.isStartIncluded || !this.isStopIncluded))
-      );
-    },
-  },
-});
+	/**
+	 * Gets whether or not this interval is empty.
+	 * @memberof TimeInterval.prototype
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	isEmpty: {
+		get: function () {
+			var stopComparedToStart = JulianDate.compare(this.stop, this.start)
+			return (
+				stopComparedToStart < 0 ||
+				(stopComparedToStart === 0 &&
+					(!this.isStartIncluded || !this.isStopIncluded))
+			)
+		},
+	},
+})
 
 var scratchInterval = {
-  start: undefined,
-  stop: undefined,
-  isStartIncluded: undefined,
-  isStopIncluded: undefined,
-  data: undefined,
-};
+	start: undefined,
+	stop: undefined,
+	isStartIncluded: undefined,
+	isStopIncluded: undefined,
+	data: undefined,
+}
 
 /**
  * Creates a new instance from a {@link http://en.wikipedia.org/wiki/ISO_8601|ISO 8601} interval.
@@ -137,39 +137,37 @@ var scratchInterval = {
  * @returns {TimeInterval} The modified result parameter or a new instance if none was provided.
  */
 TimeInterval.fromIso8601 = function (options, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("options", options);
-  Check.typeOf.string("options.iso8601", options.iso8601);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('options', options)
+	Check.typeOf.string('options.iso8601', options.iso8601)
+	//>>includeEnd('debug');
 
-  var dates = options.iso8601.split("/");
-  if (dates.length !== 2) {
-    throw new DeveloperError(
-      "options.iso8601 is an invalid ISO 8601 interval."
-    );
-  }
-  var start = JulianDate.fromIso8601(dates[0]);
-  var stop = JulianDate.fromIso8601(dates[1]);
-  var isStartIncluded = defaultValue(options.isStartIncluded, true);
-  var isStopIncluded = defaultValue(options.isStopIncluded, true);
-  var data = options.data;
+	var dates = options.iso8601.split('/')
+	if (dates.length !== 2) {
+		throw new DeveloperError('options.iso8601 is an invalid ISO 8601 interval.')
+	}
+	var start = JulianDate.fromIso8601(dates[0])
+	var stop = JulianDate.fromIso8601(dates[1])
+	var isStartIncluded = defaultValue(options.isStartIncluded, true)
+	var isStopIncluded = defaultValue(options.isStopIncluded, true)
+	var data = options.data
 
-  if (!defined(result)) {
-    scratchInterval.start = start;
-    scratchInterval.stop = stop;
-    scratchInterval.isStartIncluded = isStartIncluded;
-    scratchInterval.isStopIncluded = isStopIncluded;
-    scratchInterval.data = data;
-    return new TimeInterval(scratchInterval);
-  }
+	if (!defined(result)) {
+		scratchInterval.start = start
+		scratchInterval.stop = stop
+		scratchInterval.isStartIncluded = isStartIncluded
+		scratchInterval.isStopIncluded = isStopIncluded
+		scratchInterval.data = data
+		return new TimeInterval(scratchInterval)
+	}
 
-  result.start = start;
-  result.stop = stop;
-  result.isStartIncluded = isStartIncluded;
-  result.isStopIncluded = isStopIncluded;
-  result.data = data;
-  return result;
-};
+	result.start = start
+	result.stop = stop
+	result.isStartIncluded = isStartIncluded
+	result.isStopIncluded = isStopIncluded
+	result.data = data
+	return result
+}
 
 /**
  * Creates an ISO8601 representation of the provided interval.
@@ -179,16 +177,16 @@ TimeInterval.fromIso8601 = function (options, result) {
  * @returns {String} The ISO8601 representation of the provided interval.
  */
 TimeInterval.toIso8601 = function (timeInterval, precision) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("timeInterval", timeInterval);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('timeInterval', timeInterval)
+	//>>includeEnd('debug');
 
-  return (
-    JulianDate.toIso8601(timeInterval.start, precision) +
-    "/" +
-    JulianDate.toIso8601(timeInterval.stop, precision)
-  );
-};
+	return (
+		JulianDate.toIso8601(timeInterval.start, precision) +
+		'/' +
+		JulianDate.toIso8601(timeInterval.stop, precision)
+	)
+}
 
 /**
  * Duplicates the provided instance.
@@ -198,19 +196,19 @@ TimeInterval.toIso8601 = function (timeInterval, precision) {
  * @returns {TimeInterval} The modified result parameter or a new instance if none was provided.
  */
 TimeInterval.clone = function (timeInterval, result) {
-  if (!defined(timeInterval)) {
-    return undefined;
-  }
-  if (!defined(result)) {
-    return new TimeInterval(timeInterval);
-  }
-  result.start = timeInterval.start;
-  result.stop = timeInterval.stop;
-  result.isStartIncluded = timeInterval.isStartIncluded;
-  result.isStopIncluded = timeInterval.isStopIncluded;
-  result.data = timeInterval.data;
-  return result;
-};
+	if (!defined(timeInterval)) {
+		return undefined
+	}
+	if (!defined(result)) {
+		return new TimeInterval(timeInterval)
+	}
+	result.start = timeInterval.start
+	result.stop = timeInterval.stop
+	result.isStartIncluded = timeInterval.isStartIncluded
+	result.isStopIncluded = timeInterval.isStopIncluded
+	result.data = timeInterval.data
+	return result
+}
 
 /**
  * Compares two instances and returns <code>true</code> if they are equal, <code>false</code> otherwise.
@@ -221,19 +219,19 @@ TimeInterval.clone = function (timeInterval, result) {
  * @returns {Boolean} <code>true</code> if the dates are equal; otherwise, <code>false</code>.
  */
 TimeInterval.equals = function (left, right, dataComparer) {
-  return (
-    left === right ||
-    (defined(left) &&
-      defined(right) &&
-      ((left.isEmpty && right.isEmpty) ||
-        (left.isStartIncluded === right.isStartIncluded &&
-          left.isStopIncluded === right.isStopIncluded &&
-          JulianDate.equals(left.start, right.start) &&
-          JulianDate.equals(left.stop, right.stop) &&
-          (left.data === right.data ||
-            (defined(dataComparer) && dataComparer(left.data, right.data))))))
-  );
-};
+	return (
+		left === right ||
+		(defined(left) &&
+			defined(right) &&
+			((left.isEmpty && right.isEmpty) ||
+				(left.isStartIncluded === right.isStartIncluded &&
+					left.isStopIncluded === right.isStopIncluded &&
+					JulianDate.equals(left.start, right.start) &&
+					JulianDate.equals(left.stop, right.stop) &&
+					(left.data === right.data ||
+						(defined(dataComparer) && dataComparer(left.data, right.data))))))
+	)
+}
 
 /**
  * Compares two instances and returns <code>true</code> if they are within <code>epsilon</code> seconds of
@@ -248,21 +246,21 @@ TimeInterval.equals = function (left, right, dataComparer) {
  * @returns {Boolean} <code>true</code> if the two dates are within <code>epsilon</code> seconds of each other; otherwise <code>false</code>.
  */
 TimeInterval.equalsEpsilon = function (left, right, epsilon, dataComparer) {
-  epsilon = defaultValue(epsilon, 0);
+	epsilon = defaultValue(epsilon, 0)
 
-  return (
-    left === right ||
-    (defined(left) &&
-      defined(right) &&
-      ((left.isEmpty && right.isEmpty) ||
-        (left.isStartIncluded === right.isStartIncluded &&
-          left.isStopIncluded === right.isStopIncluded &&
-          JulianDate.equalsEpsilon(left.start, right.start, epsilon) &&
-          JulianDate.equalsEpsilon(left.stop, right.stop, epsilon) &&
-          (left.data === right.data ||
-            (defined(dataComparer) && dataComparer(left.data, right.data))))))
-  );
-};
+	return (
+		left === right ||
+		(defined(left) &&
+			defined(right) &&
+			((left.isEmpty && right.isEmpty) ||
+				(left.isStartIncluded === right.isStartIncluded &&
+					left.isStopIncluded === right.isStopIncluded &&
+					JulianDate.equalsEpsilon(left.start, right.start, epsilon) &&
+					JulianDate.equalsEpsilon(left.stop, right.stop, epsilon) &&
+					(left.data === right.data ||
+						(defined(dataComparer) && dataComparer(left.data, right.data))))))
+	)
+}
 
 /**
  * Computes the intersection of two intervals, optionally merging their data.
@@ -274,58 +272,58 @@ TimeInterval.equalsEpsilon = function (left, right, epsilon, dataComparer) {
  * @returns {TimeInterval} The modified result parameter.
  */
 TimeInterval.intersect = function (left, right, result, mergeCallback) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	//>>includeEnd('debug');
 
-  if (!defined(right)) {
-    return TimeInterval.clone(TimeInterval.EMPTY, result);
-  }
+	if (!defined(right)) {
+		return TimeInterval.clone(TimeInterval.EMPTY, result)
+	}
 
-  var leftStart = left.start;
-  var leftStop = left.stop;
+	var leftStart = left.start
+	var leftStop = left.stop
 
-  var rightStart = right.start;
-  var rightStop = right.stop;
+	var rightStart = right.start
+	var rightStop = right.stop
 
-  var intersectsStartRight =
-    JulianDate.greaterThanOrEquals(rightStart, leftStart) &&
-    JulianDate.greaterThanOrEquals(leftStop, rightStart);
-  var intersectsStartLeft =
-    !intersectsStartRight &&
-    JulianDate.lessThanOrEquals(rightStart, leftStart) &&
-    JulianDate.lessThanOrEquals(leftStart, rightStop);
+	var intersectsStartRight =
+		JulianDate.greaterThanOrEquals(rightStart, leftStart) &&
+		JulianDate.greaterThanOrEquals(leftStop, rightStart)
+	var intersectsStartLeft =
+		!intersectsStartRight &&
+		JulianDate.lessThanOrEquals(rightStart, leftStart) &&
+		JulianDate.lessThanOrEquals(leftStart, rightStop)
 
-  if (!intersectsStartRight && !intersectsStartLeft) {
-    return TimeInterval.clone(TimeInterval.EMPTY, result);
-  }
+	if (!intersectsStartRight && !intersectsStartLeft) {
+		return TimeInterval.clone(TimeInterval.EMPTY, result)
+	}
 
-  var leftIsStartIncluded = left.isStartIncluded;
-  var leftIsStopIncluded = left.isStopIncluded;
-  var rightIsStartIncluded = right.isStartIncluded;
-  var rightIsStopIncluded = right.isStopIncluded;
-  var leftLessThanRight = JulianDate.lessThan(leftStop, rightStop);
+	var leftIsStartIncluded = left.isStartIncluded
+	var leftIsStopIncluded = left.isStopIncluded
+	var rightIsStartIncluded = right.isStartIncluded
+	var rightIsStopIncluded = right.isStopIncluded
+	var leftLessThanRight = JulianDate.lessThan(leftStop, rightStop)
 
-  if (!defined(result)) {
-    result = new TimeInterval();
-  }
+	if (!defined(result)) {
+		result = new TimeInterval()
+	}
 
-  result.start = intersectsStartRight ? rightStart : leftStart;
-  result.isStartIncluded =
-    (leftIsStartIncluded && rightIsStartIncluded) ||
-    (!JulianDate.equals(rightStart, leftStart) &&
-      ((intersectsStartRight && rightIsStartIncluded) ||
-        (intersectsStartLeft && leftIsStartIncluded)));
-  result.stop = leftLessThanRight ? leftStop : rightStop;
-  result.isStopIncluded = leftLessThanRight
-    ? leftIsStopIncluded
-    : (leftIsStopIncluded && rightIsStopIncluded) ||
-      (!JulianDate.equals(rightStop, leftStop) && rightIsStopIncluded);
-  result.data = defined(mergeCallback)
-    ? mergeCallback(left.data, right.data)
-    : left.data;
-  return result;
-};
+	result.start = intersectsStartRight ? rightStart : leftStart
+	result.isStartIncluded =
+		(leftIsStartIncluded && rightIsStartIncluded) ||
+		(!JulianDate.equals(rightStart, leftStart) &&
+			((intersectsStartRight && rightIsStartIncluded) ||
+				(intersectsStartLeft && leftIsStartIncluded)))
+	result.stop = leftLessThanRight ? leftStop : rightStop
+	result.isStopIncluded = leftLessThanRight
+		? leftIsStopIncluded
+		: (leftIsStopIncluded && rightIsStopIncluded) ||
+		  (!JulianDate.equals(rightStop, leftStop) && rightIsStopIncluded)
+	result.data = defined(mergeCallback)
+		? mergeCallback(left.data, right.data)
+		: left.data
+	return result
+}
 
 /**
  * Checks if the specified date is inside the provided interval.
@@ -335,27 +333,27 @@ TimeInterval.intersect = function (left, right, result, mergeCallback) {
  * @returns {Boolean} <code>true</code> if the interval contains the specified date, <code>false</code> otherwise.
  */
 TimeInterval.contains = function (timeInterval, julianDate) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("timeInterval", timeInterval);
-  Check.typeOf.object("julianDate", julianDate);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('timeInterval', timeInterval)
+	Check.typeOf.object('julianDate', julianDate)
+	//>>includeEnd('debug');
 
-  if (timeInterval.isEmpty) {
-    return false;
-  }
+	if (timeInterval.isEmpty) {
+		return false
+	}
 
-  var startComparedToDate = JulianDate.compare(timeInterval.start, julianDate);
-  if (startComparedToDate === 0) {
-    return timeInterval.isStartIncluded;
-  }
+	var startComparedToDate = JulianDate.compare(timeInterval.start, julianDate)
+	if (startComparedToDate === 0) {
+		return timeInterval.isStartIncluded
+	}
 
-  var dateComparedToStop = JulianDate.compare(julianDate, timeInterval.stop);
-  if (dateComparedToStop === 0) {
-    return timeInterval.isStopIncluded;
-  }
+	var dateComparedToStop = JulianDate.compare(julianDate, timeInterval.stop)
+	if (dateComparedToStop === 0) {
+		return timeInterval.isStopIncluded
+	}
 
-  return startComparedToDate < 0 && dateComparedToStop < 0;
-};
+	return startComparedToDate < 0 && dateComparedToStop < 0
+}
 
 /**
  * Duplicates this instance.
@@ -364,8 +362,8 @@ TimeInterval.contains = function (timeInterval, julianDate) {
  * @returns {TimeInterval} The modified result parameter or a new instance if none was provided.
  */
 TimeInterval.prototype.clone = function (result) {
-  return TimeInterval.clone(this, result);
-};
+	return TimeInterval.clone(this, result)
+}
 
 /**
  * Compares this instance against the provided instance componentwise and returns
@@ -376,8 +374,8 @@ TimeInterval.prototype.clone = function (result) {
  * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
  */
 TimeInterval.prototype.equals = function (right, dataComparer) {
-  return TimeInterval.equals(this, right, dataComparer);
-};
+	return TimeInterval.equals(this, right, dataComparer)
+}
 
 /**
  * Compares this instance against the provided instance componentwise and returns
@@ -390,8 +388,8 @@ TimeInterval.prototype.equals = function (right, dataComparer) {
  * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
  */
 TimeInterval.prototype.equalsEpsilon = function (right, epsilon, dataComparer) {
-  return TimeInterval.equalsEpsilon(this, right, epsilon, dataComparer);
-};
+	return TimeInterval.equalsEpsilon(this, right, epsilon, dataComparer)
+}
 
 /**
  * Creates a string representing this TimeInterval in ISO8601 format.
@@ -399,8 +397,8 @@ TimeInterval.prototype.equalsEpsilon = function (right, epsilon, dataComparer) {
  * @returns {String} A string representing this TimeInterval in ISO8601 format.
  */
 TimeInterval.prototype.toString = function () {
-  return TimeInterval.toIso8601(this);
-};
+	return TimeInterval.toIso8601(this)
+}
 
 /**
  * An immutable empty interval.
@@ -409,13 +407,13 @@ TimeInterval.prototype.toString = function () {
  * @constant
  */
 TimeInterval.EMPTY = Object.freeze(
-  new TimeInterval({
-    start: new JulianDate(),
-    stop: new JulianDate(),
-    isStartIncluded: false,
-    isStopIncluded: false,
-  })
-);
+	new TimeInterval({
+		start: new JulianDate(),
+		stop: new JulianDate(),
+		isStartIncluded: false,
+		isStopIncluded: false,
+	}),
+)
 
 /**
  * Function interface for merging interval data.
@@ -433,4 +431,4 @@ TimeInterval.EMPTY = Object.freeze(
  * @param {*} rightData The second data instance.
  * @returns {Boolean} <code>true</code> if the provided instances are equal, <code>false</code> otherwise.
  */
-export default TimeInterval;
+export default TimeInterval

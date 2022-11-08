@@ -1,10 +1,10 @@
-import Cartesian3 from "./Cartesian3.js";
-import Check from "./Check.js";
-import combine from "./combine.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import Rectangle from "./Rectangle.js";
-import Resource from "./Resource.js";
+import Cartesian3 from './Cartesian3.js'
+import Check from './Check.js'
+import combine from './combine.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import Rectangle from './Rectangle.js'
+import Resource from './Resource.js'
 
 /**
  * Provides geocoding via a {@link https://opencagedata.com/|OpenCage} server.
@@ -35,45 +35,45 @@ import Resource from "./Resource.js";
  * });
  */
 function OpenCageGeocoderService(url, apiKey, params) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("url", url);
-  Check.defined("apiKey", apiKey);
-  if (defined(params)) {
-    Check.typeOf.object("params", params);
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('url', url)
+	Check.defined('apiKey', apiKey)
+	if (defined(params)) {
+		Check.typeOf.object('params', params)
+	}
+	//>>includeEnd('debug');
 
-  url = Resource.createIfNeeded(url);
-  url.appendForwardSlash();
-  url.setQueryParameters({ key: apiKey });
-  this._url = url;
-  this._params = defaultValue(params, {});
+	url = Resource.createIfNeeded(url)
+	url.appendForwardSlash()
+	url.setQueryParameters({ key: apiKey })
+	this._url = url
+	this._params = defaultValue(params, {})
 }
 
 Object.defineProperties(OpenCageGeocoderService.prototype, {
-  /**
-   * The Resource used to access the OpenCage endpoint.
-   * @type {Resource}
-   * @memberof OpenCageGeocoderService.prototype
-   * @readonly
-   */
-  url: {
-    get: function () {
-      return this._url;
-    },
-  },
-  /**
-   * Optional params passed to OpenCage in order to customize geocoding
-   * @type {Object}
-   * @memberof OpenCageGeocoderService.prototype
-   * @readonly
-   */
-  params: {
-    get: function () {
-      return this._params;
-    },
-  },
-});
+	/**
+	 * The Resource used to access the OpenCage endpoint.
+	 * @type {Resource}
+	 * @memberof OpenCageGeocoderService.prototype
+	 * @readonly
+	 */
+	url: {
+		get: function () {
+			return this._url
+		},
+	},
+	/**
+	 * Optional params passed to OpenCage in order to customize geocoding
+	 * @type {Object}
+	 * @memberof OpenCageGeocoderService.prototype
+	 * @readonly
+	 */
+	params: {
+		get: function () {
+			return this._params
+		},
+	},
+})
 
 /**
  * @function
@@ -82,37 +82,37 @@ Object.defineProperties(OpenCageGeocoderService.prototype, {
  * @returns {Promise<GeocoderService.Result[]>}
  */
 OpenCageGeocoderService.prototype.geocode = function (query) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.string("query", query);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.string('query', query)
+	//>>includeEnd('debug');
 
-  var resource = this._url.getDerivedResource({
-    url: "json",
-    queryParameters: combine(this._params, { q: query }),
-  });
-  return resource.fetchJson().then(function (response) {
-    return response.results.map(function (resultObject) {
-      var destination;
-      var bounds = resultObject.bounds;
+	var resource = this._url.getDerivedResource({
+		url: 'json',
+		queryParameters: combine(this._params, { q: query }),
+	})
+	return resource.fetchJson().then(function (response) {
+		return response.results.map(function (resultObject) {
+			var destination
+			var bounds = resultObject.bounds
 
-      if (defined(bounds)) {
-        destination = Rectangle.fromDegrees(
-          bounds.southwest.lng,
-          bounds.southwest.lat,
-          bounds.northeast.lng,
-          bounds.northeast.lat
-        );
-      } else {
-        var lon = resultObject.geometry.lat;
-        var lat = resultObject.geometry.lng;
-        destination = Cartesian3.fromDegrees(lon, lat);
-      }
+			if (defined(bounds)) {
+				destination = Rectangle.fromDegrees(
+					bounds.southwest.lng,
+					bounds.southwest.lat,
+					bounds.northeast.lng,
+					bounds.northeast.lat,
+				)
+			} else {
+				var lon = resultObject.geometry.lat
+				var lat = resultObject.geometry.lng
+				destination = Cartesian3.fromDegrees(lon, lat)
+			}
 
-      return {
-        displayName: resultObject.formatted,
-        destination: destination,
-      };
-    });
-  });
-};
-export default OpenCageGeocoderService;
+			return {
+				displayName: resultObject.formatted,
+				destination: destination,
+			}
+		})
+	})
+}
+export default OpenCageGeocoderService

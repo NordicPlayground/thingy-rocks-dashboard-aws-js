@@ -22,10 +22,22 @@
   background-color: #efefef;
   background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
   padding: 2px 0 2px 4px;
   zoom: 1;
@@ -57,7 +69,6 @@
   background-color: rgba(171, 214, 255, 0);
   background-image: none;
   /* cancel gradient for normal buttons, we don't want any gradient besides toolbar's on non-hovered buttons */
-
 }
 .dj_ie .claro .dijitToolbar .dijitButton .dijitButtonNode,
 .dj_ie .claro .dijitToolbar .dijitDropDownButton .dijitButtonNode,
@@ -66,7 +77,6 @@
 .dj_ie .claro .dijitToolbar .dijitComboBox .dijitButtonNode {
   background-color: transparent;
   /* for IE, which doesn't understand rgba(...) */
-
 }
 /* hover status */
 .dj_ie .claro .dijitToolbar .dijitButtonHover .dijitButtonNode,
@@ -111,10 +121,22 @@
   background-color: #abd6ff;
   background-image: url("images/standardGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
   padding: 1px;
 }
@@ -134,10 +156,26 @@
   background-color: #7dbdfa;
   background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
   padding: 1px;
 }
@@ -157,20 +195,52 @@
   background-color: #7dbdfa;
   background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
 }
 .claro .dijitToolbar .dijitComboButtonActive .dijitDownArrowButtonActive {
   background-color: #7dbdfa;
   background-image: url("images/activeGradient.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(rgba(190, 190, 190, 0.98) 0px, rgba(255, 255, 255, 0.65) 3px, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    rgba(190, 190, 190, 0.98) 0px,
+    rgba(255, 255, 255, 0.65) 3px,
+    rgba(255, 255, 255, 0) 100%
+  );
   _background-image: none;
 }
 /* Avoid double border between button and arrow */
@@ -181,7 +251,6 @@
 .claro .dijitToolbar .dijitComboButtonHover .dijitDownArrowButton {
   padding-left: 2px;
   /* since there's no left border, don't reduce from 2px --> 1px */
-
 }
 /* toggle button checked status */
 .claro .dijitToolbar .dijitToggleButtonChecked .dijitButtonNode {

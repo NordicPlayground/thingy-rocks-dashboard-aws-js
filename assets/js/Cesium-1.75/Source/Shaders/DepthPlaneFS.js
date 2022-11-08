@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "varying vec4 positionEC;\n\
+export default 'varying vec4 positionEC;\n\
 \n\
 void main()\n\
 {\n\
@@ -35,4 +35,4 @@ void main()\n\
 \n\
     czm_writeLogDepth();\n\
 }\n\
-";
+'

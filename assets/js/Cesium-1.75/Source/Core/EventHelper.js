@@ -1,5 +1,5 @@
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * A convenience object that simplifies the common pattern of attaching event listeners
@@ -22,7 +22,7 @@ import DeveloperError from "./DeveloperError.js";
  * @see Event
  */
 function EventHelper() {
-  this._removalFunctions = [];
+	this._removalFunctions = []
 }
 
 /**
@@ -37,22 +37,22 @@ function EventHelper() {
  * @see Event#addEventListener
  */
 EventHelper.prototype.add = function (event, listener, scope) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(event)) {
-    throw new DeveloperError("event is required");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(event)) {
+		throw new DeveloperError('event is required')
+	}
+	//>>includeEnd('debug');
 
-  var removalFunction = event.addEventListener(listener, scope);
-  this._removalFunctions.push(removalFunction);
+	var removalFunction = event.addEventListener(listener, scope)
+	this._removalFunctions.push(removalFunction)
 
-  var that = this;
-  return function () {
-    removalFunction();
-    var removalFunctions = that._removalFunctions;
-    removalFunctions.splice(removalFunctions.indexOf(removalFunction), 1);
-  };
-};
+	var that = this
+	return function () {
+		removalFunction()
+		var removalFunctions = that._removalFunctions
+		removalFunctions.splice(removalFunctions.indexOf(removalFunction), 1)
+	}
+}
 
 /**
  * Unregisters all previously added listeners.
@@ -60,15 +60,15 @@ EventHelper.prototype.add = function (event, listener, scope) {
  * @see Event#removeEventListener
  */
 EventHelper.prototype.removeAll = function () {
-  var removalFunctions = this._removalFunctions;
-  for (var i = 0, len = removalFunctions.length; i < len; ++i) {
-    removalFunctions[i]();
-  }
-  removalFunctions.length = 0;
-};
+	var removalFunctions = this._removalFunctions
+	for (var i = 0, len = removalFunctions.length; i < len; ++i) {
+		removalFunctions[i]()
+	}
+	removalFunctions.length = 0
+}
 
 /**
  * A function that removes a listener.
  * @callback EventHelper.RemoveCallback
  */
-export default EventHelper;
+export default EventHelper

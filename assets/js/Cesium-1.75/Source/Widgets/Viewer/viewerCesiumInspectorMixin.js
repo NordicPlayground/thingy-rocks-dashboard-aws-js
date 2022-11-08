@@ -1,6 +1,6 @@
-import defined from "../../Core/defined.js";
-import DeveloperError from "../../Core/DeveloperError.js";
-import CesiumInspector from "../CesiumInspector/CesiumInspector.js";
+import defined from '../../Core/defined.js'
+import DeveloperError from '../../Core/DeveloperError.js'
+import CesiumInspector from '../CesiumInspector/CesiumInspector.js'
 
 /**
  * A mixin which adds the CesiumInspector widget to the Viewer widget.
@@ -19,26 +19,26 @@ import CesiumInspector from "../CesiumInspector/CesiumInspector.js";
  * viewer.extend(Cesium.viewerCesiumInspectorMixin);
  */
 function viewerCesiumInspectorMixin(viewer) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(viewer)) {
-    throw new DeveloperError("viewer is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(viewer)) {
+		throw new DeveloperError('viewer is required.')
+	}
+	//>>includeEnd('debug');
 
-  var cesiumInspectorContainer = document.createElement("div");
-  cesiumInspectorContainer.className = "cesium-viewer-cesiumInspectorContainer";
-  viewer.container.appendChild(cesiumInspectorContainer);
-  var cesiumInspector = new CesiumInspector(
-    cesiumInspectorContainer,
-    viewer.scene
-  );
+	var cesiumInspectorContainer = document.createElement('div')
+	cesiumInspectorContainer.className = 'cesium-viewer-cesiumInspectorContainer'
+	viewer.container.appendChild(cesiumInspectorContainer)
+	var cesiumInspector = new CesiumInspector(
+		cesiumInspectorContainer,
+		viewer.scene,
+	)
 
-  Object.defineProperties(viewer, {
-    cesiumInspector: {
-      get: function () {
-        return cesiumInspector;
-      },
-    },
-  });
+	Object.defineProperties(viewer, {
+		cesiumInspector: {
+			get: function () {
+				return cesiumInspector
+			},
+		},
+	})
 }
-export default viewerCesiumInspectorMixin;
+export default viewerCesiumInspectorMixin

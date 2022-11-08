@@ -1,10 +1,10 @@
-import Credit from "./Credit.js";
-import defined from "./defined.js";
-import Resource from "./Resource.js";
+import Credit from './Credit.js'
+import defined from './defined.js'
+import Resource from './Resource.js'
 
-var defaultTokenCredit;
+var defaultTokenCredit
 var defaultAccessToken =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4Y2U2ODRlMS0zYzBkLTRmNjQtYTlkOC1mMjg0MGY4NWIyNzEiLCJpZCI6NjExMTAsImlhdCI6MTYzODgxODYyMH0.Vu8wJT7AmTneNnboUooMyNFFLgG0sDiBeOIG5qAOEAw";
+	'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI4Y2U2ODRlMS0zYzBkLTRmNjQtYTlkOC1mMjg0MGY4NWIyNzEiLCJpZCI6NjExMTAsImlhdCI6MTYzODgxODYyMH0.Vu8wJT7AmTneNnboUooMyNFFLgG0sDiBeOIG5qAOEAw'
 /**
  * Default settings for accessing the Cesium ion API.
  *
@@ -19,14 +19,14 @@ var defaultAccessToken =
  * @see createWorldTerrain
  * @namespace Ion
  */
-var Ion = {};
+var Ion = {}
 
 /**
  * Gets or sets the default Cesium ion access token.
  *
  * @type {String}
  */
-Ion.defaultAccessToken = defaultAccessToken;
+Ion.defaultAccessToken = defaultAccessToken
 
 /**
  * Gets or sets the default Cesium ion server.
@@ -34,23 +34,23 @@ Ion.defaultAccessToken = defaultAccessToken;
  * @type {String|Resource}
  * @default https://api.cesium.com
  */
-Ion.defaultServer = new Resource({ url: "https://api.cesium.com/" });
+Ion.defaultServer = new Resource({ url: 'https://api.cesium.com/' })
 
 Ion.getDefaultTokenCredit = function (providedKey) {
-  if (providedKey !== defaultAccessToken) {
-    return undefined;
-  }
+	if (providedKey !== defaultAccessToken) {
+		return undefined
+	}
 
-  if (!defined(defaultTokenCredit)) {
-    var defaultTokenMessage =
-      '<b> \
+	if (!defined(defaultTokenCredit)) {
+		var defaultTokenMessage =
+			'<b> \
             This application is using Cesium\'s default ion access token. Please assign <i>Cesium.Ion.defaultAccessToken</i> \
             with an access token from your ion account before making any Cesium API calls. \
-            You can sign up for a free ion account at <a href="https://cesium.com">https://cesium.com</a>.</b>';
+            You can sign up for a free ion account at <a href="https://cesium.com">https://cesium.com</a>.</b>'
 
-    defaultTokenCredit = new Credit(defaultTokenMessage, true);
-  }
+		defaultTokenCredit = new Credit(defaultTokenMessage, true)
+	}
 
-  return defaultTokenCredit;
-};
-export default Ion;
+	return defaultTokenCredit
+}
+export default Ion

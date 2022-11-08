@@ -138,14 +138,7 @@
           var red = viewer.entities.add({
             polygon: {
               hierarchy: Cesium.Cartesian3.fromDegreesArray([
-                -70.0,
-                30.0,
-                -60.0,
-                30.0,
-                -60.0,
-                40.0,
-                -70.0,
-                40.0,
+                -70.0, 30.0, -60.0, 30.0, -60.0, 40.0, -70.0, 40.0,
               ]),
               height: 0,
             },
@@ -155,14 +148,7 @@
           var blue = viewer.entities.add({
             polygon: {
               hierarchy: Cesium.Cartesian3.fromDegreesArray([
-                -75.0,
-                34.0,
-                -63.0,
-                34.0,
-                -63.0,
-                40.0,
-                -75.0,
-                40.0,
+                -75.0, 34.0, -63.0, 34.0, -63.0, 40.0, -75.0, 40.0,
               ]),
               height: 0,
             },
@@ -172,14 +158,7 @@
           var green = viewer.entities.add({
             polygon: {
               hierarchy: Cesium.Cartesian3.fromDegreesArray([
-                -67.0,
-                36.0,
-                -55.0,
-                36.0,
-                -55.0,
-                30.0,
-                -67.0,
-                30.0,
+                -67.0, 36.0, -55.0, 36.0, -55.0, 30.0, -67.0, 30.0,
               ]),
               height: 0,
             },
@@ -207,8 +186,7 @@
             name: "milktruck",
             position: Cesium.Cartesian3.fromDegrees(-123.0744619, 44.0503706),
             model: {
-              uri:
-                "../../SampleData/models/CesiumMilkTruck/CesiumMilkTruck.glb",
+              uri: "../../SampleData/models/CesiumMilkTruck/CesiumMilkTruck.glb",
             },
           });
           viewer.zoomTo(modelEntity);
@@ -240,9 +218,8 @@
                 var cartesian = viewer.scene.pickPosition(movement.endPosition);
 
                 if (Cesium.defined(cartesian)) {
-                  var cartographic = Cesium.Cartographic.fromCartesian(
-                    cartesian
-                  );
+                  var cartographic =
+                    Cesium.Cartographic.fromCartesian(cartesian);
                   var longitudeString = Cesium.Math.toDegrees(
                     cartographic.longitude
                   ).toFixed(2);

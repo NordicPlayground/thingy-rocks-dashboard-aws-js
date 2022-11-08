@@ -1,7 +1,7 @@
 define(function () {
-  "use strict";
+	'use strict'
 
-  return function () {
-    throw new Error("BadGeometry.createGeometry");
-  };
-});
+	return function () {
+		throw new Error('BadGeometry.createGeometry')
+	}
+})

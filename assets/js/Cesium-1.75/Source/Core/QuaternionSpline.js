@@ -1,29 +1,29 @@
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import Quaternion from "./Quaternion.js";
-import Spline from "./Spline.js";
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import Quaternion from './Quaternion.js'
+import Spline from './Spline.js'
 
 function createEvaluateFunction(spline) {
-  var points = spline.points;
-  var times = spline.times;
+	var points = spline.points
+	var times = spline.times
 
-  // use slerp interpolation
-  return function (time, result) {
-    if (!defined(result)) {
-      result = new Quaternion();
-    }
-    var i = (spline._lastTimeIndex = spline.findTimeInterval(
-      time,
-      spline._lastTimeIndex
-    ));
-    var u = (time - times[i]) / (times[i + 1] - times[i]);
+	// use slerp interpolation
+	return function (time, result) {
+		if (!defined(result)) {
+			result = new Quaternion()
+		}
+		var i = (spline._lastTimeIndex = spline.findTimeInterval(
+			time,
+			spline._lastTimeIndex,
+		))
+		var u = (time - times[i]) / (times[i + 1] - times[i])
 
-    var q0 = points[i];
-    var q1 = points[i + 1];
+		var q0 = points[i]
+		var q1 = points[i + 1]
 
-    return Quaternion.fastSlerp(q0, q1, u, result);
-  };
+		return Quaternion.fastSlerp(q0, q1, u, result)
+	}
 }
 
 /**
@@ -47,61 +47,61 @@ function createEvaluateFunction(spline) {
  * @see WeightSpline
  */
 function QuaternionSpline(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  var points = options.points;
-  var times = options.times;
+	var points = options.points
+	var times = options.times
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(points) || !defined(times)) {
-    throw new DeveloperError("points and times are required.");
-  }
-  if (points.length < 2) {
-    throw new DeveloperError(
-      "points.length must be greater than or equal to 2."
-    );
-  }
-  if (times.length !== points.length) {
-    throw new DeveloperError("times.length must be equal to points.length.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(points) || !defined(times)) {
+		throw new DeveloperError('points and times are required.')
+	}
+	if (points.length < 2) {
+		throw new DeveloperError(
+			'points.length must be greater than or equal to 2.',
+		)
+	}
+	if (times.length !== points.length) {
+		throw new DeveloperError('times.length must be equal to points.length.')
+	}
+	//>>includeEnd('debug');
 
-  this._times = times;
-  this._points = points;
+	this._times = times
+	this._points = points
 
-  this._evaluateFunction = createEvaluateFunction(this);
-  this._lastTimeIndex = 0;
+	this._evaluateFunction = createEvaluateFunction(this)
+	this._lastTimeIndex = 0
 }
 
 Object.defineProperties(QuaternionSpline.prototype, {
-  /**
-   * An array of times for the control points.
-   *
-   * @memberof QuaternionSpline.prototype
-   *
-   * @type {Number[]}
-   * @readonly
-   */
-  times: {
-    get: function () {
-      return this._times;
-    },
-  },
+	/**
+	 * An array of times for the control points.
+	 *
+	 * @memberof QuaternionSpline.prototype
+	 *
+	 * @type {Number[]}
+	 * @readonly
+	 */
+	times: {
+		get: function () {
+			return this._times
+		},
+	},
 
-  /**
-   * An array of {@link Quaternion} control points.
-   *
-   * @memberof QuaternionSpline.prototype
-   *
-   * @type {Quaternion[]}
-   * @readonly
-   */
-  points: {
-    get: function () {
-      return this._points;
-    },
-  },
-});
+	/**
+	 * An array of {@link Quaternion} control points.
+	 *
+	 * @memberof QuaternionSpline.prototype
+	 *
+	 * @type {Quaternion[]}
+	 * @readonly
+	 */
+	points: {
+		get: function () {
+			return this._points
+		},
+	},
+})
 
 /**
  * Finds an index <code>i</code> in <code>times</code> such that the parameter
@@ -115,7 +115,7 @@ Object.defineProperties(QuaternionSpline.prototype, {
  *                             is the first element in the array <code>times</code> and <code>t<sub>n</sub></code> is the last element
  *                             in the array <code>times</code>.
  */
-QuaternionSpline.prototype.findTimeInterval = Spline.prototype.findTimeInterval;
+QuaternionSpline.prototype.findTimeInterval = Spline.prototype.findTimeInterval
 
 /**
  * Wraps the given time to the period covered by the spline.
@@ -124,7 +124,7 @@ QuaternionSpline.prototype.findTimeInterval = Spline.prototype.findTimeInterval;
  * @param {Number} time The time.
  * @return {Number} The time, wrapped around to the updated animation.
  */
-QuaternionSpline.prototype.wrapTime = Spline.prototype.wrapTime;
+QuaternionSpline.prototype.wrapTime = Spline.prototype.wrapTime
 
 /**
  * Clamps the given time to the period covered by the spline.
@@ -133,7 +133,7 @@ QuaternionSpline.prototype.wrapTime = Spline.prototype.wrapTime;
  * @param {Number} time The time.
  * @return {Number} The time, clamped to the animation period.
  */
-QuaternionSpline.prototype.clampTime = Spline.prototype.clampTime;
+QuaternionSpline.prototype.clampTime = Spline.prototype.clampTime
 
 /**
  * Evaluates the curve at a given time.
@@ -147,6 +147,6 @@ QuaternionSpline.prototype.clampTime = Spline.prototype.clampTime;
  *                             in the array <code>times</code>.
  */
 QuaternionSpline.prototype.evaluate = function (time, result) {
-  return this._evaluateFunction(time, result);
-};
-export default QuaternionSpline;
+	return this._evaluateFunction(time, result)
+}
+export default QuaternionSpline

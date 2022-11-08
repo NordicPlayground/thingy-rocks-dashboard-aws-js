@@ -1,4 +1,4 @@
-import DeveloperError from "../Core/DeveloperError.js";
+import DeveloperError from '../Core/DeveloperError.js'
 
 /**
  * An expression for a style applied to a {@link Cesium3DTileset}.
@@ -33,8 +33,8 @@ function StyleExpression() {}
  * @returns {Boolean|Number|String|RegExp|Cartesian2|Cartesian3|Cartesian4|Color} The result of evaluating the expression.
  */
 StyleExpression.prototype.evaluate = function (feature, result) {
-  DeveloperError.throwInstantiationError();
-};
+	DeveloperError.throwInstantiationError()
+}
 
 /**
  * Evaluates the result of a Color expression, optionally using the provided feature's properties.
@@ -47,8 +47,8 @@ StyleExpression.prototype.evaluate = function (feature, result) {
  * @returns {Color} The modified result parameter or a new Color instance if one was not provided.
  */
 StyleExpression.prototype.evaluateColor = function (feature, result) {
-  DeveloperError.throwInstantiationError();
-};
+	DeveloperError.throwInstantiationError()
+}
 
 /**
  * Gets the shader function for this expression.
@@ -64,11 +64,11 @@ StyleExpression.prototype.evaluateColor = function (feature, result) {
  * @private
  */
 StyleExpression.prototype.getShaderFunction = function (
-  functionName,
-  propertyNameMap,
-  shaderState,
-  returnType
+	functionName,
+	propertyNameMap,
+	shaderState,
+	returnType,
 ) {
-  DeveloperError.throwInstantiationError();
-};
-export default StyleExpression;
+	DeveloperError.throwInstantiationError()
+}
+export default StyleExpression

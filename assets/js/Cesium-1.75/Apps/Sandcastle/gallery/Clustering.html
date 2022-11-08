@@ -129,8 +129,11 @@
               removeListener();
               removeListener = undefined;
             } else {
-              removeListener = dataSource.clustering.clusterEvent.addEventListener(
-                function (clusteredEntities, cluster) {
+              removeListener =
+                dataSource.clustering.clusterEvent.addEventListener(function (
+                  clusteredEntities,
+                  cluster
+                ) {
                   cluster.label.show = false;
                   cluster.billboard.show = true;
                   cluster.billboard.id = cluster.label.id;
@@ -151,8 +154,7 @@
                     cluster.billboard.image =
                       singleDigitPins[clusteredEntities.length - 2];
                   }
-                }
-              );
+                });
             }
 
             // force a re-cluster with the new styling
@@ -188,11 +190,13 @@
             dataSource.clustering.enabled = checked;
           });
 
-          Sandcastle.addToggleButton("Custom Styling", true, function (
-            checked
-          ) {
-            customStyle();
-          });
+          Sandcastle.addToggleButton(
+            "Custom Styling",
+            true,
+            function (checked) {
+              customStyle();
+            }
+          );
 
           var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
           handler.setInputAction(function (movement) {

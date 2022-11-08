@@ -1,10 +1,10 @@
-import Cartesian3 from "./Cartesian3.js";
-import Cartesian4 from "./Cartesian4.js";
-import Check from "./Check.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import CesiumMath from "./Math.js";
-import Matrix4 from "./Matrix4.js";
+import Cartesian3 from './Cartesian3.js'
+import Cartesian4 from './Cartesian4.js'
+import Check from './Check.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import CesiumMath from './Math.js'
+import Matrix4 from './Matrix4.js'
 
 /**
  * A plane in Hessian Normal Form defined by
@@ -32,37 +32,37 @@ import Matrix4 from "./Matrix4.js";
  * @exception {DeveloperError} Normal must be normalized
  */
 function Plane(normal, distance) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("normal", normal);
-  if (
-    !CesiumMath.equalsEpsilon(
-      Cartesian3.magnitude(normal),
-      1.0,
-      CesiumMath.EPSILON6
-    )
-  ) {
-    throw new DeveloperError("normal must be normalized.");
-  }
-  Check.typeOf.number("distance", distance);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('normal', normal)
+	if (
+		!CesiumMath.equalsEpsilon(
+			Cartesian3.magnitude(normal),
+			1.0,
+			CesiumMath.EPSILON6,
+		)
+	) {
+		throw new DeveloperError('normal must be normalized.')
+	}
+	Check.typeOf.number('distance', distance)
+	//>>includeEnd('debug');
 
-  /**
-   * The plane's normal.
-   *
-   * @type {Cartesian3}
-   */
-  this.normal = Cartesian3.clone(normal);
+	/**
+	 * The plane's normal.
+	 *
+	 * @type {Cartesian3}
+	 */
+	this.normal = Cartesian3.clone(normal)
 
-  /**
-   * The shortest distance from the origin to the plane.  The sign of
-   * <code>distance</code> determines which side of the plane the origin
-   * is on.  If <code>distance</code> is positive, the origin is in the half-space
-   * in the direction of the normal; if negative, the origin is in the half-space
-   * opposite to the normal; if zero, the plane passes through the origin.
-   *
-   * @type {Number}
-   */
-  this.distance = distance;
+	/**
+	 * The shortest distance from the origin to the plane.  The sign of
+	 * <code>distance</code> determines which side of the plane the origin
+	 * is on.  If <code>distance</code> is positive, the origin is in the half-space
+	 * in the direction of the normal; if negative, the origin is in the half-space
+	 * opposite to the normal; if zero, the plane passes through the origin.
+	 *
+	 * @type {Number}
+	 */
+	this.distance = distance
 }
 
 /**
@@ -81,32 +81,32 @@ function Plane(normal, distance) {
  * @exception {DeveloperError} Normal must be normalized
  */
 Plane.fromPointNormal = function (point, normal, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("point", point);
-  Check.typeOf.object("normal", normal);
-  if (
-    !CesiumMath.equalsEpsilon(
-      Cartesian3.magnitude(normal),
-      1.0,
-      CesiumMath.EPSILON6
-    )
-  ) {
-    throw new DeveloperError("normal must be normalized.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('point', point)
+	Check.typeOf.object('normal', normal)
+	if (
+		!CesiumMath.equalsEpsilon(
+			Cartesian3.magnitude(normal),
+			1.0,
+			CesiumMath.EPSILON6,
+		)
+	) {
+		throw new DeveloperError('normal must be normalized.')
+	}
+	//>>includeEnd('debug');
 
-  var distance = -Cartesian3.dot(normal, point);
+	var distance = -Cartesian3.dot(normal, point)
 
-  if (!defined(result)) {
-    return new Plane(normal, distance);
-  }
+	if (!defined(result)) {
+		return new Plane(normal, distance)
+	}
 
-  Cartesian3.clone(normal, result.normal);
-  result.distance = distance;
-  return result;
-};
+	Cartesian3.clone(normal, result.normal)
+	result.distance = distance
+	return result
+}
 
-var scratchNormal = new Cartesian3();
+var scratchNormal = new Cartesian3()
 /**
  * Creates a plane from the general equation
  *
@@ -117,32 +117,32 @@ var scratchNormal = new Cartesian3();
  * @exception {DeveloperError} Normal must be normalized
  */
 Plane.fromCartesian4 = function (coefficients, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("coefficients", coefficients);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('coefficients', coefficients)
+	//>>includeEnd('debug');
 
-  var normal = Cartesian3.fromCartesian4(coefficients, scratchNormal);
-  var distance = coefficients.w;
+	var normal = Cartesian3.fromCartesian4(coefficients, scratchNormal)
+	var distance = coefficients.w
 
-  //>>includeStart('debug', pragmas.debug);
-  if (
-    !CesiumMath.equalsEpsilon(
-      Cartesian3.magnitude(normal),
-      1.0,
-      CesiumMath.EPSILON6
-    )
-  ) {
-    throw new DeveloperError("normal must be normalized.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (
+		!CesiumMath.equalsEpsilon(
+			Cartesian3.magnitude(normal),
+			1.0,
+			CesiumMath.EPSILON6,
+		)
+	) {
+		throw new DeveloperError('normal must be normalized.')
+	}
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    return new Plane(normal, distance);
-  }
-  Cartesian3.clone(normal, result.normal);
-  result.distance = distance;
-  return result;
-};
+	if (!defined(result)) {
+		return new Plane(normal, distance)
+	}
+	Cartesian3.clone(normal, result.normal)
+	result.distance = distance
+	return result
+}
 
 /**
  * Computes the signed shortest distance of a point to a plane.
@@ -156,15 +156,15 @@ Plane.fromCartesian4 = function (coefficients, result) {
  * @returns {Number} The signed shortest distance of the point to the plane.
  */
 Plane.getPointDistance = function (plane, point) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("plane", plane);
-  Check.typeOf.object("point", point);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('plane', plane)
+	Check.typeOf.object('point', point)
+	//>>includeEnd('debug');
 
-  return Cartesian3.dot(plane.normal, point) + plane.distance;
-};
+	return Cartesian3.dot(plane.normal, point) + plane.distance
+}
 
-var scratchCartesian = new Cartesian3();
+var scratchCartesian = new Cartesian3()
 /**
  * Projects a point onto the plane.
  * @param {Plane} plane The plane to project the point onto
@@ -173,29 +173,29 @@ var scratchCartesian = new Cartesian3();
  * @returns {Cartesian3} The modified result parameter or a new Cartesian3 instance if one was not provided.
  */
 Plane.projectPointOntoPlane = function (plane, point, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("plane", plane);
-  Check.typeOf.object("point", point);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('plane', plane)
+	Check.typeOf.object('point', point)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
 
-  // projectedPoint = point - (normal.point + scale) * normal
-  var pointDistance = Plane.getPointDistance(plane, point);
-  var scaledNormal = Cartesian3.multiplyByScalar(
-    plane.normal,
-    pointDistance,
-    scratchCartesian
-  );
+	// projectedPoint = point - (normal.point + scale) * normal
+	var pointDistance = Plane.getPointDistance(plane, point)
+	var scaledNormal = Cartesian3.multiplyByScalar(
+		plane.normal,
+		pointDistance,
+		scratchCartesian,
+	)
 
-  return Cartesian3.subtract(point, scaledNormal, result);
-};
+	return Cartesian3.subtract(point, scaledNormal, result)
+}
 
-var scratchInverseTranspose = new Matrix4();
-var scratchPlaneCartesian4 = new Cartesian4();
-var scratchTransformNormal = new Cartesian3();
+var scratchInverseTranspose = new Matrix4()
+var scratchPlaneCartesian4 = new Cartesian4()
+var scratchTransformNormal = new Cartesian3()
 /**
  * Transforms the plane by the given transformation matrix.
  *
@@ -205,44 +205,44 @@ var scratchTransformNormal = new Cartesian3();
  * @returns {Plane} The plane transformed by the given transformation matrix.
  */
 Plane.transform = function (plane, transform, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("plane", plane);
-  Check.typeOf.object("transform", transform);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('plane', plane)
+	Check.typeOf.object('transform', transform)
+	//>>includeEnd('debug');
 
-  var normal = plane.normal;
-  var distance = plane.distance;
-  var inverseTranspose = Matrix4.inverseTranspose(
-    transform,
-    scratchInverseTranspose
-  );
-  var planeAsCartesian4 = Cartesian4.fromElements(
-    normal.x,
-    normal.y,
-    normal.z,
-    distance,
-    scratchPlaneCartesian4
-  );
-  planeAsCartesian4 = Matrix4.multiplyByVector(
-    inverseTranspose,
-    planeAsCartesian4,
-    planeAsCartesian4
-  );
+	var normal = plane.normal
+	var distance = plane.distance
+	var inverseTranspose = Matrix4.inverseTranspose(
+		transform,
+		scratchInverseTranspose,
+	)
+	var planeAsCartesian4 = Cartesian4.fromElements(
+		normal.x,
+		normal.y,
+		normal.z,
+		distance,
+		scratchPlaneCartesian4,
+	)
+	planeAsCartesian4 = Matrix4.multiplyByVector(
+		inverseTranspose,
+		planeAsCartesian4,
+		planeAsCartesian4,
+	)
 
-  // Convert the transformed plane to Hessian Normal Form
-  var transformedNormal = Cartesian3.fromCartesian4(
-    planeAsCartesian4,
-    scratchTransformNormal
-  );
+	// Convert the transformed plane to Hessian Normal Form
+	var transformedNormal = Cartesian3.fromCartesian4(
+		planeAsCartesian4,
+		scratchTransformNormal,
+	)
 
-  planeAsCartesian4 = Cartesian4.divideByScalar(
-    planeAsCartesian4,
-    Cartesian3.magnitude(transformedNormal),
-    planeAsCartesian4
-  );
+	planeAsCartesian4 = Cartesian4.divideByScalar(
+		planeAsCartesian4,
+		Cartesian3.magnitude(transformedNormal),
+		planeAsCartesian4,
+	)
 
-  return Plane.fromCartesian4(planeAsCartesian4, result);
-};
+	return Plane.fromCartesian4(planeAsCartesian4, result)
+}
 
 /**
  * Duplicates a Plane instance.
@@ -252,19 +252,19 @@ Plane.transform = function (plane, transform, result) {
  * @returns {Plane} The modified result parameter or a new Plane instance if one was not provided.
  */
 Plane.clone = function (plane, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("plane", plane);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('plane', plane)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    return new Plane(plane.normal, plane.distance);
-  }
+	if (!defined(result)) {
+		return new Plane(plane.normal, plane.distance)
+	}
 
-  Cartesian3.clone(plane.normal, result.normal);
-  result.distance = plane.distance;
+	Cartesian3.clone(plane.normal, result.normal)
+	result.distance = plane.distance
 
-  return result;
-};
+	return result
+}
 
 /**
  * Compares the provided Planes by normal and distance and returns
@@ -275,16 +275,16 @@ Plane.clone = function (plane, result) {
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
 Plane.equals = function (left, right) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	//>>includeEnd('debug');
 
-  return (
-    left.distance === right.distance &&
-    Cartesian3.equals(left.normal, right.normal)
-  );
-};
+	return (
+		left.distance === right.distance &&
+		Cartesian3.equals(left.normal, right.normal)
+	)
+}
 
 /**
  * A constant initialized to the XY plane passing through the origin, with normal in positive Z.
@@ -292,7 +292,7 @@ Plane.equals = function (left, right) {
  * @type {Plane}
  * @constant
  */
-Plane.ORIGIN_XY_PLANE = Object.freeze(new Plane(Cartesian3.UNIT_Z, 0.0));
+Plane.ORIGIN_XY_PLANE = Object.freeze(new Plane(Cartesian3.UNIT_Z, 0.0))
 
 /**
  * A constant initialized to the YZ plane passing through the origin, with normal in positive X.
@@ -300,7 +300,7 @@ Plane.ORIGIN_XY_PLANE = Object.freeze(new Plane(Cartesian3.UNIT_Z, 0.0));
  * @type {Plane}
  * @constant
  */
-Plane.ORIGIN_YZ_PLANE = Object.freeze(new Plane(Cartesian3.UNIT_X, 0.0));
+Plane.ORIGIN_YZ_PLANE = Object.freeze(new Plane(Cartesian3.UNIT_X, 0.0))
 
 /**
  * A constant initialized to the ZX plane passing through the origin, with normal in positive Y.
@@ -308,5 +308,5 @@ Plane.ORIGIN_YZ_PLANE = Object.freeze(new Plane(Cartesian3.UNIT_X, 0.0));
  * @type {Plane}
  * @constant
  */
-Plane.ORIGIN_ZX_PLANE = Object.freeze(new Plane(Cartesian3.UNIT_Y, 0.0));
-export default Plane;
+Plane.ORIGIN_ZX_PLANE = Object.freeze(new Plane(Cartesian3.UNIT_Y, 0.0))
+export default Plane

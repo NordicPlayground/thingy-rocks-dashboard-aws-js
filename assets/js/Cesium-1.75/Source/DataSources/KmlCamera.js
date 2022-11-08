@@ -7,7 +7,7 @@
  * @param {HeadingPitchRoll} headingPitchRoll camera orientation
  */
 function KmlCamera(position, headingPitchRoll) {
-  this.position = position;
-  this.headingPitchRoll = headingPitchRoll;
+	this.position = position
+	this.headingPitchRoll = headingPitchRoll
 }
-export default KmlCamera;
+export default KmlCamera

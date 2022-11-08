@@ -1,13 +1,10 @@
-define([
-	"./Deferred",
-	"./promise/Promise"
-], function(Deferred, Promise){
-	"use strict";
+define(['./Deferred', './promise/Promise'], function (Deferred, Promise) {
+	'use strict'
 
 	// module:
 	//		dojo/when
 
-	return function when(valueOrPromise, callback, errback, progback){
+	return function when(valueOrPromise, callback, errback, progback) {
 		// summary:
 		//		Transparently applies callbacks to values and/or promises.
 		// description:
@@ -32,24 +29,25 @@ define([
 		// returns: dojo/promise/Promise
 		//		Promise, or if a callback is provided, the result of the callback.
 
-		var receivedPromise = valueOrPromise && typeof valueOrPromise.then === "function";
-		var nativePromise = receivedPromise && valueOrPromise instanceof Promise;
+		var receivedPromise =
+			valueOrPromise && typeof valueOrPromise.then === 'function'
+		var nativePromise = receivedPromise && valueOrPromise instanceof Promise
 
-		if(!receivedPromise){
-			if(arguments.length > 1){
-				return callback ? callback(valueOrPromise) : valueOrPromise;
-			}else{
-				return new Deferred().resolve(valueOrPromise);
+		if (!receivedPromise) {
+			if (arguments.length > 1) {
+				return callback ? callback(valueOrPromise) : valueOrPromise
+			} else {
+				return new Deferred().resolve(valueOrPromise)
 			}
-		}else if(!nativePromise){
-			var deferred = new Deferred(valueOrPromise.cancel);
-			valueOrPromise.then(deferred.resolve, deferred.reject, deferred.progress);
-			valueOrPromise = deferred.promise;
+		} else if (!nativePromise) {
+			var deferred = new Deferred(valueOrPromise.cancel)
+			valueOrPromise.then(deferred.resolve, deferred.reject, deferred.progress)
+			valueOrPromise = deferred.promise
 		}
 
-		if(callback || errback || progback){
-			return valueOrPromise.then(callback, errback, progback);
+		if (callback || errback || progback) {
+			return valueOrPromise.then(callback, errback, progback)
 		}
-		return valueOrPromise;
-	};
-});
+		return valueOrPromise
+	}
+})

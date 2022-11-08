@@ -57,10 +57,11 @@
           ) {
             Cesium.Transforms.computeTemeToPseudoFixedMatrix(date, icrfToFixed);
           }
-          var moonPosition = Cesium.Simon1994PlanetaryPositions.computeMoonPositionInEarthInertialFrame(
-            date,
-            scratchMoonPosition
-          );
+          var moonPosition =
+            Cesium.Simon1994PlanetaryPositions.computeMoonPositionInEarthInertialFrame(
+              date,
+              scratchMoonPosition
+            );
           Cesium.Matrix3.multiplyByVector(
             icrfToFixed,
             moonPosition,

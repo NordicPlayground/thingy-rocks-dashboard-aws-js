@@ -1,23 +1,38 @@
 define([
-	"dojo/_base/array", // array.forEach array.some
-	"dojo/aspect",
-	"dojo/_base/declare", // declare
-	"dojo/dom", // dom.isDescendant
-	"dojo/dom-attr", // domAttr.set
-	"dojo/dom-construct", // domConstruct.create domConstruct.destroy
-	"dojo/dom-geometry", // domGeometry.isBodyLtr
-	"dojo/dom-style", // domStyle.set
-	"dojo/has", // has("config-bgIframe")
-	"dojo/keys",
-	"dojo/_base/lang", // lang.hitch
-	"dojo/on",
-	"./place",
-	"./BackgroundIframe",
-	"./Viewport",
-	"./main"    // dijit (defining dijit.popup to match API doc)
-], function(array, aspect, declare, dom, domAttr, domConstruct, domGeometry, domStyle, has, keys, lang, on,
-			place, BackgroundIframe, Viewport, dijit){
-
+	'dojo/_base/array', // array.forEach array.some
+	'dojo/aspect',
+	'dojo/_base/declare', // declare
+	'dojo/dom', // dom.isDescendant
+	'dojo/dom-attr', // domAttr.set
+	'dojo/dom-construct', // domConstruct.create domConstruct.destroy
+	'dojo/dom-geometry', // domGeometry.isBodyLtr
+	'dojo/dom-style', // domStyle.set
+	'dojo/has', // has("config-bgIframe")
+	'dojo/keys',
+	'dojo/_base/lang', // lang.hitch
+	'dojo/on',
+	'./place',
+	'./BackgroundIframe',
+	'./Viewport',
+	'./main', // dijit (defining dijit.popup to match API doc)
+], function (
+	array,
+	aspect,
+	declare,
+	dom,
+	domAttr,
+	domConstruct,
+	domGeometry,
+	domStyle,
+	has,
+	keys,
+	lang,
+	on,
+	place,
+	BackgroundIframe,
+	Viewport,
+	dijit,
+) {
 	// module:
 	//		dijit/popup
 
@@ -70,13 +85,13 @@ define([
 	 };
 	 =====*/
 
-	function destroyWrapper(){
+	function destroyWrapper() {
 		// summary:
 		//		Function to destroy wrapper when popup widget is destroyed.
 		//		Left in this scope to avoid memory leak on IE8 on refresh page, see #15206.
-		if(this._popupWrapper){
-			domConstruct.destroy(this._popupWrapper);
-			delete this._popupWrapper;
+		if (this._popupWrapper) {
+			domConstruct.destroy(this._popupWrapper)
+			delete this._popupWrapper
 		}
 	}
 
@@ -97,80 +112,89 @@ define([
 
 		_idGen: 1,
 
-		_repositionAll: function(){
+		_repositionAll: function () {
 			// summary:
 			//		If screen has been scrolled, reposition all the popups in the stack.
 			//		Then set timer to check again later.
 
-			if(this._firstAroundNode){	// guard for when clearTimeout() on IE doesn't work
+			if (this._firstAroundNode) {
+				// guard for when clearTimeout() on IE doesn't work
 				var oldPos = this._firstAroundPosition,
 					newPos = domGeometry.position(this._firstAroundNode, true),
 					dx = newPos.x - oldPos.x,
-					dy = newPos.y - oldPos.y;
+					dy = newPos.y - oldPos.y
 
-				if(dx || dy){
-					this._firstAroundPosition = newPos;
-					for(var i = 0; i < this._stack.length; i++){
-						var style = this._stack[i].wrapper.style;
-						style.top = (parseFloat(style.top) + dy) + "px";
-						if(style.right == "auto"){
-							style.left = (parseFloat(style.left) + dx) + "px";
-						}else{
-							style.right = (parseFloat(style.right) - dx) + "px";
+				if (dx || dy) {
+					this._firstAroundPosition = newPos
+					for (var i = 0; i < this._stack.length; i++) {
+						var style = this._stack[i].wrapper.style
+						style.top = parseFloat(style.top) + dy + 'px'
+						if (style.right == 'auto') {
+							style.left = parseFloat(style.left) + dx + 'px'
+						} else {
+							style.right = parseFloat(style.right) - dx + 'px'
 						}
 					}
 				}
 
-				this._aroundMoveListener = setTimeout(lang.hitch(this, "_repositionAll"), dx || dy ? 10 : 50);
+				this._aroundMoveListener = setTimeout(
+					lang.hitch(this, '_repositionAll'),
+					dx || dy ? 10 : 50,
+				)
 			}
 		},
 
-		_createWrapper: function(/*Widget*/ widget){
+		_createWrapper: function (/*Widget*/ widget) {
 			// summary:
 			//		Initialization for widgets that will be used as popups.
 			//		Puts widget inside a wrapper DIV (if not already in one),
 			//		and returns pointer to that wrapper DIV.
 
 			var wrapper = widget._popupWrapper,
-				node = widget.domNode;
+				node = widget.domNode
 
-			if(!wrapper){
+			if (!wrapper) {
 				// Create wrapper <div> for when this widget [in the future] will be used as a popup.
 				// This is done early because of IE bugs where creating/moving DOM nodes causes focus
 				// to go wonky, see tests/robot/Toolbar.html to reproduce
-				wrapper = domConstruct.create("div", {
-					"class": "dijitPopup",
-					style: { display: "none"},
-					role: "region",
-					"aria-label": widget["aria-label"] || widget.label || widget.name || widget.id
-				}, widget.ownerDocumentBody);
-				wrapper.appendChild(node);
+				wrapper = domConstruct.create(
+					'div',
+					{
+						class: 'dijitPopup',
+						style: { display: 'none' },
+						role: 'region',
+						'aria-label':
+							widget['aria-label'] || widget.label || widget.name || widget.id,
+					},
+					widget.ownerDocumentBody,
+				)
+				wrapper.appendChild(node)
 
-				var s = node.style;
-				s.display = "";
-				s.visibility = "";
-				s.position = "";
-				s.top = "0px";
+				var s = node.style
+				s.display = ''
+				s.visibility = ''
+				s.position = ''
+				s.top = '0px'
 
-				widget._popupWrapper = wrapper;
-				aspect.after(widget, "destroy", destroyWrapper, true);
+				widget._popupWrapper = wrapper
+				aspect.after(widget, 'destroy', destroyWrapper, true)
 
 				// Workaround iOS problem where clicking a Menu can focus an <input> (or click a button) behind it.
 				// Need to be careful though that you can still focus <input>'s and click <button>'s in a TooltipDialog.
 				// Also, be careful not to break (native) scrolling of dropdown like ComboBox's options list.
-				if("ontouchend" in document) {
-					on(wrapper, "touchend", function (evt){
-						if(!/^(input|button|textarea)$/i.test(evt.target.tagName)) {
-							evt.preventDefault();
+				if ('ontouchend' in document) {
+					on(wrapper, 'touchend', function (evt) {
+						if (!/^(input|button|textarea)$/i.test(evt.target.tagName)) {
+							evt.preventDefault()
 						}
-					});
+					})
 				}
 			}
 
-			return wrapper;
+			return wrapper
 		},
 
-		moveOffScreen: function(/*Widget*/ widget){
+		moveOffScreen: function (/*Widget*/ widget) {
 			// summary:
 			//		Moves the popup widget off-screen.
 			//		Do not use this method to hide popups when not in use, because
@@ -178,23 +202,23 @@ define([
 			//		still in the tabbing order.
 
 			// Create wrapper if not already there
-			var wrapper = this._createWrapper(widget);
+			var wrapper = this._createWrapper(widget)
 
 			// Besides setting visibility:hidden, move it out of the viewport, see #5776, #10111, #13604
 			var ltr = domGeometry.isBodyLtr(widget.ownerDocument),
 				style = {
-					visibility: "hidden",
-					top: "-9999px",
-					display: ""
-				};
-			style[ltr ? "left" : "right"] = "-9999px";
-			style[ltr ? "right" : "left"] = "auto";
-			domStyle.set(wrapper, style);
+					visibility: 'hidden',
+					top: '-9999px',
+					display: '',
+				}
+			style[ltr ? 'left' : 'right'] = '-9999px'
+			style[ltr ? 'right' : 'left'] = 'auto'
+			domStyle.set(wrapper, style)
 
-			return wrapper;
+			return wrapper
 		},
 
-		hide: function(/*Widget*/ widget){
+		hide: function (/*Widget*/ widget) {
 			// summary:
 			//		Hide this popup widget (until it is ready to be shown).
 			//		Initialization for widgets that will be used as popups
@@ -205,34 +229,38 @@ define([
 			//		do so when it is made visible, and popup._onShow() is called.
 
 			// Create wrapper if not already there
-			var wrapper = this._createWrapper(widget);
+			var wrapper = this._createWrapper(widget)
 
 			domStyle.set(wrapper, {
-				display: "none",
-				height: "auto",		// Open may have limited the height to fit in the viewport
-				overflow: "visible",
-				border: ""			// Open() may have moved border from popup to wrapper.
-			});
+				display: 'none',
+				height: 'auto', // Open may have limited the height to fit in the viewport
+				overflow: 'visible',
+				border: '', // Open() may have moved border from popup to wrapper.
+			})
 
 			// Open() may have moved border from popup to wrapper.  Move it back.
-			var node = widget.domNode;
-			if("_originalStyle" in node){
-				node.style.cssText = node._originalStyle;
+			var node = widget.domNode
+			if ('_originalStyle' in node) {
+				node.style.cssText = node._originalStyle
 			}
 		},
 
-		getTopPopup: function(){
+		getTopPopup: function () {
 			// summary:
 			//		Compute the closest ancestor popup that's *not* a child of another popup.
 			//		Ex: For a TooltipDialog with a button that spawns a tree of menus, find the popup of the button.
-			var stack = this._stack;
-			for(var pi = stack.length - 1; pi > 0 && stack[pi].parent === stack[pi - 1].widget; pi--){
+			var stack = this._stack
+			for (
+				var pi = stack.length - 1;
+				pi > 0 && stack[pi].parent === stack[pi - 1].widget;
+				pi--
+			) {
 				/* do nothing, just trying to get right value for pi */
 			}
-			return stack[pi];
+			return stack[pi]
 		},
 
-		open: function(/*__OpenArgs*/ args){
+		open: function (/*__OpenArgs*/ args) {
 			// summary:
 			//		Popup the widget at the specified position
 			//
@@ -250,113 +278,159 @@ define([
 			var stack = this._stack,
 				widget = args.popup,
 				node = widget.domNode,
-				orient = args.orient || ["below", "below-alt", "above", "above-alt"],
-				ltr = args.parent ? args.parent.isLeftToRight() : domGeometry.isBodyLtr(widget.ownerDocument),
+				orient = args.orient || ['below', 'below-alt', 'above', 'above-alt'],
+				ltr = args.parent
+					? args.parent.isLeftToRight()
+					: domGeometry.isBodyLtr(widget.ownerDocument),
 				around = args.around,
-				id = (args.around && args.around.id) ? (args.around.id + "_dropdown") : ("popup_" + this._idGen++);
+				id =
+					args.around && args.around.id
+						? args.around.id + '_dropdown'
+						: 'popup_' + this._idGen++
 
 			// If we are opening a new popup that isn't a child of a currently opened popup, then
 			// close currently opened popup(s).   This should happen automatically when the old popups
 			// gets the _onBlur() event, except that the _onBlur() event isn't reliable on IE, see [22198].
-			while(stack.length && (!args.parent || !dom.isDescendant(args.parent.domNode, stack[stack.length - 1].widget.domNode))){
-				this.close(stack[stack.length - 1].widget);
+			while (
+				stack.length &&
+				(!args.parent ||
+					!dom.isDescendant(
+						args.parent.domNode,
+						stack[stack.length - 1].widget.domNode,
+					))
+			) {
+				this.close(stack[stack.length - 1].widget)
 			}
 
 			// Get pointer to popup wrapper, and create wrapper if it doesn't exist.  Remove display:none (but keep
 			// off screen) so we can do sizing calculations.
-			var wrapper = this.moveOffScreen(widget);
+			var wrapper = this.moveOffScreen(widget)
 
-			if(widget.startup && !widget._started){
-				widget.startup(); // this has to be done after being added to the DOM
+			if (widget.startup && !widget._started) {
+				widget.startup() // this has to be done after being added to the DOM
 			}
 
 			// Limit height to space available in viewport either above or below aroundNode (whichever side has more
 			// room), adding scrollbar if necessary. Can't add scrollbar to widget because it may be a <table> (ex:
 			// dijit/Menu), so add to wrapper, and then move popup's border to wrapper so scroll bar inside border.
-			var maxHeight, popupSize = domGeometry.position(node);
-			if("maxHeight" in args && args.maxHeight != -1){
-				maxHeight = args.maxHeight || Infinity;	// map 0 --> infinity for back-compat of _HasDropDown.maxHeight
-			}else{
+			var maxHeight,
+				popupSize = domGeometry.position(node)
+			if ('maxHeight' in args && args.maxHeight != -1) {
+				maxHeight = args.maxHeight || Infinity // map 0 --> infinity for back-compat of _HasDropDown.maxHeight
+			} else {
 				var viewport = Viewport.getEffectiveBox(this.ownerDocument),
-					aroundPos = around ? domGeometry.position(around, false) : {y: args.y - (args.padding||0), h: (args.padding||0) * 2};
-				maxHeight = Math.floor(Math.max(aroundPos.y, viewport.h - (aroundPos.y + aroundPos.h)));
+					aroundPos = around
+						? domGeometry.position(around, false)
+						: { y: args.y - (args.padding || 0), h: (args.padding || 0) * 2 }
+				maxHeight = Math.floor(
+					Math.max(aroundPos.y, viewport.h - (aroundPos.y + aroundPos.h)),
+				)
 			}
-			if(popupSize.h > maxHeight){
+			if (popupSize.h > maxHeight) {
 				// Get style of popup's border.  Unfortunately domStyle.get(node, "border") doesn't work on FF or IE,
 				// and domStyle.get(node, "borderColor") etc. doesn't work on FF, so need to use fully qualified names.
 				var cs = domStyle.getComputedStyle(node),
-					borderStyle = cs.borderLeftWidth + " " + cs.borderLeftStyle + " " + cs.borderLeftColor;
+					borderStyle =
+						cs.borderLeftWidth +
+						' ' +
+						cs.borderLeftStyle +
+						' ' +
+						cs.borderLeftColor
 				domStyle.set(wrapper, {
-					overflowY: "scroll",
-					height: maxHeight + "px",
-					border: borderStyle	// so scrollbar is inside border
-				});
-				node._originalStyle = node.style.cssText;
-				node.style.border = "none";
+					overflowY: 'scroll',
+					height: maxHeight + 'px',
+					border: borderStyle, // so scrollbar is inside border
+				})
+				node._originalStyle = node.style.cssText
+				node.style.border = 'none'
 			}
 
 			domAttr.set(wrapper, {
 				id: id,
 				style: {
-					zIndex: this._beginZIndex + stack.length
+					zIndex: this._beginZIndex + stack.length,
 				},
-				"class": "dijitPopup " + (widget.baseClass || widget["class"] || "").split(" ")[0] + "Popup",
-				dijitPopupParent: args.parent ? args.parent.id : ""
-			});
+				class:
+					'dijitPopup ' +
+					(widget.baseClass || widget['class'] || '').split(' ')[0] +
+					'Popup',
+				dijitPopupParent: args.parent ? args.parent.id : '',
+			})
 
-			if(stack.length == 0 && around){
+			if (stack.length == 0 && around) {
 				// First element on stack. Save position of aroundNode and setup listener for changes to that position.
-				this._firstAroundNode = around;
-				this._firstAroundPosition = domGeometry.position(around, true);
-				this._aroundMoveListener = setTimeout(lang.hitch(this, "_repositionAll"), 50);
+				this._firstAroundNode = around
+				this._firstAroundPosition = domGeometry.position(around, true)
+				this._aroundMoveListener = setTimeout(
+					lang.hitch(this, '_repositionAll'),
+					50,
+				)
 			}
 
-			if(has("config-bgIframe") && !widget.bgIframe){
+			if (has('config-bgIframe') && !widget.bgIframe) {
 				// setting widget.bgIframe triggers cleanup in _WidgetBase.destroyRendering()
-				widget.bgIframe = new BackgroundIframe(wrapper);
+				widget.bgIframe = new BackgroundIframe(wrapper)
 			}
 
 			// position the wrapper node and make it visible
-			var layoutFunc = widget.orient ? lang.hitch(widget, "orient") : null,
-				best = around ?
-					place.around(wrapper, around, orient, ltr, layoutFunc) :
-					place.at(wrapper, args, orient == 'R' ? ['TR', 'BR', 'TL', 'BL'] : ['TL', 'BL', 'TR', 'BR'], args.padding,
-						layoutFunc);
+			var layoutFunc = widget.orient ? lang.hitch(widget, 'orient') : null,
+				best = around
+					? place.around(wrapper, around, orient, ltr, layoutFunc)
+					: place.at(
+							wrapper,
+							args,
+							orient == 'R'
+								? ['TR', 'BR', 'TL', 'BL']
+								: ['TL', 'BL', 'TR', 'BR'],
+							args.padding,
+							layoutFunc,
+					  )
 
-			wrapper.style.visibility = "visible";
-			node.style.visibility = "visible";	// counteract effects from _HasDropDown
+			wrapper.style.visibility = 'visible'
+			node.style.visibility = 'visible' // counteract effects from _HasDropDown
 
-			var handlers = [];
+			var handlers = []
 
 			// provide default escape and tab key handling
 			// (this will work for any widget, not just menu)
-			handlers.push(on(wrapper, "keydown", lang.hitch(this, function(evt){
-				if(evt.keyCode == keys.ESCAPE && args.onCancel){
-					evt.stopPropagation();
-					evt.preventDefault();
-					args.onCancel();
-				}else if(evt.keyCode == keys.TAB){
-					evt.stopPropagation();
-					evt.preventDefault();
-					var topPopup = this.getTopPopup();
-					if(topPopup && topPopup.onCancel){
-						topPopup.onCancel();
-					}
-				}
-			})));
+			handlers.push(
+				on(
+					wrapper,
+					'keydown',
+					lang.hitch(this, function (evt) {
+						if (evt.keyCode == keys.ESCAPE && args.onCancel) {
+							evt.stopPropagation()
+							evt.preventDefault()
+							args.onCancel()
+						} else if (evt.keyCode == keys.TAB) {
+							evt.stopPropagation()
+							evt.preventDefault()
+							var topPopup = this.getTopPopup()
+							if (topPopup && topPopup.onCancel) {
+								topPopup.onCancel()
+							}
+						}
+					}),
+				),
+			)
 
 			// watch for cancel/execute events on the popup and notify the caller
 			// (for a menu, "execute" means clicking an item)
-			if(widget.onCancel && args.onCancel){
-				handlers.push(widget.on("cancel", args.onCancel));
+			if (widget.onCancel && args.onCancel) {
+				handlers.push(widget.on('cancel', args.onCancel))
 			}
 
-			handlers.push(widget.on(widget.onExecute ? "execute" : "change", lang.hitch(this, function(){
-				var topPopup = this.getTopPopup();
-				if(topPopup && topPopup.onExecute){
-					topPopup.onExecute();
-				}
-			})));
+			handlers.push(
+				widget.on(
+					widget.onExecute ? 'execute' : 'change',
+					lang.hitch(this, function () {
+						var topPopup = this.getTopPopup()
+						if (topPopup && topPopup.onExecute) {
+							topPopup.onExecute()
+						}
+					}),
+				),
+			)
 
 			stack.push({
 				widget: widget,
@@ -365,71 +439,77 @@ define([
 				onExecute: args.onExecute,
 				onCancel: args.onCancel,
 				onClose: args.onClose,
-				handlers: handlers
-			});
+				handlers: handlers,
+			})
 
-			if(widget.onOpen){
+			if (widget.onOpen) {
 				// TODO: in 2.0 standardize onShow() (used by StackContainer) and onOpen() (used here)
-				widget.onOpen(best);
+				widget.onOpen(best)
 			}
 
-			return best;
+			return best
 		},
 
-		close: function(/*Widget?*/ popup){
+		close: function (/*Widget?*/ popup) {
 			// summary:
 			//		Close specified popup and any popups that it parented.
 			//		If no popup is specified, closes all popups.
 
-			var stack = this._stack;
+			var stack = this._stack
 
 			// Basically work backwards from the top of the stack closing popups
 			// until we hit the specified popup, but IIRC there was some issue where closing
 			// a popup would cause others to close too.  Thus if we are trying to close B in [A,B,C]
 			// closing C might close B indirectly and then the while() condition will run where stack==[A]...
 			// so the while condition is constructed defensively.
-			while((popup && array.some(stack, function(elem){
-				return elem.widget == popup;
-			})) ||
-				(!popup && stack.length)){
+			while (
+				(popup &&
+					array.some(stack, function (elem) {
+						return elem.widget == popup
+					})) ||
+				(!popup && stack.length)
+			) {
 				var top = stack.pop(),
 					widget = top.widget,
-					onClose = top.onClose;
+					onClose = top.onClose
 
 				if (widget.bgIframe) {
 					// push the iframe back onto the stack.
-					widget.bgIframe.destroy();
-					delete widget.bgIframe;
+					widget.bgIframe.destroy()
+					delete widget.bgIframe
 				}
 
-				if(widget.onClose){
+				if (widget.onClose) {
 					// TODO: in 2.0 standardize onHide() (used by StackContainer) and onClose() (used here).
 					// Actually, StackContainer also calls onClose(), but to mean that the pane is being deleted
 					// (i.e. that the TabContainer's tab's [x] icon was clicked)
-					widget.onClose();
+					widget.onClose()
 				}
 
-				var h;
-				while(h = top.handlers.pop()){
-					h.remove();
+				var h
+				while ((h = top.handlers.pop())) {
+					h.remove()
 				}
 
 				// Hide the widget and it's wrapper unless it has already been destroyed in above onClose() etc.
-				if(widget && widget.domNode){
-					this.hide(widget);
+				if (widget && widget.domNode) {
+					this.hide(widget)
 				}
 
-				if(onClose){
-					onClose();
+				if (onClose) {
+					onClose()
 				}
 			}
 
-			if(stack.length == 0 && this._aroundMoveListener){
-				clearTimeout(this._aroundMoveListener);
-				this._firstAroundNode = this._firstAroundPosition = this._aroundMoveListener = null;
+			if (stack.length == 0 && this._aroundMoveListener) {
+				clearTimeout(this._aroundMoveListener)
+				this._firstAroundNode =
+					this._firstAroundPosition =
+					this._aroundMoveListener =
+						null
 			}
-		}
-	});
+		},
+	})
 
-	return (dijit.popup = new PopupManager());
-});
+	return (dijit.popup = new PopupManager())
+})

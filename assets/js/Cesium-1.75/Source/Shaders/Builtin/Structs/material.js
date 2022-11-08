@@ -21,4 +21,4 @@ struct czm_material\n\
     vec3 emission;\n\
     float alpha;\n\
 };\n\
-";
+"

@@ -1,31 +1,32 @@
 define([
-	"dojo/_base/array", // array.filter array.forEach
-	"dojo/dom-class", // domClass.add domClass.remove
-	"dojo/dom-geometry", // domGeometry.marginBox
-	"dojo/dom-style", // domStyle.getComputedStyle
-	"dojo/_base/lang" // lang.mixin, lang.setObject
-], function(array, domClass, domGeometry, domStyle, lang){
-
+	'dojo/_base/array', // array.filter array.forEach
+	'dojo/dom-class', // domClass.add domClass.remove
+	'dojo/dom-geometry', // domGeometry.marginBox
+	'dojo/dom-style', // domStyle.getComputedStyle
+	'dojo/_base/lang', // lang.mixin, lang.setObject
+], function (array, domClass, domGeometry, domStyle, lang) {
 	// module:
 	//		dijit/layout/utils
 
-	function capitalize(word){
-		return word.substring(0,1).toUpperCase() + word.substring(1);
+	function capitalize(word) {
+		return word.substring(0, 1).toUpperCase() + word.substring(1)
 	}
 
-	function size(widget, dim){
+	function size(widget, dim) {
 		// size the child
-		var newSize = widget.resize ? widget.resize(dim) : domGeometry.setMarginBox(widget.domNode, dim);
+		var newSize = widget.resize
+			? widget.resize(dim)
+			: domGeometry.setMarginBox(widget.domNode, dim)
 
 		// record child's size
-		if(newSize){
+		if (newSize) {
 			// if the child returned it's new size then use that
-			lang.mixin(widget, newSize);
-		}else{
+			lang.mixin(widget, newSize)
+		} else {
 			// otherwise, call getMarginBox(), but favor our own numbers when we have them.
 			// the browser lies sometimes
-			lang.mixin(widget, domGeometry.getMarginBox(widget.domNode));
-			lang.mixin(widget, dim);
+			lang.mixin(widget, domGeometry.getMarginBox(widget.domNode))
+			lang.mixin(widget, dim)
 		}
 	}
 
@@ -33,25 +34,29 @@ define([
 		// summary:
 		//		Utility functions for doing layout
 
-		marginBox2contentBox: function(/*DomNode*/ node, /*Object*/ mb){
+		marginBox2contentBox: function (/*DomNode*/ node, /*Object*/ mb) {
 			// summary:
 			//		Given the margin-box size of a node, return its content box size.
 			//		Functions like domGeometry.contentBox() but is more reliable since it doesn't have
 			//		to wait for the browser to compute sizes.
-			var cs = domStyle.getComputedStyle(node);
-			var me = domGeometry.getMarginExtents(node, cs);
-			var pb = domGeometry.getPadBorderExtents(node, cs);
+			var cs = domStyle.getComputedStyle(node)
+			var me = domGeometry.getMarginExtents(node, cs)
+			var pb = domGeometry.getPadBorderExtents(node, cs)
 			return {
 				l: domStyle.toPixelValue(node, cs.paddingLeft),
 				t: domStyle.toPixelValue(node, cs.paddingTop),
 				w: mb.w - (me.w + pb.w),
-				h: mb.h - (me.h + pb.h)
-			};
+				h: mb.h - (me.h + pb.h),
+			}
 		},
 
-
-		layoutChildren: function(/*DomNode*/ container, /*Object*/ dim, /*Widget[]*/ children,
-				/*String?*/ changedRegionId, /*Number?*/ changedRegionSize){
+		layoutChildren: function (
+			/*DomNode*/ container,
+			/*Object*/ dim,
+			/*Widget[]*/ children,
+			/*String?*/ changedRegionId,
+			/*Number?*/ changedRegionSize,
+		) {
 			// summary:
 			//		Layout a bunch of child dom nodes within a parent dom node
 			// container:
@@ -76,76 +81,85 @@ define([
 			//		See changedRegionId.
 
 			// copy dim because we are going to modify it
-			dim = lang.mixin({}, dim);
+			dim = lang.mixin({}, dim)
 
-			domClass.add(container, "dijitLayoutContainer");
+			domClass.add(container, 'dijitLayoutContainer')
 
 			// Move "client" elements to the end of the array for layout.  a11y dictates that the author
 			// needs to be able to put them in the document in tab-order, but this algorithm requires that
 			// client be last.    TODO: remove for 2.0, all dijit client code already sends children as last item.
-			children = array.filter(children, function(item){ return item.region != "center" && item.layoutAlign != "client"; })
-				.concat(array.filter(children, function(item){ return item.region == "center" || item.layoutAlign == "client"; }));
+			children = array
+				.filter(children, function (item) {
+					return item.region != 'center' && item.layoutAlign != 'client'
+				})
+				.concat(
+					array.filter(children, function (item) {
+						return item.region == 'center' || item.layoutAlign == 'client'
+					}),
+				)
 
 			// set positions/sizes
-			array.forEach(children, function(child){
+			array.forEach(children, function (child) {
 				var elm = child.domNode,
-					pos = (child.region || child.layoutAlign);
-				if(!pos){
-					throw new Error("No region setting for " + child.id)
+					pos = child.region || child.layoutAlign
+				if (!pos) {
+					throw new Error('No region setting for ' + child.id)
 				}
 
 				// set elem to upper left corner of unused space; may move it later
-				var elmStyle = elm.style;
-				elmStyle.left = dim.l+"px";
-				elmStyle.top = dim.t+"px";
-				elmStyle.position = "absolute";
+				var elmStyle = elm.style
+				elmStyle.left = dim.l + 'px'
+				elmStyle.top = dim.t + 'px'
+				elmStyle.position = 'absolute'
 
-				domClass.add(elm, "dijitAlign" + capitalize(pos));
+				domClass.add(elm, 'dijitAlign' + capitalize(pos))
 
 				// Size adjustments to make to this child widget
-				var sizeSetting = {};
+				var sizeSetting = {}
 
 				// Check for optional size adjustment due to splitter drag (height adjustment for top/bottom align
 				// panes and width adjustment for left/right align panes.
-				if(changedRegionId && changedRegionId == child.id){
-					sizeSetting[child.region == "top" || child.region == "bottom" ? "h" : "w"] = changedRegionSize;
+				if (changedRegionId && changedRegionId == child.id) {
+					sizeSetting[
+						child.region == 'top' || child.region == 'bottom' ? 'h' : 'w'
+					] = changedRegionSize
 				}
 
-				if(pos == "leading"){
-					pos = child.isLeftToRight() ? "left" : "right";
+				if (pos == 'leading') {
+					pos = child.isLeftToRight() ? 'left' : 'right'
 				}
-				if(pos == "trailing"){
-					pos = child.isLeftToRight() ? "right" : "left";
+				if (pos == 'trailing') {
+					pos = child.isLeftToRight() ? 'right' : 'left'
 				}
 
 				// set size && adjust record of remaining space.
 				// note that setting the width of a <div> may affect its height.
-				if(pos == "top" || pos == "bottom"){
-					sizeSetting.w = dim.w;
-					size(child, sizeSetting);
-					dim.h -= child.h;
-					if(pos == "top"){
-						dim.t += child.h;
-					}else{
-						elmStyle.top = dim.t + dim.h + "px";
+				if (pos == 'top' || pos == 'bottom') {
+					sizeSetting.w = dim.w
+					size(child, sizeSetting)
+					dim.h -= child.h
+					if (pos == 'top') {
+						dim.t += child.h
+					} else {
+						elmStyle.top = dim.t + dim.h + 'px'
 					}
-				}else if(pos == "left" || pos == "right"){
-					sizeSetting.h = dim.h;
-					size(child, sizeSetting);
-					dim.w -= child.w;
-					if(pos == "left"){
-						dim.l += child.w;
-					}else{
-						elmStyle.left = dim.l + dim.w + "px";
+				} else if (pos == 'left' || pos == 'right') {
+					sizeSetting.h = dim.h
+					size(child, sizeSetting)
+					dim.w -= child.w
+					if (pos == 'left') {
+						dim.l += child.w
+					} else {
+						elmStyle.left = dim.l + dim.w + 'px'
 					}
-				}else if(pos == "client" || pos == "center"){
-					size(child, dim);
+				} else if (pos == 'client' || pos == 'center') {
+					size(child, dim)
 				}
-			});
-		}
-	};
+			})
+		},
+	}
 
-	lang.setObject("dijit.layout.utils", utils);	// remove for 2.0
+	lang.setObject('dijit.layout.utils', utils) // remove for 2.0
 
-	return utils;
-});
+	return utils
+})

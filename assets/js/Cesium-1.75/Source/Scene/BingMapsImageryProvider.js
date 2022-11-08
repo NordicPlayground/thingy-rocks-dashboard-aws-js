@@ -1,20 +1,20 @@
-import buildModuleUrl from "../Core/buildModuleUrl.js";
-import Check from "../Core/Check.js";
-import Credit from "../Core/Credit.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Event from "../Core/Event.js";
-import CesiumMath from "../Core/Math.js";
-import Rectangle from "../Core/Rectangle.js";
-import Resource from "../Core/Resource.js";
-import RuntimeError from "../Core/RuntimeError.js";
-import TileProviderError from "../Core/TileProviderError.js";
-import WebMercatorTilingScheme from "../Core/WebMercatorTilingScheme.js";
-import when from "../ThirdParty/when.js";
-import BingMapsStyle from "./BingMapsStyle.js";
-import DiscardEmptyTilePolicy from "./DiscardEmptyTileImagePolicy.js";
-import ImageryProvider from "./ImageryProvider.js";
+import buildModuleUrl from '../Core/buildModuleUrl.js'
+import Check from '../Core/Check.js'
+import Credit from '../Core/Credit.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Event from '../Core/Event.js'
+import CesiumMath from '../Core/Math.js'
+import Rectangle from '../Core/Rectangle.js'
+import Resource from '../Core/Resource.js'
+import RuntimeError from '../Core/RuntimeError.js'
+import TileProviderError from '../Core/TileProviderError.js'
+import WebMercatorTilingScheme from '../Core/WebMercatorTilingScheme.js'
+import when from '../ThirdParty/when.js'
+import BingMapsStyle from './BingMapsStyle.js'
+import DiscardEmptyTilePolicy from './DiscardEmptyTileImagePolicy.js'
+import ImageryProvider from './ImageryProvider.js'
 
 /**
  * @typedef {Object} BingMapsImageryProvider.ConstructorOptions
@@ -66,536 +66,536 @@ import ImageryProvider from "./ImageryProvider.js";
  * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
  */
 function BingMapsImageryProvider(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
-  var accessKey = options.key;
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
+	var accessKey = options.key
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(options.url)) {
-    throw new DeveloperError("options.url is required.");
-  }
-  if (!defined(accessKey)) {
-    throw new DeveloperError("options.key is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(options.url)) {
+		throw new DeveloperError('options.url is required.')
+	}
+	if (!defined(accessKey)) {
+		throw new DeveloperError('options.key is required.')
+	}
+	//>>includeEnd('debug');
 
-  /**
-   * The default alpha blending value of this provider, with 0.0 representing fully transparent and
-   * 1.0 representing fully opaque.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultAlpha = undefined;
+	/**
+	 * The default alpha blending value of this provider, with 0.0 representing fully transparent and
+	 * 1.0 representing fully opaque.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultAlpha = undefined
 
-  /**
-   * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-   * 1.0 representing fully opaque.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultNightAlpha = undefined;
+	/**
+	 * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
+	 * 1.0 representing fully opaque.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultNightAlpha = undefined
 
-  /**
-   * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-   * 1.0 representing fully opaque.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultDayAlpha = undefined;
+	/**
+	 * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
+	 * 1.0 representing fully opaque.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultDayAlpha = undefined
 
-  /**
-   * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
-   * makes the imagery darker while greater than 1.0 makes it brighter.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultBrightness = undefined;
+	/**
+	 * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
+	 * makes the imagery darker while greater than 1.0 makes it brighter.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultBrightness = undefined
 
-  /**
-   * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
-   * the contrast while greater than 1.0 increases it.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultContrast = undefined;
+	/**
+	 * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
+	 * the contrast while greater than 1.0 increases it.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultContrast = undefined
 
-  /**
-   * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultHue = undefined;
+	/**
+	 * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultHue = undefined
 
-  /**
-   * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
-   * saturation while greater than 1.0 increases it.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultSaturation = undefined;
+	/**
+	 * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
+	 * saturation while greater than 1.0 increases it.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultSaturation = undefined
 
-  /**
-   * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
-   *
-   * @type {Number|undefined}
-   * @default 1.0
-   */
-  this.defaultGamma = 1.0;
+	/**
+	 * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
+	 *
+	 * @type {Number|undefined}
+	 * @default 1.0
+	 */
+	this.defaultGamma = 1.0
 
-  /**
-   * The default texture minification filter to apply to this provider.
-   *
-   * @type {TextureMinificationFilter}
-   * @default undefined
-   */
-  this.defaultMinificationFilter = undefined;
+	/**
+	 * The default texture minification filter to apply to this provider.
+	 *
+	 * @type {TextureMinificationFilter}
+	 * @default undefined
+	 */
+	this.defaultMinificationFilter = undefined
 
-  /**
-   * The default texture magnification filter to apply to this provider.
-   *
-   * @type {TextureMagnificationFilter}
-   * @default undefined
-   */
-  this.defaultMagnificationFilter = undefined;
+	/**
+	 * The default texture magnification filter to apply to this provider.
+	 *
+	 * @type {TextureMagnificationFilter}
+	 * @default undefined
+	 */
+	this.defaultMagnificationFilter = undefined
 
-  this._key = accessKey;
-  this._resource = Resource.createIfNeeded(options.url);
-  this._resource.appendForwardSlash();
-  this._tileProtocol = options.tileProtocol;
-  this._mapStyle = defaultValue(options.mapStyle, BingMapsStyle.AERIAL);
-  this._culture = defaultValue(options.culture, "");
+	this._key = accessKey
+	this._resource = Resource.createIfNeeded(options.url)
+	this._resource.appendForwardSlash()
+	this._tileProtocol = options.tileProtocol
+	this._mapStyle = defaultValue(options.mapStyle, BingMapsStyle.AERIAL)
+	this._culture = defaultValue(options.culture, '')
 
-  this._tileDiscardPolicy = options.tileDiscardPolicy;
-  if (!defined(this._tileDiscardPolicy)) {
-    this._tileDiscardPolicy = new DiscardEmptyTilePolicy();
-  }
+	this._tileDiscardPolicy = options.tileDiscardPolicy
+	if (!defined(this._tileDiscardPolicy)) {
+		this._tileDiscardPolicy = new DiscardEmptyTilePolicy()
+	}
 
-  this._proxy = options.proxy;
-  this._credit = new Credit(
-    '<a href="http://www.bing.com"><img src="' +
-      BingMapsImageryProvider.logoUrl +
-      '" title="Bing Imagery"/></a>'
-  );
+	this._proxy = options.proxy
+	this._credit = new Credit(
+		'<a href="http://www.bing.com"><img src="' +
+			BingMapsImageryProvider.logoUrl +
+			'" title="Bing Imagery"/></a>',
+	)
 
-  this._tilingScheme = new WebMercatorTilingScheme({
-    numberOfLevelZeroTilesX: 2,
-    numberOfLevelZeroTilesY: 2,
-    ellipsoid: options.ellipsoid,
-  });
+	this._tilingScheme = new WebMercatorTilingScheme({
+		numberOfLevelZeroTilesX: 2,
+		numberOfLevelZeroTilesY: 2,
+		ellipsoid: options.ellipsoid,
+	})
 
-  this._tileWidth = undefined;
-  this._tileHeight = undefined;
-  this._maximumLevel = undefined;
-  this._imageUrlTemplate = undefined;
-  this._imageUrlSubdomains = undefined;
+	this._tileWidth = undefined
+	this._tileHeight = undefined
+	this._maximumLevel = undefined
+	this._imageUrlTemplate = undefined
+	this._imageUrlSubdomains = undefined
 
-  this._errorEvent = new Event();
+	this._errorEvent = new Event()
 
-  this._ready = false;
-  this._readyPromise = when.defer();
+	this._ready = false
+	this._readyPromise = when.defer()
 
-  var tileProtocol = this._tileProtocol;
+	var tileProtocol = this._tileProtocol
 
-  // For backward compatibility reasons, the tileProtocol may end with
-  // a `:`. Remove it.
-  if (defined(tileProtocol)) {
-    if (
-      tileProtocol.length > 0 &&
-      tileProtocol[tileProtocol.length - 1] === ":"
-    ) {
-      tileProtocol = tileProtocol.substr(0, tileProtocol.length - 1);
-    }
-  } else {
-    // use http if the document's protocol is http, otherwise use https
-    var documentProtocol = document.location.protocol;
-    tileProtocol = documentProtocol === "http:" ? "http" : "https";
-  }
+	// For backward compatibility reasons, the tileProtocol may end with
+	// a `:`. Remove it.
+	if (defined(tileProtocol)) {
+		if (
+			tileProtocol.length > 0 &&
+			tileProtocol[tileProtocol.length - 1] === ':'
+		) {
+			tileProtocol = tileProtocol.substr(0, tileProtocol.length - 1)
+		}
+	} else {
+		// use http if the document's protocol is http, otherwise use https
+		var documentProtocol = document.location.protocol
+		tileProtocol = documentProtocol === 'http:' ? 'http' : 'https'
+	}
 
-  var metadataResource = this._resource.getDerivedResource({
-    url: "REST/v1/Imagery/Metadata/" + this._mapStyle,
-    queryParameters: {
-      incl: "ImageryProviders",
-      key: this._key,
-      uriScheme: tileProtocol,
-    },
-  });
-  var that = this;
-  var metadataError;
+	var metadataResource = this._resource.getDerivedResource({
+		url: 'REST/v1/Imagery/Metadata/' + this._mapStyle,
+		queryParameters: {
+			incl: 'ImageryProviders',
+			key: this._key,
+			uriScheme: tileProtocol,
+		},
+	})
+	var that = this
+	var metadataError
 
-  function metadataSuccess(data) {
-    if (data.resourceSets.length !== 1) {
-      metadataFailure();
-      return;
-    }
-    var resource = data.resourceSets[0].resources[0];
+	function metadataSuccess(data) {
+		if (data.resourceSets.length !== 1) {
+			metadataFailure()
+			return
+		}
+		var resource = data.resourceSets[0].resources[0]
 
-    that._tileWidth = resource.imageWidth;
-    that._tileHeight = resource.imageHeight;
-    that._maximumLevel = resource.zoomMax - 1;
-    that._imageUrlSubdomains = resource.imageUrlSubdomains;
-    that._imageUrlTemplate = resource.imageUrl;
+		that._tileWidth = resource.imageWidth
+		that._tileHeight = resource.imageHeight
+		that._maximumLevel = resource.zoomMax - 1
+		that._imageUrlSubdomains = resource.imageUrlSubdomains
+		that._imageUrlTemplate = resource.imageUrl
 
-    var attributionList = (that._attributionList = resource.imageryProviders);
-    if (!attributionList) {
-      attributionList = that._attributionList = [];
-    }
+		var attributionList = (that._attributionList = resource.imageryProviders)
+		if (!attributionList) {
+			attributionList = that._attributionList = []
+		}
 
-    for (
-      var attributionIndex = 0, attributionLength = attributionList.length;
-      attributionIndex < attributionLength;
-      ++attributionIndex
-    ) {
-      var attribution = attributionList[attributionIndex];
+		for (
+			var attributionIndex = 0, attributionLength = attributionList.length;
+			attributionIndex < attributionLength;
+			++attributionIndex
+		) {
+			var attribution = attributionList[attributionIndex]
 
-      if (attribution.credit instanceof Credit) {
-        // If attribution.credit has already been created
-        // then we are using a cached value, which means
-        // none of the remaining processing needs to be done.
-        break;
-      }
+			if (attribution.credit instanceof Credit) {
+				// If attribution.credit has already been created
+				// then we are using a cached value, which means
+				// none of the remaining processing needs to be done.
+				break
+			}
 
-      attribution.credit = new Credit(attribution.attribution);
-      var coverageAreas = attribution.coverageAreas;
+			attribution.credit = new Credit(attribution.attribution)
+			var coverageAreas = attribution.coverageAreas
 
-      for (
-        var areaIndex = 0, areaLength = attribution.coverageAreas.length;
-        areaIndex < areaLength;
-        ++areaIndex
-      ) {
-        var area = coverageAreas[areaIndex];
-        var bbox = area.bbox;
-        area.bbox = new Rectangle(
-          CesiumMath.toRadians(bbox[1]),
-          CesiumMath.toRadians(bbox[0]),
-          CesiumMath.toRadians(bbox[3]),
-          CesiumMath.toRadians(bbox[2])
-        );
-      }
-    }
+			for (
+				var areaIndex = 0, areaLength = attribution.coverageAreas.length;
+				areaIndex < areaLength;
+				++areaIndex
+			) {
+				var area = coverageAreas[areaIndex]
+				var bbox = area.bbox
+				area.bbox = new Rectangle(
+					CesiumMath.toRadians(bbox[1]),
+					CesiumMath.toRadians(bbox[0]),
+					CesiumMath.toRadians(bbox[3]),
+					CesiumMath.toRadians(bbox[2]),
+				)
+			}
+		}
 
-    that._ready = true;
-    that._readyPromise.resolve(true);
-    TileProviderError.handleSuccess(metadataError);
-  }
+		that._ready = true
+		that._readyPromise.resolve(true)
+		TileProviderError.handleSuccess(metadataError)
+	}
 
-  function metadataFailure(e) {
-    var message =
-      "An error occurred while accessing " + metadataResource.url + ".";
-    metadataError = TileProviderError.handleError(
-      metadataError,
-      that,
-      that._errorEvent,
-      message,
-      undefined,
-      undefined,
-      undefined,
-      requestMetadata
-    );
-    that._readyPromise.reject(new RuntimeError(message));
-  }
+	function metadataFailure(e) {
+		var message =
+			'An error occurred while accessing ' + metadataResource.url + '.'
+		metadataError = TileProviderError.handleError(
+			metadataError,
+			that,
+			that._errorEvent,
+			message,
+			undefined,
+			undefined,
+			undefined,
+			requestMetadata,
+		)
+		that._readyPromise.reject(new RuntimeError(message))
+	}
 
-  var cacheKey = metadataResource.url;
-  function requestMetadata() {
-    var promise = metadataResource.fetchJsonp("jsonp");
-    BingMapsImageryProvider._metadataCache[cacheKey] = promise;
-    promise.then(metadataSuccess).otherwise(metadataFailure);
-  }
+	var cacheKey = metadataResource.url
+	function requestMetadata() {
+		var promise = metadataResource.fetchJsonp('jsonp')
+		BingMapsImageryProvider._metadataCache[cacheKey] = promise
+		promise.then(metadataSuccess).otherwise(metadataFailure)
+	}
 
-  var promise = BingMapsImageryProvider._metadataCache[cacheKey];
-  if (defined(promise)) {
-    promise.then(metadataSuccess).otherwise(metadataFailure);
-  } else {
-    requestMetadata();
-  }
+	var promise = BingMapsImageryProvider._metadataCache[cacheKey]
+	if (defined(promise)) {
+		promise.then(metadataSuccess).otherwise(metadataFailure)
+	} else {
+		requestMetadata()
+	}
 }
 
 Object.defineProperties(BingMapsImageryProvider.prototype, {
-  /**
-   * Gets the name of the BingMaps server url hosting the imagery.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {String}
-   * @readonly
-   */
-  url: {
-    get: function () {
-      return this._resource.url;
-    },
-  },
+	/**
+	 * Gets the name of the BingMaps server url hosting the imagery.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {String}
+	 * @readonly
+	 */
+	url: {
+		get: function () {
+			return this._resource.url
+		},
+	},
 
-  /**
-   * Gets the proxy used by this provider.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Proxy}
-   * @readonly
-   */
-  proxy: {
-    get: function () {
-      return this._resource.proxy;
-    },
-  },
+	/**
+	 * Gets the proxy used by this provider.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Proxy}
+	 * @readonly
+	 */
+	proxy: {
+		get: function () {
+			return this._resource.proxy
+		},
+	},
 
-  /**
-   * Gets the Bing Maps key.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {String}
-   * @readonly
-   */
-  key: {
-    get: function () {
-      return this._key;
-    },
-  },
+	/**
+	 * Gets the Bing Maps key.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {String}
+	 * @readonly
+	 */
+	key: {
+		get: function () {
+			return this._key
+		},
+	},
 
-  /**
-   * Gets the type of Bing Maps imagery to load.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {BingMapsStyle}
-   * @readonly
-   */
-  mapStyle: {
-    get: function () {
-      return this._mapStyle;
-    },
-  },
+	/**
+	 * Gets the type of Bing Maps imagery to load.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {BingMapsStyle}
+	 * @readonly
+	 */
+	mapStyle: {
+		get: function () {
+			return this._mapStyle
+		},
+	},
 
-  /**
-   * The culture to use when requesting Bing Maps imagery. Not
-   * all cultures are supported. See {@link http://msdn.microsoft.com/en-us/library/hh441729.aspx}
-   * for information on the supported cultures.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {String}
-   * @readonly
-   */
-  culture: {
-    get: function () {
-      return this._culture;
-    },
-  },
+	/**
+	 * The culture to use when requesting Bing Maps imagery. Not
+	 * all cultures are supported. See {@link http://msdn.microsoft.com/en-us/library/hh441729.aspx}
+	 * for information on the supported cultures.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {String}
+	 * @readonly
+	 */
+	culture: {
+		get: function () {
+			return this._culture
+		},
+	},
 
-  /**
-   * Gets the width of each tile, in pixels. This function should
-   * not be called before {@link BingMapsImageryProvider#ready} returns true.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Number}
-   * @readonly
-   */
-  tileWidth: {
-    get: function () {
-      //>>includeStart('debug', pragmas.debug);
-      if (!this._ready) {
-        throw new DeveloperError(
-          "tileWidth must not be called before the imagery provider is ready."
-        );
-      }
-      //>>includeEnd('debug');
+	/**
+	 * Gets the width of each tile, in pixels. This function should
+	 * not be called before {@link BingMapsImageryProvider#ready} returns true.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	tileWidth: {
+		get: function () {
+			//>>includeStart('debug', pragmas.debug);
+			if (!this._ready) {
+				throw new DeveloperError(
+					'tileWidth must not be called before the imagery provider is ready.',
+				)
+			}
+			//>>includeEnd('debug');
 
-      return this._tileWidth;
-    },
-  },
+			return this._tileWidth
+		},
+	},
 
-  /**
-   * Gets the height of each tile, in pixels.  This function should
-   * not be called before {@link BingMapsImageryProvider#ready} returns true.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Number}
-   * @readonly
-   */
-  tileHeight: {
-    get: function () {
-      //>>includeStart('debug', pragmas.debug);
-      if (!this._ready) {
-        throw new DeveloperError(
-          "tileHeight must not be called before the imagery provider is ready."
-        );
-      }
-      //>>includeEnd('debug');
+	/**
+	 * Gets the height of each tile, in pixels.  This function should
+	 * not be called before {@link BingMapsImageryProvider#ready} returns true.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	tileHeight: {
+		get: function () {
+			//>>includeStart('debug', pragmas.debug);
+			if (!this._ready) {
+				throw new DeveloperError(
+					'tileHeight must not be called before the imagery provider is ready.',
+				)
+			}
+			//>>includeEnd('debug');
 
-      return this._tileHeight;
-    },
-  },
+			return this._tileHeight
+		},
+	},
 
-  /**
-   * Gets the maximum level-of-detail that can be requested.  This function should
-   * not be called before {@link BingMapsImageryProvider#ready} returns true.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Number|undefined}
-   * @readonly
-   */
-  maximumLevel: {
-    get: function () {
-      //>>includeStart('debug', pragmas.debug);
-      if (!this._ready) {
-        throw new DeveloperError(
-          "maximumLevel must not be called before the imagery provider is ready."
-        );
-      }
-      //>>includeEnd('debug');
+	/**
+	 * Gets the maximum level-of-detail that can be requested.  This function should
+	 * not be called before {@link BingMapsImageryProvider#ready} returns true.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Number|undefined}
+	 * @readonly
+	 */
+	maximumLevel: {
+		get: function () {
+			//>>includeStart('debug', pragmas.debug);
+			if (!this._ready) {
+				throw new DeveloperError(
+					'maximumLevel must not be called before the imagery provider is ready.',
+				)
+			}
+			//>>includeEnd('debug');
 
-      return this._maximumLevel;
-    },
-  },
+			return this._maximumLevel
+		},
+	},
 
-  /**
-   * Gets the minimum level-of-detail that can be requested.  This function should
-   * not be called before {@link BingMapsImageryProvider#ready} returns true.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Number}
-   * @readonly
-   */
-  minimumLevel: {
-    get: function () {
-      //>>includeStart('debug', pragmas.debug);
-      if (!this._ready) {
-        throw new DeveloperError(
-          "minimumLevel must not be called before the imagery provider is ready."
-        );
-      }
-      //>>includeEnd('debug');
+	/**
+	 * Gets the minimum level-of-detail that can be requested.  This function should
+	 * not be called before {@link BingMapsImageryProvider#ready} returns true.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	minimumLevel: {
+		get: function () {
+			//>>includeStart('debug', pragmas.debug);
+			if (!this._ready) {
+				throw new DeveloperError(
+					'minimumLevel must not be called before the imagery provider is ready.',
+				)
+			}
+			//>>includeEnd('debug');
 
-      return 0;
-    },
-  },
+			return 0
+		},
+	},
 
-  /**
-   * Gets the tiling scheme used by this provider.  This function should
-   * not be called before {@link BingMapsImageryProvider#ready} returns true.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {TilingScheme}
-   * @readonly
-   */
-  tilingScheme: {
-    get: function () {
-      //>>includeStart('debug', pragmas.debug);
-      if (!this._ready) {
-        throw new DeveloperError(
-          "tilingScheme must not be called before the imagery provider is ready."
-        );
-      }
-      //>>includeEnd('debug');
+	/**
+	 * Gets the tiling scheme used by this provider.  This function should
+	 * not be called before {@link BingMapsImageryProvider#ready} returns true.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {TilingScheme}
+	 * @readonly
+	 */
+	tilingScheme: {
+		get: function () {
+			//>>includeStart('debug', pragmas.debug);
+			if (!this._ready) {
+				throw new DeveloperError(
+					'tilingScheme must not be called before the imagery provider is ready.',
+				)
+			}
+			//>>includeEnd('debug');
 
-      return this._tilingScheme;
-    },
-  },
+			return this._tilingScheme
+		},
+	},
 
-  /**
-   * Gets the rectangle, in radians, of the imagery provided by this instance.  This function should
-   * not be called before {@link BingMapsImageryProvider#ready} returns true.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Rectangle}
-   * @readonly
-   */
-  rectangle: {
-    get: function () {
-      //>>includeStart('debug', pragmas.debug);
-      if (!this._ready) {
-        throw new DeveloperError(
-          "rectangle must not be called before the imagery provider is ready."
-        );
-      }
-      //>>includeEnd('debug');
+	/**
+	 * Gets the rectangle, in radians, of the imagery provided by this instance.  This function should
+	 * not be called before {@link BingMapsImageryProvider#ready} returns true.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Rectangle}
+	 * @readonly
+	 */
+	rectangle: {
+		get: function () {
+			//>>includeStart('debug', pragmas.debug);
+			if (!this._ready) {
+				throw new DeveloperError(
+					'rectangle must not be called before the imagery provider is ready.',
+				)
+			}
+			//>>includeEnd('debug');
 
-      return this._tilingScheme.rectangle;
-    },
-  },
+			return this._tilingScheme.rectangle
+		},
+	},
 
-  /**
-   * Gets the tile discard policy.  If not undefined, the discard policy is responsible
-   * for filtering out "missing" tiles via its shouldDiscardImage function.  If this function
-   * returns undefined, no tiles are filtered.  This function should
-   * not be called before {@link BingMapsImageryProvider#ready} returns true.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {TileDiscardPolicy}
-   * @readonly
-   */
-  tileDiscardPolicy: {
-    get: function () {
-      //>>includeStart('debug', pragmas.debug);
-      if (!this._ready) {
-        throw new DeveloperError(
-          "tileDiscardPolicy must not be called before the imagery provider is ready."
-        );
-      }
-      //>>includeEnd('debug');
+	/**
+	 * Gets the tile discard policy.  If not undefined, the discard policy is responsible
+	 * for filtering out "missing" tiles via its shouldDiscardImage function.  If this function
+	 * returns undefined, no tiles are filtered.  This function should
+	 * not be called before {@link BingMapsImageryProvider#ready} returns true.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {TileDiscardPolicy}
+	 * @readonly
+	 */
+	tileDiscardPolicy: {
+		get: function () {
+			//>>includeStart('debug', pragmas.debug);
+			if (!this._ready) {
+				throw new DeveloperError(
+					'tileDiscardPolicy must not be called before the imagery provider is ready.',
+				)
+			}
+			//>>includeEnd('debug');
 
-      return this._tileDiscardPolicy;
-    },
-  },
+			return this._tileDiscardPolicy
+		},
+	},
 
-  /**
-   * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
-   * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
-   * are passed an instance of {@link TileProviderError}.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Event}
-   * @readonly
-   */
-  errorEvent: {
-    get: function () {
-      return this._errorEvent;
-    },
-  },
+	/**
+	 * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
+	 * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
+	 * are passed an instance of {@link TileProviderError}.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Event}
+	 * @readonly
+	 */
+	errorEvent: {
+		get: function () {
+			return this._errorEvent
+		},
+	},
 
-  /**
-   * Gets a value indicating whether or not the provider is ready for use.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Boolean}
-   * @readonly
-   */
-  ready: {
-    get: function () {
-      return this._ready;
-    },
-  },
+	/**
+	 * Gets a value indicating whether or not the provider is ready for use.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	ready: {
+		get: function () {
+			return this._ready
+		},
+	},
 
-  /**
-   * Gets a promise that resolves to true when the provider is ready for use.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Promise.<Boolean>}
-   * @readonly
-   */
-  readyPromise: {
-    get: function () {
-      return this._readyPromise.promise;
-    },
-  },
+	/**
+	 * Gets a promise that resolves to true when the provider is ready for use.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Promise.<Boolean>}
+	 * @readonly
+	 */
+	readyPromise: {
+		get: function () {
+			return this._readyPromise.promise
+		},
+	},
 
-  /**
-   * Gets the credit to display when this imagery provider is active.  Typically this is used to credit
-   * the source of the imagery.  This function should not be called before {@link BingMapsImageryProvider#ready} returns true.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Credit}
-   * @readonly
-   */
-  credit: {
-    get: function () {
-      return this._credit;
-    },
-  },
+	/**
+	 * Gets the credit to display when this imagery provider is active.  Typically this is used to credit
+	 * the source of the imagery.  This function should not be called before {@link BingMapsImageryProvider#ready} returns true.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Credit}
+	 * @readonly
+	 */
+	credit: {
+		get: function () {
+			return this._credit
+		},
+	},
 
-  /**
-   * Gets a value indicating whether or not the images provided by this imagery provider
-   * include an alpha channel.  If this property is false, an alpha channel, if present, will
-   * be ignored.  If this property is true, any images without an alpha channel will be treated
-   * as if their alpha is 1.0 everywhere.  Setting this property to false reduces memory usage
-   * and texture upload time.
-   * @memberof BingMapsImageryProvider.prototype
-   * @type {Boolean}
-   * @readonly
-   */
-  hasAlphaChannel: {
-    get: function () {
-      return false;
-    },
-  },
-});
+	/**
+	 * Gets a value indicating whether or not the images provided by this imagery provider
+	 * include an alpha channel.  If this property is false, an alpha channel, if present, will
+	 * be ignored.  If this property is true, any images without an alpha channel will be treated
+	 * as if their alpha is 1.0 everywhere.  Setting this property to false reduces memory usage
+	 * and texture upload time.
+	 * @memberof BingMapsImageryProvider.prototype
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	hasAlphaChannel: {
+		get: function () {
+			return false
+		},
+	},
+})
 
-var rectangleScratch = new Rectangle();
+var rectangleScratch = new Rectangle()
 
 /**
  * Gets the credits to be displayed when a given tile is displayed.
@@ -608,24 +608,24 @@ var rectangleScratch = new Rectangle();
  * @exception {DeveloperError} <code>getTileCredits</code> must not be called before the imagery provider is ready.
  */
 BingMapsImageryProvider.prototype.getTileCredits = function (x, y, level) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!this._ready) {
-    throw new DeveloperError(
-      "getTileCredits must not be called before the imagery provider is ready."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!this._ready) {
+		throw new DeveloperError(
+			'getTileCredits must not be called before the imagery provider is ready.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  var rectangle = this._tilingScheme.tileXYToRectangle(
-    x,
-    y,
-    level,
-    rectangleScratch
-  );
-  var result = getRectangleAttribution(this._attributionList, level, rectangle);
+	var rectangle = this._tilingScheme.tileXYToRectangle(
+		x,
+		y,
+		level,
+		rectangleScratch,
+	)
+	var result = getRectangleAttribution(this._attributionList, level, rectangle)
 
-  return result;
-};
+	return result
+}
 
 /**
  * Requests the image for a given tile.  This function should
@@ -643,38 +643,38 @@ BingMapsImageryProvider.prototype.getTileCredits = function (x, y, level) {
  * @exception {DeveloperError} <code>requestImage</code> must not be called before the imagery provider is ready.
  */
 BingMapsImageryProvider.prototype.requestImage = function (
-  x,
-  y,
-  level,
-  request
+	x,
+	y,
+	level,
+	request,
 ) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!this._ready) {
-    throw new DeveloperError(
-      "requestImage must not be called before the imagery provider is ready."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!this._ready) {
+		throw new DeveloperError(
+			'requestImage must not be called before the imagery provider is ready.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  var promise = ImageryProvider.loadImage(
-    this,
-    buildImageResource(this, x, y, level, request)
-  );
+	var promise = ImageryProvider.loadImage(
+		this,
+		buildImageResource(this, x, y, level, request),
+	)
 
-  if (defined(promise)) {
-    return promise.otherwise(function (error) {
-      // One cause of an error here is that the image we tried to load was zero-length.
-      // This isn't actually a problem, since it indicates that there is no tile.
-      // So, in that case we return the EMPTY_IMAGE sentinel value for later discarding.
-      if (defined(error.blob) && error.blob.size === 0) {
-        return DiscardEmptyTilePolicy.EMPTY_IMAGE;
-      }
-      return when.reject(error);
-    });
-  }
+	if (defined(promise)) {
+		return promise.otherwise(function (error) {
+			// One cause of an error here is that the image we tried to load was zero-length.
+			// This isn't actually a problem, since it indicates that there is no tile.
+			// So, in that case we return the EMPTY_IMAGE sentinel value for later discarding.
+			if (defined(error.blob) && error.blob.size === 0) {
+				return DiscardEmptyTilePolicy.EMPTY_IMAGE
+			}
+			return when.reject(error)
+		})
+	}
 
-  return undefined;
-};
+	return undefined
+}
 
 /**
  * Picking features is not currently supported by this imagery provider, so this function simply returns
@@ -691,14 +691,14 @@ BingMapsImageryProvider.prototype.requestImage = function (
  *                   It may also be undefined if picking is not supported.
  */
 BingMapsImageryProvider.prototype.pickFeatures = function (
-  x,
-  y,
-  level,
-  longitude,
-  latitude
+	x,
+	y,
+	level,
+	longitude,
+	latitude,
 ) {
-  return undefined;
-};
+	return undefined
+}
 
 /**
  * Converts a tiles (x, y, level) position into a quadkey used to request an image
@@ -712,23 +712,23 @@ BingMapsImageryProvider.prototype.pickFeatures = function (
  * @see BingMapsImageryProvider#quadKeyToTileXY
  */
 BingMapsImageryProvider.tileXYToQuadKey = function (x, y, level) {
-  var quadkey = "";
-  for (var i = level; i >= 0; --i) {
-    var bitmask = 1 << i;
-    var digit = 0;
+	var quadkey = ''
+	for (var i = level; i >= 0; --i) {
+		var bitmask = 1 << i
+		var digit = 0
 
-    if ((x & bitmask) !== 0) {
-      digit |= 1;
-    }
+		if ((x & bitmask) !== 0) {
+			digit |= 1
+		}
 
-    if ((y & bitmask) !== 0) {
-      digit |= 2;
-    }
+		if ((y & bitmask) !== 0) {
+			digit |= 2
+		}
 
-    quadkey += digit;
-  }
-  return quadkey;
-};
+		quadkey += digit
+	}
+	return quadkey
+}
 
 /**
  * Converts a tile's quadkey used to request an image from a Bing Maps server into the
@@ -740,121 +740,121 @@ BingMapsImageryProvider.tileXYToQuadKey = function (x, y, level) {
  * @see BingMapsImageryProvider#tileXYToQuadKey
  */
 BingMapsImageryProvider.quadKeyToTileXY = function (quadkey) {
-  var x = 0;
-  var y = 0;
-  var level = quadkey.length - 1;
-  for (var i = level; i >= 0; --i) {
-    var bitmask = 1 << i;
-    var digit = +quadkey[level - i];
+	var x = 0
+	var y = 0
+	var level = quadkey.length - 1
+	for (var i = level; i >= 0; --i) {
+		var bitmask = 1 << i
+		var digit = +quadkey[level - i]
 
-    if ((digit & 1) !== 0) {
-      x |= bitmask;
-    }
+		if ((digit & 1) !== 0) {
+			x |= bitmask
+		}
 
-    if ((digit & 2) !== 0) {
-      y |= bitmask;
-    }
-  }
-  return {
-    x: x,
-    y: y,
-    level: level,
-  };
-};
-
-BingMapsImageryProvider._logoUrl = undefined;
-
-Object.defineProperties(BingMapsImageryProvider, {
-  /**
-   * Gets or sets the URL to the Bing logo for display in the credit.
-   * @memberof BingMapsImageryProvider
-   * @type {String}
-   */
-  logoUrl: {
-    get: function () {
-      if (!defined(BingMapsImageryProvider._logoUrl)) {
-        BingMapsImageryProvider._logoUrl = buildModuleUrl(
-          "Assets/Images/bing_maps_credit.png"
-        );
-      }
-      return BingMapsImageryProvider._logoUrl;
-    },
-    set: function (value) {
-      //>>includeStart('debug', pragmas.debug);
-      Check.defined("value", value);
-      //>>includeEnd('debug');
-
-      BingMapsImageryProvider._logoUrl = value;
-    },
-  },
-});
-
-function buildImageResource(imageryProvider, x, y, level, request) {
-  var imageUrl = imageryProvider._imageUrlTemplate;
-
-  var subdomains = imageryProvider._imageUrlSubdomains;
-  var subdomainIndex = (x + y + level) % subdomains.length;
-
-  return imageryProvider._resource.getDerivedResource({
-    url: imageUrl,
-    request: request,
-    templateValues: {
-      quadkey: BingMapsImageryProvider.tileXYToQuadKey(x, y, level),
-      subdomain: subdomains[subdomainIndex],
-      culture: imageryProvider._culture,
-    },
-    queryParameters: {
-      // this parameter tells the Bing servers to send a zero-length response
-      // instead of a placeholder image for missing tiles.
-      n: "z",
-    },
-  });
+		if ((digit & 2) !== 0) {
+			y |= bitmask
+		}
+	}
+	return {
+		x: x,
+		y: y,
+		level: level,
+	}
 }
 
-var intersectionScratch = new Rectangle();
+BingMapsImageryProvider._logoUrl = undefined
+
+Object.defineProperties(BingMapsImageryProvider, {
+	/**
+	 * Gets or sets the URL to the Bing logo for display in the credit.
+	 * @memberof BingMapsImageryProvider
+	 * @type {String}
+	 */
+	logoUrl: {
+		get: function () {
+			if (!defined(BingMapsImageryProvider._logoUrl)) {
+				BingMapsImageryProvider._logoUrl = buildModuleUrl(
+					'Assets/Images/bing_maps_credit.png',
+				)
+			}
+			return BingMapsImageryProvider._logoUrl
+		},
+		set: function (value) {
+			//>>includeStart('debug', pragmas.debug);
+			Check.defined('value', value)
+			//>>includeEnd('debug');
+
+			BingMapsImageryProvider._logoUrl = value
+		},
+	},
+})
+
+function buildImageResource(imageryProvider, x, y, level, request) {
+	var imageUrl = imageryProvider._imageUrlTemplate
+
+	var subdomains = imageryProvider._imageUrlSubdomains
+	var subdomainIndex = (x + y + level) % subdomains.length
+
+	return imageryProvider._resource.getDerivedResource({
+		url: imageUrl,
+		request: request,
+		templateValues: {
+			quadkey: BingMapsImageryProvider.tileXYToQuadKey(x, y, level),
+			subdomain: subdomains[subdomainIndex],
+			culture: imageryProvider._culture,
+		},
+		queryParameters: {
+			// this parameter tells the Bing servers to send a zero-length response
+			// instead of a placeholder image for missing tiles.
+			n: 'z',
+		},
+	})
+}
+
+var intersectionScratch = new Rectangle()
 
 function getRectangleAttribution(attributionList, level, rectangle) {
-  // Bing levels start at 1, while ours start at 0.
-  ++level;
+	// Bing levels start at 1, while ours start at 0.
+	++level
 
-  var result = [];
+	var result = []
 
-  for (
-    var attributionIndex = 0, attributionLength = attributionList.length;
-    attributionIndex < attributionLength;
-    ++attributionIndex
-  ) {
-    var attribution = attributionList[attributionIndex];
-    var coverageAreas = attribution.coverageAreas;
+	for (
+		var attributionIndex = 0, attributionLength = attributionList.length;
+		attributionIndex < attributionLength;
+		++attributionIndex
+	) {
+		var attribution = attributionList[attributionIndex]
+		var coverageAreas = attribution.coverageAreas
 
-    var included = false;
+		var included = false
 
-    for (
-      var areaIndex = 0, areaLength = attribution.coverageAreas.length;
-      !included && areaIndex < areaLength;
-      ++areaIndex
-    ) {
-      var area = coverageAreas[areaIndex];
-      if (level >= area.zoomMin && level <= area.zoomMax) {
-        var intersection = Rectangle.intersection(
-          rectangle,
-          area.bbox,
-          intersectionScratch
-        );
-        if (defined(intersection)) {
-          included = true;
-        }
-      }
-    }
+		for (
+			var areaIndex = 0, areaLength = attribution.coverageAreas.length;
+			!included && areaIndex < areaLength;
+			++areaIndex
+		) {
+			var area = coverageAreas[areaIndex]
+			if (level >= area.zoomMin && level <= area.zoomMax) {
+				var intersection = Rectangle.intersection(
+					rectangle,
+					area.bbox,
+					intersectionScratch,
+				)
+				if (defined(intersection)) {
+					included = true
+				}
+			}
+		}
 
-    if (included) {
-      result.push(attribution.credit);
-    }
-  }
+		if (included) {
+			result.push(attribution.credit)
+		}
+	}
 
-  return result;
+	return result
 }
 
 // Exposed for testing
-BingMapsImageryProvider._metadataCache = {};
-export default BingMapsImageryProvider;
+BingMapsImageryProvider._metadataCache = {}
+export default BingMapsImageryProvider

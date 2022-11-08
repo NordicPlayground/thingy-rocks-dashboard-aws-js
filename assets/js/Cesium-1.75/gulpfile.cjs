@@ -717,9 +717,8 @@ function getMimeType(filename) {
   var mimeType = mime.getType(filename);
   if (mimeType) {
     //Compress everything except zipfiles, binary images, and video
-    var compress = !/^(image\/|video\/|application\/zip|application\/gzip)/i.test(
-      mimeType
-    );
+    var compress =
+      !/^(image\/|video\/|application\/zip|application\/gzip)/i.test(mimeType);
     if (mimeType === "image/svg+xml") {
       compress = true;
     }
@@ -885,7 +884,7 @@ gulp.task("coverage", function (done) {
       var html = "<!doctype html><html><body><ul>";
       folders.forEach(function (folder) {
         html +=
-          '<li><a href=' +
+          "<li><a href=" +
           encodeURIComponent(folder) +
           '"/assets/index.html">' +
           folder +
@@ -982,8 +981,10 @@ gulp.task("test", function (done) {
 });
 
 gulp.task("convertToModules", function () {
-  var requiresRegex = /([\s\S]*?(define|defineSuite|require)\((?:{[\s\S]*}, )?\[)([\S\s]*?)]([\s\S]*?function\s*)\(([\S\s]*?)\) {([\s\S]*)/;
-  var noModulesRegex = /([\s\S]*?(define|defineSuite|require)\((?:{[\s\S]*}, )?\[?)([\S\s]*?)]?([\s\S]*?function\s*)\(([\S\s]*?)\) {([\s\S]*)/;
+  var requiresRegex =
+    /([\s\S]*?(define|defineSuite|require)\((?:{[\s\S]*}, )?\[)([\S\s]*?)]([\s\S]*?function\s*)\(([\S\s]*?)\) {([\s\S]*)/;
+  var noModulesRegex =
+    /([\s\S]*?(define|defineSuite|require)\((?:{[\s\S]*}, )?\[?)([\S\s]*?)]?([\s\S]*?function\s*)\(([\S\s]*?)\) {([\s\S]*)/;
   var splitRegex = /,\s*/;
 
   var fsReadFile = Promise.promisify(fs.readFile);

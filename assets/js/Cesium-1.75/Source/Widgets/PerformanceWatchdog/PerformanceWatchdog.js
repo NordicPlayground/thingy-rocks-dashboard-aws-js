@@ -1,9 +1,9 @@
-import defined from "../../Core/defined.js";
-import destroyObject from "../../Core/destroyObject.js";
-import DeveloperError from "../../Core/DeveloperError.js";
-import knockout from "../../ThirdParty/knockout.js";
-import getElement from "../getElement.js";
-import PerformanceWatchdogViewModel from "./PerformanceWatchdogViewModel.js";
+import defined from '../../Core/defined.js'
+import destroyObject from '../../Core/destroyObject.js'
+import DeveloperError from '../../Core/DeveloperError.js'
+import knockout from '../../ThirdParty/knockout.js'
+import getElement from '../getElement.js'
+import PerformanceWatchdogViewModel from './PerformanceWatchdogViewModel.js'
 
 /**
  * Monitors performance of the application and displays a message if poor performance is detected.
@@ -19,77 +19,77 @@ import PerformanceWatchdogViewModel from "./PerformanceWatchdogViewModel.js";
  *        it comes from a trusted source so that your application is not vulnerable to cross-site scripting attacks.
  */
 function PerformanceWatchdog(options) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(options) || !defined(options.container)) {
-    throw new DeveloperError("options.container is required.");
-  }
-  if (!defined(options.scene)) {
-    throw new DeveloperError("options.scene is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(options) || !defined(options.container)) {
+		throw new DeveloperError('options.container is required.')
+	}
+	if (!defined(options.scene)) {
+		throw new DeveloperError('options.scene is required.')
+	}
+	//>>includeEnd('debug');
 
-  var container = getElement(options.container);
+	var container = getElement(options.container)
 
-  var viewModel = new PerformanceWatchdogViewModel(options);
+	var viewModel = new PerformanceWatchdogViewModel(options)
 
-  var element = document.createElement("div");
-  element.className = "cesium-performance-watchdog-message-area";
-  element.setAttribute("data-bind", "visible: showingLowFrameRateMessage");
+	var element = document.createElement('div')
+	element.className = 'cesium-performance-watchdog-message-area'
+	element.setAttribute('data-bind', 'visible: showingLowFrameRateMessage')
 
-  var dismissButton = document.createElement("button");
-  dismissButton.setAttribute("type", "button");
-  dismissButton.className = "cesium-performance-watchdog-message-dismiss";
-  dismissButton.innerHTML = "&times;";
-  dismissButton.setAttribute("data-bind", "click: dismissMessage");
-  element.appendChild(dismissButton);
+	var dismissButton = document.createElement('button')
+	dismissButton.setAttribute('type', 'button')
+	dismissButton.className = 'cesium-performance-watchdog-message-dismiss'
+	dismissButton.innerHTML = '&times;'
+	dismissButton.setAttribute('data-bind', 'click: dismissMessage')
+	element.appendChild(dismissButton)
 
-  var message = document.createElement("div");
-  message.className = "cesium-performance-watchdog-message";
-  message.setAttribute("data-bind", "html: lowFrameRateMessage");
-  element.appendChild(message);
+	var message = document.createElement('div')
+	message.className = 'cesium-performance-watchdog-message'
+	message.setAttribute('data-bind', 'html: lowFrameRateMessage')
+	element.appendChild(message)
 
-  container.appendChild(element);
+	container.appendChild(element)
 
-  knockout.applyBindings(viewModel, element);
+	knockout.applyBindings(viewModel, element)
 
-  this._container = container;
-  this._viewModel = viewModel;
-  this._element = element;
+	this._container = container
+	this._viewModel = viewModel
+	this._element = element
 }
 
 Object.defineProperties(PerformanceWatchdog.prototype, {
-  /**
-   * Gets the parent container.
-   * @memberof PerformanceWatchdog.prototype
-   *
-   * @type {Element}
-   */
-  container: {
-    get: function () {
-      return this._container;
-    },
-  },
+	/**
+	 * Gets the parent container.
+	 * @memberof PerformanceWatchdog.prototype
+	 *
+	 * @type {Element}
+	 */
+	container: {
+		get: function () {
+			return this._container
+		},
+	},
 
-  /**
-   * Gets the view model.
-   * @memberof PerformanceWatchdog.prototype
-   *
-   * @type {PerformanceWatchdogViewModel}
-   */
-  viewModel: {
-    get: function () {
-      return this._viewModel;
-    },
-  },
-});
+	/**
+	 * Gets the view model.
+	 * @memberof PerformanceWatchdog.prototype
+	 *
+	 * @type {PerformanceWatchdogViewModel}
+	 */
+	viewModel: {
+		get: function () {
+			return this._viewModel
+		},
+	},
+})
 
 /**
  * @memberof PerformanceWatchdog
  * @returns {Boolean} true if the object has been destroyed, false otherwise.
  */
 PerformanceWatchdog.prototype.isDestroyed = function () {
-  return false;
-};
+	return false
+}
 
 /**
  * Destroys the widget.  Should be called if permanently
@@ -97,10 +97,10 @@ PerformanceWatchdog.prototype.isDestroyed = function () {
  * @memberof PerformanceWatchdog
  */
 PerformanceWatchdog.prototype.destroy = function () {
-  this._viewModel.destroy();
-  knockout.cleanNode(this._element);
-  this._container.removeChild(this._element);
+	this._viewModel.destroy()
+	knockout.cleanNode(this._element)
+	this._container.removeChild(this._element)
 
-  return destroyObject(this);
-};
-export default PerformanceWatchdog;
+	return destroyObject(this)
+}
+export default PerformanceWatchdog

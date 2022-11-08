@@ -1,8 +1,8 @@
-define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
+define(['./_base/lang', './_base/array', './dom'], function (lang, array, dom) {
 	// module:
 	//		dojo/dom-class
 
-	var className = "className";
+	var className = 'className'
 
 	/* Part I of classList-based implementation is preserved here for posterity
 	var classList = "classList";
@@ -16,28 +16,31 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 	// =============================
 
 	var cls, // exports object
-		spaces = /\s+/, a1 = [""];
+		spaces = /\s+/,
+		a1 = ['']
 
-	function str2array(s){
-		if(typeof s == "string" || s instanceof String){
-			if(s && !spaces.test(s)){
-				a1[0] = s;
-				return a1;
+	function str2array(s) {
+		if (typeof s == 'string' || s instanceof String) {
+			if (s && !spaces.test(s)) {
+				a1[0] = s
+				return a1
 			}
-			var a = s.split(spaces);
-			if(a.length && !a[0]){
-				a.shift();
+			var a = s.split(spaces)
+			if (a.length && !a[0]) {
+				a.shift()
 			}
-			if(a.length && !a[a.length - 1]){
-				a.pop();
+			if (a.length && !a[a.length - 1]) {
+				a.pop()
 			}
-			return a;
+			return a
 		}
 		// assumed to be an array
-		if(!s){
-			return [];
+		if (!s) {
+			return []
 		}
-		return array.filter(s, function(x){ return x; });
+		return array.filter(s, function (x) {
+			return x
+		})
 	}
 
 	/* Part II of classList-based implementation is preserved here for posterity
@@ -102,12 +105,15 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 	*/
 
 	// regular DOM version
-	var fakeNode = {};  // for effective replacement
+	var fakeNode = {} // for effective replacement
 	cls = {
 		// summary:
 		//		This module defines the core dojo DOM class API.
 
-		contains: function containsClass(/*DomNode|String*/ node, /*String*/ classStr){
+		contains: function containsClass(
+			/*DomNode|String*/ node,
+			/*String*/ classStr,
+		) {
 			// summary:
 			//		Returns whether or not the specified classes are a portion of the
 			//		class list currently applied to the node.
@@ -119,10 +125,13 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			//		Do something if a node with id="someNode" has class="aSillyClassName" present
 			//	|	if(dojo.hasClass("someNode","aSillyClassName")){ ... }
 
-			return ((" " + dom.byId(node)[className] + " ").indexOf(" " + classStr + " ") >= 0); // Boolean
+			return (
+				(' ' + dom.byId(node)[className] + ' ').indexOf(' ' + classStr + ' ') >=
+				0
+			) // Boolean
 		},
 
-		add: function addClass(/*DomNode|String*/ node, /*String|Array*/ classStr){
+		add: function addClass(/*DomNode|String*/ node, /*String|Array*/ classStr) {
 			// summary:
 			//		Adds the specified classes to the end of the class list on the
 			//		passed node. Will not re-apply duplicate classes.
@@ -158,23 +167,27 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			//	|		query("ul > li").addClass("firstLevel");
 			//	|	});
 
-			node = dom.byId(node);
-			classStr = str2array(classStr);
-			var cls = node[className], oldLen;
-			cls = cls ? " " + cls + " " : " ";
-			oldLen = cls.length;
-			for(var i = 0, len = classStr.length, c; i < len; ++i){
-				c = classStr[i];
-				if(c && cls.indexOf(" " + c + " ") < 0){
-					cls += c + " ";
+			node = dom.byId(node)
+			classStr = str2array(classStr)
+			var cls = node[className],
+				oldLen
+			cls = cls ? ' ' + cls + ' ' : ' '
+			oldLen = cls.length
+			for (var i = 0, len = classStr.length, c; i < len; ++i) {
+				c = classStr[i]
+				if (c && cls.indexOf(' ' + c + ' ') < 0) {
+					cls += c + ' '
 				}
 			}
-			if(oldLen < cls.length){
-				node[className] = cls.substr(1, cls.length - 2);
+			if (oldLen < cls.length) {
+				node[className] = cls.substr(1, cls.length - 2)
 			}
 		},
 
-		remove: function removeClass(/*DomNode|String*/ node, /*String|Array?*/ classStr){
+		remove: function removeClass(
+			/*DomNode|String*/ node,
+			/*String|Array?*/ classStr,
+		) {
 			// summary:
 			//		Removes the specified classes from node. No `contains()`
 			//		check is required.
@@ -217,22 +230,28 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			//	|		query("ul > li").removeClass("foo");
 			//	|	});
 
-			node = dom.byId(node);
-			var cls;
-			if(classStr !== undefined){
-				classStr = str2array(classStr);
-				cls = " " + node[className] + " ";
-				for(var i = 0, len = classStr.length; i < len; ++i){
-					cls = cls.replace(" " + classStr[i] + " ", " ");
+			node = dom.byId(node)
+			var cls
+			if (classStr !== undefined) {
+				classStr = str2array(classStr)
+				cls = ' ' + node[className] + ' '
+				for (var i = 0, len = classStr.length; i < len; ++i) {
+					cls = cls.replace(' ' + classStr[i] + ' ', ' ')
 				}
-				cls = lang.trim(cls);
-			}else{
-				cls = "";
+				cls = lang.trim(cls)
+			} else {
+				cls = ''
 			}
-			if(node[className] != cls){ node[className] = cls; }
+			if (node[className] != cls) {
+				node[className] = cls
+			}
 		},
 
-		replace: function replaceClass(/*DomNode|String*/ node, /*String|Array*/ addClassStr, /*String|Array?*/ removeClassStr){
+		replace: function replaceClass(
+			/*DomNode|String*/ node,
+			/*String|Array*/ addClassStr,
+			/*String|Array?*/ removeClassStr,
+		) {
 			// summary:
 			//		Replaces one or more classes on a node if not present.
 			//		Operates more quickly than calling dojo.removeClass and dojo.addClass
@@ -265,16 +284,20 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			//	|		query(".findMe").replaceClass("addMe", "removeMe");
 			//	|	});
 
-			node = dom.byId(node);
-			fakeNode[className] = node[className];
-			cls.remove(fakeNode, removeClassStr);
-			cls.add(fakeNode, addClassStr);
-			if(node[className] !== fakeNode[className]){
-				node[className] = fakeNode[className];
+			node = dom.byId(node)
+			fakeNode[className] = node[className]
+			cls.remove(fakeNode, removeClassStr)
+			cls.add(fakeNode, addClassStr)
+			if (node[className] !== fakeNode[className]) {
+				node[className] = fakeNode[className]
 			}
 		},
 
-		toggle: function toggleClass(/*DomNode|String*/ node, /*String|Array*/ classStr, /*Boolean?*/ condition){
+		toggle: function toggleClass(
+			/*DomNode|String*/ node,
+			/*String|Array*/ classStr,
+			/*Boolean?*/ condition,
+		) {
 			// summary:
 			//		Adds a class to node if not present, or removes if present.
 			//		Pass a boolean condition if you want to explicitly add or remove.
@@ -308,19 +331,19 @@ define(["./_base/lang", "./_base/array", "./dom"], function(lang, array, dom){
 			//	|		query(".toggleMe").toggleClass("toggleMe");
 			//	|	});
 
-			node = dom.byId(node);
-			if(condition === undefined){
-				classStr = str2array(classStr);
-				for(var i = 0, len = classStr.length, c; i < len; ++i){
-					c = classStr[i];
-					cls[cls.contains(node, c) ? "remove" : "add"](node, c);
+			node = dom.byId(node)
+			if (condition === undefined) {
+				classStr = str2array(classStr)
+				for (var i = 0, len = classStr.length, c; i < len; ++i) {
+					c = classStr[i]
+					cls[cls.contains(node, c) ? 'remove' : 'add'](node, c)
 				}
-			}else{
-				cls[condition ? "add" : "remove"](node, classStr);
+			} else {
+				cls[condition ? 'add' : 'remove'](node, classStr)
 			}
-			return condition;   // Boolean
-		}
-	};
+			return condition // Boolean
+		},
+	}
 
-	return cls;
-});
+	return cls
+})

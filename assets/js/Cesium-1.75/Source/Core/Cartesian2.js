@@ -1,8 +1,8 @@
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import CesiumMath from "./Math.js";
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import CesiumMath from './Math.js'
 
 /**
  * A 2D Cartesian point.
@@ -17,19 +17,19 @@ import CesiumMath from "./Math.js";
  * @see Packable
  */
 function Cartesian2(x, y) {
-  /**
-   * The X component.
-   * @type {Number}
-   * @default 0.0
-   */
-  this.x = defaultValue(x, 0.0);
+	/**
+	 * The X component.
+	 * @type {Number}
+	 * @default 0.0
+	 */
+	this.x = defaultValue(x, 0.0)
 
-  /**
-   * The Y component.
-   * @type {Number}
-   * @default 0.0
-   */
-  this.y = defaultValue(y, 0.0);
+	/**
+	 * The Y component.
+	 * @type {Number}
+	 * @default 0.0
+	 */
+	this.y = defaultValue(y, 0.0)
 }
 
 /**
@@ -41,14 +41,14 @@ function Cartesian2(x, y) {
  * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
  */
 Cartesian2.fromElements = function (x, y, result) {
-  if (!defined(result)) {
-    return new Cartesian2(x, y);
-  }
+	if (!defined(result)) {
+		return new Cartesian2(x, y)
+	}
 
-  result.x = x;
-  result.y = y;
-  return result;
-};
+	result.x = x
+	result.y = y
+	return result
+}
 
 /**
  * Duplicates a Cartesian2 instance.
@@ -58,17 +58,17 @@ Cartesian2.fromElements = function (x, y, result) {
  * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided. (Returns undefined if cartesian is undefined)
  */
 Cartesian2.clone = function (cartesian, result) {
-  if (!defined(cartesian)) {
-    return undefined;
-  }
-  if (!defined(result)) {
-    return new Cartesian2(cartesian.x, cartesian.y);
-  }
+	if (!defined(cartesian)) {
+		return undefined
+	}
+	if (!defined(result)) {
+		return new Cartesian2(cartesian.x, cartesian.y)
+	}
 
-  result.x = cartesian.x;
-  result.y = cartesian.y;
-  return result;
-};
+	result.x = cartesian.x
+	result.y = cartesian.y
+	return result
+}
 
 /**
  * Creates a Cartesian2 instance from an existing Cartesian3.  This simply takes the
@@ -79,7 +79,7 @@ Cartesian2.clone = function (cartesian, result) {
  * @param {Cartesian2} [result] The object onto which to store the result.
  * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
  */
-Cartesian2.fromCartesian3 = Cartesian2.clone;
+Cartesian2.fromCartesian3 = Cartesian2.clone
 
 /**
  * Creates a Cartesian2 instance from an existing Cartesian4.  This simply takes the
@@ -90,13 +90,13 @@ Cartesian2.fromCartesian3 = Cartesian2.clone;
  * @param {Cartesian2} [result] The object onto which to store the result.
  * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
  */
-Cartesian2.fromCartesian4 = Cartesian2.clone;
+Cartesian2.fromCartesian4 = Cartesian2.clone
 
 /**
  * The number of elements used to pack the object into an array.
  * @type {Number}
  */
-Cartesian2.packedLength = 2;
+Cartesian2.packedLength = 2
 
 /**
  * Stores the provided instance into the provided array.
@@ -108,18 +108,18 @@ Cartesian2.packedLength = 2;
  * @returns {Number[]} The array that was packed into
  */
 Cartesian2.pack = function (value, array, startingIndex) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("value", value);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('value', value)
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
+	startingIndex = defaultValue(startingIndex, 0)
 
-  array[startingIndex++] = value.x;
-  array[startingIndex] = value.y;
+	array[startingIndex++] = value.x
+	array[startingIndex] = value.y
 
-  return array;
-};
+	return array
+}
 
 /**
  * Retrieves an instance from a packed array.
@@ -130,19 +130,19 @@ Cartesian2.pack = function (value, array, startingIndex) {
  * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
  */
 Cartesian2.unpack = function (array, startingIndex, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
+	startingIndex = defaultValue(startingIndex, 0)
 
-  if (!defined(result)) {
-    result = new Cartesian2();
-  }
-  result.x = array[startingIndex++];
-  result.y = array[startingIndex];
-  return result;
-};
+	if (!defined(result)) {
+		result = new Cartesian2()
+	}
+	result.x = array[startingIndex++]
+	result.y = array[startingIndex]
+	return result
+}
 
 /**
      * Flattens an array of Cartesian2s into and array of components.
@@ -153,27 +153,27 @@ Cartesian2.unpack = function (array, startingIndex, result) {
      * @returns {Number[]} The packed array.
      */
 Cartesian2.packArray = function (array, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  var length = array.length;
-  var resultLength = length * 2;
-  if (!defined(result)) {
-    result = new Array(resultLength);
-  } else if (!Array.isArray(result) && result.length !== resultLength) {
-    throw new DeveloperError(
-      "If result is a typed array, it must have exactly array.length * 2 elements"
-    );
-  } else if (result.length !== resultLength) {
-    result.length = resultLength;
-  }
+	var length = array.length
+	var resultLength = length * 2
+	if (!defined(result)) {
+		result = new Array(resultLength)
+	} else if (!Array.isArray(result) && result.length !== resultLength) {
+		throw new DeveloperError(
+			'If result is a typed array, it must have exactly array.length * 2 elements',
+		)
+	} else if (result.length !== resultLength) {
+		result.length = resultLength
+	}
 
-  for (var i = 0; i < length; ++i) {
-    Cartesian2.pack(array[i], result, i * 2);
-  }
-  return result;
-};
+	for (var i = 0; i < length; ++i) {
+		Cartesian2.pack(array[i], result, i * 2)
+	}
+	return result
+}
 
 /**
  * Unpacks an array of cartesian components into and array of Cartesian2s.
@@ -183,27 +183,27 @@ Cartesian2.packArray = function (array, result) {
  * @returns {Cartesian2[]} The unpacked array.
  */
 Cartesian2.unpackArray = function (array, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  Check.typeOf.number.greaterThanOrEquals("array.length", array.length, 2);
-  if (array.length % 2 !== 0) {
-    throw new DeveloperError("array length must be a multiple of 2.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	Check.typeOf.number.greaterThanOrEquals('array.length', array.length, 2)
+	if (array.length % 2 !== 0) {
+		throw new DeveloperError('array length must be a multiple of 2.')
+	}
+	//>>includeEnd('debug');
 
-  var length = array.length;
-  if (!defined(result)) {
-    result = new Array(length / 2);
-  } else {
-    result.length = length / 2;
-  }
+	var length = array.length
+	if (!defined(result)) {
+		result = new Array(length / 2)
+	} else {
+		result.length = length / 2
+	}
 
-  for (var i = 0; i < length; i += 2) {
-    var index = i / 2;
-    result[index] = Cartesian2.unpack(array, i, result[index]);
-  }
-  return result;
-};
+	for (var i = 0; i < length; i += 2) {
+		var index = i / 2
+		result[index] = Cartesian2.unpack(array, i, result[index])
+	}
+	return result
+}
 
 /**
  * Creates a Cartesian2 from two consecutive elements in an array.
@@ -223,7 +223,7 @@ Cartesian2.unpackArray = function (array, result) {
  * var v2 = [0.0, 0.0, 1.0, 2.0];
  * var p2 = Cesium.Cartesian2.fromArray(v2, 2);
  */
-Cartesian2.fromArray = Cartesian2.unpack;
+Cartesian2.fromArray = Cartesian2.unpack
 
 /**
  * Computes the value of the maximum component for the supplied Cartesian.
@@ -232,12 +232,12 @@ Cartesian2.fromArray = Cartesian2.unpack;
  * @returns {Number} The value of the maximum component.
  */
 Cartesian2.maximumComponent = function (cartesian) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	//>>includeEnd('debug');
 
-  return Math.max(cartesian.x, cartesian.y);
-};
+	return Math.max(cartesian.x, cartesian.y)
+}
 
 /**
  * Computes the value of the minimum component for the supplied Cartesian.
@@ -246,12 +246,12 @@ Cartesian2.maximumComponent = function (cartesian) {
  * @returns {Number} The value of the minimum component.
  */
 Cartesian2.minimumComponent = function (cartesian) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	//>>includeEnd('debug');
 
-  return Math.min(cartesian.x, cartesian.y);
-};
+	return Math.min(cartesian.x, cartesian.y)
+}
 
 /**
  * Compares two Cartesians and computes a Cartesian which contains the minimum components of the supplied Cartesians.
@@ -262,17 +262,17 @@ Cartesian2.minimumComponent = function (cartesian) {
  * @returns {Cartesian2} A cartesian with the minimum components.
  */
 Cartesian2.minimumByComponent = function (first, second, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("first", first);
-  Check.typeOf.object("second", second);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('first', first)
+	Check.typeOf.object('second', second)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = Math.min(first.x, second.x);
-  result.y = Math.min(first.y, second.y);
+	result.x = Math.min(first.x, second.x)
+	result.y = Math.min(first.y, second.y)
 
-  return result;
-};
+	return result
+}
 
 /**
  * Compares two Cartesians and computes a Cartesian which contains the maximum components of the supplied Cartesians.
@@ -283,16 +283,16 @@ Cartesian2.minimumByComponent = function (first, second, result) {
  * @returns {Cartesian2} A cartesian with the maximum components.
  */
 Cartesian2.maximumByComponent = function (first, second, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("first", first);
-  Check.typeOf.object("second", second);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('first', first)
+	Check.typeOf.object('second', second)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = Math.max(first.x, second.x);
-  result.y = Math.max(first.y, second.y);
-  return result;
-};
+	result.x = Math.max(first.x, second.x)
+	result.y = Math.max(first.y, second.y)
+	return result
+}
 
 /**
  * Computes the provided Cartesian's squared magnitude.
@@ -301,12 +301,12 @@ Cartesian2.maximumByComponent = function (first, second, result) {
  * @returns {Number} The squared magnitude.
  */
 Cartesian2.magnitudeSquared = function (cartesian) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	//>>includeEnd('debug');
 
-  return cartesian.x * cartesian.x + cartesian.y * cartesian.y;
-};
+	return cartesian.x * cartesian.x + cartesian.y * cartesian.y
+}
 
 /**
  * Computes the Cartesian's magnitude (length).
@@ -315,10 +315,10 @@ Cartesian2.magnitudeSquared = function (cartesian) {
  * @returns {Number} The magnitude.
  */
 Cartesian2.magnitude = function (cartesian) {
-  return Math.sqrt(Cartesian2.magnitudeSquared(cartesian));
-};
+	return Math.sqrt(Cartesian2.magnitudeSquared(cartesian))
+}
 
-var distanceScratch = new Cartesian2();
+var distanceScratch = new Cartesian2()
 
 /**
  * Computes the distance between two points.
@@ -332,14 +332,14 @@ var distanceScratch = new Cartesian2();
  * var d = Cesium.Cartesian2.distance(new Cesium.Cartesian2(1.0, 0.0), new Cesium.Cartesian2(2.0, 0.0));
  */
 Cartesian2.distance = function (left, right) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	//>>includeEnd('debug');
 
-  Cartesian2.subtract(left, right, distanceScratch);
-  return Cartesian2.magnitude(distanceScratch);
-};
+	Cartesian2.subtract(left, right, distanceScratch)
+	return Cartesian2.magnitude(distanceScratch)
+}
 
 /**
  * Computes the squared distance between two points.  Comparing squared distances
@@ -354,14 +354,14 @@ Cartesian2.distance = function (left, right) {
  * var d = Cesium.Cartesian2.distance(new Cesium.Cartesian2(1.0, 0.0), new Cesium.Cartesian2(3.0, 0.0));
  */
 Cartesian2.distanceSquared = function (left, right) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	//>>includeEnd('debug');
 
-  Cartesian2.subtract(left, right, distanceScratch);
-  return Cartesian2.magnitudeSquared(distanceScratch);
-};
+	Cartesian2.subtract(left, right, distanceScratch)
+	return Cartesian2.magnitudeSquared(distanceScratch)
+}
 
 /**
  * Computes the normalized form of the supplied Cartesian.
@@ -371,24 +371,24 @@ Cartesian2.distanceSquared = function (left, right) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.normalize = function (cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  var magnitude = Cartesian2.magnitude(cartesian);
+	var magnitude = Cartesian2.magnitude(cartesian)
 
-  result.x = cartesian.x / magnitude;
-  result.y = cartesian.y / magnitude;
+	result.x = cartesian.x / magnitude
+	result.y = cartesian.y / magnitude
 
-  //>>includeStart('debug', pragmas.debug);
-  if (isNaN(result.x) || isNaN(result.y)) {
-    throw new DeveloperError("normalized result is not a number");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (isNaN(result.x) || isNaN(result.y)) {
+		throw new DeveloperError('normalized result is not a number')
+	}
+	//>>includeEnd('debug');
 
-  return result;
-};
+	return result
+}
 
 /**
  * Computes the dot (scalar) product of two Cartesians.
@@ -398,13 +398,13 @@ Cartesian2.normalize = function (cartesian, result) {
  * @returns {Number} The dot product.
  */
 Cartesian2.dot = function (left, right) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	//>>includeEnd('debug');
 
-  return left.x * right.x + left.y * right.y;
-};
+	return left.x * right.x + left.y * right.y
+}
 
 /**
  * Computes the componentwise product of two Cartesians.
@@ -415,16 +415,16 @@ Cartesian2.dot = function (left, right) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.multiplyComponents = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = left.x * right.x;
-  result.y = left.y * right.y;
-  return result;
-};
+	result.x = left.x * right.x
+	result.y = left.y * right.y
+	return result
+}
 
 /**
  * Computes the componentwise quotient of two Cartesians.
@@ -435,16 +435,16 @@ Cartesian2.multiplyComponents = function (left, right, result) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.divideComponents = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = left.x / right.x;
-  result.y = left.y / right.y;
-  return result;
-};
+	result.x = left.x / right.x
+	result.y = left.y / right.y
+	return result
+}
 
 /**
  * Computes the componentwise sum of two Cartesians.
@@ -455,16 +455,16 @@ Cartesian2.divideComponents = function (left, right, result) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.add = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = left.x + right.x;
-  result.y = left.y + right.y;
-  return result;
-};
+	result.x = left.x + right.x
+	result.y = left.y + right.y
+	return result
+}
 
 /**
  * Computes the componentwise difference of two Cartesians.
@@ -475,16 +475,16 @@ Cartesian2.add = function (left, right, result) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.subtract = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = left.x - right.x;
-  result.y = left.y - right.y;
-  return result;
-};
+	result.x = left.x - right.x
+	result.y = left.y - right.y
+	return result
+}
 
 /**
  * Multiplies the provided Cartesian componentwise by the provided scalar.
@@ -495,16 +495,16 @@ Cartesian2.subtract = function (left, right, result) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.multiplyByScalar = function (cartesian, scalar, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  Check.typeOf.number("scalar", scalar);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	Check.typeOf.number('scalar', scalar)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = cartesian.x * scalar;
-  result.y = cartesian.y * scalar;
-  return result;
-};
+	result.x = cartesian.x * scalar
+	result.y = cartesian.y * scalar
+	return result
+}
 
 /**
  * Divides the provided Cartesian componentwise by the provided scalar.
@@ -515,16 +515,16 @@ Cartesian2.multiplyByScalar = function (cartesian, scalar, result) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.divideByScalar = function (cartesian, scalar, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  Check.typeOf.number("scalar", scalar);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	Check.typeOf.number('scalar', scalar)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = cartesian.x / scalar;
-  result.y = cartesian.y / scalar;
-  return result;
-};
+	result.x = cartesian.x / scalar
+	result.y = cartesian.y / scalar
+	return result
+}
 
 /**
  * Negates the provided Cartesian.
@@ -534,15 +534,15 @@ Cartesian2.divideByScalar = function (cartesian, scalar, result) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.negate = function (cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = -cartesian.x;
-  result.y = -cartesian.y;
-  return result;
-};
+	result.x = -cartesian.x
+	result.y = -cartesian.y
+	return result
+}
 
 /**
  * Computes the absolute value of the provided Cartesian.
@@ -552,17 +552,17 @@ Cartesian2.negate = function (cartesian, result) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.abs = function (cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = Math.abs(cartesian.x);
-  result.y = Math.abs(cartesian.y);
-  return result;
-};
+	result.x = Math.abs(cartesian.x)
+	result.y = Math.abs(cartesian.y)
+	return result
+}
 
-var lerpScratch = new Cartesian2();
+var lerpScratch = new Cartesian2()
 /**
  * Computes the linear interpolation or extrapolation at t using the provided cartesians.
  *
@@ -573,20 +573,20 @@ var lerpScratch = new Cartesian2();
  * @returns {Cartesian2} The modified result parameter.
  */
 Cartesian2.lerp = function (start, end, t, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("start", start);
-  Check.typeOf.object("end", end);
-  Check.typeOf.number("t", t);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('start', start)
+	Check.typeOf.object('end', end)
+	Check.typeOf.number('t', t)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  Cartesian2.multiplyByScalar(end, t, lerpScratch);
-  result = Cartesian2.multiplyByScalar(start, 1.0 - t, result);
-  return Cartesian2.add(lerpScratch, result, result);
-};
+	Cartesian2.multiplyByScalar(end, t, lerpScratch)
+	result = Cartesian2.multiplyByScalar(start, 1.0 - t, result)
+	return Cartesian2.add(lerpScratch, result, result)
+}
 
-var angleBetweenScratch = new Cartesian2();
-var angleBetweenScratch2 = new Cartesian2();
+var angleBetweenScratch = new Cartesian2()
+var angleBetweenScratch2 = new Cartesian2()
 /**
  * Returns the angle, in radians, between the provided Cartesians.
  *
@@ -595,19 +595,19 @@ var angleBetweenScratch2 = new Cartesian2();
  * @returns {Number} The angle between the Cartesians.
  */
 Cartesian2.angleBetween = function (left, right) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	//>>includeEnd('debug');
 
-  Cartesian2.normalize(left, angleBetweenScratch);
-  Cartesian2.normalize(right, angleBetweenScratch2);
-  return CesiumMath.acosClamped(
-    Cartesian2.dot(angleBetweenScratch, angleBetweenScratch2)
-  );
-};
+	Cartesian2.normalize(left, angleBetweenScratch)
+	Cartesian2.normalize(right, angleBetweenScratch2)
+	return CesiumMath.acosClamped(
+		Cartesian2.dot(angleBetweenScratch, angleBetweenScratch2),
+	)
+}
 
-var mostOrthogonalAxisScratch = new Cartesian2();
+var mostOrthogonalAxisScratch = new Cartesian2()
 /**
  * Returns the axis that is most orthogonal to the provided Cartesian.
  *
@@ -616,22 +616,22 @@ var mostOrthogonalAxisScratch = new Cartesian2();
  * @returns {Cartesian2} The most orthogonal axis.
  */
 Cartesian2.mostOrthogonalAxis = function (cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  var f = Cartesian2.normalize(cartesian, mostOrthogonalAxisScratch);
-  Cartesian2.abs(f, f);
+	var f = Cartesian2.normalize(cartesian, mostOrthogonalAxisScratch)
+	Cartesian2.abs(f, f)
 
-  if (f.x <= f.y) {
-    result = Cartesian2.clone(Cartesian2.UNIT_X, result);
-  } else {
-    result = Cartesian2.clone(Cartesian2.UNIT_Y, result);
-  }
+	if (f.x <= f.y) {
+		result = Cartesian2.clone(Cartesian2.UNIT_X, result)
+	} else {
+		result = Cartesian2.clone(Cartesian2.UNIT_Y, result)
+	}
 
-  return result;
-};
+	return result
+}
 
 /**
  * Compares the provided Cartesians componentwise and returns
@@ -642,21 +642,21 @@ Cartesian2.mostOrthogonalAxis = function (cartesian, result) {
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
 Cartesian2.equals = function (left, right) {
-  return (
-    left === right ||
-    (defined(left) &&
-      defined(right) &&
-      left.x === right.x &&
-      left.y === right.y)
-  );
-};
+	return (
+		left === right ||
+		(defined(left) &&
+			defined(right) &&
+			left.x === right.x &&
+			left.y === right.y)
+	)
+}
 
 /**
  * @private
  */
 Cartesian2.equalsArray = function (cartesian, array, offset) {
-  return cartesian.x === array[offset] && cartesian.y === array[offset + 1];
-};
+	return cartesian.x === array[offset] && cartesian.y === array[offset + 1]
+}
 
 /**
  * Compares the provided Cartesians componentwise and returns
@@ -670,29 +670,29 @@ Cartesian2.equalsArray = function (cartesian, array, offset) {
  * @returns {Boolean} <code>true</code> if left and right are within the provided epsilon, <code>false</code> otherwise.
  */
 Cartesian2.equalsEpsilon = function (
-  left,
-  right,
-  relativeEpsilon,
-  absoluteEpsilon
+	left,
+	right,
+	relativeEpsilon,
+	absoluteEpsilon,
 ) {
-  return (
-    left === right ||
-    (defined(left) &&
-      defined(right) &&
-      CesiumMath.equalsEpsilon(
-        left.x,
-        right.x,
-        relativeEpsilon,
-        absoluteEpsilon
-      ) &&
-      CesiumMath.equalsEpsilon(
-        left.y,
-        right.y,
-        relativeEpsilon,
-        absoluteEpsilon
-      ))
-  );
-};
+	return (
+		left === right ||
+		(defined(left) &&
+			defined(right) &&
+			CesiumMath.equalsEpsilon(
+				left.x,
+				right.x,
+				relativeEpsilon,
+				absoluteEpsilon,
+			) &&
+			CesiumMath.equalsEpsilon(
+				left.y,
+				right.y,
+				relativeEpsilon,
+				absoluteEpsilon,
+			))
+	)
+}
 
 /**
  * An immutable Cartesian2 instance initialized to (0.0, 0.0).
@@ -700,7 +700,7 @@ Cartesian2.equalsEpsilon = function (
  * @type {Cartesian2}
  * @constant
  */
-Cartesian2.ZERO = Object.freeze(new Cartesian2(0.0, 0.0));
+Cartesian2.ZERO = Object.freeze(new Cartesian2(0.0, 0.0))
 
 /**
  * An immutable Cartesian2 instance initialized to (1.0, 0.0).
@@ -708,7 +708,7 @@ Cartesian2.ZERO = Object.freeze(new Cartesian2(0.0, 0.0));
  * @type {Cartesian2}
  * @constant
  */
-Cartesian2.UNIT_X = Object.freeze(new Cartesian2(1.0, 0.0));
+Cartesian2.UNIT_X = Object.freeze(new Cartesian2(1.0, 0.0))
 
 /**
  * An immutable Cartesian2 instance initialized to (0.0, 1.0).
@@ -716,7 +716,7 @@ Cartesian2.UNIT_X = Object.freeze(new Cartesian2(1.0, 0.0));
  * @type {Cartesian2}
  * @constant
  */
-Cartesian2.UNIT_Y = Object.freeze(new Cartesian2(0.0, 1.0));
+Cartesian2.UNIT_Y = Object.freeze(new Cartesian2(0.0, 1.0))
 
 /**
  * Duplicates this Cartesian2 instance.
@@ -725,8 +725,8 @@ Cartesian2.UNIT_Y = Object.freeze(new Cartesian2(0.0, 1.0));
  * @returns {Cartesian2} The modified result parameter or a new Cartesian2 instance if one was not provided.
  */
 Cartesian2.prototype.clone = function (result) {
-  return Cartesian2.clone(this, result);
-};
+	return Cartesian2.clone(this, result)
+}
 
 /**
  * Compares this Cartesian against the provided Cartesian componentwise and returns
@@ -736,8 +736,8 @@ Cartesian2.prototype.clone = function (result) {
  * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
  */
 Cartesian2.prototype.equals = function (right) {
-  return Cartesian2.equals(this, right);
-};
+	return Cartesian2.equals(this, right)
+}
 
 /**
  * Compares this Cartesian against the provided Cartesian componentwise and returns
@@ -750,17 +750,12 @@ Cartesian2.prototype.equals = function (right) {
  * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
  */
 Cartesian2.prototype.equalsEpsilon = function (
-  right,
-  relativeEpsilon,
-  absoluteEpsilon
+	right,
+	relativeEpsilon,
+	absoluteEpsilon,
 ) {
-  return Cartesian2.equalsEpsilon(
-    this,
-    right,
-    relativeEpsilon,
-    absoluteEpsilon
-  );
-};
+	return Cartesian2.equalsEpsilon(this, right, relativeEpsilon, absoluteEpsilon)
+}
 
 /**
  * Creates a string representing this Cartesian in the format '(x, y)'.
@@ -768,6 +763,6 @@ Cartesian2.prototype.equalsEpsilon = function (
  * @returns {String} A string representing the provided Cartesian in the format '(x, y)'.
  */
 Cartesian2.prototype.toString = function () {
-  return "(" + this.x + ", " + this.y + ")";
-};
-export default Cartesian2;
+	return '(' + this.x + ', ' + this.y + ')'
+}
+export default Cartesian2

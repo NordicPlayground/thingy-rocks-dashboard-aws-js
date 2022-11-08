@@ -1,9 +1,9 @@
-import Color from "../Core/Color.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import Event from "../Core/Event.js";
-import GeographicTilingScheme from "../Core/GeographicTilingScheme.js";
-import when from "../ThirdParty/when.js";
+import Color from '../Core/Color.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import Event from '../Core/Event.js'
+import GeographicTilingScheme from '../Core/GeographicTilingScheme.js'
+import when from '../ThirdParty/when.js'
 
 /**
  * @typedef {Object} TileCoordinatesImageryProvider.ConstructorOptions
@@ -30,277 +30,277 @@ import when from "../ThirdParty/when.js";
  * @param {TileCoordinatesImageryProvider.ConstructorOptions} [options] Object describing initialization options
  */
 function TileCoordinatesImageryProvider(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  this._tilingScheme = defined(options.tilingScheme)
-    ? options.tilingScheme
-    : new GeographicTilingScheme({ ellipsoid: options.ellipsoid });
-  this._color = defaultValue(options.color, Color.YELLOW);
-  this._errorEvent = new Event();
-  this._tileWidth = defaultValue(options.tileWidth, 256);
-  this._tileHeight = defaultValue(options.tileHeight, 256);
-  this._readyPromise = when.resolve(true);
+	this._tilingScheme = defined(options.tilingScheme)
+		? options.tilingScheme
+		: new GeographicTilingScheme({ ellipsoid: options.ellipsoid })
+	this._color = defaultValue(options.color, Color.YELLOW)
+	this._errorEvent = new Event()
+	this._tileWidth = defaultValue(options.tileWidth, 256)
+	this._tileHeight = defaultValue(options.tileHeight, 256)
+	this._readyPromise = when.resolve(true)
 
-  /**
-   * The default alpha blending value of this provider, with 0.0 representing fully transparent and
-   * 1.0 representing fully opaque.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultAlpha = undefined;
+	/**
+	 * The default alpha blending value of this provider, with 0.0 representing fully transparent and
+	 * 1.0 representing fully opaque.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultAlpha = undefined
 
-  /**
-   * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
-   * 1.0 representing fully opaque.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultNightAlpha = undefined;
+	/**
+	 * The default alpha blending value on the night side of the globe of this provider, with 0.0 representing fully transparent and
+	 * 1.0 representing fully opaque.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultNightAlpha = undefined
 
-  /**
-   * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
-   * 1.0 representing fully opaque.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultDayAlpha = undefined;
+	/**
+	 * The default alpha blending value on the day side of the globe of this provider, with 0.0 representing fully transparent and
+	 * 1.0 representing fully opaque.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultDayAlpha = undefined
 
-  /**
-   * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
-   * makes the imagery darker while greater than 1.0 makes it brighter.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultBrightness = undefined;
+	/**
+	 * The default brightness of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0
+	 * makes the imagery darker while greater than 1.0 makes it brighter.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultBrightness = undefined
 
-  /**
-   * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
-   * the contrast while greater than 1.0 increases it.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultContrast = undefined;
+	/**
+	 * The default contrast of this provider.  1.0 uses the unmodified imagery color.  Less than 1.0 reduces
+	 * the contrast while greater than 1.0 increases it.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultContrast = undefined
 
-  /**
-   * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultHue = undefined;
+	/**
+	 * The default hue of this provider in radians. 0.0 uses the unmodified imagery color.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultHue = undefined
 
-  /**
-   * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
-   * saturation while greater than 1.0 increases it.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultSaturation = undefined;
+	/**
+	 * The default saturation of this provider. 1.0 uses the unmodified imagery color. Less than 1.0 reduces the
+	 * saturation while greater than 1.0 increases it.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultSaturation = undefined
 
-  /**
-   * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
-   *
-   * @type {Number|undefined}
-   * @default undefined
-   */
-  this.defaultGamma = undefined;
+	/**
+	 * The default gamma correction to apply to this provider.  1.0 uses the unmodified imagery color.
+	 *
+	 * @type {Number|undefined}
+	 * @default undefined
+	 */
+	this.defaultGamma = undefined
 
-  /**
-   * The default texture minification filter to apply to this provider.
-   *
-   * @type {TextureMinificationFilter}
-   * @default undefined
-   */
-  this.defaultMinificationFilter = undefined;
+	/**
+	 * The default texture minification filter to apply to this provider.
+	 *
+	 * @type {TextureMinificationFilter}
+	 * @default undefined
+	 */
+	this.defaultMinificationFilter = undefined
 
-  /**
-   * The default texture magnification filter to apply to this provider.
-   *
-   * @type {TextureMagnificationFilter}
-   * @default undefined
-   */
-  this.defaultMagnificationFilter = undefined;
+	/**
+	 * The default texture magnification filter to apply to this provider.
+	 *
+	 * @type {TextureMagnificationFilter}
+	 * @default undefined
+	 */
+	this.defaultMagnificationFilter = undefined
 }
 
 Object.defineProperties(TileCoordinatesImageryProvider.prototype, {
-  /**
-   * Gets the proxy used by this provider.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Proxy}
-   * @readonly
-   */
-  proxy: {
-    get: function () {
-      return undefined;
-    },
-  },
+	/**
+	 * Gets the proxy used by this provider.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Proxy}
+	 * @readonly
+	 */
+	proxy: {
+		get: function () {
+			return undefined
+		},
+	},
 
-  /**
-   * Gets the width of each tile, in pixels. This function should
-   * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Number}
-   * @readonly
-   */
-  tileWidth: {
-    get: function () {
-      return this._tileWidth;
-    },
-  },
+	/**
+	 * Gets the width of each tile, in pixels. This function should
+	 * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	tileWidth: {
+		get: function () {
+			return this._tileWidth
+		},
+	},
 
-  /**
-   * Gets the height of each tile, in pixels.  This function should
-   * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Number}
-   * @readonly
-   */
-  tileHeight: {
-    get: function () {
-      return this._tileHeight;
-    },
-  },
+	/**
+	 * Gets the height of each tile, in pixels.  This function should
+	 * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	tileHeight: {
+		get: function () {
+			return this._tileHeight
+		},
+	},
 
-  /**
-   * Gets the maximum level-of-detail that can be requested.  This function should
-   * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Number|undefined}
-   * @readonly
-   */
-  maximumLevel: {
-    get: function () {
-      return undefined;
-    },
-  },
+	/**
+	 * Gets the maximum level-of-detail that can be requested.  This function should
+	 * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Number|undefined}
+	 * @readonly
+	 */
+	maximumLevel: {
+		get: function () {
+			return undefined
+		},
+	},
 
-  /**
-   * Gets the minimum level-of-detail that can be requested.  This function should
-   * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Number}
-   * @readonly
-   */
-  minimumLevel: {
-    get: function () {
-      return undefined;
-    },
-  },
+	/**
+	 * Gets the minimum level-of-detail that can be requested.  This function should
+	 * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Number}
+	 * @readonly
+	 */
+	minimumLevel: {
+		get: function () {
+			return undefined
+		},
+	},
 
-  /**
-   * Gets the tiling scheme used by this provider.  This function should
-   * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {TilingScheme}
-   * @readonly
-   */
-  tilingScheme: {
-    get: function () {
-      return this._tilingScheme;
-    },
-  },
+	/**
+	 * Gets the tiling scheme used by this provider.  This function should
+	 * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {TilingScheme}
+	 * @readonly
+	 */
+	tilingScheme: {
+		get: function () {
+			return this._tilingScheme
+		},
+	},
 
-  /**
-   * Gets the rectangle, in radians, of the imagery provided by this instance.  This function should
-   * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Rectangle}
-   * @readonly
-   */
-  rectangle: {
-    get: function () {
-      return this._tilingScheme.rectangle;
-    },
-  },
+	/**
+	 * Gets the rectangle, in radians, of the imagery provided by this instance.  This function should
+	 * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Rectangle}
+	 * @readonly
+	 */
+	rectangle: {
+		get: function () {
+			return this._tilingScheme.rectangle
+		},
+	},
 
-  /**
-   * Gets the tile discard policy.  If not undefined, the discard policy is responsible
-   * for filtering out "missing" tiles via its shouldDiscardImage function.  If this function
-   * returns undefined, no tiles are filtered.  This function should
-   * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {TileDiscardPolicy}
-   * @readonly
-   */
-  tileDiscardPolicy: {
-    get: function () {
-      return undefined;
-    },
-  },
+	/**
+	 * Gets the tile discard policy.  If not undefined, the discard policy is responsible
+	 * for filtering out "missing" tiles via its shouldDiscardImage function.  If this function
+	 * returns undefined, no tiles are filtered.  This function should
+	 * not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {TileDiscardPolicy}
+	 * @readonly
+	 */
+	tileDiscardPolicy: {
+		get: function () {
+			return undefined
+		},
+	},
 
-  /**
-   * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
-   * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
-   * are passed an instance of {@link TileProviderError}.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Event}
-   * @readonly
-   */
-  errorEvent: {
-    get: function () {
-      return this._errorEvent;
-    },
-  },
+	/**
+	 * Gets an event that is raised when the imagery provider encounters an asynchronous error.  By subscribing
+	 * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
+	 * are passed an instance of {@link TileProviderError}.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Event}
+	 * @readonly
+	 */
+	errorEvent: {
+		get: function () {
+			return this._errorEvent
+		},
+	},
 
-  /**
-   * Gets a value indicating whether or not the provider is ready for use.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Boolean}
-   * @readonly
-   */
-  ready: {
-    get: function () {
-      return true;
-    },
-  },
+	/**
+	 * Gets a value indicating whether or not the provider is ready for use.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	ready: {
+		get: function () {
+			return true
+		},
+	},
 
-  /**
-   * Gets a promise that resolves to true when the provider is ready for use.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Promise.<Boolean>}
-   * @readonly
-   */
-  readyPromise: {
-    get: function () {
-      return this._readyPromise;
-    },
-  },
+	/**
+	 * Gets a promise that resolves to true when the provider is ready for use.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Promise.<Boolean>}
+	 * @readonly
+	 */
+	readyPromise: {
+		get: function () {
+			return this._readyPromise
+		},
+	},
 
-  /**
-   * Gets the credit to display when this imagery provider is active.  Typically this is used to credit
-   * the source of the imagery.  This function should not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Credit}
-   * @readonly
-   */
-  credit: {
-    get: function () {
-      return undefined;
-    },
-  },
+	/**
+	 * Gets the credit to display when this imagery provider is active.  Typically this is used to credit
+	 * the source of the imagery.  This function should not be called before {@link TileCoordinatesImageryProvider#ready} returns true.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Credit}
+	 * @readonly
+	 */
+	credit: {
+		get: function () {
+			return undefined
+		},
+	},
 
-  /**
-   * Gets a value indicating whether or not the images provided by this imagery provider
-   * include an alpha channel.  If this property is false, an alpha channel, if present, will
-   * be ignored.  If this property is true, any images without an alpha channel will be treated
-   * as if their alpha is 1.0 everywhere.  Setting this property to false reduces memory usage
-   * and texture upload time.
-   * @memberof TileCoordinatesImageryProvider.prototype
-   * @type {Boolean}
-   * @readonly
-   */
-  hasAlphaChannel: {
-    get: function () {
-      return true;
-    },
-  },
-});
+	/**
+	 * Gets a value indicating whether or not the images provided by this imagery provider
+	 * include an alpha channel.  If this property is false, an alpha channel, if present, will
+	 * be ignored.  If this property is true, any images without an alpha channel will be treated
+	 * as if their alpha is 1.0 everywhere.  Setting this property to false reduces memory usage
+	 * and texture upload time.
+	 * @memberof TileCoordinatesImageryProvider.prototype
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	hasAlphaChannel: {
+		get: function () {
+			return true
+		},
+	},
+})
 
 /**
  * Gets the credits to be displayed when a given tile is displayed.
@@ -313,12 +313,12 @@ Object.defineProperties(TileCoordinatesImageryProvider.prototype, {
  * @exception {DeveloperError} <code>getTileCredits</code> must not be called before the imagery provider is ready.
  */
 TileCoordinatesImageryProvider.prototype.getTileCredits = function (
-  x,
-  y,
-  level
+	x,
+	y,
+	level,
 ) {
-  return undefined;
-};
+	return undefined
+}
 
 /**
  * Requests the image for a given tile.  This function should
@@ -334,31 +334,31 @@ TileCoordinatesImageryProvider.prototype.getTileCredits = function (
  *          Image or a Canvas DOM object.
  */
 TileCoordinatesImageryProvider.prototype.requestImage = function (
-  x,
-  y,
-  level,
-  request
+	x,
+	y,
+	level,
+	request,
 ) {
-  var canvas = document.createElement("canvas");
-  canvas.width = 256;
-  canvas.height = 256;
-  var context = canvas.getContext("2d");
+	var canvas = document.createElement('canvas')
+	canvas.width = 256
+	canvas.height = 256
+	var context = canvas.getContext('2d')
 
-  var cssColor = this._color.toCssColorString();
+	var cssColor = this._color.toCssColorString()
 
-  context.strokeStyle = cssColor;
-  context.lineWidth = 2;
-  context.strokeRect(1, 1, 255, 255);
+	context.strokeStyle = cssColor
+	context.lineWidth = 2
+	context.strokeRect(1, 1, 255, 255)
 
-  context.font = "bold 25px Arial";
-  context.textAlign = "center";
-  context.fillStyle = cssColor;
-  context.fillText("L: " + level, 124, 86);
-  context.fillText("X: " + x, 124, 136);
-  context.fillText("Y: " + y, 124, 186);
+	context.font = 'bold 25px Arial'
+	context.textAlign = 'center'
+	context.fillStyle = cssColor
+	context.fillText('L: ' + level, 124, 86)
+	context.fillText('X: ' + x, 124, 136)
+	context.fillText('Y: ' + y, 124, 186)
 
-  return canvas;
-};
+	return canvas
+}
 
 /**
  * Picking features is not currently supported by this imagery provider, so this function simply returns
@@ -375,12 +375,12 @@ TileCoordinatesImageryProvider.prototype.requestImage = function (
  *                   It may also be undefined if picking is not supported.
  */
 TileCoordinatesImageryProvider.prototype.pickFeatures = function (
-  x,
-  y,
-  level,
-  longitude,
-  latitude
+	x,
+	y,
+	level,
+	longitude,
+	latitude,
 ) {
-  return undefined;
-};
-export default TileCoordinatesImageryProvider;
+	return undefined
+}
+export default TileCoordinatesImageryProvider

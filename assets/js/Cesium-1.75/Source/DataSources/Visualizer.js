@@ -1,4 +1,4 @@
-import DeveloperError from "../Core/DeveloperError.js";
+import DeveloperError from '../Core/DeveloperError.js'
 
 /**
  * Defines the interface for visualizers. Visualizers are plug-ins to
@@ -17,7 +17,7 @@ import DeveloperError from "../Core/DeveloperError.js";
  * @see GeometryVisualizer
  */
 function Visualizer() {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 /**
@@ -30,7 +30,7 @@ function Visualizer() {
  * false if the visualizer is waiting for an asynchronous operation to
  * complete before data can be updated.
  */
-Visualizer.prototype.update = DeveloperError.throwInstantiationError;
+Visualizer.prototype.update = DeveloperError.throwInstantiationError
 
 /**
  * Computes a bounding sphere which encloses the visualization produced for the specified entity.
@@ -43,7 +43,7 @@ Visualizer.prototype.update = DeveloperError.throwInstantiationError;
  *                       BoundingSphereState.FAILED if the entity has no visualization in the current scene.
  * @private
  */
-Visualizer.prototype.getBoundingSphere = DeveloperError.throwInstantiationError;
+Visualizer.prototype.getBoundingSphere = DeveloperError.throwInstantiationError
 
 /**
  * Returns true if this object was destroyed; otherwise, false.
@@ -51,11 +51,11 @@ Visualizer.prototype.getBoundingSphere = DeveloperError.throwInstantiationError;
  *
  * @returns {Boolean} True if this object was destroyed; otherwise, false.
  */
-Visualizer.prototype.isDestroyed = DeveloperError.throwInstantiationError;
+Visualizer.prototype.isDestroyed = DeveloperError.throwInstantiationError
 
 /**
  * Removes all visualization and cleans up any resources associated with this instance.
  * @function
  */
-Visualizer.prototype.destroy = DeveloperError.throwInstantiationError;
-export default Visualizer;
+Visualizer.prototype.destroy = DeveloperError.throwInstantiationError
+export default Visualizer

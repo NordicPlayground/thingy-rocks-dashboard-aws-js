@@ -54,4 +54,4 @@ float czm_fastApproximateAtan(float x, float y) {\n\
     t = czm_branchFreeTernary(y < 0.0, -t, t);\n\
     return t;\n\
 }\n\
-";
+"

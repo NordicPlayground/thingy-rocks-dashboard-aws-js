@@ -1,14 +1,13 @@
-define(["./sniff", "./_base/window"],
-		function(has, win){
+define(['./sniff', './_base/window'], function (has, win) {
 	// module:
 	//		dojo/dom
 
 	// FIXME: need to add unit tests for all the semi-public methods
 
-	if(has("ie") <= 7){
-		try{
-			document.execCommand("BackgroundImageCache", false, true);
-		}catch(e){
+	if (has('ie') <= 7) {
+		try {
+			document.execCommand('BackgroundImageCache', false, true)
+		} catch (e) {
 			// sane browsers don't have cache "issues"
 		}
 	}
@@ -21,38 +20,47 @@ define(["./sniff", "./_base/window"],
 	var dom = {
 		// summary:
 		//		This module defines the core dojo DOM API.
-	};
+	}
 
-	if(has("ie")){
-		dom.byId = function(id, doc){
-			if(typeof id != "string"){
-				return id;
+	if (has('ie')) {
+		dom.byId = function (id, doc) {
+			if (typeof id != 'string') {
+				return id
 			}
-			var _d = doc || win.doc, te = id && _d.getElementById(id);
+			var _d = doc || win.doc,
+				te = id && _d.getElementById(id)
 			// attributes.id.value is better than just id in case the
 			// user has a name=id inside a form
-			if(te && (te.attributes.id.value == id || te.id == id)){
-				return te;
-			}else{
-				var eles = _d.all[id];
-				if(!eles || eles.nodeName){
-					eles = [eles];
+			if (te && (te.attributes.id.value == id || te.id == id)) {
+				return te
+			} else {
+				var eles = _d.all[id]
+				if (!eles || eles.nodeName) {
+					eles = [eles]
 				}
 				// if more than 1, choose first with the correct id
-				var i = 0;
-				while((te = eles[i++])){
-					if((te.attributes && te.attributes.id && te.attributes.id.value == id) || te.id == id){
-						return te;
+				var i = 0
+				while ((te = eles[i++])) {
+					if (
+						(te.attributes &&
+							te.attributes.id &&
+							te.attributes.id.value == id) ||
+						te.id == id
+					) {
+						return te
 					}
 				}
 			}
-		};
-	}else{
-		dom.byId = function(id, doc){
+		}
+	} else {
+		dom.byId = function (id, doc) {
 			// inline'd type check.
 			// be sure to return null per documentation, to match IE branch.
-			return ((typeof id == "string") ? (doc || win.doc).getElementById(id) : id) || null; // DOMNode
-		};
+			return (
+				(typeof id == 'string' ? (doc || win.doc).getElementById(id) : id) ||
+				null
+			) // DOMNode
+		}
 	}
 	/*=====
 	 dom.byId = function(id, doc){
@@ -92,7 +100,10 @@ define(["./sniff", "./_base/window"],
 	 };
 	 =====*/
 
-	dom.isDescendant = function(/*DOMNode|String*/ node, /*DOMNode|String*/ ancestor){
+	dom.isDescendant = function (
+		/*DOMNode|String*/ node,
+		/*DOMNode|String*/ ancestor,
+	) {
 		// summary:
 		//		Returns true if node is a descendant of ancestor
 		// node: DOMNode|String
@@ -106,19 +117,20 @@ define(["./sniff", "./_base/window"],
 		//	|		if(dom.isDescendant("bar", "foo")){ ... }
 		//	|	});
 
-		try{
-			node = dom.byId(node);
-			ancestor = dom.byId(ancestor);
-			while(node){
-				if(node == ancestor){
-					return true; // Boolean
+		try {
+			node = dom.byId(node)
+			ancestor = dom.byId(ancestor)
+			while (node) {
+				if (node == ancestor) {
+					return true // Boolean
 				}
-				node = node.parentNode;
+				node = node.parentNode
 			}
-		}catch(e){ /* squelch, return false */ }
-		return false; // Boolean
-	};
-
+		} catch (e) {
+			/* squelch, return false */
+		}
+		return false // Boolean
+	}
 
 	// TODO: do we need setSelectable in the base?
 
@@ -129,27 +141,29 @@ define(["./sniff", "./_base/window"],
 	// as the unselectable attribute on elements; namely, dijit Editor buttons
 	// do not properly prevent the content of the editable content frame from
 	// unblurring. As a result, the -ms- prefixed version is omitted here.
-	has.add("css-user-select", function(global, doc, element){
+	has.add('css-user-select', function (global, doc, element) {
 		// Avoid exception when dom.js is loaded in non-browser environments
-		if(!element){ return false; }
-		
-		var style = element.style;
-		var prefixes = ["Khtml", "O", "Moz", "Webkit"],
+		if (!element) {
+			return false
+		}
+
+		var style = element.style
+		var prefixes = ['Khtml', 'O', 'Moz', 'Webkit'],
 			i = prefixes.length,
-			name = "userSelect",
-			prefix;
+			name = 'userSelect',
+			prefix
 
 		// Iterate prefixes from most to least likely
-		do{
-			if(typeof style[name] !== "undefined"){
+		do {
+			if (typeof style[name] !== 'undefined') {
 				// Supported; return property name
-				return name;
+				return name
 			}
-		}while(i-- && (name = prefixes[i] + "UserSelect"));
+		} while (i-- && (name = prefixes[i] + 'UserSelect'))
 
 		// Not supported if we didn't return before now
-		return false;
-	});
+		return false
+	})
 
 	/*=====
 	dom.setSelectable = function(node, selectable){
@@ -173,30 +187,32 @@ define(["./sniff", "./_base/window"],
 	};
 	=====*/
 
-	var cssUserSelect = has("css-user-select");
-	dom.setSelectable = cssUserSelect ? function(node, selectable){
-		// css-user-select returns a (possibly vendor-prefixed) CSS property name
-		dom.byId(node).style[cssUserSelect] = selectable ? "" : "none";
-	} : function(node, selectable){
-		node = dom.byId(node);
+	var cssUserSelect = has('css-user-select')
+	dom.setSelectable = cssUserSelect
+		? function (node, selectable) {
+				// css-user-select returns a (possibly vendor-prefixed) CSS property name
+				dom.byId(node).style[cssUserSelect] = selectable ? '' : 'none'
+		  }
+		: function (node, selectable) {
+				node = dom.byId(node)
 
-		// (IE < 10 / Opera) Fall back to setting/removing the
-		// unselectable attribute on the element and all its children
-		var nodes = node.getElementsByTagName("*"),
-			i = nodes.length;
+				// (IE < 10 / Opera) Fall back to setting/removing the
+				// unselectable attribute on the element and all its children
+				var nodes = node.getElementsByTagName('*'),
+					i = nodes.length
 
-		if(selectable){
-			node.removeAttribute("unselectable");
-			while(i--){
-				nodes[i].removeAttribute("unselectable");
-			}
-		}else{
-			node.setAttribute("unselectable", "on");
-			while(i--){
-				nodes[i].setAttribute("unselectable", "on");
-			}
-		}
-	};
+				if (selectable) {
+					node.removeAttribute('unselectable')
+					while (i--) {
+						nodes[i].removeAttribute('unselectable')
+					}
+				} else {
+					node.setAttribute('unselectable', 'on')
+					while (i--) {
+						nodes[i].setAttribute('unselectable', 'on')
+					}
+				}
+		  }
 
-	return dom;
-});
+	return dom
+})

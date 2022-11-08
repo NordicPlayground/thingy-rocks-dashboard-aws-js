@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform sampler2D colorTexture;\n\
+export default 'uniform sampler2D colorTexture;\n\
 uniform sampler2D bloomTexture;\n\
 uniform bool glowOnly;\n\
 \n\
@@ -19,4 +19,4 @@ void main(void)\n\
     vec4 bloom = texture2D(bloomTexture, v_textureCoordinates);\n\
     gl_FragColor = glowOnly ? bloom : bloom + color;\n\
 }\n\
-";
+'

@@ -1,5 +1,5 @@
-import defaultValue from "../Core/defaultValue.js";
-import Pass from "../Renderer/Pass.js";
+import defaultValue from '../Core/defaultValue.js'
+import Pass from '../Renderer/Pass.js'
 
 /**
  * Defines a list of commands whose geometry are bound by near and far distances from the camera.
@@ -12,19 +12,19 @@ import Pass from "../Renderer/Pass.js";
  * @private
  */
 function FrustumCommands(near, far) {
-  this.near = defaultValue(near, 0.0);
-  this.far = defaultValue(far, 0.0);
+	this.near = defaultValue(near, 0.0)
+	this.far = defaultValue(far, 0.0)
 
-  var numPasses = Pass.NUMBER_OF_PASSES;
-  var commands = new Array(numPasses);
-  var indices = new Array(numPasses);
+	var numPasses = Pass.NUMBER_OF_PASSES
+	var commands = new Array(numPasses)
+	var indices = new Array(numPasses)
 
-  for (var i = 0; i < numPasses; ++i) {
-    commands[i] = [];
-    indices[i] = 0;
-  }
+	for (var i = 0; i < numPasses; ++i) {
+		commands[i] = []
+		indices[i] = 0
+	}
 
-  this.commands = commands;
-  this.indices = indices;
+	this.commands = commands
+	this.indices = indices
 }
-export default FrustumCommands;
+export default FrustumCommands

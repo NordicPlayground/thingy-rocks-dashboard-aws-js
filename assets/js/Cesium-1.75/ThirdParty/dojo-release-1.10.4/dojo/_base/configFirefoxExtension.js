@@ -2,82 +2,88 @@
 
 // a host environment specifically built for Mozilla extensions, but derived
 // from the browser host environment
-if(typeof window != 'undefined'){
-	dojo.isBrowser = true;
-	dojo._name = "browser";
-
+if (typeof window != 'undefined') {
+	dojo.isBrowser = true
+	dojo._name = 'browser'
 
 	// FIXME: PORTME
 	//	http://developer.mozilla.org/en/mozIJSSubScriptLoader
 
-
 	// attempt to figure out the path to dojo if it isn't set in the config
-	(function(){
+	;(function () {
 		// this is a scope protection closure. We set browser versions and grab
 		// the URL we were loaded from here.
 
 		// FIXME: need to probably use a different reference to "document" to get the hosting XUL environment
 
-		dojo.baseUrl = dojo.config.baseUrl;
+		dojo.baseUrl = dojo.config.baseUrl
 
 		// fill in the rendering support information in dojo.render.*
-		var n = navigator;
-		var dua = n.userAgent;
-		var dav = n.appVersion;
-		var tv = parseFloat(dav);
+		var n = navigator
+		var dua = n.userAgent
+		var dav = n.appVersion
+		var tv = parseFloat(dav)
 
-		dojo.isMozilla = dojo.isMoz = tv;
-		if(dojo.isMoz){
-			dojo.isFF = parseFloat(dua.split("Firefox/")[1]) || undefined;
+		dojo.isMozilla = dojo.isMoz = tv
+		if (dojo.isMoz) {
+			dojo.isFF = parseFloat(dua.split('Firefox/')[1]) || undefined
 		}
 
 		// FIXME
-		dojo.isQuirks = document.compatMode == "BackCompat";
+		dojo.isQuirks = document.compatMode == 'BackCompat'
 
 		// FIXME
 		// TODO: is the HTML LANG attribute relevant?
-		dojo.locale = dojo.config.locale || n.language.toLowerCase();
+		dojo.locale = dojo.config.locale || n.language.toLowerCase()
 
-		dojo._xhrObj = function(){
-			return new XMLHttpRequest();
-		};
+		dojo._xhrObj = function () {
+			return new XMLHttpRequest()
+		}
 
 		// monkey-patch _loadUri to handle file://, chrome://, and resource:// url's
-		var oldLoadUri = dojo._loadUri;
-		dojo._loadUri = function(uri, cb){
-			var handleLocal = ["file:", "chrome:", "resource:"].some(function(prefix){
-				return String(uri).indexOf(prefix) == 0;
-			});
-			if(handleLocal){
+		var oldLoadUri = dojo._loadUri
+		dojo._loadUri = function (uri, cb) {
+			var handleLocal = ['file:', 'chrome:', 'resource:'].some(function (
+				prefix,
+			) {
+				return String(uri).indexOf(prefix) == 0
+			})
+			if (handleLocal) {
 				// see:
 				//		http://developer.mozilla.org/en/mozIJSSubScriptLoader
-				var l = Components.classes["@mozilla.org/moz/jssubscript-loader;1"]
-					.getService(Components.interfaces.mozIJSSubScriptLoader);
-				var value = l.loadSubScript(uri, dojo.global);
-				if(cb){ cb(value); }
-				return true;
-			}else{
+				var l = Components.classes[
+					'@mozilla.org/moz/jssubscript-loader;1'
+				].getService(Components.interfaces.mozIJSSubScriptLoader)
+				var value = l.loadSubScript(uri, dojo.global)
+				if (cb) {
+					cb(value)
+				}
+				return true
+			} else {
 				// otherwise, call the pre-existing version
-				return oldLoadUri.apply(dojo, arguments);
+				return oldLoadUri.apply(dojo, arguments)
 			}
-		};
+		}
 
 		// FIXME: PORTME
-		dojo._isDocumentOk = function(http){
-			var stat = http.status || 0;
-			return (stat >= 200 && stat < 300) || 	// Boolean
-				stat == 304 || 						// allow any 2XX response code
-				stat == 1223 || 						// get it out of the cache
-				(!stat && (location.protocol == "file:" || location.protocol == "chrome:") );
-		};
+		dojo._isDocumentOk = function (http) {
+			var stat = http.status || 0
+			return (
+				(stat >= 200 && stat < 300) || // Boolean
+				stat == 304 || // allow any 2XX response code
+				stat == 1223 || // get it out of the cache
+				(!stat &&
+					(location.protocol == 'file:' || location.protocol == 'chrome:'))
+			)
+		}
 
 		// FIXME: PORTME
 		// var owloc = window.location+"";
 		// var base = document.getElementsByTagName("base");
 		// var hasBase = (base && base.length > 0);
-		var hasBase = false;
+		var hasBase = false
 
-		dojo._getText = function(/*URI*/ uri, /*Boolean*/ fail_ok){
+		dojo._getText = function (/*URI*/ uri, /*Boolean*/ fail_ok) {
 			// summary:
 			//		Read the contents of the specified uri and return those contents.
 			// uri:
@@ -93,73 +99,81 @@ if(typeof window != 'undefined'){
 			// alert("_getText: " + uri);
 
 			// NOTE: must be declared before scope switches ie. this._xhrObj()
-			var http = dojo._xhrObj();
+			var http = dojo._xhrObj()
 
-			if(!hasBase && dojo._Url){
-				uri = (new dojo._Url(uri)).toString();
+			if (!hasBase && dojo._Url) {
+				uri = new dojo._Url(uri).toString()
 			}
-			if(dojo.config.cacheBust){
+			if (dojo.config.cacheBust) {
 				//Make sure we have a string before string methods are used on uri
-				uri += "";
-				uri += (uri.indexOf("?") == -1 ? "?" : "&") + String(dojo.config.cacheBust).replace(/\W+/g, "");
+				uri += ''
+				uri +=
+					(uri.indexOf('?') == -1 ? '?' : '&') +
+					String(dojo.config.cacheBust).replace(/\W+/g, '')
 			}
-			var handleLocal = ["file:", "chrome:", "resource:"].some(function(prefix){
-				return String(uri).indexOf(prefix) == 0;
-			});
-			if(handleLocal){
+			var handleLocal = ['file:', 'chrome:', 'resource:'].some(function (
+				prefix,
+			) {
+				return String(uri).indexOf(prefix) == 0
+			})
+			if (handleLocal) {
 				// see:
 				//		http://forums.mozillazine.org/viewtopic.php?p=921150#921150
-				var ioService = Components.classes["@mozilla.org/network/io-service;1"]
-					.getService(Components.interfaces.nsIIOService);
-				var scriptableStream = Components
-					.classes["@mozilla.org/scriptableinputstream;1"]
-					.getService(Components.interfaces.nsIScriptableInputStream);
+				var ioService = Components.classes[
+					'@mozilla.org/network/io-service;1'
+				].getService(Components.interfaces.nsIIOService)
+				var scriptableStream = Components.classes[
+					'@mozilla.org/scriptableinputstream;1'
+				].getService(Components.interfaces.nsIScriptableInputStream)
 
-				var channel = ioService.newChannel(uri, null, null);
-				var input = channel.open();
-				scriptableStream.init(input);
-				var str = scriptableStream.read(input.available());
-				scriptableStream.close();
-				input.close();
-				return str;
-			}else{
-				http.open('GET', uri, false);
-				try{
-					http.send(null);
+				var channel = ioService.newChannel(uri, null, null)
+				var input = channel.open()
+				scriptableStream.init(input)
+				var str = scriptableStream.read(input.available())
+				scriptableStream.close()
+				input.close()
+				return str
+			} else {
+				http.open('GET', uri, false)
+				try {
+					http.send(null)
 					// alert(http);
-					if(!dojo._isDocumentOk(http)){
-						var err = Error("Unable to load " + uri + " status:" + http.status);
-						err.status = http.status;
-						err.responseText = http.responseText;
-						throw err;
+					if (!dojo._isDocumentOk(http)) {
+						var err = Error('Unable to load ' + uri + ' status:' + http.status)
+						err.status = http.status
+						err.responseText = http.responseText
+						throw err
 					}
-				}catch(e){
-					if(fail_ok){
-						return null;
+				} catch (e) {
+					if (fail_ok) {
+						return null
 					} // null
 					// rethrow the exception
-					throw e;
+					throw e
 				}
-				return http.responseText; // String
+				return http.responseText // String
 			}
-		};
+		}
 
-		dojo._windowUnloaders = [];
+		dojo._windowUnloaders = []
 
 		// FIXME: PORTME
-		dojo.windowUnloaded = function(){
+		dojo.windowUnloaded = function () {
 			// summary:
 			//		signal fired by impending window destruction. You may use
 			//		dojo.addOnWIndowUnload() or dojo.connect() to this method to perform
 			//		page/application cleanup methods. See dojo.addOnWindowUnload for more info.
-			var mll = dojo._windowUnloaders;
-			while(mll.length){
-				(mll.pop())();
+			var mll = dojo._windowUnloaders
+			while (mll.length) {
+				mll.pop()()
 			}
-		};
+		}
 
 		// FIXME: PORTME
-		dojo.addOnWindowUnload = function(/*Object?*/obj, /*String|Function?*/functionName){
+		dojo.addOnWindowUnload = function (
+			/*Object?*/ obj,
+			/*String|Function?*/ functionName,
+		) {
 			// summary:
 			//		registers a function to be triggered when window.onunload fires.
 			//		Be careful trying to modify the DOM or access JavaScript properties
@@ -171,15 +185,18 @@ if(typeof window != 'undefined'){
 			//	|	dojo.addOnWindowUnload(object, "functionName")
 			//	|	dojo.addOnWindowUnload(object, function(){ /* ... */});
 
-			dojo._onto(dojo._windowUnloaders, obj, functionName);
-		};
+			dojo._onto(dojo._windowUnloaders, obj, functionName)
+		}
 
 		// XUL specific APIs
-		var contexts = [];
-		var current = null;
-		dojo._defaultContext = [ window, document ];
+		var contexts = []
+		var current = null
+		dojo._defaultContext = [window, document]
 
-		dojo.pushContext = function(/*Object|String?*/g, /*MDocumentElement?*/d){
+		dojo.pushContext = function (
+			/*Object|String?*/ g,
+			/*MDocumentElement?*/ d,
+		) {
 			// summary:
 			//		causes subsequent calls to Dojo methods to assume the
 			//		passed object and, optionally, document as the default
@@ -206,70 +223,74 @@ if(typeof window != 'undefined'){
 			//		search for a context and document.
 			// d:
 			//		The document element to execute subsequent code with.
-			var old = [dojo.global, dojo.doc];
-			contexts.push(old);
-			var n;
-			if(!g && !d){
-				n = dojo._defaultContext;
-			}else{
-				n = [ g, d ];
-				if(!d && dojo.isString(g)){
-					var t = document.getElementById(g);
-					if(t.contentDocument){
-						n = [t.contentWindow, t.contentDocument];
+			var old = [dojo.global, dojo.doc]
+			contexts.push(old)
+			var n
+			if (!g && !d) {
+				n = dojo._defaultContext
+			} else {
+				n = [g, d]
+				if (!d && dojo.isString(g)) {
+					var t = document.getElementById(g)
+					if (t.contentDocument) {
+						n = [t.contentWindow, t.contentDocument]
 					}
 				}
 			}
-			current = n;
-			dojo.setContext.apply(dojo, n);
-			return old; // Array
-		};
+			current = n
+			dojo.setContext.apply(dojo, n)
+			return old // Array
+		}
 
-		dojo.popContext = function(){
+		dojo.popContext = function () {
 			// summary:
 			//		If the context stack contains elements, ensure that
 			//		subsequent code executes in the *previous* context to the
 			//		current context. The current context set ([global,
 			//		document]) is returned.
-			var oc = current;
-			if(!contexts.length){
-				return oc;
+			var oc = current
+			if (!contexts.length) {
+				return oc
 			}
-			dojo.setContext.apply(dojo, contexts.pop());
-			return oc;
-		};
+			dojo.setContext.apply(dojo, contexts.pop())
+			return oc
+		}
 
 		// FIXME:
 		//		don't really like the current arguments and order to
 		//		_inContext, so don't make it public until it's right!
-		dojo._inContext = function(g, d, f){
-			var a = dojo._toArray(arguments);
-			f = a.pop();
-			if(a.length == 1){
-				d = null;
+		dojo._inContext = function (g, d, f) {
+			var a = dojo._toArray(arguments)
+			f = a.pop()
+			if (a.length == 1) {
+				d = null
 			}
-			dojo.pushContext(g, d);
-			var r = f();
-			dojo.popContext();
-			return r;
-		};
+			dojo.pushContext(g, d)
+			var r = f()
+			dojo.popContext()
+			return r
+		}
+	})()
 
-	})();
-
-	dojo._initFired = false;
+	dojo._initFired = false
 	//	BEGIN DOMContentLoaded, from Dean Edwards (http://dean.edwards.name/weblog/2006/06/again/)
-	dojo._loadInit = function(e){
-		dojo._initFired = true;
+	dojo._loadInit = function (e) {
+		dojo._initFired = true
 		// allow multiple calls, only first one will take effect
 		// A bug in khtml calls events callbacks for document for event which isnt supported
 		// for example a created contextmenu event calls DOMContentLoaded, workaround
-		var type = (e && e.type) ? e.type.toLowerCase() : "load";
-		if(arguments.callee.initialized || (type != "domcontentloaded" && type != "load")){ return; }
-		arguments.callee.initialized = true;
-		if(dojo._inFlightCount == 0){
-			dojo._modulesLoaded();
+		var type = e && e.type ? e.type.toLowerCase() : 'load'
+		if (
+			arguments.callee.initialized ||
+			(type != 'domcontentloaded' && type != 'load')
+		) {
+			return
 		}
-	};
+		arguments.callee.initialized = true
+		if (dojo._inFlightCount == 0) {
+			dojo._modulesLoaded()
+		}
+	}
 
 	/*
 	(function(){
@@ -293,44 +314,46 @@ if(typeof window != 'undefined'){
 	})();
 	*/
 
-
 	//	FIXME: PORTME
 	//		this event fires a lot, namely for all plugin XUL overlays and for
 	//		all iframes (in addition to window navigations). We only want
 	//		Dojo's to fire once..but we might care if pages navigate. We'll
 	//		probably need an extension-specific API
-	if(!dojo.config.afterOnLoad){
-		window.addEventListener("DOMContentLoaded", function(e){
-			dojo._loadInit(e);
-			// console.log("DOM content loaded", e);
-		}, false);
+	if (!dojo.config.afterOnLoad) {
+		window.addEventListener(
+			'DOMContentLoaded',
+			function (e) {
+				dojo._loadInit(e)
+				// console.log("DOM content loaded", e);
+			},
+			false,
+		)
 	}
-
 } //if (typeof window != 'undefined')
 
 //Register any module paths set up in djConfig. Need to do this
 //in the hostenvs since hostenv_browser can read djConfig from a
 //script tag's attribute.
-(function(){
-	var mp = dojo.config["modulePaths"];
-	if(mp){
-		for(var param in mp){
-			dojo.registerModulePath(param, mp[param]);
+;(function () {
+	var mp = dojo.config['modulePaths']
+	if (mp) {
+		for (var param in mp) {
+			dojo.registerModulePath(param, mp[param])
 		}
 	}
-})();
+})()
 
 //Load debug code if necessary.
-if(dojo.config.isDebug){
+if (dojo.config.isDebug) {
 	// logging stub for extension logging
-	console.log = function(m){
-		var s = Components.classes["@mozilla.org/consoleservice;1"].getService(
-			Components.interfaces.nsIConsoleService
-			);
-		s.logStringMessage(m);
-	};
-	console.debug = function(){
-		console.log(dojo._toArray(arguments).join(" "));
-	};
+	console.log = function (m) {
+		var s = Components.classes['@mozilla.org/consoleservice;1'].getService(
+			Components.interfaces.nsIConsoleService,
+		)
+		s.logStringMessage(m)
+	}
+	console.debug = function () {
+		console.log(dojo._toArray(arguments).join(' '))
+	}
 	// FIXME: what about the rest of the console.* methods? And is there any way to reach into firebug and log into it directly?
 }

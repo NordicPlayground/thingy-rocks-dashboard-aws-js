@@ -179,12 +179,12 @@
                   tileset.root.transform,
                   new Cesium.Cartesian3()
                 );
-                var transformCartographic = Cesium.Cartographic.fromCartesian(
-                  transformCenter
-                );
-                var boundingSphereCartographic = Cesium.Cartographic.fromCartesian(
-                  tileset.boundingSphere.center
-                );
+                var transformCartographic =
+                  Cesium.Cartographic.fromCartesian(transformCenter);
+                var boundingSphereCartographic =
+                  Cesium.Cartographic.fromCartesian(
+                    tileset.boundingSphere.center
+                  );
                 var height =
                   boundingSphereCartographic.height -
                   transformCartographic.height;

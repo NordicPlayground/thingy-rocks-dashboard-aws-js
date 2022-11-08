@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Transforms a value for non-perspective interpolation by multiplying\n\
  * it by w, the value used in the perspective divide. This function is\n\
  * intended to be called in a vertex shader to compute the value of a\n\
@@ -31,4 +31,4 @@ vec3 czm_writeNonPerspective(vec3 value, float w) {\n\
 vec4 czm_writeNonPerspective(vec4 value, float w) {\n\
     return value * w;\n\
 }\n\
-";
+'

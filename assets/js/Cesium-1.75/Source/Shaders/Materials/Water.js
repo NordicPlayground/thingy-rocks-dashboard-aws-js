@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "// Thanks for the contribution Jonas\n\
+export default '// Thanks for the contribution Jonas\n\
 // http://29a.ch/2012/7/19/webgl-terrain-rendering-water-fog\n\
 \n\
 uniform sampler2D specularMap;\n\
@@ -57,4 +57,4 @@ czm_material czm_getMaterial(czm_materialInput materialInput)\n\
 \n\
     return material;\n\
 }\n\
-";
+'

@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * @private\n\
  */\n\
 vec4 czm_getWaterNoise(sampler2D normalMap, vec2 uv, float time, float angleInRadians)\n\
@@ -36,4 +36,4 @@ vec4 czm_getWaterNoise(sampler2D normalMap, vec2 uv, float time, float angleInRa
     // average and scale to between -1 and 1\n\
     return ((noise / 4.0) - 0.5) * 2.0;\n\
 }\n\
-";
+'

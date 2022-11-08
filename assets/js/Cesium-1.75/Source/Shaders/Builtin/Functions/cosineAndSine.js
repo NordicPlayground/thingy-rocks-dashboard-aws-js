@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * @private\n\
  */\n\
 vec2 cordic(float angle)\n\
@@ -210,4 +210,4 @@ vec2 czm_cosineAndSine(float angle)\n\
         return cordic(angle);\n\
     }\n\
 }\n\
-";
+'

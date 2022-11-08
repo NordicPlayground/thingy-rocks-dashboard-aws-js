@@ -1,5 +1,5 @@
-import { defined, RuntimeError } from "../../Source/Cesium.js";
-import findAccessorMinMax from "../../Source/ThirdParty/GltfPipeline/findAccessorMinMax.js";
+import { defined, RuntimeError } from '../../Source/Cesium.js'
+import findAccessorMinMax from '../../Source/ThirdParty/GltfPipeline/findAccessorMinMax.js'
 
 /**
  * A fluent interface for programmatically building a glTF.
@@ -8,31 +8,31 @@ import findAccessorMinMax from "../../Source/ThirdParty/GltfPipeline/findAccesso
  * @private
  */
 function GltfBuilder() {
-  this.gltf = {
-    asset: {
-      generator: "cesium-tests",
-      version: "2.0",
-    },
-    extensionsUsed: [],
-    accessors: [],
-    buffers: [],
-    bufferViews: [],
-    materials: [],
-    meshes: [],
-    nodes: [
-      {
-        mesh: 0,
-      },
-    ],
-    scenes: [
-      {
-        nodes: [0],
-      },
-    ],
-    scene: 0,
-  };
+	this.gltf = {
+		asset: {
+			generator: 'cesium-tests',
+			version: '2.0',
+		},
+		extensionsUsed: [],
+		accessors: [],
+		buffers: [],
+		bufferViews: [],
+		materials: [],
+		meshes: [],
+		nodes: [
+			{
+				mesh: 0,
+			},
+		],
+		scenes: [
+			{
+				nodes: [0],
+			},
+		],
+		scene: 0,
+	}
 
-  this.bufferBuilders = [];
+	this.bufferBuilders = []
 }
 
 /**
@@ -41,15 +41,15 @@ function GltfBuilder() {
  * @returns {GltfBufferBuilder}
  */
 GltfBuilder.prototype.buffer = function (name) {
-  var index =
-    this.gltf.buffers.push({
-      name: name,
-      byteLength: 0,
-    }) - 1;
-  var bufferBuilder = new GltfBufferBuilder(this, index);
-  this.bufferBuilders.push(bufferBuilder);
-  return bufferBuilder;
-};
+	var index =
+		this.gltf.buffers.push({
+			name: name,
+			byteLength: 0,
+		}) - 1
+	var bufferBuilder = new GltfBufferBuilder(this, index)
+	this.bufferBuilders.push(bufferBuilder)
+	return bufferBuilder
+}
 
 /**
  * Creates a new mesh.
@@ -57,15 +57,15 @@ GltfBuilder.prototype.buffer = function (name) {
  * @returns {GltfMeshBuilder}
  */
 GltfBuilder.prototype.mesh = function (name) {
-  var index =
-    this.gltf.meshes.push({
-      name: name,
-      primitives: [],
-    }) - 1;
+	var index =
+		this.gltf.meshes.push({
+			name: name,
+			primitives: [],
+		}) - 1
 
-  var meshBuilder = new GltfMeshBuilder(this, index);
-  return meshBuilder;
-};
+	var meshBuilder = new GltfMeshBuilder(this, index)
+	return meshBuilder
+}
 
 /**
  * Creates a new material.
@@ -73,13 +73,13 @@ GltfBuilder.prototype.mesh = function (name) {
  * @returns {GltfMaterialBuilder}
  */
 GltfBuilder.prototype.material = function (name) {
-  var index =
-    this.gltf.materials.push({
-      name: name,
-    }) - 1;
-  var materialBuilder = new GltfMaterialBuilder(this, index);
-  return materialBuilder;
-};
+	var index =
+		this.gltf.materials.push({
+			name: name,
+		}) - 1
+	var materialBuilder = new GltfMaterialBuilder(this, index)
+	return materialBuilder
+}
 
 /**
  * Gets the built glTF JSON from this builder. Calling this a second
@@ -91,69 +91,69 @@ GltfBuilder.prototype.material = function (name) {
  * when done with the glTF, to a void leaking buffer memory.
  */
 GltfBuilder.prototype.toGltf = function () {
-  for (var i = 0; i < this.bufferBuilders.length; ++i) {
-    var bufferBuilder = this.bufferBuilders[i];
+	for (var i = 0; i < this.bufferBuilders.length; ++i) {
+		var bufferBuilder = this.bufferBuilders[i]
 
-    var byteLength = bufferBuilder.viewBuilders.reduce(function (
-      byteLength,
-      viewBuilder
-    ) {
-      return byteLength + viewBuilder.bufferView.byteLength;
-    },
-    0);
+		var byteLength = bufferBuilder.viewBuilders.reduce(function (
+			byteLength,
+			viewBuilder,
+		) {
+			return byteLength + viewBuilder.bufferView.byteLength
+		},
+		0)
 
-    var buffer = new ArrayBuffer(byteLength);
-    var nextStart = 0;
+		var buffer = new ArrayBuffer(byteLength)
+		var nextStart = 0
 
-    for (var j = 0; j < bufferBuilder.viewBuilders.length; ++j) {
-      var viewBuilder = bufferBuilder.viewBuilders[j];
-      viewBuilder.bufferView.byteOffset = nextStart;
-      var destBuffer =
-        viewBuilder.componentType === 5126
-          ? new Float32Array(buffer, nextStart, viewBuilder._data.length)
-          : new Uint16Array(buffer, nextStart, viewBuilder._data.length);
-      destBuffer.set(viewBuilder._data);
-      nextStart += viewBuilder.bufferView.byteLength;
-    }
+		for (var j = 0; j < bufferBuilder.viewBuilders.length; ++j) {
+			var viewBuilder = bufferBuilder.viewBuilders[j]
+			viewBuilder.bufferView.byteOffset = nextStart
+			var destBuffer =
+				viewBuilder.componentType === 5126
+					? new Float32Array(buffer, nextStart, viewBuilder._data.length)
+					: new Uint16Array(buffer, nextStart, viewBuilder._data.length)
+			destBuffer.set(viewBuilder._data)
+			nextStart += viewBuilder.bufferView.byteLength
+		}
 
-    bufferBuilder.buffer.byteLength = byteLength;
+		bufferBuilder.buffer.byteLength = byteLength
 
-    if (bufferBuilder.buffer.uri) {
-      URL.revokeObjectURL(bufferBuilder.buffer.uri);
-    }
+		if (bufferBuilder.buffer.uri) {
+			URL.revokeObjectURL(bufferBuilder.buffer.uri)
+		}
 
-    bufferBuilder.buffer.uri = URL.createObjectURL(new Blob([buffer]));
+		bufferBuilder.buffer.uri = URL.createObjectURL(new Blob([buffer]))
 
-    bufferBuilder.buffer.extras = {
-      _pipeline: {
-        source: new Uint8Array(buffer, 0, buffer.byteLength),
-      },
-    };
-  }
+		bufferBuilder.buffer.extras = {
+			_pipeline: {
+				source: new Uint8Array(buffer, 0, buffer.byteLength),
+			},
+		}
+	}
 
-  var gltf = this.gltf;
-  gltf.accessors.forEach(function (accessor) {
-    var minMax = findAccessorMinMax(gltf, accessor);
-    accessor.min = minMax.min;
-    accessor.max = minMax.max;
-  });
+	var gltf = this.gltf
+	gltf.accessors.forEach(function (accessor) {
+		var minMax = findAccessorMinMax(gltf, accessor)
+		accessor.min = minMax.min
+		accessor.max = minMax.max
+	})
 
-  this.bufferBuilders.forEach(function (builder) {
-    delete builder.buffer.extras;
-  });
+	this.bufferBuilders.forEach(function (builder) {
+		delete builder.buffer.extras
+	})
 
-  return this.gltf;
-};
+	return this.gltf
+}
 
 /**
  * Frees memory allocated for buffers in {@link GltfBuilder@toGltf}.
  */
 GltfBuilder.prototype.destroy = function () {
-  this.bufferBuilders.forEach(function (bufferBuilder) {
-    URL.revokeObjectURL(bufferBuilder.buffer.uri);
-    bufferBuilder.buffer.uri = undefined;
-  });
-};
+	this.bufferBuilders.forEach(function (bufferBuilder) {
+		URL.revokeObjectURL(bufferBuilder.buffer.uri)
+		bufferBuilder.buffer.uri = undefined
+	})
+}
 
 /**
  * A fluent interface for programmatically building a glTF material.
@@ -162,9 +162,9 @@ GltfBuilder.prototype.destroy = function () {
  * @private
  */
 function GltfMaterialBuilder(gltfBuilder, materialIndex) {
-  this.gltfBuilder = gltfBuilder;
-  this.materialIndex = materialIndex;
-  this.material = this.gltfBuilder.gltf.materials[materialIndex];
+	this.gltfBuilder = gltfBuilder
+	this.materialIndex = materialIndex
+	this.material = this.gltfBuilder.gltf.materials[materialIndex]
 }
 
 /**
@@ -173,16 +173,16 @@ function GltfMaterialBuilder(gltfBuilder, materialIndex) {
  * @returns {GltfMaterialBuilder}
  */
 GltfMaterialBuilder.prototype.json = function (json) {
-  for (var property in json) {
-    if (!json.hasOwnProperty(property)) {
-      continue;
-    }
+	for (var property in json) {
+		if (!json.hasOwnProperty(property)) {
+			continue
+		}
 
-    this.material[property] = json[property];
-  }
+		this.material[property] = json[property]
+	}
 
-  return this;
-};
+	return this
+}
 
 /**
  * A fluent interface for building a glTF mesh.
@@ -191,9 +191,9 @@ GltfMaterialBuilder.prototype.json = function (json) {
  * @private
  */
 function GltfMeshBuilder(gltfBuilder, meshIndex) {
-  this.gltfBuilder = gltfBuilder;
-  this.meshIndex = meshIndex;
-  this.mesh = gltfBuilder.gltf.meshes[this.meshIndex];
+	this.gltfBuilder = gltfBuilder
+	this.meshIndex = meshIndex
+	this.mesh = gltfBuilder.gltf.meshes[this.meshIndex]
 }
 
 /**
@@ -202,15 +202,15 @@ function GltfMeshBuilder(gltfBuilder, meshIndex) {
  * @returns {GltfPrimitiveBuilder}
  */
 GltfMeshBuilder.prototype.primitive = function (name) {
-  var index =
-    this.mesh.primitives.push({
-      name: name,
-      attributes: {},
-    }) - 1;
+	var index =
+		this.mesh.primitives.push({
+			name: name,
+			attributes: {},
+		}) - 1
 
-  var meshBuilder = new GltfPrimitiveBuilder(this, index);
-  return meshBuilder;
-};
+	var meshBuilder = new GltfPrimitiveBuilder(this, index)
+	return meshBuilder
+}
 
 /**
  * A fluent interface for building a glTF primitive.
@@ -219,9 +219,9 @@ GltfMeshBuilder.prototype.primitive = function (name) {
  * @private
  */
 function GltfPrimitiveBuilder(gltfMeshBuilder, primitiveIndex) {
-  this.gltfMeshBuilder = gltfMeshBuilder;
-  this.primitiveIndex = primitiveIndex;
-  this.primitive = this.gltfMeshBuilder.mesh.primitives[this.primitiveIndex];
+	this.gltfMeshBuilder = gltfMeshBuilder
+	this.primitiveIndex = primitiveIndex
+	this.primitive = this.gltfMeshBuilder.mesh.primitives[this.primitiveIndex]
 }
 
 /**
@@ -231,15 +231,15 @@ function GltfPrimitiveBuilder(gltfMeshBuilder, primitiveIndex) {
  * @returns {GltfPrimitiveBuilder}
  */
 GltfPrimitiveBuilder.prototype.attribute = function (semantic, accessorName) {
-  var gltf = this.gltfMeshBuilder.gltfBuilder.gltf;
-  var accessorId = findAccessorByName(gltf, accessorName);
-  if (accessorId < 0) {
-    throw new RuntimeError("Accessor named " + accessorName + " not found.");
-  }
+	var gltf = this.gltfMeshBuilder.gltfBuilder.gltf
+	var accessorId = findAccessorByName(gltf, accessorName)
+	if (accessorId < 0) {
+		throw new RuntimeError('Accessor named ' + accessorName + ' not found.')
+	}
 
-  this.primitive.attributes[semantic] = accessorId;
-  return this;
-};
+	this.primitive.attributes[semantic] = accessorId
+	return this
+}
 
 /**
  * Sets the name of the accessor providing this primitive's indices.
@@ -247,24 +247,24 @@ GltfPrimitiveBuilder.prototype.attribute = function (semantic, accessorName) {
  * @returns {GltfPrimitiveBuilder}
  */
 GltfPrimitiveBuilder.prototype.indices = function (accessorName) {
-  var gltf = this.gltfMeshBuilder.gltfBuilder.gltf;
-  var accessorId = findAccessorByName(gltf, accessorName);
-  if (accessorId < 0) {
-    throw new RuntimeError("Accessor named " + accessorName + " not found.");
-  }
+	var gltf = this.gltfMeshBuilder.gltfBuilder.gltf
+	var accessorId = findAccessorByName(gltf, accessorName)
+	if (accessorId < 0) {
+		throw new RuntimeError('Accessor named ' + accessorName + ' not found.')
+	}
 
-  this.primitive.indices = accessorId;
-  return this;
-};
+	this.primitive.indices = accessorId
+	return this
+}
 
 /**
  * Indicates that this primitive is TRIANGLES.
  * @returns {GltfPrimitiveBuilder}
  */
 GltfPrimitiveBuilder.prototype.triangles = function () {
-  this.primitive.mode = 4;
-  return this;
-};
+	this.primitive.mode = 4
+	return this
+}
 
 /**
  * Sets the material applied to this primitive.
@@ -272,17 +272,17 @@ GltfPrimitiveBuilder.prototype.triangles = function () {
  * @returns {GltfPrimitiveBuilder}
  */
 GltfPrimitiveBuilder.prototype.material = function (materialName) {
-  var gltf = this.gltfMeshBuilder.gltfBuilder.gltf;
+	var gltf = this.gltfMeshBuilder.gltfBuilder.gltf
 
-  for (var i = 0; i < gltf.materials.length; ++i) {
-    if (gltf.materials[i].name === materialName) {
-      this.primitive.material = i;
-      return this;
-    }
-  }
+	for (var i = 0; i < gltf.materials.length; ++i) {
+		if (gltf.materials[i].name === materialName) {
+			this.primitive.material = i
+			return this
+		}
+	}
 
-  throw new RuntimeError("Material named " + materialName + " not found.");
-};
+	throw new RuntimeError('Material named ' + materialName + ' not found.')
+}
 
 /**
  * A fluent interface for building a glTF buffer.
@@ -291,10 +291,10 @@ GltfPrimitiveBuilder.prototype.material = function (materialName) {
  * @private
  */
 function GltfBufferBuilder(gltfBuilder, bufferIndex) {
-  this.gltfBuilder = gltfBuilder;
-  this.bufferIndex = bufferIndex;
-  this.buffer = this.gltfBuilder.gltf.buffers[bufferIndex];
-  this.viewBuilders = [];
+	this.gltfBuilder = gltfBuilder
+	this.bufferIndex = bufferIndex
+	this.buffer = this.gltfBuilder.gltf.buffers[bufferIndex]
+	this.viewBuilders = []
 }
 
 /**
@@ -303,17 +303,17 @@ function GltfBufferBuilder(gltfBuilder, bufferIndex) {
  * @returns {GltfBufferViewBuilder}
  */
 GltfBufferBuilder.prototype.vertexBuffer = function (name) {
-  var index =
-    this.gltfBuilder.gltf.bufferViews.push({
-      name: name,
-      buffer: this.bufferIndex,
-      byteLength: 0,
-      target: 34962,
-    }) - 1;
-  var viewBuilder = new GltfBufferViewBuilder(this, index, 5126);
-  this.viewBuilders.push(viewBuilder);
-  return viewBuilder;
-};
+	var index =
+		this.gltfBuilder.gltf.bufferViews.push({
+			name: name,
+			buffer: this.bufferIndex,
+			byteLength: 0,
+			target: 34962,
+		}) - 1
+	var viewBuilder = new GltfBufferViewBuilder(this, index, 5126)
+	this.viewBuilders.push(viewBuilder)
+	return viewBuilder
+}
 
 /**
  * Creates a new index bufferView in this buffer.
@@ -321,17 +321,17 @@ GltfBufferBuilder.prototype.vertexBuffer = function (name) {
  * @returns {GltfBufferViewBuilder}
  */
 GltfBufferBuilder.prototype.indexBuffer = function (name) {
-  var index =
-    this.gltfBuilder.gltf.bufferViews.push({
-      name: name,
-      buffer: this.bufferIndex,
-      byteLength: 0,
-      target: 34963,
-    }) - 1;
-  var viewBuilder = new GltfBufferViewBuilder(this, index, 5123);
-  this.viewBuilders.push(viewBuilder);
-  return viewBuilder;
-};
+	var index =
+		this.gltfBuilder.gltf.bufferViews.push({
+			name: name,
+			buffer: this.bufferIndex,
+			byteLength: 0,
+			target: 34963,
+		}) - 1
+	var viewBuilder = new GltfBufferViewBuilder(this, index, 5123)
+	this.viewBuilders.push(viewBuilder)
+	return viewBuilder
+}
 
 /**
  * A fluent interface for building a glTF bufferView.
@@ -341,27 +341,26 @@ GltfBufferBuilder.prototype.indexBuffer = function (name) {
  * @private
  */
 function GltfBufferViewBuilder(bufferBuilder, bufferViewIndex, componentType) {
-  this.bufferBuilder = bufferBuilder;
-  this.bufferViewIndex = bufferViewIndex;
-  this.bufferView = this.bufferBuilder.gltfBuilder.gltf.bufferViews[
-    this.bufferViewIndex
-  ];
-  this.componentType = componentType;
-  this.elementStride = 0;
-  this.nextOffset = 0;
-  this._data = undefined;
+	this.bufferBuilder = bufferBuilder
+	this.bufferViewIndex = bufferViewIndex
+	this.bufferView =
+		this.bufferBuilder.gltfBuilder.gltf.bufferViews[this.bufferViewIndex]
+	this.componentType = componentType
+	this.elementStride = 0
+	this.nextOffset = 0
+	this._data = undefined
 }
 
 Object.defineProperties(GltfBufferViewBuilder.prototype, {
-  /**
-   * Gets the number of bytes in each numeric element of this bufferView.
-   */
-  elementByteLength: {
-    get: function () {
-      return this.componentType === 5126 ? 4 : 2;
-    },
-  },
-});
+	/**
+	 * Gets the number of bytes in each numeric element of this bufferView.
+	 */
+	elementByteLength: {
+		get: function () {
+			return this.componentType === 5126 ? 4 : 2
+		},
+	},
+})
 
 /**
  * Defines a `VEC3` element in this bufferView.
@@ -369,29 +368,29 @@ Object.defineProperties(GltfBufferViewBuilder.prototype, {
  * @returns {GltfBufferViewBuilder}
  */
 GltfBufferViewBuilder.prototype.vec3 = function (name) {
-  var gltf = this.bufferBuilder.gltfBuilder.gltf;
-  gltf.accessors.push({
-    name: name,
-    bufferView: this.bufferViewIndex,
-    byteOffset: this.nextOffset,
-    componentType: this.componentType,
-    count: 0,
-    type: "VEC3",
-  });
+	var gltf = this.bufferBuilder.gltfBuilder.gltf
+	gltf.accessors.push({
+		name: name,
+		bufferView: this.bufferViewIndex,
+		byteOffset: this.nextOffset,
+		componentType: this.componentType,
+		count: 0,
+		type: 'VEC3',
+	})
 
-  this.elementStride += 3;
+	this.elementStride += 3
 
-  var newStride = 3 * this.elementByteLength;
-  if (!defined(this.bufferView.byteStride)) {
-    this.bufferView.byteStride = newStride;
-  } else {
-    this.bufferView.byteStride += newStride;
-  }
+	var newStride = 3 * this.elementByteLength
+	if (!defined(this.bufferView.byteStride)) {
+		this.bufferView.byteStride = newStride
+	} else {
+		this.bufferView.byteStride += newStride
+	}
 
-  this.nextOffset += newStride;
+	this.nextOffset += newStride
 
-  return this;
-};
+	return this
+}
 
 /**
  * Defines a `SCALAR` element in this bufferView.
@@ -399,29 +398,29 @@ GltfBufferViewBuilder.prototype.vec3 = function (name) {
  * @returns {GltfBufferViewBuilder}
  */
 GltfBufferViewBuilder.prototype.scalar = function (name) {
-  var gltf = this.bufferBuilder.gltfBuilder.gltf;
-  gltf.accessors.push({
-    name: name,
-    bufferView: this.bufferViewIndex,
-    byteOffset: this.nextOffset,
-    componentType: this.componentType,
-    count: 0,
-    type: "SCALAR",
-  });
+	var gltf = this.bufferBuilder.gltfBuilder.gltf
+	gltf.accessors.push({
+		name: name,
+		bufferView: this.bufferViewIndex,
+		byteOffset: this.nextOffset,
+		componentType: this.componentType,
+		count: 0,
+		type: 'SCALAR',
+	})
 
-  this.elementStride += 1;
+	this.elementStride += 1
 
-  var newStride = this.elementByteLength;
-  if (!defined(this.bufferView.byteStride)) {
-    this.bufferView.byteStride = newStride;
-  } else {
-    this.bufferView.byteStride += newStride;
-  }
+	var newStride = this.elementByteLength
+	if (!defined(this.bufferView.byteStride)) {
+		this.bufferView.byteStride = newStride
+	} else {
+		this.bufferView.byteStride += newStride
+	}
 
-  this.nextOffset += newStride;
+	this.nextOffset += newStride
 
-  return this;
-};
+	return this
+}
 
 /**
  * Provides this bufferView's data. All elements should be defined with
@@ -431,35 +430,35 @@ GltfBufferViewBuilder.prototype.scalar = function (name) {
  * @returns {GltfBufferViewBuilder}
  */
 GltfBufferViewBuilder.prototype.data = function (data) {
-  this.bufferView.byteLength = data.length * this.elementByteLength;
-  this._data = data;
+	this.bufferView.byteLength = data.length * this.elementByteLength
+	this._data = data
 
-  var count = data.length / this.elementStride;
+	var count = data.length / this.elementStride
 
-  var gltf = this.bufferBuilder.gltfBuilder.gltf;
-  var bufferViewIndex = this.bufferViewIndex;
+	var gltf = this.bufferBuilder.gltfBuilder.gltf
+	var bufferViewIndex = this.bufferViewIndex
 
-  gltf.accessors
-    .filter(function (accessor) {
-      return accessor.bufferView === bufferViewIndex;
-    })
-    .forEach(function (accessor) {
-      accessor.count = count;
-    });
+	gltf.accessors
+		.filter(function (accessor) {
+			return accessor.bufferView === bufferViewIndex
+		})
+		.forEach(function (accessor) {
+			accessor.count = count
+		})
 
-  return this;
-};
-
-function findAccessorByName(gltf, accessorName) {
-  var accessors = gltf.accessors;
-
-  for (var i = 0; i < accessors.length; ++i) {
-    if (accessors[i].name === accessorName) {
-      return i;
-    }
-  }
-
-  return -1;
+	return this
 }
 
-export default GltfBuilder;
+function findAccessorByName(gltf, accessorName) {
+	var accessors = gltf.accessors
+
+	for (var i = 0; i < accessors.length; ++i) {
+		if (accessors[i].name === accessorName) {
+			return i
+		}
+	}
+
+	return -1
+}
+
+export default GltfBuilder

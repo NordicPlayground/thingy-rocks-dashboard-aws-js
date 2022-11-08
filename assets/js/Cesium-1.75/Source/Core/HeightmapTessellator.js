@@ -1,19 +1,19 @@
-import AxisAlignedBoundingBox from "./AxisAlignedBoundingBox.js";
-import BoundingSphere from "./BoundingSphere.js";
-import Cartesian2 from "./Cartesian2.js";
-import Cartesian3 from "./Cartesian3.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import Ellipsoid from "./Ellipsoid.js";
-import EllipsoidalOccluder from "./EllipsoidalOccluder.js";
-import CesiumMath from "./Math.js";
-import Matrix4 from "./Matrix4.js";
-import OrientedBoundingBox from "./OrientedBoundingBox.js";
-import Rectangle from "./Rectangle.js";
-import TerrainEncoding from "./TerrainEncoding.js";
-import Transforms from "./Transforms.js";
-import WebMercatorProjection from "./WebMercatorProjection.js";
+import AxisAlignedBoundingBox from './AxisAlignedBoundingBox.js'
+import BoundingSphere from './BoundingSphere.js'
+import Cartesian2 from './Cartesian2.js'
+import Cartesian3 from './Cartesian3.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import Ellipsoid from './Ellipsoid.js'
+import EllipsoidalOccluder from './EllipsoidalOccluder.js'
+import CesiumMath from './Math.js'
+import Matrix4 from './Matrix4.js'
+import OrientedBoundingBox from './OrientedBoundingBox.js'
+import Rectangle from './Rectangle.js'
+import TerrainEncoding from './TerrainEncoding.js'
+import Transforms from './Transforms.js'
+import WebMercatorProjection from './WebMercatorProjection.js'
 
 /**
  * Contains functions to create a mesh from a heightmap image.
@@ -22,7 +22,7 @@ import WebMercatorProjection from "./WebMercatorProjection.js";
  *
  * @private
  */
-var HeightmapTessellator = {};
+var HeightmapTessellator = {}
 
 /**
  * The default structure of a heightmap, as given to {@link HeightmapTessellator.computeVertices}.
@@ -30,18 +30,18 @@ var HeightmapTessellator = {};
  * @constant
  */
 HeightmapTessellator.DEFAULT_STRUCTURE = Object.freeze({
-  heightScale: 1.0,
-  heightOffset: 0.0,
-  elementsPerHeight: 1,
-  stride: 1,
-  elementMultiplier: 256.0,
-  isBigEndian: false,
-});
+	heightScale: 1.0,
+	heightOffset: 0.0,
+	elementsPerHeight: 1,
+	stride: 1,
+	elementMultiplier: 256.0,
+	isBigEndian: false,
+})
 
-var cartesian3Scratch = new Cartesian3();
-var matrix4Scratch = new Matrix4();
-var minimumScratch = new Cartesian3();
-var maximumScratch = new Cartesian3();
+var cartesian3Scratch = new Cartesian3()
+var matrix4Scratch = new Matrix4()
+var minimumScratch = new Cartesian3()
+var maximumScratch = new Cartesian3()
 
 /**
  * Fills an array of vertices from a heightmap image.
@@ -113,398 +113,398 @@ var maximumScratch = new Cartesian3();
  * var position = encoding.decodePosition(statistics.vertices, index * encoding.getStride());
  */
 HeightmapTessellator.computeVertices = function (options) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(options) || !defined(options.heightmap)) {
-    throw new DeveloperError("options.heightmap is required.");
-  }
-  if (!defined(options.width) || !defined(options.height)) {
-    throw new DeveloperError("options.width and options.height are required.");
-  }
-  if (!defined(options.nativeRectangle)) {
-    throw new DeveloperError("options.nativeRectangle is required.");
-  }
-  if (!defined(options.skirtHeight)) {
-    throw new DeveloperError("options.skirtHeight is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(options) || !defined(options.heightmap)) {
+		throw new DeveloperError('options.heightmap is required.')
+	}
+	if (!defined(options.width) || !defined(options.height)) {
+		throw new DeveloperError('options.width and options.height are required.')
+	}
+	if (!defined(options.nativeRectangle)) {
+		throw new DeveloperError('options.nativeRectangle is required.')
+	}
+	if (!defined(options.skirtHeight)) {
+		throw new DeveloperError('options.skirtHeight is required.')
+	}
+	//>>includeEnd('debug');
 
-  // This function tends to be a performance hotspot for terrain rendering,
-  // so it employs a lot of inlining and unrolling as an optimization.
-  // In particular, the functionality of Ellipsoid.cartographicToCartesian
-  // is inlined.
+	// This function tends to be a performance hotspot for terrain rendering,
+	// so it employs a lot of inlining and unrolling as an optimization.
+	// In particular, the functionality of Ellipsoid.cartographicToCartesian
+	// is inlined.
 
-  var cos = Math.cos;
-  var sin = Math.sin;
-  var sqrt = Math.sqrt;
-  var atan = Math.atan;
-  var exp = Math.exp;
-  var piOverTwo = CesiumMath.PI_OVER_TWO;
-  var toRadians = CesiumMath.toRadians;
+	var cos = Math.cos
+	var sin = Math.sin
+	var sqrt = Math.sqrt
+	var atan = Math.atan
+	var exp = Math.exp
+	var piOverTwo = CesiumMath.PI_OVER_TWO
+	var toRadians = CesiumMath.toRadians
 
-  var heightmap = options.heightmap;
-  var width = options.width;
-  var height = options.height;
-  var skirtHeight = options.skirtHeight;
+	var heightmap = options.heightmap
+	var width = options.width
+	var height = options.height
+	var skirtHeight = options.skirtHeight
 
-  var isGeographic = defaultValue(options.isGeographic, true);
-  var ellipsoid = defaultValue(options.ellipsoid, Ellipsoid.WGS84);
+	var isGeographic = defaultValue(options.isGeographic, true)
+	var ellipsoid = defaultValue(options.ellipsoid, Ellipsoid.WGS84)
 
-  var oneOverGlobeSemimajorAxis = 1.0 / ellipsoid.maximumRadius;
+	var oneOverGlobeSemimajorAxis = 1.0 / ellipsoid.maximumRadius
 
-  var nativeRectangle = options.nativeRectangle;
+	var nativeRectangle = options.nativeRectangle
 
-  var geographicWest;
-  var geographicSouth;
-  var geographicEast;
-  var geographicNorth;
+	var geographicWest
+	var geographicSouth
+	var geographicEast
+	var geographicNorth
 
-  var rectangle = options.rectangle;
-  if (!defined(rectangle)) {
-    if (isGeographic) {
-      geographicWest = toRadians(nativeRectangle.west);
-      geographicSouth = toRadians(nativeRectangle.south);
-      geographicEast = toRadians(nativeRectangle.east);
-      geographicNorth = toRadians(nativeRectangle.north);
-    } else {
-      geographicWest = nativeRectangle.west * oneOverGlobeSemimajorAxis;
-      geographicSouth =
-        piOverTwo -
-        2.0 * atan(exp(-nativeRectangle.south * oneOverGlobeSemimajorAxis));
-      geographicEast = nativeRectangle.east * oneOverGlobeSemimajorAxis;
-      geographicNorth =
-        piOverTwo -
-        2.0 * atan(exp(-nativeRectangle.north * oneOverGlobeSemimajorAxis));
-    }
-  } else {
-    geographicWest = rectangle.west;
-    geographicSouth = rectangle.south;
-    geographicEast = rectangle.east;
-    geographicNorth = rectangle.north;
-  }
+	var rectangle = options.rectangle
+	if (!defined(rectangle)) {
+		if (isGeographic) {
+			geographicWest = toRadians(nativeRectangle.west)
+			geographicSouth = toRadians(nativeRectangle.south)
+			geographicEast = toRadians(nativeRectangle.east)
+			geographicNorth = toRadians(nativeRectangle.north)
+		} else {
+			geographicWest = nativeRectangle.west * oneOverGlobeSemimajorAxis
+			geographicSouth =
+				piOverTwo -
+				2.0 * atan(exp(-nativeRectangle.south * oneOverGlobeSemimajorAxis))
+			geographicEast = nativeRectangle.east * oneOverGlobeSemimajorAxis
+			geographicNorth =
+				piOverTwo -
+				2.0 * atan(exp(-nativeRectangle.north * oneOverGlobeSemimajorAxis))
+		}
+	} else {
+		geographicWest = rectangle.west
+		geographicSouth = rectangle.south
+		geographicEast = rectangle.east
+		geographicNorth = rectangle.north
+	}
 
-  var relativeToCenter = options.relativeToCenter;
-  var hasRelativeToCenter = defined(relativeToCenter);
-  relativeToCenter = hasRelativeToCenter ? relativeToCenter : Cartesian3.ZERO;
-  var exaggeration = defaultValue(options.exaggeration, 1.0);
-  var includeWebMercatorT = defaultValue(options.includeWebMercatorT, false);
+	var relativeToCenter = options.relativeToCenter
+	var hasRelativeToCenter = defined(relativeToCenter)
+	relativeToCenter = hasRelativeToCenter ? relativeToCenter : Cartesian3.ZERO
+	var exaggeration = defaultValue(options.exaggeration, 1.0)
+	var includeWebMercatorT = defaultValue(options.includeWebMercatorT, false)
 
-  var structure = defaultValue(
-    options.structure,
-    HeightmapTessellator.DEFAULT_STRUCTURE
-  );
-  var heightScale = defaultValue(
-    structure.heightScale,
-    HeightmapTessellator.DEFAULT_STRUCTURE.heightScale
-  );
-  var heightOffset = defaultValue(
-    structure.heightOffset,
-    HeightmapTessellator.DEFAULT_STRUCTURE.heightOffset
-  );
-  var elementsPerHeight = defaultValue(
-    structure.elementsPerHeight,
-    HeightmapTessellator.DEFAULT_STRUCTURE.elementsPerHeight
-  );
-  var stride = defaultValue(
-    structure.stride,
-    HeightmapTessellator.DEFAULT_STRUCTURE.stride
-  );
-  var elementMultiplier = defaultValue(
-    structure.elementMultiplier,
-    HeightmapTessellator.DEFAULT_STRUCTURE.elementMultiplier
-  );
-  var isBigEndian = defaultValue(
-    structure.isBigEndian,
-    HeightmapTessellator.DEFAULT_STRUCTURE.isBigEndian
-  );
+	var structure = defaultValue(
+		options.structure,
+		HeightmapTessellator.DEFAULT_STRUCTURE,
+	)
+	var heightScale = defaultValue(
+		structure.heightScale,
+		HeightmapTessellator.DEFAULT_STRUCTURE.heightScale,
+	)
+	var heightOffset = defaultValue(
+		structure.heightOffset,
+		HeightmapTessellator.DEFAULT_STRUCTURE.heightOffset,
+	)
+	var elementsPerHeight = defaultValue(
+		structure.elementsPerHeight,
+		HeightmapTessellator.DEFAULT_STRUCTURE.elementsPerHeight,
+	)
+	var stride = defaultValue(
+		structure.stride,
+		HeightmapTessellator.DEFAULT_STRUCTURE.stride,
+	)
+	var elementMultiplier = defaultValue(
+		structure.elementMultiplier,
+		HeightmapTessellator.DEFAULT_STRUCTURE.elementMultiplier,
+	)
+	var isBigEndian = defaultValue(
+		structure.isBigEndian,
+		HeightmapTessellator.DEFAULT_STRUCTURE.isBigEndian,
+	)
 
-  var rectangleWidth = Rectangle.computeWidth(nativeRectangle);
-  var rectangleHeight = Rectangle.computeHeight(nativeRectangle);
+	var rectangleWidth = Rectangle.computeWidth(nativeRectangle)
+	var rectangleHeight = Rectangle.computeHeight(nativeRectangle)
 
-  var granularityX = rectangleWidth / (width - 1);
-  var granularityY = rectangleHeight / (height - 1);
+	var granularityX = rectangleWidth / (width - 1)
+	var granularityY = rectangleHeight / (height - 1)
 
-  if (!isGeographic) {
-    rectangleWidth *= oneOverGlobeSemimajorAxis;
-    rectangleHeight *= oneOverGlobeSemimajorAxis;
-  }
+	if (!isGeographic) {
+		rectangleWidth *= oneOverGlobeSemimajorAxis
+		rectangleHeight *= oneOverGlobeSemimajorAxis
+	}
 
-  var radiiSquared = ellipsoid.radiiSquared;
-  var radiiSquaredX = radiiSquared.x;
-  var radiiSquaredY = radiiSquared.y;
-  var radiiSquaredZ = radiiSquared.z;
+	var radiiSquared = ellipsoid.radiiSquared
+	var radiiSquaredX = radiiSquared.x
+	var radiiSquaredY = radiiSquared.y
+	var radiiSquaredZ = radiiSquared.z
 
-  var minimumHeight = 65536.0;
-  var maximumHeight = -65536.0;
+	var minimumHeight = 65536.0
+	var maximumHeight = -65536.0
 
-  var fromENU = Transforms.eastNorthUpToFixedFrame(relativeToCenter, ellipsoid);
-  var toENU = Matrix4.inverseTransformation(fromENU, matrix4Scratch);
+	var fromENU = Transforms.eastNorthUpToFixedFrame(relativeToCenter, ellipsoid)
+	var toENU = Matrix4.inverseTransformation(fromENU, matrix4Scratch)
 
-  var southMercatorY;
-  var oneOverMercatorHeight;
-  if (includeWebMercatorT) {
-    southMercatorY = WebMercatorProjection.geodeticLatitudeToMercatorAngle(
-      geographicSouth
-    );
-    oneOverMercatorHeight =
-      1.0 /
-      (WebMercatorProjection.geodeticLatitudeToMercatorAngle(geographicNorth) -
-        southMercatorY);
-  }
+	var southMercatorY
+	var oneOverMercatorHeight
+	if (includeWebMercatorT) {
+		southMercatorY =
+			WebMercatorProjection.geodeticLatitudeToMercatorAngle(geographicSouth)
+		oneOverMercatorHeight =
+			1.0 /
+			(WebMercatorProjection.geodeticLatitudeToMercatorAngle(geographicNorth) -
+				southMercatorY)
+	}
 
-  var minimum = minimumScratch;
-  minimum.x = Number.POSITIVE_INFINITY;
-  minimum.y = Number.POSITIVE_INFINITY;
-  minimum.z = Number.POSITIVE_INFINITY;
+	var minimum = minimumScratch
+	minimum.x = Number.POSITIVE_INFINITY
+	minimum.y = Number.POSITIVE_INFINITY
+	minimum.z = Number.POSITIVE_INFINITY
 
-  var maximum = maximumScratch;
-  maximum.x = Number.NEGATIVE_INFINITY;
-  maximum.y = Number.NEGATIVE_INFINITY;
-  maximum.z = Number.NEGATIVE_INFINITY;
+	var maximum = maximumScratch
+	maximum.x = Number.NEGATIVE_INFINITY
+	maximum.y = Number.NEGATIVE_INFINITY
+	maximum.z = Number.NEGATIVE_INFINITY
 
-  var hMin = Number.POSITIVE_INFINITY;
+	var hMin = Number.POSITIVE_INFINITY
 
-  var gridVertexCount = width * height;
-  var edgeVertexCount = skirtHeight > 0.0 ? width * 2 + height * 2 : 0;
-  var vertexCount = gridVertexCount + edgeVertexCount;
+	var gridVertexCount = width * height
+	var edgeVertexCount = skirtHeight > 0.0 ? width * 2 + height * 2 : 0
+	var vertexCount = gridVertexCount + edgeVertexCount
 
-  var positions = new Array(vertexCount);
-  var heights = new Array(vertexCount);
-  var uvs = new Array(vertexCount);
-  var webMercatorTs = includeWebMercatorT ? new Array(vertexCount) : [];
+	var positions = new Array(vertexCount)
+	var heights = new Array(vertexCount)
+	var uvs = new Array(vertexCount)
+	var webMercatorTs = includeWebMercatorT ? new Array(vertexCount) : []
 
-  var startRow = 0;
-  var endRow = height;
-  var startCol = 0;
-  var endCol = width;
+	var startRow = 0
+	var endRow = height
+	var startCol = 0
+	var endCol = width
 
-  if (skirtHeight > 0.0) {
-    --startRow;
-    ++endRow;
-    --startCol;
-    ++endCol;
-  }
+	if (skirtHeight > 0.0) {
+		--startRow
+		++endRow
+		--startCol
+		++endCol
+	}
 
-  var skirtOffsetPercentage = 0.00001;
+	var skirtOffsetPercentage = 0.00001
 
-  for (var rowIndex = startRow; rowIndex < endRow; ++rowIndex) {
-    var row = rowIndex;
-    if (row < 0) {
-      row = 0;
-    }
-    if (row >= height) {
-      row = height - 1;
-    }
+	for (var rowIndex = startRow; rowIndex < endRow; ++rowIndex) {
+		var row = rowIndex
+		if (row < 0) {
+			row = 0
+		}
+		if (row >= height) {
+			row = height - 1
+		}
 
-    var latitude = nativeRectangle.north - granularityY * row;
+		var latitude = nativeRectangle.north - granularityY * row
 
-    if (!isGeographic) {
-      latitude =
-        piOverTwo - 2.0 * atan(exp(-latitude * oneOverGlobeSemimajorAxis));
-    } else {
-      latitude = toRadians(latitude);
-    }
+		if (!isGeographic) {
+			latitude =
+				piOverTwo - 2.0 * atan(exp(-latitude * oneOverGlobeSemimajorAxis))
+		} else {
+			latitude = toRadians(latitude)
+		}
 
-    var v = (latitude - geographicSouth) / (geographicNorth - geographicSouth);
-    v = CesiumMath.clamp(v, 0.0, 1.0);
+		var v = (latitude - geographicSouth) / (geographicNorth - geographicSouth)
+		v = CesiumMath.clamp(v, 0.0, 1.0)
 
-    var isNorthEdge = rowIndex === startRow;
-    var isSouthEdge = rowIndex === endRow - 1;
-    if (skirtHeight > 0.0) {
-      if (isNorthEdge) {
-        latitude += skirtOffsetPercentage * rectangleHeight;
-      } else if (isSouthEdge) {
-        latitude -= skirtOffsetPercentage * rectangleHeight;
-      }
-    }
+		var isNorthEdge = rowIndex === startRow
+		var isSouthEdge = rowIndex === endRow - 1
+		if (skirtHeight > 0.0) {
+			if (isNorthEdge) {
+				latitude += skirtOffsetPercentage * rectangleHeight
+			} else if (isSouthEdge) {
+				latitude -= skirtOffsetPercentage * rectangleHeight
+			}
+		}
 
-    var cosLatitude = cos(latitude);
-    var nZ = sin(latitude);
-    var kZ = radiiSquaredZ * nZ;
+		var cosLatitude = cos(latitude)
+		var nZ = sin(latitude)
+		var kZ = radiiSquaredZ * nZ
 
-    var webMercatorT;
-    if (includeWebMercatorT) {
-      webMercatorT =
-        (WebMercatorProjection.geodeticLatitudeToMercatorAngle(latitude) -
-          southMercatorY) *
-        oneOverMercatorHeight;
-    }
+		var webMercatorT
+		if (includeWebMercatorT) {
+			webMercatorT =
+				(WebMercatorProjection.geodeticLatitudeToMercatorAngle(latitude) -
+					southMercatorY) *
+				oneOverMercatorHeight
+		}
 
-    for (var colIndex = startCol; colIndex < endCol; ++colIndex) {
-      var col = colIndex;
-      if (col < 0) {
-        col = 0;
-      }
-      if (col >= width) {
-        col = width - 1;
-      }
+		for (var colIndex = startCol; colIndex < endCol; ++colIndex) {
+			var col = colIndex
+			if (col < 0) {
+				col = 0
+			}
+			if (col >= width) {
+				col = width - 1
+			}
 
-      var terrainOffset = row * (width * stride) + col * stride;
+			var terrainOffset = row * (width * stride) + col * stride
 
-      var heightSample;
-      if (elementsPerHeight === 1) {
-        heightSample = heightmap[terrainOffset];
-      } else {
-        heightSample = 0;
+			var heightSample
+			if (elementsPerHeight === 1) {
+				heightSample = heightmap[terrainOffset]
+			} else {
+				heightSample = 0
 
-        var elementOffset;
-        if (isBigEndian) {
-          for (
-            elementOffset = 0;
-            elementOffset < elementsPerHeight;
-            ++elementOffset
-          ) {
-            heightSample =
-              heightSample * elementMultiplier +
-              heightmap[terrainOffset + elementOffset];
-          }
-        } else {
-          for (
-            elementOffset = elementsPerHeight - 1;
-            elementOffset >= 0;
-            --elementOffset
-          ) {
-            heightSample =
-              heightSample * elementMultiplier +
-              heightmap[terrainOffset + elementOffset];
-          }
-        }
-      }
+				var elementOffset
+				if (isBigEndian) {
+					for (
+						elementOffset = 0;
+						elementOffset < elementsPerHeight;
+						++elementOffset
+					) {
+						heightSample =
+							heightSample * elementMultiplier +
+							heightmap[terrainOffset + elementOffset]
+					}
+				} else {
+					for (
+						elementOffset = elementsPerHeight - 1;
+						elementOffset >= 0;
+						--elementOffset
+					) {
+						heightSample =
+							heightSample * elementMultiplier +
+							heightmap[terrainOffset + elementOffset]
+					}
+				}
+			}
 
-      heightSample = (heightSample * heightScale + heightOffset) * exaggeration;
+			heightSample = (heightSample * heightScale + heightOffset) * exaggeration
 
-      maximumHeight = Math.max(maximumHeight, heightSample);
-      minimumHeight = Math.min(minimumHeight, heightSample);
+			maximumHeight = Math.max(maximumHeight, heightSample)
+			minimumHeight = Math.min(minimumHeight, heightSample)
 
-      var longitude = nativeRectangle.west + granularityX * col;
+			var longitude = nativeRectangle.west + granularityX * col
 
-      if (!isGeographic) {
-        longitude = longitude * oneOverGlobeSemimajorAxis;
-      } else {
-        longitude = toRadians(longitude);
-      }
+			if (!isGeographic) {
+				longitude = longitude * oneOverGlobeSemimajorAxis
+			} else {
+				longitude = toRadians(longitude)
+			}
 
-      var u = (longitude - geographicWest) / (geographicEast - geographicWest);
-      u = CesiumMath.clamp(u, 0.0, 1.0);
+			var u = (longitude - geographicWest) / (geographicEast - geographicWest)
+			u = CesiumMath.clamp(u, 0.0, 1.0)
 
-      var index = row * width + col;
+			var index = row * width + col
 
-      if (skirtHeight > 0.0) {
-        var isWestEdge = colIndex === startCol;
-        var isEastEdge = colIndex === endCol - 1;
-        var isEdge = isNorthEdge || isSouthEdge || isWestEdge || isEastEdge;
-        var isCorner =
-          (isNorthEdge || isSouthEdge) && (isWestEdge || isEastEdge);
-        if (isCorner) {
-          // Don't generate skirts on the corners.
-          continue;
-        } else if (isEdge) {
-          heightSample -= skirtHeight;
+			if (skirtHeight > 0.0) {
+				var isWestEdge = colIndex === startCol
+				var isEastEdge = colIndex === endCol - 1
+				var isEdge = isNorthEdge || isSouthEdge || isWestEdge || isEastEdge
+				var isCorner =
+					(isNorthEdge || isSouthEdge) && (isWestEdge || isEastEdge)
+				if (isCorner) {
+					// Don't generate skirts on the corners.
+					continue
+				} else if (isEdge) {
+					heightSample -= skirtHeight
 
-          if (isWestEdge) {
-            // The outer loop iterates north to south but the indices are ordered south to north, hence the index flip below
-            index = gridVertexCount + (height - row - 1);
-            longitude -= skirtOffsetPercentage * rectangleWidth;
-          } else if (isSouthEdge) {
-            // Add after west indices. South indices are ordered east to west.
-            index = gridVertexCount + height + (width - col - 1);
-          } else if (isEastEdge) {
-            // Add after west and south indices. East indices are ordered north to south. The index is flipped like above.
-            index = gridVertexCount + height + width + row;
-            longitude += skirtOffsetPercentage * rectangleWidth;
-          } else if (isNorthEdge) {
-            // Add after west, south, and east indices. North indices are ordered west to east.
-            index = gridVertexCount + height + width + height + col;
-          }
-        }
-      }
+					if (isWestEdge) {
+						// The outer loop iterates north to south but the indices are ordered south to north, hence the index flip below
+						index = gridVertexCount + (height - row - 1)
+						longitude -= skirtOffsetPercentage * rectangleWidth
+					} else if (isSouthEdge) {
+						// Add after west indices. South indices are ordered east to west.
+						index = gridVertexCount + height + (width - col - 1)
+					} else if (isEastEdge) {
+						// Add after west and south indices. East indices are ordered north to south. The index is flipped like above.
+						index = gridVertexCount + height + width + row
+						longitude += skirtOffsetPercentage * rectangleWidth
+					} else if (isNorthEdge) {
+						// Add after west, south, and east indices. North indices are ordered west to east.
+						index = gridVertexCount + height + width + height + col
+					}
+				}
+			}
 
-      var nX = cosLatitude * cos(longitude);
-      var nY = cosLatitude * sin(longitude);
+			var nX = cosLatitude * cos(longitude)
+			var nY = cosLatitude * sin(longitude)
 
-      var kX = radiiSquaredX * nX;
-      var kY = radiiSquaredY * nY;
+			var kX = radiiSquaredX * nX
+			var kY = radiiSquaredY * nY
 
-      var gamma = sqrt(kX * nX + kY * nY + kZ * nZ);
-      var oneOverGamma = 1.0 / gamma;
+			var gamma = sqrt(kX * nX + kY * nY + kZ * nZ)
+			var oneOverGamma = 1.0 / gamma
 
-      var rSurfaceX = kX * oneOverGamma;
-      var rSurfaceY = kY * oneOverGamma;
-      var rSurfaceZ = kZ * oneOverGamma;
+			var rSurfaceX = kX * oneOverGamma
+			var rSurfaceY = kY * oneOverGamma
+			var rSurfaceZ = kZ * oneOverGamma
 
-      var position = new Cartesian3();
-      position.x = rSurfaceX + nX * heightSample;
-      position.y = rSurfaceY + nY * heightSample;
-      position.z = rSurfaceZ + nZ * heightSample;
+			var position = new Cartesian3()
+			position.x = rSurfaceX + nX * heightSample
+			position.y = rSurfaceY + nY * heightSample
+			position.z = rSurfaceZ + nZ * heightSample
 
-      positions[index] = position;
-      heights[index] = heightSample;
-      uvs[index] = new Cartesian2(u, v);
+			positions[index] = position
+			heights[index] = heightSample
+			uvs[index] = new Cartesian2(u, v)
 
-      if (includeWebMercatorT) {
-        webMercatorTs[index] = webMercatorT;
-      }
+			if (includeWebMercatorT) {
+				webMercatorTs[index] = webMercatorT
+			}
 
-      Matrix4.multiplyByPoint(toENU, position, cartesian3Scratch);
+			Matrix4.multiplyByPoint(toENU, position, cartesian3Scratch)
 
-      Cartesian3.minimumByComponent(cartesian3Scratch, minimum, minimum);
-      Cartesian3.maximumByComponent(cartesian3Scratch, maximum, maximum);
-      hMin = Math.min(hMin, heightSample);
-    }
-  }
+			Cartesian3.minimumByComponent(cartesian3Scratch, minimum, minimum)
+			Cartesian3.maximumByComponent(cartesian3Scratch, maximum, maximum)
+			hMin = Math.min(hMin, heightSample)
+		}
+	}
 
-  var boundingSphere3D = BoundingSphere.fromPoints(positions);
-  var orientedBoundingBox;
-  if (defined(rectangle)) {
-    orientedBoundingBox = OrientedBoundingBox.fromRectangle(
-      rectangle,
-      minimumHeight,
-      maximumHeight,
-      ellipsoid
-    );
-  }
+	var boundingSphere3D = BoundingSphere.fromPoints(positions)
+	var orientedBoundingBox
+	if (defined(rectangle)) {
+		orientedBoundingBox = OrientedBoundingBox.fromRectangle(
+			rectangle,
+			minimumHeight,
+			maximumHeight,
+			ellipsoid,
+		)
+	}
 
-  var occludeePointInScaledSpace;
-  if (hasRelativeToCenter) {
-    var occluder = new EllipsoidalOccluder(ellipsoid);
-    occludeePointInScaledSpace = occluder.computeHorizonCullingPointPossiblyUnderEllipsoid(
-      relativeToCenter,
-      positions,
-      minimumHeight
-    );
-  }
+	var occludeePointInScaledSpace
+	if (hasRelativeToCenter) {
+		var occluder = new EllipsoidalOccluder(ellipsoid)
+		occludeePointInScaledSpace =
+			occluder.computeHorizonCullingPointPossiblyUnderEllipsoid(
+				relativeToCenter,
+				positions,
+				minimumHeight,
+			)
+	}
 
-  var aaBox = new AxisAlignedBoundingBox(minimum, maximum, relativeToCenter);
-  var encoding = new TerrainEncoding(
-    aaBox,
-    hMin,
-    maximumHeight,
-    fromENU,
-    false,
-    includeWebMercatorT
-  );
-  var vertices = new Float32Array(vertexCount * encoding.getStride());
+	var aaBox = new AxisAlignedBoundingBox(minimum, maximum, relativeToCenter)
+	var encoding = new TerrainEncoding(
+		aaBox,
+		hMin,
+		maximumHeight,
+		fromENU,
+		false,
+		includeWebMercatorT,
+	)
+	var vertices = new Float32Array(vertexCount * encoding.getStride())
 
-  var bufferIndex = 0;
-  for (var j = 0; j < vertexCount; ++j) {
-    bufferIndex = encoding.encode(
-      vertices,
-      bufferIndex,
-      positions[j],
-      uvs[j],
-      heights[j],
-      undefined,
-      webMercatorTs[j]
-    );
-  }
+	var bufferIndex = 0
+	for (var j = 0; j < vertexCount; ++j) {
+		bufferIndex = encoding.encode(
+			vertices,
+			bufferIndex,
+			positions[j],
+			uvs[j],
+			heights[j],
+			undefined,
+			webMercatorTs[j],
+		)
+	}
 
-  return {
-    vertices: vertices,
-    maximumHeight: maximumHeight,
-    minimumHeight: minimumHeight,
-    encoding: encoding,
-    boundingSphere3D: boundingSphere3D,
-    orientedBoundingBox: orientedBoundingBox,
-    occludeePointInScaledSpace: occludeePointInScaledSpace,
-  };
-};
-export default HeightmapTessellator;
+	return {
+		vertices: vertices,
+		maximumHeight: maximumHeight,
+		minimumHeight: minimumHeight,
+		encoding: encoding,
+		boundingSphere3D: boundingSphere3D,
+		orientedBoundingBox: orientedBoundingBox,
+		occludeePointInScaledSpace: occludeePointInScaledSpace,
+	}
+}
+export default HeightmapTessellator

@@ -96,12 +96,14 @@
           Cesium.PostProcessStageLibrary.isSilhouetteSupported(viewer.scene)
         ) {
           // Silhouettes are supported
-          var silhouetteBlue = Cesium.PostProcessStageLibrary.createEdgeDetectionStage();
+          var silhouetteBlue =
+            Cesium.PostProcessStageLibrary.createEdgeDetectionStage();
           silhouetteBlue.uniforms.color = Cesium.Color.BLUE;
           silhouetteBlue.uniforms.length = 0.01;
           silhouetteBlue.selected = [];
 
-          var silhouetteGreen = Cesium.PostProcessStageLibrary.createEdgeDetectionStage();
+          var silhouetteGreen =
+            Cesium.PostProcessStageLibrary.createEdgeDetectionStage();
           silhouetteGreen.uniforms.color = Cesium.Color.LIME;
           silhouetteGreen.uniforms.length = 0.01;
           silhouetteGreen.selected = [];

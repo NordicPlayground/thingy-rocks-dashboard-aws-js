@@ -1,6 +1,6 @@
-import Uri from "../ThirdParty/Uri.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import Uri from '../ThirdParty/Uri.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * A singleton that contains all of the servers that are trusted. Credentials will be sent with
@@ -10,8 +10,8 @@ import DeveloperError from "./DeveloperError.js";
  *
  * @see {@link http://www.w3.org/TR/cors/|Cross-Origin Resource Sharing}
  */
-var TrustedServers = {};
-var _servers = {};
+var TrustedServers = {}
+var _servers = {}
 
 /**
  * Adds a trusted server to the registry
@@ -24,20 +24,20 @@ var _servers = {};
  * TrustedServers.add('my.server.com', 80);
  */
 TrustedServers.add = function (host, port) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(host)) {
-    throw new DeveloperError("host is required.");
-  }
-  if (!defined(port) || port <= 0) {
-    throw new DeveloperError("port is required to be greater than 0.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(host)) {
+		throw new DeveloperError('host is required.')
+	}
+	if (!defined(port) || port <= 0) {
+		throw new DeveloperError('port is required to be greater than 0.')
+	}
+	//>>includeEnd('debug');
 
-  var authority = host.toLowerCase() + ":" + port;
-  if (!defined(_servers[authority])) {
-    _servers[authority] = true;
-  }
-};
+	var authority = host.toLowerCase() + ':' + port
+	if (!defined(_servers[authority])) {
+		_servers[authority] = true
+	}
+}
 
 /**
  * Removes a trusted server from the registry
@@ -50,53 +50,53 @@ TrustedServers.add = function (host, port) {
  * TrustedServers.remove('my.server.com', 80);
  */
 TrustedServers.remove = function (host, port) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(host)) {
-    throw new DeveloperError("host is required.");
-  }
-  if (!defined(port) || port <= 0) {
-    throw new DeveloperError("port is required to be greater than 0.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(host)) {
+		throw new DeveloperError('host is required.')
+	}
+	if (!defined(port) || port <= 0) {
+		throw new DeveloperError('port is required to be greater than 0.')
+	}
+	//>>includeEnd('debug');
 
-  var authority = host.toLowerCase() + ":" + port;
-  if (defined(_servers[authority])) {
-    delete _servers[authority];
-  }
-};
+	var authority = host.toLowerCase() + ':' + port
+	if (defined(_servers[authority])) {
+		delete _servers[authority]
+	}
+}
 
 function getAuthority(url) {
-  var uri = new Uri(url);
-  uri.normalize();
+	var uri = new Uri(url)
+	uri.normalize()
 
-  // Removes username:password@ so we just have host[:port]
-  var authority = uri.getAuthority();
-  if (!defined(authority)) {
-    return undefined; // Relative URL
-  }
+	// Removes username:password@ so we just have host[:port]
+	var authority = uri.getAuthority()
+	if (!defined(authority)) {
+		return undefined // Relative URL
+	}
 
-  if (authority.indexOf("@") !== -1) {
-    var parts = authority.split("@");
-    authority = parts[1];
-  }
+	if (authority.indexOf('@') !== -1) {
+		var parts = authority.split('@')
+		authority = parts[1]
+	}
 
-  // If the port is missing add one based on the scheme
-  if (authority.indexOf(":") === -1) {
-    var scheme = uri.getScheme();
-    if (!defined(scheme)) {
-      scheme = window.location.protocol;
-      scheme = scheme.substring(0, scheme.length - 1);
-    }
-    if (scheme === "http") {
-      authority += ":80";
-    } else if (scheme === "https") {
-      authority += ":443";
-    } else {
-      return undefined;
-    }
-  }
+	// If the port is missing add one based on the scheme
+	if (authority.indexOf(':') === -1) {
+		var scheme = uri.getScheme()
+		if (!defined(scheme)) {
+			scheme = window.location.protocol
+			scheme = scheme.substring(0, scheme.length - 1)
+		}
+		if (scheme === 'http') {
+			authority += ':80'
+		} else if (scheme === 'https') {
+			authority += ':443'
+		} else {
+			return undefined
+		}
+	}
 
-  return authority;
+	return authority
 }
 
 /**
@@ -119,18 +119,18 @@ function getAuthority(url) {
  * }
  */
 TrustedServers.contains = function (url) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(url)) {
-    throw new DeveloperError("url is required.");
-  }
-  //>>includeEnd('debug');
-  var authority = getAuthority(url);
-  if (defined(authority) && defined(_servers[authority])) {
-    return true;
-  }
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(url)) {
+		throw new DeveloperError('url is required.')
+	}
+	//>>includeEnd('debug');
+	var authority = getAuthority(url)
+	if (defined(authority) && defined(_servers[authority])) {
+		return true
+	}
 
-  return false;
-};
+	return false
+}
 
 /**
  * Clears the registry
@@ -140,6 +140,6 @@ TrustedServers.contains = function (url) {
  * TrustedServers.clear();
  */
 TrustedServers.clear = function () {
-  _servers = {};
-};
-export default TrustedServers;
+	_servers = {}
+}
+export default TrustedServers

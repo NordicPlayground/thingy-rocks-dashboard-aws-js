@@ -70,12 +70,14 @@
         });
         viewer.scene.primitives.add(nonClassificationTileset);
 
-        Sandcastle.addToggleButton("Show classification", true, function (
-          checked
-        ) {
-          classificationTileset.show = checked;
-          nonClassificationTileset.show = !checked;
-        });
+        Sandcastle.addToggleButton(
+          "Show classification",
+          true,
+          function (checked) {
+            classificationTileset.show = checked;
+            nonClassificationTileset.show = !checked;
+          }
+        );
         //Sandcastle_End
         Sandcastle.finishedLoading();
       }

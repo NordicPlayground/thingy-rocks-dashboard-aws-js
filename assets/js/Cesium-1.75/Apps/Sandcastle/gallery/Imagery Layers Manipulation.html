@@ -168,8 +168,7 @@
           addBaseLayerOption(
             "ArcGIS World Street Maps",
             new Cesium.ArcGisMapServerImageryProvider({
-              url:
-                "https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer",
+              url: "https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer",
             })
           );
           addBaseLayerOption(
@@ -194,8 +193,7 @@
           addBaseLayerOption(
             "USGS Shaded Relief (via WMTS)",
             new Cesium.WebMapTileServiceImageryProvider({
-              url:
-                "http://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer/WMTS",
+              url: "http://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer/WMTS",
               layer: "USGSShadedReliefOnly",
               style: "default",
               format: "image/jpeg",
@@ -209,8 +207,7 @@
           addAdditionalLayerOption(
             "United States GOES Infrared",
             new Cesium.WebMapServiceImageryProvider({
-              url:
-                "https://mesonet.agron.iastate.edu/cgi-bin/wms/goes/conus_ir.cgi?",
+              url: "https://mesonet.agron.iastate.edu/cgi-bin/wms/goes/conus_ir.cgi?",
               layers: "goes_conus_ir",
               credit: "Infrared data courtesy Iowa Environmental Mesonet",
               parameters: {
@@ -222,8 +219,7 @@
           addAdditionalLayerOption(
             "United States Weather Radar",
             new Cesium.WebMapServiceImageryProvider({
-              url:
-                "https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?",
+              url: "https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi?",
               layers: "nexrad-n0r",
               credit: "Radar data courtesy Iowa Environmental Mesonet",
               parameters: {

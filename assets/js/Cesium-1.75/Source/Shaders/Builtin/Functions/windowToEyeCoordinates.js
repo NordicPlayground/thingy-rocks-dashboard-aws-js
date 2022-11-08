@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Transforms a position from window to eye coordinates.\n\
  * The transform from window to normalized device coordinates is done using components\n\
  * of (@link czm_viewport} and {@link czm_viewportTransformation} instead of calculating\n\
@@ -98,4 +98,4 @@ vec4 czm_windowToEyeCoordinates(vec2 fragmentCoordinateXY, float depthOrLogDepth
 #endif\n\
     return eyeCoordinate;\n\
 }\n\
-";
+'

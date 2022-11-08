@@ -1,59 +1,62 @@
-define(["./kernel", "../has", "../sniff"], function(dojo, has){
+define(['./kernel', '../has', '../sniff'], function (dojo, has) {
 	// module:
 	//		dojo/_base/lang
 
-	has.add("bug-for-in-skips-shadowed", function(){
+	has.add('bug-for-in-skips-shadowed', function () {
 		// if true, the for-in iterator skips object properties that exist in Object's prototype (IE 6 - ?)
-		for(var i in {toString: 1}){
-			return 0;
+		for (var i in { toString: 1 }) {
+			return 0
 		}
-		return 1;
-	});
+		return 1
+	})
 
 	// Helper methods
-	var _extraNames =
-			has("bug-for-in-skips-shadowed") ?
-				"hasOwnProperty.valueOf.isPrototypeOf.propertyIsEnumerable.toLocaleString.toString.constructor".split(".") : [],
-
+	var _extraNames = has('bug-for-in-skips-shadowed')
+			? 'hasOwnProperty.valueOf.isPrototypeOf.propertyIsEnumerable.toLocaleString.toString.constructor'.split(
+					'.',
+			  )
+			: [],
 		_extraLen = _extraNames.length,
-
-		getProp = function(/*Array*/parts, /*Boolean*/create, /*Object*/context){
-			if(!context){
-				if(parts[0] && dojo.scopeMap[parts[0]]) {
+		getProp = function (
+			/*Array*/ parts,
+			/*Boolean*/ create,
+			/*Object*/ context,
+		) {
+			if (!context) {
+				if (parts[0] && dojo.scopeMap[parts[0]]) {
 					// Voodoo code from the old days where "dojo" or "dijit" maps to some special object
 					// rather than just window.dojo
-					context = dojo.scopeMap[parts.shift()][1];
-				}else{
-					context = dojo.global;
+					context = dojo.scopeMap[parts.shift()][1]
+				} else {
+					context = dojo.global
 				}
 			}
 
-			try{
-				for(var i = 0; i < parts.length; i++){
-					var p = parts[i];
-					if(!(p in context)){
-						if(create){
-							context[p] = {};
-						}else{
-							return;		// return undefined
+			try {
+				for (var i = 0; i < parts.length; i++) {
+					var p = parts[i]
+					if (!(p in context)) {
+						if (create) {
+							context[p] = {}
+						} else {
+							return // return undefined
 						}
 					}
-					context = context[p];
+					context = context[p]
 				}
-				return context; // mixed
-			}catch(e){
+				return context // mixed
+			} catch (e) {
 				// "p in context" throws an exception when context is a number, boolean, etc. rather than an object,
 				// so in that corner case just return undefined (by having no return statement)
 			}
 		},
-
 		opts = Object.prototype.toString,
-
-		efficient = function(obj, offset, startWith){
-			return (startWith||[]).concat(Array.prototype.slice.call(obj, offset||0));
+		efficient = function (obj, offset, startWith) {
+			return (startWith || []).concat(
+				Array.prototype.slice.call(obj, offset || 0),
+			)
 		},
-
-		_pattern = /\{([^\}]+)\}/g;
+		_pattern = /\{([^\}]+)\}/g
 
 	// Module export
 	var lang = {
@@ -63,9 +66,9 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 		// _extraNames: String[]
 		//		Lists property names that must be explicitly processed during for-in iteration
 		//		in environments that have has("bug-for-in-skips-shadowed") true.
-		_extraNames:_extraNames,
+		_extraNames: _extraNames,
 
-		_mixin: function(dest, source, copyFunc){
+		_mixin: function (dest, source, copyFunc) {
 			// summary:
 			//		Copies/adds all properties of source to dest; returns dest.
 			// dest: Object
@@ -81,33 +84,42 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//		found in Object.prototype, are copied/added to dest. Copying/adding each particular property is
 			//		delegated to copyFunc (if any); copyFunc defaults to the Javascript assignment operator if not provided.
 			//		Notice that by default, _mixin executes a so-called "shallow copy" and aggregate types are copied/added by reference.
-			var name, s, i, empty = {};
-			for(name in source){
+			var name,
+				s,
+				i,
+				empty = {}
+			for (name in source) {
 				// the (!(name in empty) || empty[name] !== s) condition avoids copying properties in "source"
 				// inherited from Object.prototype.	 For example, if dest has a custom toString() method,
 				// don't overwrite it with the toString() method that source inherited from Object.prototype
-				s = source[name];
-				if(!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))){
-					dest[name] = copyFunc ? copyFunc(s) : s;
+				s = source[name]
+				if (
+					!(name in dest) ||
+					(dest[name] !== s && (!(name in empty) || empty[name] !== s))
+				) {
+					dest[name] = copyFunc ? copyFunc(s) : s
 				}
 			}
 
-			if(has("bug-for-in-skips-shadowed")){
-				if(source){
-					for(i = 0; i < _extraLen; ++i){
-						name = _extraNames[i];
-						s = source[name];
-						if(!(name in dest) || (dest[name] !== s && (!(name in empty) || empty[name] !== s))){
-							dest[name] = copyFunc ? copyFunc(s) : s;
+			if (has('bug-for-in-skips-shadowed')) {
+				if (source) {
+					for (i = 0; i < _extraLen; ++i) {
+						name = _extraNames[i]
+						s = source[name]
+						if (
+							!(name in dest) ||
+							(dest[name] !== s && (!(name in empty) || empty[name] !== s))
+						) {
+							dest[name] = copyFunc ? copyFunc(s) : s
 						}
 					}
 				}
 			}
 
-			return dest; // Object
+			return dest // Object
 		},
 
-		mixin: function(dest, sources){
+		mixin: function (dest, sources) {
 			// summary:
 			//		Copies/adds all properties of one or more sources to dest; returns dest.
 			// dest: Object
@@ -162,14 +174,16 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//	|	// will print "true"
 			//	|	console.log(flattened.braces);
 
-			if(!dest){ dest = {}; }
-			for(var i = 1, l = arguments.length; i < l; i++){
-				lang._mixin(dest, arguments[i]);
+			if (!dest) {
+				dest = {}
 			}
-			return dest; // Object
+			for (var i = 1, l = arguments.length; i < l; i++) {
+				lang._mixin(dest, arguments[i])
+			}
+			return dest // Object
 		},
 
-		setObject: function(name, value, context){
+		setObject: function (name, value, context) {
 			// summary:
 			//		Set a property from a dot-separated string, such as "A.B.C"
 			// description:
@@ -198,11 +212,13 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//		whereas with `lang.setObject`, we can shorten that to:
 			//	| lang.setObject("parent.child.prop", "some value", obj);
 
-			var parts = name.split("."), p = parts.pop(), obj = getProp(parts, true, context);
-			return obj && p ? (obj[p] = value) : undefined; // Object
+			var parts = name.split('.'),
+				p = parts.pop(),
+				obj = getProp(parts, true, context)
+			return obj && p ? (obj[p] = value) : undefined // Object
 		},
 
-		getObject: function(name, create, context){
+		getObject: function (name, create, context) {
 			// summary:
 			//		Get a property from a dot-separated string, such as "A.B.C"
 			// description:
@@ -216,10 +232,10 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			// context: Object?
 			//		Optional. Object to use as root of path. Defaults to
 			//		'dojo.global'. Null may be passed.
-			return getProp(name ? name.split(".") : [], create, context); // Object
+			return getProp(name ? name.split('.') : [], create, context) // Object
 		},
 
-		exists: function(name, obj){
+		exists: function (name, obj) {
 			// summary:
 			//		determine if an object supports a given method
 			// description:
@@ -243,47 +259,52 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//	| // search from a particular scope
 			//	| lang.exists("bar", foo); // true
 			//	| lang.exists("bar.baz", foo); // false
-			return lang.getObject(name, false, obj) !== undefined; // Boolean
+			return lang.getObject(name, false, obj) !== undefined // Boolean
 		},
 
 		// Crockford (ish) functions
 
-		isString: function(it){
+		isString: function (it) {
 			// summary:
 			//		Return true if it is a String
 			// it: anything
 			//		Item to test.
-			return (typeof it == "string" || it instanceof String); // Boolean
+			return typeof it == 'string' || it instanceof String // Boolean
 		},
 
-		isArray: function(it){
+		isArray: function (it) {
 			// summary:
 			//		Return true if it is an Array.
 			//		Does not work on Arrays created in other windows.
 			// it: anything
 			//		Item to test.
-			return it && (it instanceof Array || typeof it == "array"); // Boolean
+			return it && (it instanceof Array || typeof it == 'array') // Boolean
 		},
 
-		isFunction: function(it){
+		isFunction: function (it) {
 			// summary:
 			//		Return true if it is a Function
 			// it: anything
 			//		Item to test.
-			return opts.call(it) === "[object Function]";
+			return opts.call(it) === '[object Function]'
 		},
 
-		isObject: function(it){
+		isObject: function (it) {
 			// summary:
 			//		Returns true if it is a JavaScript object (or an Array, a Function
 			//		or null)
 			// it: anything
 			//		Item to test.
-			return it !== undefined &&
-				(it === null || typeof it == "object" || lang.isArray(it) || lang.isFunction(it)); // Boolean
+			return (
+				it !== undefined &&
+				(it === null ||
+					typeof it == 'object' ||
+					lang.isArray(it) ||
+					lang.isFunction(it))
+			) // Boolean
 		},
 
-		isArrayLike: function(it){
+		isArrayLike: function (it) {
 			// summary:
 			//		similar to isArray() but more permissive
 			// it: anything
@@ -296,22 +317,30 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//		and DOM collections will return true when passed to
 			//		isArrayLike(), but will return false when passed to
 			//		isArray().
-			return it && it !== undefined && // Boolean
+			return (
+				it &&
+				it !== undefined && // Boolean
 				// keep out built-in constructors (Number, String, ...) which have length
 				// properties
-				!lang.isString(it) && !lang.isFunction(it) &&
+				!lang.isString(it) &&
+				!lang.isFunction(it) &&
 				!(it.tagName && it.tagName.toLowerCase() == 'form') &&
-				(lang.isArray(it) || isFinite(it.length));
+				(lang.isArray(it) || isFinite(it.length))
+			)
 		},
 
-		isAlien: function(it){
+		isAlien: function (it) {
 			// summary:
 			//		Returns true if it is a built-in function or some other kind of
 			//		oddball that *should* report as a function but doesn't
-			return it && !lang.isFunction(it) && /\{\s*\[native code\]\s*\}/.test(String(it)); // Boolean
+			return (
+				it &&
+				!lang.isFunction(it) &&
+				/\{\s*\[native code\]\s*\}/.test(String(it))
+			) // Boolean
 		},
 
-		extend: function(ctor, props){
+		extend: function (ctor, props) {
 			// summary:
 			//		Adds all properties and methods of props to constructor's
 			//		prototype, making them available to all instances created with
@@ -320,26 +349,26 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//		Target constructor to extend.
 			// props: Object
 			//		One or more objects to mix into ctor.prototype
-			for(var i=1, l=arguments.length; i<l; i++){
-				lang._mixin(ctor.prototype, arguments[i]);
+			for (var i = 1, l = arguments.length; i < l; i++) {
+				lang._mixin(ctor.prototype, arguments[i])
 			}
-			return ctor; // Object
+			return ctor // Object
 		},
 
-		_hitchArgs: function(scope, method){
-			var pre = lang._toArray(arguments, 2);
-			var named = lang.isString(method);
-			return function(){
+		_hitchArgs: function (scope, method) {
+			var pre = lang._toArray(arguments, 2)
+			var named = lang.isString(method)
+			return function () {
 				// arrayify arguments
-				var args = lang._toArray(arguments);
+				var args = lang._toArray(arguments)
 				// locate our method
-				var f = named ? (scope||dojo.global)[method] : method;
+				var f = named ? (scope || dojo.global)[method] : method
 				// invoke with collected args
-				return f && f.apply(scope || this, pre.concat(args)); // mixed
-			}; // Function
+				return f && f.apply(scope || this, pre.concat(args)) // mixed
+			} // Function
 		},
 
-		hitch: function(scope, method){
+		hitch: function (scope, method) {
 			// summary:
 			//		Returns a function that will only ever execute in the given scope.
 			//		This allows for easy use of object member functions
@@ -371,33 +400,47 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//	|	var foo = { bar: 2 };
 			//	|	lang.hitch(foo, function(){ this.bar = 10; })();
 			//		execute an anonymous function in scope of foo
-			if(arguments.length > 2){
-				return lang._hitchArgs.apply(dojo, arguments); // Function
+			if (arguments.length > 2) {
+				return lang._hitchArgs.apply(dojo, arguments) // Function
 			}
-			if(!method){
-				method = scope;
-				scope = null;
+			if (!method) {
+				method = scope
+				scope = null
 			}
-			if(lang.isString(method)){
-				scope = scope || dojo.global;
-				if(!scope[method]){ throw(['lang.hitch: scope["', method, '"] is null (scope="', scope, '")'].join('')); }
-				return function(){ return scope[method].apply(scope, arguments || []); }; // Function
+			if (lang.isString(method)) {
+				scope = scope || dojo.global
+				if (!scope[method]) {
+					throw [
+						'lang.hitch: scope["',
+						method,
+						'"] is null (scope="',
+						scope,
+						'")',
+					].join('')
+				}
+				return function () {
+					return scope[method].apply(scope, arguments || [])
+				} // Function
 			}
-			return !scope ? method : function(){ return method.apply(scope, arguments || []); }; // Function
+			return !scope
+				? method
+				: function () {
+						return method.apply(scope, arguments || [])
+				  } // Function
 		},
 
-		delegate: (function(){
+		delegate: (function () {
 			// boodman/crockford delegation w/ cornford optimization
-			function TMP(){}
-			return function(obj, props){
-				TMP.prototype = obj;
-				var tmp = new TMP();
-				TMP.prototype = null;
-				if(props){
-					lang._mixin(tmp, props);
+			function TMP() {}
+			return function (obj, props) {
+				TMP.prototype = obj
+				var tmp = new TMP()
+				TMP.prototype = null
+				if (props) {
+					lang._mixin(tmp, props)
 				}
-				return tmp; // Object
-			};
+				return tmp // Object
+			}
 		})(),
 		/*=====
 		delegate: function(obj, props){
@@ -430,19 +473,20 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 		},
 		=====*/
 
-		_toArray: has("ie") ?
-			(function(){
-				function slow(obj, offset, startWith){
-					var arr = startWith||[];
-					for(var x = offset || 0; x < obj.length; x++){
-						arr.push(obj[x]);
+		_toArray: has('ie')
+			? (function () {
+					function slow(obj, offset, startWith) {
+						var arr = startWith || []
+						for (var x = offset || 0; x < obj.length; x++) {
+							arr.push(obj[x])
+						}
+						return arr
 					}
-					return arr;
-				}
-				return function(obj){
-					return ((obj.item) ? slow : efficient).apply(this, arguments);
-				};
-			})() : efficient,
+					return function (obj) {
+						return (obj.item ? slow : efficient).apply(this, arguments)
+					}
+			  })()
+			: efficient,
 		/*=====
 		 _toArray: function(obj, offset, startWith){
 			 // summary:
@@ -462,7 +506,7 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 		 },
 		 =====*/
 
-		partial: function(/*Function|String*/ method /*, ...*/){
+		partial: function (/*Function|String*/ method /*, ...*/) {
 			// summary:
 			//		similar to hitch() except that the scope object is left to be
 			//		whatever the execution context eventually becomes.
@@ -471,56 +515,59 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//		|	lang.hitch(null, funcName, ...);
 			// method:
 			//		The function to "wrap"
-			var arr = [ null ];
-			return lang.hitch.apply(dojo, arr.concat(lang._toArray(arguments))); // Function
+			var arr = [null]
+			return lang.hitch.apply(dojo, arr.concat(lang._toArray(arguments))) // Function
 		},
 
-		clone: function(/*anything*/ src){
+		clone: function (/*anything*/ src) {
 			// summary:
 			//		Clones objects (including DOM nodes) and all children.
 			//		Warning: do not clone cyclic structures.
 			// src:
 			//		The object to clone
-			if(!src || typeof src != "object" || lang.isFunction(src)){
+			if (!src || typeof src != 'object' || lang.isFunction(src)) {
 				// null, undefined, any non-object, or function
-				return src;	// anything
+				return src // anything
 			}
-			if(src.nodeType && "cloneNode" in src){
+			if (src.nodeType && 'cloneNode' in src) {
 				// DOM Node
-				return src.cloneNode(true); // Node
+				return src.cloneNode(true) // Node
 			}
-			if(src instanceof Date){
+			if (src instanceof Date) {
 				// Date
-				return new Date(src.getTime());	// Date
+				return new Date(src.getTime()) // Date
 			}
-			if(src instanceof RegExp){
+			if (src instanceof RegExp) {
 				// RegExp
-				return new RegExp(src);   // RegExp
+				return new RegExp(src) // RegExp
 			}
-			var r, i, l;
-			if(lang.isArray(src)){
+			var r, i, l
+			if (lang.isArray(src)) {
 				// array
-				r = [];
-				for(i = 0, l = src.length; i < l; ++i){
-					if(i in src){
-						r.push(lang.clone(src[i]));
+				r = []
+				for (i = 0, l = src.length; i < l; ++i) {
+					if (i in src) {
+						r.push(lang.clone(src[i]))
 					}
 				}
 				// we don't clone functions for performance reasons
 				//		}else if(d.isFunction(src)){
 				//			// function
 				//			r = function(){ return src.apply(this, arguments); };
-			}else{
+			} else {
 				// generic objects
-				r = src.constructor ? new src.constructor() : {};
+				r = src.constructor ? new src.constructor() : {}
 			}
-			return lang._mixin(r, src, lang.clone);
+			return lang._mixin(r, src, lang.clone)
 		},
 
-
-		trim: String.prototype.trim ?
-			function(str){ return str.trim(); } :
-			function(str){ return str.replace(/^\s\s*/, '').replace(/\s\s*$/, ''); },
+		trim: String.prototype.trim
+			? function (str) {
+					return str.trim()
+			  }
+			: function (str) {
+					return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+			  },
 		/*=====
 		 trim: function(str){
 			 // summary:
@@ -539,7 +586,7 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 		 },
 		 =====*/
 
-		replace: function(tmpl, map, pattern){
+		replace: function (tmpl, map, pattern) {
 			// summary:
 			//		Performs parameterized substitutions on a string. Throws an
 			//		exception if any parameter is unmatched.
@@ -604,13 +651,18 @@ define(["./kernel", "../has", "../sniff"], function(dojo, has){
 			//	|		["Robert", "X", "Cringely"], /\$\{([^\}]+)\}/g);
 			//	|	// returns: Hello, Robert Cringely!
 
-			return tmpl.replace(pattern || _pattern, lang.isFunction(map) ?
-				map : function(_, k){ return lang.getObject(k, false, map); });
-		}
-	};
+			return tmpl.replace(
+				pattern || _pattern,
+				lang.isFunction(map)
+					? map
+					: function (_, k) {
+							return lang.getObject(k, false, map)
+					  },
+			)
+		},
+	}
 
-	has("extend-dojo") && lang.mixin(dojo, lang);
+	has('extend-dojo') && lang.mixin(dojo, lang)
 
-	return lang;
-});
-
+	return lang
+})

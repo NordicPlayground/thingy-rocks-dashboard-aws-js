@@ -1,30 +1,30 @@
-import RBush from "../ThirdParty/rbush.js";
-import Check from "./Check.js";
+import RBush from '../ThirdParty/rbush.js'
+import Check from './Check.js'
 
 /**
  * Wrapper around rbush for use with Rectangle types.
  * @private
  */
 function RectangleCollisionChecker() {
-  this._tree = new RBush();
+	this._tree = new RBush()
 }
 
 function RectangleWithId() {
-  this.minX = 0.0;
-  this.minY = 0.0;
-  this.maxX = 0.0;
-  this.maxY = 0.0;
-  this.id = "";
+	this.minX = 0.0
+	this.minY = 0.0
+	this.maxX = 0.0
+	this.maxY = 0.0
+	this.id = ''
 }
 
 RectangleWithId.fromRectangleAndId = function (id, rectangle, result) {
-  result.minX = rectangle.west;
-  result.minY = rectangle.south;
-  result.maxX = rectangle.east;
-  result.maxY = rectangle.north;
-  result.id = id;
-  return result;
-};
+	result.minX = rectangle.west
+	result.minY = rectangle.south
+	result.maxX = rectangle.east
+	result.maxY = rectangle.north
+	result.id = id
+	return result
+}
 
 /**
  * Insert a rectangle into the collision checker.
@@ -34,24 +34,24 @@ RectangleWithId.fromRectangleAndId = function (id, rectangle, result) {
  * @private
  */
 RectangleCollisionChecker.prototype.insert = function (id, rectangle) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.string("id", id);
-  Check.typeOf.object("rectangle", rectangle);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.string('id', id)
+	Check.typeOf.object('rectangle', rectangle)
+	//>>includeEnd('debug');
 
-  var withId = RectangleWithId.fromRectangleAndId(
-    id,
-    rectangle,
-    new RectangleWithId()
-  );
-  this._tree.insert(withId);
-};
-
-function idCompare(a, b) {
-  return a.id === b.id;
+	var withId = RectangleWithId.fromRectangleAndId(
+		id,
+		rectangle,
+		new RectangleWithId(),
+	)
+	this._tree.insert(withId)
 }
 
-var removalScratch = new RectangleWithId();
+function idCompare(a, b) {
+	return a.id === b.id
+}
+
+var removalScratch = new RectangleWithId()
 /**
  * Remove a rectangle from the collision checker.
  *
@@ -60,20 +60,16 @@ var removalScratch = new RectangleWithId();
  * @private
  */
 RectangleCollisionChecker.prototype.remove = function (id, rectangle) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.string("id", id);
-  Check.typeOf.object("rectangle", rectangle);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.string('id', id)
+	Check.typeOf.object('rectangle', rectangle)
+	//>>includeEnd('debug');
 
-  var withId = RectangleWithId.fromRectangleAndId(
-    id,
-    rectangle,
-    removalScratch
-  );
-  this._tree.remove(withId, idCompare);
-};
+	var withId = RectangleWithId.fromRectangleAndId(id, rectangle, removalScratch)
+	this._tree.remove(withId, idCompare)
+}
 
-var collisionScratch = new RectangleWithId();
+var collisionScratch = new RectangleWithId()
 /**
  * Checks if a given rectangle collides with any of the rectangles in the collection.
  *
@@ -81,15 +77,15 @@ var collisionScratch = new RectangleWithId();
  * @returns {Boolean} Whether the rectangle collides with any of the rectangles in the collision checker.
  */
 RectangleCollisionChecker.prototype.collides = function (rectangle) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("rectangle", rectangle);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('rectangle', rectangle)
+	//>>includeEnd('debug');
 
-  var withId = RectangleWithId.fromRectangleAndId(
-    "",
-    rectangle,
-    collisionScratch
-  );
-  return this._tree.collides(withId);
-};
-export default RectangleCollisionChecker;
+	var withId = RectangleWithId.fromRectangleAndId(
+		'',
+		rectangle,
+		collisionScratch,
+	)
+	return this._tree.collides(withId)
+}
+export default RectangleCollisionChecker

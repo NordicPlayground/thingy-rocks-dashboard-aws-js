@@ -1,13 +1,13 @@
-import Cartesian3 from "../Core/Cartesian3.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import Ellipsoid from "../Core/Ellipsoid.js";
-import Event from "../Core/Event.js";
-import Matrix3 from "../Core/Matrix3.js";
-import Quaternion from "../Core/Quaternion.js";
-import Transforms from "../Core/Transforms.js";
-import Property from "./Property.js";
-import VelocityVectorProperty from "./VelocityVectorProperty.js";
+import Cartesian3 from '../Core/Cartesian3.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import Ellipsoid from '../Core/Ellipsoid.js'
+import Event from '../Core/Event.js'
+import Matrix3 from '../Core/Matrix3.js'
+import Quaternion from '../Core/Quaternion.js'
+import Transforms from '../Core/Transforms.js'
+import Property from './Property.js'
+import VelocityVectorProperty from './VelocityVectorProperty.js'
 
 /**
  * A {@link Property} which evaluates to a {@link Quaternion} rotation
@@ -29,81 +29,81 @@ import VelocityVectorProperty from "./VelocityVectorProperty.js";
  * }));
  */
 function VelocityOrientationProperty(position, ellipsoid) {
-  this._velocityVectorProperty = new VelocityVectorProperty(position, true);
-  this._subscription = undefined;
-  this._ellipsoid = undefined;
-  this._definitionChanged = new Event();
+	this._velocityVectorProperty = new VelocityVectorProperty(position, true)
+	this._subscription = undefined
+	this._ellipsoid = undefined
+	this._definitionChanged = new Event()
 
-  this.ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
+	this.ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84)
 
-  var that = this;
-  this._velocityVectorProperty.definitionChanged.addEventListener(function () {
-    that._definitionChanged.raiseEvent(that);
-  });
+	var that = this
+	this._velocityVectorProperty.definitionChanged.addEventListener(function () {
+		that._definitionChanged.raiseEvent(that)
+	})
 }
 
 Object.defineProperties(VelocityOrientationProperty.prototype, {
-  /**
-   * Gets a value indicating if this property is constant.
-   * @memberof VelocityOrientationProperty.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   */
-  isConstant: {
-    get: function () {
-      return Property.isConstant(this._velocityVectorProperty);
-    },
-  },
-  /**
-   * Gets the event that is raised whenever the definition of this property changes.
-   * @memberof VelocityOrientationProperty.prototype
-   *
-   * @type {Event}
-   * @readonly
-   */
-  definitionChanged: {
-    get: function () {
-      return this._definitionChanged;
-    },
-  },
-  /**
-   * Gets or sets the position property used to compute orientation.
-   * @memberof VelocityOrientationProperty.prototype
-   *
-   * @type {Property|undefined}
-   */
-  position: {
-    get: function () {
-      return this._velocityVectorProperty.position;
-    },
-    set: function (value) {
-      this._velocityVectorProperty.position = value;
-    },
-  },
-  /**
-   * Gets or sets the ellipsoid used to determine which way is up.
-   * @memberof VelocityOrientationProperty.prototype
-   *
-   * @type {Property|undefined}
-   */
-  ellipsoid: {
-    get: function () {
-      return this._ellipsoid;
-    },
-    set: function (value) {
-      var oldValue = this._ellipsoid;
-      if (oldValue !== value) {
-        this._ellipsoid = value;
-        this._definitionChanged.raiseEvent(this);
-      }
-    },
-  },
-});
+	/**
+	 * Gets a value indicating if this property is constant.
+	 * @memberof VelocityOrientationProperty.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	isConstant: {
+		get: function () {
+			return Property.isConstant(this._velocityVectorProperty)
+		},
+	},
+	/**
+	 * Gets the event that is raised whenever the definition of this property changes.
+	 * @memberof VelocityOrientationProperty.prototype
+	 *
+	 * @type {Event}
+	 * @readonly
+	 */
+	definitionChanged: {
+		get: function () {
+			return this._definitionChanged
+		},
+	},
+	/**
+	 * Gets or sets the position property used to compute orientation.
+	 * @memberof VelocityOrientationProperty.prototype
+	 *
+	 * @type {Property|undefined}
+	 */
+	position: {
+		get: function () {
+			return this._velocityVectorProperty.position
+		},
+		set: function (value) {
+			this._velocityVectorProperty.position = value
+		},
+	},
+	/**
+	 * Gets or sets the ellipsoid used to determine which way is up.
+	 * @memberof VelocityOrientationProperty.prototype
+	 *
+	 * @type {Property|undefined}
+	 */
+	ellipsoid: {
+		get: function () {
+			return this._ellipsoid
+		},
+		set: function (value) {
+			var oldValue = this._ellipsoid
+			if (oldValue !== value) {
+				this._ellipsoid = value
+				this._definitionChanged.raiseEvent(this)
+			}
+		},
+	},
+})
 
-var positionScratch = new Cartesian3();
-var velocityScratch = new Cartesian3();
-var rotationScratch = new Matrix3();
+var positionScratch = new Cartesian3()
+var velocityScratch = new Cartesian3()
+var rotationScratch = new Matrix3()
 
 /**
  * Gets the value of the property at the provided time.
@@ -113,24 +113,24 @@ var rotationScratch = new Matrix3();
  * @returns {Quaternion} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 VelocityOrientationProperty.prototype.getValue = function (time, result) {
-  var velocity = this._velocityVectorProperty._getValue(
-    time,
-    velocityScratch,
-    positionScratch
-  );
+	var velocity = this._velocityVectorProperty._getValue(
+		time,
+		velocityScratch,
+		positionScratch,
+	)
 
-  if (!defined(velocity)) {
-    return undefined;
-  }
+	if (!defined(velocity)) {
+		return undefined
+	}
 
-  Transforms.rotationMatrixFromPositionVelocity(
-    positionScratch,
-    velocity,
-    this._ellipsoid,
-    rotationScratch
-  );
-  return Quaternion.fromRotationMatrix(rotationScratch, result);
-};
+	Transforms.rotationMatrixFromPositionVelocity(
+		positionScratch,
+		velocity,
+		this._ellipsoid,
+		rotationScratch,
+	)
+	return Quaternion.fromRotationMatrix(rotationScratch, result)
+}
 
 /**
  * Compares this property to the provided property and returns
@@ -140,15 +140,15 @@ VelocityOrientationProperty.prototype.getValue = function (time, result) {
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
 VelocityOrientationProperty.prototype.equals = function (other) {
-  return (
-    this === other || //
-    (other instanceof VelocityOrientationProperty &&
-      Property.equals(
-        this._velocityVectorProperty,
-        other._velocityVectorProperty
-      ) &&
-      (this._ellipsoid === other._ellipsoid ||
-        this._ellipsoid.equals(other._ellipsoid)))
-  );
-};
-export default VelocityOrientationProperty;
+	return (
+		this === other || //
+		(other instanceof VelocityOrientationProperty &&
+			Property.equals(
+				this._velocityVectorProperty,
+				other._velocityVectorProperty,
+			) &&
+			(this._ellipsoid === other._ellipsoid ||
+				this._ellipsoid.equals(other._ellipsoid)))
+	)
+}
+export default VelocityOrientationProperty

@@ -1,10 +1,10 @@
-import Cartesian3 from "./Cartesian3.js";
-import defined from "./defined.js";
-import Iau2000Orientation from "./Iau2000Orientation.js";
-import JulianDate from "./JulianDate.js";
-import CesiumMath from "./Math.js";
-import Matrix3 from "./Matrix3.js";
-import Quaternion from "./Quaternion.js";
+import Cartesian3 from './Cartesian3.js'
+import defined from './defined.js'
+import Iau2000Orientation from './Iau2000Orientation.js'
+import JulianDate from './JulianDate.js'
+import CesiumMath from './Math.js'
+import Matrix3 from './Matrix3.js'
+import Quaternion from './Quaternion.js'
 
 /**
  * The Axes representing the orientation of a Globe as represented by the data
@@ -19,51 +19,51 @@ import Quaternion from "./Quaternion.js";
  * @private
  */
 function IauOrientationAxes(computeFunction) {
-  if (!defined(computeFunction) || typeof computeFunction !== "function") {
-    computeFunction = Iau2000Orientation.ComputeMoon;
-  }
+	if (!defined(computeFunction) || typeof computeFunction !== 'function') {
+		computeFunction = Iau2000Orientation.ComputeMoon
+	}
 
-  this._computeFunction = computeFunction;
+	this._computeFunction = computeFunction
 }
 
-var xAxisScratch = new Cartesian3();
-var yAxisScratch = new Cartesian3();
-var zAxisScratch = new Cartesian3();
+var xAxisScratch = new Cartesian3()
+var yAxisScratch = new Cartesian3()
+var zAxisScratch = new Cartesian3()
 
 function computeRotationMatrix(alpha, delta, result) {
-  var xAxis = xAxisScratch;
-  xAxis.x = Math.cos(alpha + CesiumMath.PI_OVER_TWO);
-  xAxis.y = Math.sin(alpha + CesiumMath.PI_OVER_TWO);
-  xAxis.z = 0.0;
+	var xAxis = xAxisScratch
+	xAxis.x = Math.cos(alpha + CesiumMath.PI_OVER_TWO)
+	xAxis.y = Math.sin(alpha + CesiumMath.PI_OVER_TWO)
+	xAxis.z = 0.0
 
-  var cosDec = Math.cos(delta);
+	var cosDec = Math.cos(delta)
 
-  var zAxis = zAxisScratch;
-  zAxis.x = cosDec * Math.cos(alpha);
-  zAxis.y = cosDec * Math.sin(alpha);
-  zAxis.z = Math.sin(delta);
+	var zAxis = zAxisScratch
+	zAxis.x = cosDec * Math.cos(alpha)
+	zAxis.y = cosDec * Math.sin(alpha)
+	zAxis.z = Math.sin(delta)
 
-  var yAxis = Cartesian3.cross(zAxis, xAxis, yAxisScratch);
+	var yAxis = Cartesian3.cross(zAxis, xAxis, yAxisScratch)
 
-  if (!defined(result)) {
-    result = new Matrix3();
-  }
+	if (!defined(result)) {
+		result = new Matrix3()
+	}
 
-  result[0] = xAxis.x;
-  result[1] = yAxis.x;
-  result[2] = zAxis.x;
-  result[3] = xAxis.y;
-  result[4] = yAxis.y;
-  result[5] = zAxis.y;
-  result[6] = xAxis.z;
-  result[7] = yAxis.z;
-  result[8] = zAxis.z;
+	result[0] = xAxis.x
+	result[1] = yAxis.x
+	result[2] = zAxis.x
+	result[3] = xAxis.y
+	result[4] = yAxis.y
+	result[5] = zAxis.y
+	result[6] = xAxis.z
+	result[7] = yAxis.z
+	result[8] = zAxis.z
 
-  return result;
+	return result
 }
 
-var rotMtxScratch = new Matrix3();
-var quatScratch = new Quaternion();
+var rotMtxScratch = new Matrix3()
+var quatScratch = new Quaternion()
 
 /**
  * Computes a rotation from ICRF to a Globe's Fixed axes.
@@ -73,27 +73,27 @@ var quatScratch = new Quaternion();
  * @returns {Matrix3} The modified result parameter or a new instance of the rotation from ICRF to Fixed.
  */
 IauOrientationAxes.prototype.evaluate = function (date, result) {
-  if (!defined(date)) {
-    date = JulianDate.now();
-  }
+	if (!defined(date)) {
+		date = JulianDate.now()
+	}
 
-  var alphaDeltaW = this._computeFunction(date);
-  var precMtx = computeRotationMatrix(
-    alphaDeltaW.rightAscension,
-    alphaDeltaW.declination,
-    result
-  );
+	var alphaDeltaW = this._computeFunction(date)
+	var precMtx = computeRotationMatrix(
+		alphaDeltaW.rightAscension,
+		alphaDeltaW.declination,
+		result,
+	)
 
-  var rot = CesiumMath.zeroToTwoPi(alphaDeltaW.rotation);
-  var quat = Quaternion.fromAxisAngle(Cartesian3.UNIT_Z, rot, quatScratch);
-  var rotMtx = Matrix3.fromQuaternion(
-    Quaternion.conjugate(quat, quat),
-    rotMtxScratch
-  );
+	var rot = CesiumMath.zeroToTwoPi(alphaDeltaW.rotation)
+	var quat = Quaternion.fromAxisAngle(Cartesian3.UNIT_Z, rot, quatScratch)
+	var rotMtx = Matrix3.fromQuaternion(
+		Quaternion.conjugate(quat, quat),
+		rotMtxScratch,
+	)
 
-  var cbi2cbf = Matrix3.multiply(rotMtx, precMtx, precMtx);
-  return cbi2cbf;
-};
+	var cbi2cbf = Matrix3.multiply(rotMtx, precMtx, precMtx)
+	return cbi2cbf
+}
 
 /**
  * A function that computes the {@link IauOrientationParameters} for a {@link JulianDate}.
@@ -102,4 +102,4 @@ IauOrientationAxes.prototype.evaluate = function (date, result) {
  * @returns {IauOrientationParameters} The orientation parameters.
  * @private
  */
-export default IauOrientationAxes;
+export default IauOrientationAxes

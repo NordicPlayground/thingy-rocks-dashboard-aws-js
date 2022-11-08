@@ -1,5 +1,5 @@
-import Color from "../Core/Color.js";
-import defaultValue from "../Core/defaultValue.js";
+import Color from '../Core/Color.js'
+import defaultValue from '../Core/defaultValue.js'
 
 /**
  * A directional light source that originates from the Sun.
@@ -12,20 +12,20 @@ import defaultValue from "../Core/defaultValue.js";
  * @constructor
  */
 function SunLight(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
-  /**
-   * The color of the light.
-   * @type {Color}
-   * @default Color.WHITE
-   */
-  this.color = Color.clone(defaultValue(options.color, Color.WHITE));
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
+	/**
+	 * The color of the light.
+	 * @type {Color}
+	 * @default Color.WHITE
+	 */
+	this.color = Color.clone(defaultValue(options.color, Color.WHITE))
 
-  /**
-   * The intensity of the light.
-   * @type {Number}
-   * @default 2.0
-   */
-  this.intensity = defaultValue(options.intensity, 2.0);
+	/**
+	 * The intensity of the light.
+	 * @type {Number}
+	 * @default 2.0
+	 */
+	this.intensity = defaultValue(options.intensity, 2.0)
 }
 
-export default SunLight;
+export default SunLight

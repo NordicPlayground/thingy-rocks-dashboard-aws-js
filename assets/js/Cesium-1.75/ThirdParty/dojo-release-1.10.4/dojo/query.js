@@ -1,16 +1,33 @@
-define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/lang", "./selector/_loader", "./selector/_loader!default"],
-	function(dojo, has, dom, on, array, lang, loader, defaultEngine){
+define([
+	'./_base/kernel',
+	'./has',
+	'./dom',
+	'./on',
+	'./_base/array',
+	'./_base/lang',
+	'./selector/_loader',
+	'./selector/_loader!default',
+], function (dojo, has, dom, on, array, lang, loader, defaultEngine) {
+	'use strict'
 
-	"use strict";
-
-	has.add("array-extensible", function(){
+	has.add('array-extensible', function () {
 		// test to see if we can extend an array (not supported in old IE)
-		return lang.delegate([], {length: 1}).length == 1 && !has("bug-for-in-skips-shadowed");
-	});
-	
-	var ap = Array.prototype, aps = ap.slice, apc = ap.concat, forEach = array.forEach;
+		return (
+			lang.delegate([], { length: 1 }).length == 1 &&
+			!has('bug-for-in-skips-shadowed')
+		)
+	})
 
-	var tnl = function(/*Array*/ a, /*dojo/NodeList?*/ parent, /*Function?*/ NodeListCtor){
+	var ap = Array.prototype,
+		aps = ap.slice,
+		apc = ap.concat,
+		forEach = array.forEach
+
+	var tnl = function (
+		/*Array*/ a,
+		/*dojo/NodeList?*/ parent,
+		/*Function?*/ NodeListCtor,
+	) {
 		// summary:
 		//		decorate an array to make it look like a `dojo/NodeList`.
 		// a:
@@ -23,22 +40,22 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		//		An optional constructor function to use for any
 		//		new NodeList calls. This allows a certain chain of
 		//		NodeList calls to use a different object than dojo/NodeList.
-		var nodeList = new (NodeListCtor || this._NodeListCtor || nl)(a);
-		return parent ? nodeList._stash(parent) : nodeList;
-	};
+		var nodeList = new (NodeListCtor || this._NodeListCtor || nl)(a)
+		return parent ? nodeList._stash(parent) : nodeList
+	}
 
-	var loopBody = function(f, a, o){
-		a = [0].concat(aps.call(a, 0));
-		o = o || dojo.global;
-		return function(node){
-			a[0] = node;
-			return f.apply(o, a);
-		};
-	};
+	var loopBody = function (f, a, o) {
+		a = [0].concat(aps.call(a, 0))
+		o = o || dojo.global
+		return function (node) {
+			a[0] = node
+			return f.apply(o, a)
+		}
+	}
 
 	// adapters
 
-	var adaptAsForEach = function(f, o){
+	var adaptAsForEach = function (f, o) {
 		// summary:
 		//		adapts a single node function to be used in the forEach-type
 		//		actions. The initial object is returned from the specialized
@@ -47,13 +64,13 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		//		a function to adapt
 		// o: Object?
 		//		an optional context for f
-		return function(){
-			this.forEach(loopBody(f, arguments, o));
-			return this;	// Object
-		};
-	};
+		return function () {
+			this.forEach(loopBody(f, arguments, o))
+			return this // Object
+		}
+	}
 
-	var adaptAsMap = function(f, o){
+	var adaptAsMap = function (f, o) {
 		// summary:
 		//		adapts a single node function to be used in the map-type
 		//		actions. The return is a new array of values, as via `dojo/_base/array.map`
@@ -61,24 +78,24 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		//		a function to adapt
 		// o: Object?
 		//		an optional context for f
-		return function(){
-			return this.map(loopBody(f, arguments, o));
-		};
-	};
+		return function () {
+			return this.map(loopBody(f, arguments, o))
+		}
+	}
 
-	var adaptAsFilter = function(f, o){
+	var adaptAsFilter = function (f, o) {
 		// summary:
 		//		adapts a single node function to be used in the filter-type actions
 		// f: Function
 		//		a function to adapt
 		// o: Object?
 		//		an optional context for f
-		return function(){
-			return this.filter(loopBody(f, arguments, o));
-		};
-	};
+		return function () {
+			return this.filter(loopBody(f, arguments, o))
+		}
+	}
 
-	var adaptWithCondition = function(f, g, o){
+	var adaptWithCondition = function (f, g, o) {
 		// summary:
 		//		adapts a single node function to be used in the map-type
 		//		actions, behaves like forEach() or map() depending on arguments
@@ -88,17 +105,18 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		//		a condition function, if true runs as map(), otherwise runs as forEach()
 		// o: Object?
 		//		an optional context for f and g
-		return function(){
-			var a = arguments, body = loopBody(f, a, o);
-			if(g.call(o || dojo.global, a)){
-				return this.map(body);	// self
+		return function () {
+			var a = arguments,
+				body = loopBody(f, a, o)
+			if (g.call(o || dojo.global, a)) {
+				return this.map(body) // self
 			}
-			this.forEach(body);
-			return this;	// self
-		};
-	};
+			this.forEach(body)
+			return this // self
+		}
+	}
 
-	var NodeList = function(array){
+	var NodeList = function (array) {
 		// summary:
 		//		Array-like object which adds syntactic
 		//		sugar for chaining, common iteration operations, animation, and
@@ -159,75 +177,79 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		//		|				.forEach(console.log);
 		//		|	});
 
-		var isNew = this instanceof nl && has("array-extensible");
-		if(typeof array == "number"){
-			array = Array(array);
+		var isNew = this instanceof nl && has('array-extensible')
+		if (typeof array == 'number') {
+			array = Array(array)
 		}
-		var nodeArray = (array && "length" in array) ? array : arguments;
-		if(isNew || !nodeArray.sort){
-			// make sure it's a real array before we pass it on to be wrapped 
+		var nodeArray = array && 'length' in array ? array : arguments
+		if (isNew || !nodeArray.sort) {
+			// make sure it's a real array before we pass it on to be wrapped
 			var target = isNew ? this : [],
-				l = target.length = nodeArray.length;
-			for(var i = 0; i < l; i++){
-				target[i] = nodeArray[i];
+				l = (target.length = nodeArray.length)
+			for (var i = 0; i < l; i++) {
+				target[i] = nodeArray[i]
 			}
-			if(isNew){
+			if (isNew) {
 				// called with new operator, this means we are going to use this instance and push
 				// the nodes on to it. This is usually much faster since the NodeList properties
 				//	don't need to be copied (unless the list of nodes is extremely large).
-				return target;
+				return target
 			}
-			nodeArray = target;
+			nodeArray = target
 		}
 		// called without new operator, use a real array and copy prototype properties,
 		// this is slower and exists for back-compat. Should be removed in 2.0.
-		lang._mixin(nodeArray, nlp);
-		nodeArray._NodeListCtor = function(array){
+		lang._mixin(nodeArray, nlp)
+		nodeArray._NodeListCtor = function (array) {
 			// call without new operator to preserve back-compat behavior
-			return nl(array);
-		};
-		return nodeArray;
-	};
-	
-	var nl = NodeList, nlp = nl.prototype = 
-		has("array-extensible") ? [] : {};// extend an array if it is extensible
+			return nl(array)
+		}
+		return nodeArray
+	}
+
+	var nl = NodeList,
+		nlp = (nl.prototype = has('array-extensible') ? [] : {}) // extend an array if it is extensible
 
 	// expose adapters and the wrapper as private functions
 
-	nl._wrap = nlp._wrap = tnl;
-	nl._adaptAsMap = adaptAsMap;
-	nl._adaptAsForEach = adaptAsForEach;
-	nl._adaptAsFilter  = adaptAsFilter;
-	nl._adaptWithCondition = adaptWithCondition;
+	nl._wrap = nlp._wrap = tnl
+	nl._adaptAsMap = adaptAsMap
+	nl._adaptAsForEach = adaptAsForEach
+	nl._adaptAsFilter = adaptAsFilter
+	nl._adaptWithCondition = adaptWithCondition
 
 	// mass assignment
 
 	// add array redirectors
-	forEach(["slice", "splice"], function(name){
-		var f = ap[name];
+	forEach(['slice', 'splice'], function (name) {
+		var f = ap[name]
 		//Use a copy of the this array via this.slice() to allow .end() to work right in the splice case.
 		// CANNOT apply ._stash()/end() to splice since it currently modifies
 		// the existing this array -- it would break backward compatibility if we copy the array before
 		// the splice so that we can use .end(). So only doing the stash option to this._wrap for slice.
-		nlp[name] = function(){ return this._wrap(f.apply(this, arguments), name == "slice" ? this : null); };
-	});
+		nlp[name] = function () {
+			return this._wrap(f.apply(this, arguments), name == 'slice' ? this : null)
+		}
+	})
 	// concat should be here but some browsers with native NodeList have problems with it
 
 	// add array.js redirectors
-	forEach(["indexOf", "lastIndexOf", "every", "some"], function(name){
-		var f = array[name];
-		nlp[name] = function(){ return f.apply(dojo, [this].concat(aps.call(arguments, 0))); };
-	});
+	forEach(['indexOf', 'lastIndexOf', 'every', 'some'], function (name) {
+		var f = array[name]
+		nlp[name] = function () {
+			return f.apply(dojo, [this].concat(aps.call(arguments, 0)))
+		}
+	})
 
 	lang.extend(NodeList, {
 		// copy the constructors
 		constructor: nl,
 		_NodeListCtor: nl,
-		toString: function(){
+		toString: function () {
 			// Array.prototype.toString can't be applied to objects, so we use join
-			return this.join(",");
+			return this.join(',')
 		},
-		_stash: function(parent){
+		_stash: function (parent) {
 			// summary:
 			//		private function to hold to a parent NodeList. end() to return the parent NodeList.
 			//
@@ -251,11 +273,11 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//	|			.removeClass("foo")
 			//	|	});
 			//
-			this._parent = parent;
-			return this; // dojo/NodeList
+			this._parent = parent
+			return this // dojo/NodeList
 		},
 
-		on: function(eventName, listener){
+		on: function (eventName, listener) {
 			// summary:
 			//		Listen for events on the nodes in the NodeList. Basic usage is:
 			//
@@ -270,18 +292,18 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//			Because on supports CSS selector syntax, we can use comma-delimited events as well:
 			//		| 		query("#my-list").on("li button:mouseover, li:click", listener);
 			//		|	});
-			var handles = this.map(function(node){
-				return on(node, eventName, listener); // TODO: apply to the NodeList so the same selector engine is used for matches
-			});
-			handles.remove = function(){
-				for(var i = 0; i < handles.length; i++){
-					handles[i].remove();
+			var handles = this.map(function (node) {
+				return on(node, eventName, listener) // TODO: apply to the NodeList so the same selector engine is used for matches
+			})
+			handles.remove = function () {
+				for (var i = 0; i < handles.length; i++) {
+					handles[i].remove()
 				}
-			};
-			return handles;
+			}
+			return handles
 		},
 
-		end: function(){
+		end: function () {
 			// summary:
 			//		Ends use of the current `NodeList` by returning the previous NodeList
 			//		that generated the current NodeList.
@@ -300,11 +322,11 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//	|			.style(...)
 			//	|	});
 			//
-			if(this._parent){
-				return this._parent;
-			}else{
+			if (this._parent) {
+				return this._parent
+			} else {
 				//Just return empty list.
-				return new this._NodeListCtor(0);
+				return new this._NodeListCtor(0)
 			}
 		},
 
@@ -430,7 +452,7 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		},
 		=====*/
 
-		concat: function(item){
+		concat: function (item) {
 			// summary:
 			//		Returns a new NodeList comprised of items in this NodeList
 			//		as well as items passed in as parameters
@@ -454,30 +476,30 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			// and then the concatenation result may be re-_wrap()ed as a Dojo NodeList.
 
 			var t = aps.call(this, 0),
-				m = array.map(arguments, function(a){
-					return aps.call(a, 0);
-				});
-			return this._wrap(apc.apply(t, m), this);	// dojo/NodeList
+				m = array.map(arguments, function (a) {
+					return aps.call(a, 0)
+				})
+			return this._wrap(apc.apply(t, m), this) // dojo/NodeList
 		},
 
-		map: function(/*Function*/ func, /*Function?*/ obj){
+		map: function (/*Function*/ func, /*Function?*/ obj) {
 			// summary:
 			//		see `dojo/_base/array.map()`. The primary difference is that the acted-on
 			//		array is implicitly this NodeList and the return is a
 			//		NodeList (a subclass of Array)
-			return this._wrap(array.map(this, func, obj), this); // dojo/NodeList
+			return this._wrap(array.map(this, func, obj), this) // dojo/NodeList
 		},
 
-		forEach: function(callback, thisObj){
+		forEach: function (callback, thisObj) {
 			// summary:
 			//		see `dojo/_base/array.forEach()`. The primary difference is that the acted-on
 			//		array is implicitly this NodeList. If you want the option to break out
 			//		of the forEach loop, use every() or some() instead.
-			forEach(this, callback, thisObj);
+			forEach(this, callback, thisObj)
 			// non-standard return to allow easier chaining
-			return this; // dojo/NodeList
+			return this // dojo/NodeList
 		},
-		filter: function(/*String|Function*/ filter){
+		filter: function (/*String|Function*/ filter) {
 			// summary:
 			//		"masks" the built-in javascript filter() method (supported
 			//		in Dojo via `dojo/_base/array.filter`) to support passing a simple
@@ -501,19 +523,25 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//		|		query("*").filter("p").styles("backgroundColor", "yellow");
 			//		|	});
 
-			var a = arguments, items = this, start = 0;
-			if(typeof filter == "string"){ // inline'd type check
-				items = query._filterResult(this, a[0]);
-				if(a.length == 1){
+			var a = arguments,
+				items = this,
+				start = 0
+			if (typeof filter == 'string') {
+				// inline'd type check
+				items = query._filterResult(this, a[0])
+				if (a.length == 1) {
 					// if we only got a string query, pass back the filtered results
-					return items._stash(this); // dojo/NodeList
+					return items._stash(this) // dojo/NodeList
 				}
 				// if we got a callback, run it over the filtered items
-				start = 1;
+				start = 1
 			}
-			return this._wrap(array.filter(items, a[start], a[start + 1]), this);	// dojo/NodeList
+			return this._wrap(array.filter(items, a[start], a[start + 1]), this) // dojo/NodeList
 		},
-		instantiate: function(/*String|Object*/ declaredClass, /*Object?*/ properties){
+		instantiate: function (
+			/*String|Object*/ declaredClass,
+			/*Object?*/ properties,
+		) {
 			// summary:
 			//		Create a new instance of a specified class, using the
 			//		specified properties and each node in the NodeList as a
@@ -521,13 +549,15 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			// example:
 			//		Grabs all buttons in the page and converts them to dijit/form/Button's.
 			//	|	var buttons = query("button").instantiate(Button, {showLabel: true});
-			var c = lang.isFunction(declaredClass) ? declaredClass : lang.getObject(declaredClass);
-			properties = properties || {};
-			return this.forEach(function(node){
-				new c(properties, node);
-			});	// dojo/NodeList
+			var c = lang.isFunction(declaredClass)
+				? declaredClass
+				: lang.getObject(declaredClass)
+			properties = properties || {}
+			return this.forEach(function (node) {
+				new c(properties, node)
+			}) // dojo/NodeList
 		},
-		at: function(/*===== index =====*/){
+		at: function (/*===== index =====*/) {
 			// summary:
 			//		Returns a new NodeList comprised of items in this NodeList
 			//		at the given index or indices.
@@ -561,57 +591,76 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 			//	|	})
 			//	|	});
 
-			var t = new this._NodeListCtor(0);
-			forEach(arguments, function(i){
-				if(i < 0){ i = this.length + i; }
-				if(this[i]){ t.push(this[i]); }
-			}, this);
-			return t._stash(this); // dojo/NodeList
-		}
-	});
+			var t = new this._NodeListCtor(0)
+			forEach(
+				arguments,
+				function (i) {
+					if (i < 0) {
+						i = this.length + i
+					}
+					if (this[i]) {
+						t.push(this[i])
+					}
+				},
+				this,
+			)
+			return t._stash(this) // dojo/NodeList
+		},
+	})
 
-	function queryForEngine(engine, NodeList){
-		var query = function(/*String*/ query, /*String|DOMNode?*/ root){
+	function queryForEngine(engine, NodeList) {
+		var query = function (/*String*/ query, /*String|DOMNode?*/ root) {
 			// summary:
 			//		Returns nodes which match the given CSS selector, searching the
 			//		entire document by default but optionally taking a node to scope
 			//		the search by. Returns an instance of NodeList.
-			if(typeof root == "string"){
-				root = dom.byId(root);
-				if(!root){
-					return new NodeList([]);
+			if (typeof root == 'string') {
+				root = dom.byId(root)
+				if (!root) {
+					return new NodeList([])
 				}
 			}
-			var results = typeof query == "string" ? engine(query, root) : query ? (query.end && query.on) ? query : [query] : [];
-			if(results.end && results.on){
+			var results =
+				typeof query == 'string'
+					? engine(query, root)
+					: query
+					? query.end && query.on
+						? query
+						: [query]
+					: []
+			if (results.end && results.on) {
 				// already wrapped
-				return results;
+				return results
 			}
-			return new NodeList(results);
-		};
-		query.matches = engine.match || function(node, selector, root){
-			// summary:
-			//		Test to see if a node matches a selector
-			return query.filter([node], selector, root).length > 0;
-		};
-		// the engine provides a filtering function, use it to for matching
-		query.filter = engine.filter || function(nodes, selector, root){
-			// summary:
-			//		Filters an array of nodes. Note that this does not guarantee to return a NodeList, just an array.
-			return query(selector, root).filter(function(node){
-				return array.indexOf(nodes, node) > -1;
-			});
-		};
-		if(typeof engine != "function"){
-			var search = engine.search;
-			engine = function(selector, root){
-				// Slick does it backwards (or everyone else does it backwards, probably the latter)
-				return search(root || document, selector);
-			};
+			return new NodeList(results)
 		}
-		return query;
+		query.matches =
+			engine.match ||
+			function (node, selector, root) {
+				// summary:
+				//		Test to see if a node matches a selector
+				return query.filter([node], selector, root).length > 0
+			}
+		// the engine provides a filtering function, use it to for matching
+		query.filter =
+			engine.filter ||
+			function (nodes, selector, root) {
+				// summary:
+				//		Filters an array of nodes. Note that this does not guarantee to return a NodeList, just an array.
+				return query(selector, root).filter(function (node) {
+					return array.indexOf(nodes, node) > -1
+				})
+			}
+		if (typeof engine != 'function') {
+			var search = engine.search
+			engine = function (selector, root) {
+				// Slick does it backwards (or everyone else does it backwards, probably the latter)
+				return search(root || document, selector)
+			}
+		}
+		return query
 	}
-	var query = queryForEngine(defaultEngine, NodeList);
+	var query = queryForEngine(defaultEngine, NodeList)
 	/*=====
 	query = function(selector, context){
 		// summary:
@@ -686,12 +735,12 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 	// true array which has performance problems. The query returned from the module
 	// does not use true arrays, but rather inherits from Array, making it much faster to
 	// instantiate.
-	dojo.query = queryForEngine(defaultEngine, function(array){
+	dojo.query = queryForEngine(defaultEngine, function (array) {
 		// call it without the new operator to invoke the back-compat behavior that returns a true array
-		return NodeList(array);	// dojo/NodeList
-	});
+		return NodeList(array) // dojo/NodeList
+	})
 
-	query.load = function(id, parentRequire, loaded){
+	query.load = function (id, parentRequire, loaded) {
 		// summary:
 		//		can be used as AMD plugin to conditionally load new query engine
 		// example:
@@ -699,14 +748,18 @@ define(["./_base/kernel", "./has", "./dom", "./on", "./_base/array", "./_base/la
 		//	|		// loaded selector/custom.js as engine
 		//	|		qsa("#foobar").forEach(...);
 		//	|	});
-		loader.load(id, parentRequire, function(engine){
-			loaded(queryForEngine(engine, NodeList));
-		});
-	};
+		loader.load(id, parentRequire, function (engine) {
+			loaded(queryForEngine(engine, NodeList))
+		})
+	}
 
-	dojo._filterQueryResult = query._filterResult = function(nodes, selector, root){
-		return new NodeList(query.filter(nodes, selector, root));
-	};
-	dojo.NodeList = query.NodeList = NodeList;
-	return query;
-});
+	dojo._filterQueryResult = query._filterResult = function (
+		nodes,
+		selector,
+		root,
+	) {
+		return new NodeList(query.filter(nodes, selector, root))
+	}
+	dojo.NodeList = query.NodeList = NodeList
+	return query
+})

@@ -675,4 +675,4 @@ FxaaFloat4 FxaaPixelShader(\n\
     if( horzSpan) posM.y += pixelOffsetSubpix * lengthSign;\n\
     return FxaaFloat4(FxaaTexTop(tex, posM).xyz, lumaM);\n\
 }\n\
-";
+"

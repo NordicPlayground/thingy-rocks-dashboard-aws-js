@@ -1,6 +1,5 @@
-define(["dojo/_base/declare"], function(declare){
-
-	return declare("dijit.tree.model", null, {
+define(['dojo/_base/declare'], function (declare) {
+	return declare('dijit.tree.model', null, {
 		// summary:
 		//		Contract for any data provider object for the tree.
 		// description:
@@ -10,7 +9,7 @@ define(["dojo/_base/declare"], function(declare){
 		//
 		//		This (like `dojo/data/api/Read`) is just documentation, and not meant to be used.
 
-		destroy: function(){
+		destroy: function () {
 			// summary:
 			//		Destroys this object, releasing connections to the store
 			// tags:
@@ -20,7 +19,7 @@ define(["dojo/_base/declare"], function(declare){
 		// =======================================================================
 		// Methods for traversing hierarchy
 
-		getRoot: function(onItem){
+		getRoot: function (onItem) {
 			// summary:
 			//		Calls onItem with the root item for the tree, possibly a fabricated item.
 			//		Throws exception on error.
@@ -28,7 +27,7 @@ define(["dojo/_base/declare"], function(declare){
 			//		extension
 		},
 
-		mayHaveChildren: function(item){
+		mayHaveChildren: function (item) {
 			// summary:
 			//		Tells if an item has or may have children.  Implementing logic here
 			//		avoids showing +/- expando icon for nodes that we know don't have children.
@@ -39,7 +38,7 @@ define(["dojo/_base/declare"], function(declare){
 			//		extension
 		},
 
-		getChildren: function(parentItem, onComplete){
+		getChildren: function (parentItem, onComplete) {
 			// summary:
 			//		Calls onComplete() with array of child items of given parent item, all loaded.
 			//		Throws exception on error.
@@ -52,7 +51,7 @@ define(["dojo/_base/declare"], function(declare){
 		// =======================================================================
 		// Inspecting items
 
-		isItem: function(something){
+		isItem: function (something) {
 			// summary:
 			//		Returns true if *something* is an item and came from this model instance.
 			//		Returns false if *something* is a literal, an item from another model instance,
@@ -61,14 +60,14 @@ define(["dojo/_base/declare"], function(declare){
 			//		extension
 		},
 
-		getIdentity: function(item){
+		getIdentity: function (item) {
 			// summary:
 			//		Returns identity for an item
 			// tags:
 			//		extension
 		},
 
-		getLabel: function(item){
+		getLabel: function (item) {
 			// summary:
 			//		Get the label for an item
 			// tags:
@@ -78,7 +77,7 @@ define(["dojo/_base/declare"], function(declare){
 		// =======================================================================
 		// Write interface
 
-		newItem: function(args, parent, insertIndex, before){
+		newItem: function (args, parent, insertIndex, before) {
 			// summary:
 			//		Creates a new item.   See `dojo/data/api/Write` for details on args.
 			// args: dijit/tree/dndSource.__Item
@@ -91,7 +90,14 @@ define(["dojo/_base/declare"], function(declare){
 			//		extension
 		},
 
-		pasteItem: function(childItem, oldParentItem, newParentItem, bCopy, insertIndex, before){
+		pasteItem: function (
+			childItem,
+			oldParentItem,
+			newParentItem,
+			bCopy,
+			insertIndex,
+			before,
+		) {
 			// summary:
 			//		Move or copy an item from one parent item to another.
 			//		Used in drag & drop.
@@ -112,7 +118,7 @@ define(["dojo/_base/declare"], function(declare){
 		// =======================================================================
 		// Callbacks
 
-		onChange: function(item){
+		onChange: function (item) {
 			// summary:
 			//		Callback whenever an item has changed, so that Tree
 			//		can update the label, icon, etc.   Note that changes
@@ -123,13 +129,13 @@ define(["dojo/_base/declare"], function(declare){
 			//		callback
 		},
 
-		onChildrenChange: function(parent, newChildrenList){
+		onChildrenChange: function (parent, newChildrenList) {
 			// summary:
 			//		Callback to do notifications about new, updated, or deleted items.
 			// parent: dojo/data/Item
 			// newChildrenList: dojo/data/Item[]
 			// tags:
 			//		callback
-		}
-	});
-});
+		},
+	})
+})

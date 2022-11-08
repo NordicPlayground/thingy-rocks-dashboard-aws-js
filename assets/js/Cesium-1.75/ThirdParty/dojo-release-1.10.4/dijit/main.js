@@ -1,10 +1,8 @@
-define([
-	"dojo/_base/kernel"
-], function(dojo){
+define(['dojo/_base/kernel'], function (dojo) {
 	// module:
 	//		dijit/main
 
-/*=====
+	/*=====
 return {
 	// summary:
 	//		The dijit package main module.
@@ -12,5 +10,5 @@ return {
 };
 =====*/
 
-	return dojo.dijit;
-});
+	return dojo.dijit
+})

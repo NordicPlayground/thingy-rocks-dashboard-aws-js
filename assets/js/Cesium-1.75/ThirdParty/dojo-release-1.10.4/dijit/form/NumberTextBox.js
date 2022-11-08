@@ -1,21 +1,26 @@
 define([
-	"dojo/_base/declare", // declare
-	"dojo/_base/lang", // lang.hitch lang.mixin
-	"dojo/i18n", // i18n.normalizeLocale, i18n.getLocalization
-	"dojo/string", // string.rep
-	"dojo/number", // number._realNumberRegexp number.format number.parse number.regexp
-	"./RangeBoundTextBox"
-], function(declare, lang, i18n, string, number, RangeBoundTextBox){
-
+	'dojo/_base/declare', // declare
+	'dojo/_base/lang', // lang.hitch lang.mixin
+	'dojo/i18n', // i18n.normalizeLocale, i18n.getLocalization
+	'dojo/string', // string.rep
+	'dojo/number', // number._realNumberRegexp number.format number.parse number.regexp
+	'./RangeBoundTextBox',
+], function (declare, lang, i18n, string, number, RangeBoundTextBox) {
 	// module:
 	//		dijit/form/NumberTextBox
 
 	// A private helper function to determine decimal information
 	// Returns an object with "sep" and "places" properties
-	var getDecimalInfo = function(constraints){
+	var getDecimalInfo = function (constraints) {
 		var constraints = constraints || {},
-			bundle = i18n.getLocalization("dojo.cldr", "number", i18n.normalizeLocale(constraints.locale)),
-			pattern = constraints.pattern ? constraints.pattern : bundle[(constraints.type || "decimal")+"Format"];
+			bundle = i18n.getLocalization(
+				'dojo.cldr',
+				'number',
+				i18n.normalizeLocale(constraints.locale),
+			),
+			pattern = constraints.pattern
+				? constraints.pattern
+				: bundle[(constraints.type || 'decimal') + 'Format']
 
 		// The number of places in the constraint can be specified in several ways,
 		// the resolution order is:
@@ -24,19 +29,25 @@ define([
 		// 2. If constraints.places is a string, which specifies a range, use the range max (e.g. 0,4)
 		// 3. If a pattern is specified, use the implicit number of places in the pattern.
 		// 4. If neither constraints.pattern or constraints.places is specified, use the locale default pattern
-		var places;
-		if(typeof constraints.places == "number"){
-			places = constraints.places;
-		}else if(typeof constraints.places === "string" && constraints.places.length > 0){
-			places = constraints.places.replace(/.*,/, "");
-		}else{
-			places = (pattern.indexOf(".") != -1 ? pattern.split(".")[1].replace(/[^#0]/g, "").length : 0);
+		var places
+		if (typeof constraints.places == 'number') {
+			places = constraints.places
+		} else if (
+			typeof constraints.places === 'string' &&
+			constraints.places.length > 0
+		) {
+			places = constraints.places.replace(/.*,/, '')
+		} else {
+			places =
+				pattern.indexOf('.') != -1
+					? pattern.split('.')[1].replace(/[^#0]/g, '').length
+					: 0
 		}
 
-		return { sep: bundle.decimal, places: places };
-	};
+		return { sep: bundle.decimal, places: places }
+	}
 
-	var NumberTextBoxMixin = declare("dijit.form.NumberTextBoxMixin", null, {
+	var NumberTextBoxMixin = declare('dijit.form.NumberTextBoxMixin', null, {
 		// summary:
 		//		A mixin for all number textboxes
 		// tags:
@@ -44,10 +55,18 @@ define([
 
 		// Override ValidationTextBox.pattern.... we use a reg-ex generating function rather
 		// than a straight regexp to deal with locale (plus formatting options too?)
-		pattern: function(constraints){
+		pattern: function (constraints) {
 			// if focused, accept either currency data or NumberTextBox format
-			return '(' + (this.focused && this.editOptions ? this._regExpGenerator(lang.delegate(constraints, this.editOptions)) + '|' : '')
-				+ this._regExpGenerator(constraints) + ')';
+			return (
+				'(' +
+				(this.focused && this.editOptions
+					? this._regExpGenerator(
+							lang.delegate(constraints, this.editOptions),
+					  ) + '|'
+					: '') +
+				this._regExpGenerator(constraints) +
+				')'
+			)
 		},
 
 		/*=====
@@ -113,57 +132,73 @@ define([
 		//		private
 		_decimalInfo: getDecimalInfo(),
 
-		postMixInProperties: function(){
-			this.inherited(arguments);
-			this._set("type", "text"); // in case type="number" was specified which messes up parse/format
+		postMixInProperties: function () {
+			this.inherited(arguments)
+			this._set('type', 'text') // in case type="number" was specified which messes up parse/format
 		},
 
-		_setConstraintsAttr: function(/*Object*/ constraints){
-			var places = typeof constraints.places == "number"? constraints.places : 0;
-			if(places){ places++; } // decimal rounding errors take away another digit of precision
-			if(typeof constraints.max != "number"){
-				constraints.max = 9 * Math.pow(10, 15-places);
+		_setConstraintsAttr: function (/*Object*/ constraints) {
+			var places =
+				typeof constraints.places == 'number' ? constraints.places : 0
+			if (places) {
+				places++
+			} // decimal rounding errors take away another digit of precision
+			if (typeof constraints.max != 'number') {
+				constraints.max = 9 * Math.pow(10, 15 - places)
 			}
-			if(typeof constraints.min != "number"){
-				constraints.min = -9 * Math.pow(10, 15-places);
+			if (typeof constraints.min != 'number') {
+				constraints.min = -9 * Math.pow(10, 15 - places)
 			}
-			this.inherited(arguments, [ constraints ]);
-			if(this.focusNode && this.focusNode.value && !isNaN(this.value)){
-				this.set('value', this.value);
+			this.inherited(arguments, [constraints])
+			if (this.focusNode && this.focusNode.value && !isNaN(this.value)) {
+				this.set('value', this.value)
 			}
 			// Capture decimal information based on the constraint locale and pattern.
-			this._decimalInfo = getDecimalInfo(constraints);
+			this._decimalInfo = getDecimalInfo(constraints)
 		},
 
-		_onFocus: function(){
-			if(this.disabled || this.readOnly){ return; }
-			var val = this.get('value');
-			if(typeof val == "number" && !isNaN(val)){
-				var formattedValue = this.format(val, this.constraints);
-				if(formattedValue !== undefined){
-					this.textbox.value = formattedValue;
+		_onFocus: function () {
+			if (this.disabled || this.readOnly) {
+				return
+			}
+			var val = this.get('value')
+			if (typeof val == 'number' && !isNaN(val)) {
+				var formattedValue = this.format(val, this.constraints)
+				if (formattedValue !== undefined) {
+					this.textbox.value = formattedValue
 				}
 			}
-			this.inherited(arguments);
+			this.inherited(arguments)
 		},
 
-		format: function(/*Number*/ value, /*number.__FormatOptions*/ constraints){
+		format: function (
+			/*Number*/ value,
+			/*number.__FormatOptions*/ constraints,
+		) {
 			// summary:
 			//		Formats the value as a Number, according to constraints.
 			// tags:
 			//		protected
 
-			var formattedValue = String(value);
-			if(typeof value != "number"){ return formattedValue; }
-			if(isNaN(value)){ return ""; }
+			var formattedValue = String(value)
+			if (typeof value != 'number') {
+				return formattedValue
+			}
+			if (isNaN(value)) {
+				return ''
+			}
 			// check for exponential notation that dojo/number.format() chokes on
-			if(!("rangeCheck" in this && this.rangeCheck(value, constraints)) && constraints.exponent !== false && /\de[-+]?\d/i.test(formattedValue)){
-				return formattedValue;
+			if (
+				!('rangeCheck' in this && this.rangeCheck(value, constraints)) &&
+				constraints.exponent !== false &&
+				/\de[-+]?\d/i.test(formattedValue)
+			) {
+				return formattedValue
 			}
-			if(this.editOptions && this.focused){
-				constraints = lang.mixin({}, constraints, this.editOptions);
+			if (this.editOptions && this.focused) {
+				constraints = lang.mixin({}, constraints, this.editOptions)
 			}
-			return this._formatter(value, constraints);
+			return this._formatter(value, constraints)
 		},
 
 		/*=====
@@ -182,115 +217,156 @@ define([
 		=====*/
 		_parser: number.parse,
 
-		parse: function(/*String*/ value, /*number.__FormatOptions*/ constraints){
+		parse: function (/*String*/ value, /*number.__FormatOptions*/ constraints) {
 			// summary:
 			//		Replaceable function to convert a formatted string to a number value
 			// tags:
 			//		protected extension
 
-			var v = this._parser(value, lang.mixin({}, constraints, (this.editOptions && this.focused) ? this.editOptions : {}));
-			if(this.editOptions && this.focused && isNaN(v)){
-				v = this._parser(value, constraints); // parse w/o editOptions: not technically needed but is nice for the user
+			var v = this._parser(
+				value,
+				lang.mixin(
+					{},
+					constraints,
+					this.editOptions && this.focused ? this.editOptions : {},
+				),
+			)
+			if (this.editOptions && this.focused && isNaN(v)) {
+				v = this._parser(value, constraints) // parse w/o editOptions: not technically needed but is nice for the user
 			}
-			return v;
+			return v
 		},
 
-		_getDisplayedValueAttr: function(){
-			var v = this.inherited(arguments);
-			return isNaN(v) ? this.textbox.value : v;
+		_getDisplayedValueAttr: function () {
+			var v = this.inherited(arguments)
+			return isNaN(v) ? this.textbox.value : v
 		},
 
-		filter: function(/*Number*/ value){
+		filter: function (/*Number*/ value) {
 			// summary:
 			//		This is called with both the display value (string), and the actual value (a number).
 			//		When called with the actual value it does corrections so that '' etc. are represented as NaN.
 			//		Otherwise it dispatches to the superclass's filter() method.
 			//
 			//		See `dijit/form/TextBox.filter()` for more details.
-			if(value == null  /* or undefined */ || typeof value == "string" && value ==''){
-				return NaN;
-			}else if(typeof value == "number" && !isNaN(value) && value != 0){
-				value = number.round(value, this._decimalInfo.places);
+			if (
+				value == null /* or undefined */ ||
+				(typeof value == 'string' && value == '')
+			) {
+				return NaN
+			} else if (typeof value == 'number' && !isNaN(value) && value != 0) {
+				value = number.round(value, this._decimalInfo.places)
 			}
-			return this.inherited(arguments, [value]);
+			return this.inherited(arguments, [value])
 		},
 
-		serialize: function(/*Number*/ value, /*Object?*/ options){
+		serialize: function (/*Number*/ value, /*Object?*/ options) {
 			// summary:
 			//		Convert value (a Number) into a canonical string (ie, how the number literal is written in javascript/java/C/etc.)
 			// tags:
 			//		protected
-			return (typeof value != "number" || isNaN(value)) ? '' : this.inherited(arguments);
+			return typeof value != 'number' || isNaN(value)
+				? ''
+				: this.inherited(arguments)
 		},
 
-		_setBlurValue: function(){
-			var val = lang.hitch(lang.delegate(this, { focused: true }), "get")('value'); // parse with editOptions
-			this._setValueAttr(val, true);
+		_setBlurValue: function () {
+			var val = lang.hitch(
+				lang.delegate(this, { focused: true }),
+				'get',
+			)('value') // parse with editOptions
+			this._setValueAttr(val, true)
 		},
 
-		_setValueAttr: function(/*Number*/ value, /*Boolean?*/ priorityChange, /*String?*/ formattedValue){
+		_setValueAttr: function (
+			/*Number*/ value,
+			/*Boolean?*/ priorityChange,
+			/*String?*/ formattedValue,
+		) {
 			// summary:
 			//		Hook so set('value', ...) works.
-			if(value !== undefined && formattedValue === undefined){
-				formattedValue = String(value);
-				if(typeof value == "number"){
-					if(isNaN(value)){ formattedValue = '' }
-					// check for exponential notation that number.format chokes on
-					else if(("rangeCheck" in this && this.rangeCheck(value, this.constraints)) || this.constraints.exponent === false || !/\de[-+]?\d/i.test(formattedValue)){
-						formattedValue = undefined; // lets format compute a real string value
+			if (value !== undefined && formattedValue === undefined) {
+				formattedValue = String(value)
+				if (typeof value == 'number') {
+					if (isNaN(value)) {
+						formattedValue = ''
 					}
-				}else if(!value){ // 0 processed in if branch above, ''|null|undefined flows through here
-					formattedValue = '';
-					value = NaN;
-				}else{ // non-numeric values
-					value = undefined;
+					// check for exponential notation that number.format chokes on
+					else if (
+						('rangeCheck' in this &&
+							this.rangeCheck(value, this.constraints)) ||
+						this.constraints.exponent === false ||
+						!/\de[-+]?\d/i.test(formattedValue)
+					) {
+						formattedValue = undefined // lets format compute a real string value
+					}
+				} else if (!value) {
+					// 0 processed in if branch above, ''|null|undefined flows through here
+					formattedValue = ''
+					value = NaN
+				} else {
+					// non-numeric values
+					value = undefined
 				}
 			}
-			this.inherited(arguments, [value, priorityChange, formattedValue]);
+			this.inherited(arguments, [value, priorityChange, formattedValue])
 		},
 
-		_getValueAttr: function(){
+		_getValueAttr: function () {
 			// summary:
 			//		Hook so get('value') works.
 			//		Returns Number, NaN for '', or undefined for unparseable text
-			var v = this.inherited(arguments); // returns Number for all values accepted by parse() or NaN for all other displayed values
+			var v = this.inherited(arguments) // returns Number for all values accepted by parse() or NaN for all other displayed values
 
 			// If the displayed value of the textbox is gibberish (ex: "hello world"), this.inherited() above
 			// returns NaN; this if() branch converts the return value to undefined.
 			// Returning undefined prevents user text from being overwritten when doing _setValueAttr(_getValueAttr()).
 			// A blank displayed value is still returned as NaN.
-			if(isNaN(v) && this.textbox.value !== ''){
-				if(this.constraints.exponent !== false && /\de[-+]?\d/i.test(this.textbox.value) && (new RegExp("^"+number._realNumberRegexp(lang.delegate(this.constraints))+"$").test(this.textbox.value))){	// check for exponential notation that parse() rejected (erroneously?)
-					var n = Number(this.textbox.value);
-					return isNaN(n) ? undefined : n; // return exponential Number or undefined for random text (may not be possible to do with the above RegExp check)
-				}else{
-					return undefined; // gibberish
+			if (isNaN(v) && this.textbox.value !== '') {
+				if (
+					this.constraints.exponent !== false &&
+					/\de[-+]?\d/i.test(this.textbox.value) &&
+					new RegExp(
+						'^' +
+							number._realNumberRegexp(lang.delegate(this.constraints)) +
+							'$',
+					).test(this.textbox.value)
+				) {
+					// check for exponential notation that parse() rejected (erroneously?)
+					var n = Number(this.textbox.value)
+					return isNaN(n) ? undefined : n // return exponential Number or undefined for random text (may not be possible to do with the above RegExp check)
+				} else {
+					return undefined // gibberish
 				}
-			}else{
-				return v; // Number or NaN for ''
+			} else {
+				return v // Number or NaN for ''
 			}
 		},
 
-		isValid: function(/*Boolean*/ isFocused){
+		isValid: function (/*Boolean*/ isFocused) {
 			// Overrides dijit/form/RangeBoundTextBox.isValid() to check that the editing-mode value is valid since
 			// it may not be formatted according to the regExp validation rules
-			if(!this.focused || this._isEmpty(this.textbox.value)){
-				return this.inherited(arguments);
-			}else{
-				var v = this.get('value');
-				if(!isNaN(v) && this.rangeCheck(v, this.constraints)){
-					if(this.constraints.exponent !== false && /\de[-+]?\d/i.test(this.textbox.value)){ // exponential, parse doesn't like it
-						return true; // valid exponential number in range
-					}else{
-						return this.inherited(arguments);
+			if (!this.focused || this._isEmpty(this.textbox.value)) {
+				return this.inherited(arguments)
+			} else {
+				var v = this.get('value')
+				if (!isNaN(v) && this.rangeCheck(v, this.constraints)) {
+					if (
+						this.constraints.exponent !== false &&
+						/\de[-+]?\d/i.test(this.textbox.value)
+					) {
+						// exponential, parse doesn't like it
+						return true // valid exponential number in range
+					} else {
+						return this.inherited(arguments)
 					}
-				}else{
-					return false;
+				} else {
+					return false
 				}
 			}
 		},
 
-		_isValidSubset: function(){
+		_isValidSubset: function () {
 			// Overrides dijit/form/ValidationTextBox._isValidSubset()
 			//
 			// The inherited method only checks that the computed regex pattern is valid, which doesn't
@@ -308,14 +384,14 @@ define([
 			// could possibly satisify the min requirement.
 			//
 			// See ticket #17923
-			var hasMinConstraint = (typeof this.constraints.min == "number"),
-				hasMaxConstraint = (typeof this.constraints.max == "number"),
-				curVal = this.get('value');
+			var hasMinConstraint = typeof this.constraints.min == 'number',
+				hasMaxConstraint = typeof this.constraints.max == 'number',
+				curVal = this.get('value')
 
 			// If there is no parsable number, or there are no min or max bounds, then we can safely
 			// skip all remaining checks
-			if(isNaN(curVal) || (!hasMinConstraint && !hasMaxConstraint)){
-				return this.inherited(arguments);
+			if (isNaN(curVal) || (!hasMinConstraint && !hasMaxConstraint)) {
+				return this.inherited(arguments)
 			}
 
 			// This block picks apart the values in the text box to be used later to compute the min and max possible
@@ -325,7 +401,7 @@ define([
 			// for an explanation.
 			//
 			// http://stackoverflow.com/questions/12125421/why-does-a-shift-by-0-truncate-the-decimal
-			var integerDigits = curVal|0,
+			var integerDigits = curVal | 0,
 				valNegative = curVal < 0,
 				// Check if the current number has a decimal based on its locale
 				hasDecimal = this.textbox.value.indexOf(this._decimalInfo.sep) != -1,
@@ -335,10 +411,16 @@ define([
 				// Determine the remaining digits, based on the max digits
 				remainingDigitsCount = maxDigits - this.textbox.value.length,
 				// avoid approximation issues by capturing the decimal portion of the value as the user-entered string
-				fractionalDigitStr = hasDecimal ? this.textbox.value.split(this._decimalInfo.sep)[1].replace(/[^0-9]/g, "") : "";
+				fractionalDigitStr = hasDecimal
+					? this.textbox.value
+							.split(this._decimalInfo.sep)[1]
+							.replace(/[^0-9]/g, '')
+					: ''
 
 			// Create a normalized value string in the form of #.###
-			var normalizedValueStr = hasDecimal ? integerDigits+"."+fractionalDigitStr : integerDigits+"";
+			var normalizedValueStr = hasDecimal
+				? integerDigits + '.' + fractionalDigitStr
+				: integerDigits + ''
 
 			// The min and max values for the field can be determined using the following
 			// logic:
@@ -350,41 +432,47 @@ define([
 			//      min value = the current value with 9s appended for all remaining possible digits
 			//      max value = the current value
 			//
-			var ninePaddingStr = string.rep("9", remainingDigitsCount),
-			    minPossibleValue = curVal,
-			    maxPossibleValue = curVal;
-			if (valNegative){
-				minPossibleValue = Number(normalizedValueStr+ninePaddingStr);
-			} else{
-				maxPossibleValue = Number(normalizedValueStr+ninePaddingStr);
+			var ninePaddingStr = string.rep('9', remainingDigitsCount),
+				minPossibleValue = curVal,
+				maxPossibleValue = curVal
+			if (valNegative) {
+				minPossibleValue = Number(normalizedValueStr + ninePaddingStr)
+			} else {
+				maxPossibleValue = Number(normalizedValueStr + ninePaddingStr)
 			}
 
-			return !((hasMinConstraint && maxPossibleValue < this.constraints.min)
-					|| (hasMaxConstraint && minPossibleValue > this.constraints.max));
-		}
-	});
+			return !(
+				(hasMinConstraint && maxPossibleValue < this.constraints.min) ||
+				(hasMaxConstraint && minPossibleValue > this.constraints.max)
+			)
+		},
+	})
 
-	var NumberTextBox = declare("dijit.form.NumberTextBox", [RangeBoundTextBox, NumberTextBoxMixin], {
-		// summary:
-		//		A TextBox for entering numbers, with formatting and range checking
-		// description:
-		//		NumberTextBox is a textbox for entering and displaying numbers, supporting
-		//		the following main features:
-		//
-		//		1. Enforce minimum/maximum allowed values (as well as enforcing that the user types
-		//			a number rather than a random string)
-		//		2. NLS support (altering roles of comma and dot as "thousands-separator" and "decimal-point"
-		//			depending on locale).
-		//		3. Separate modes for editing the value and displaying it, specifically that
-		//			the thousands separator character (typically comma) disappears when editing
-		//			but reappears after the field is blurred.
-		//		4. Formatting and constraints regarding the number of places (digits after the decimal point)
-		//			allowed on input, and number of places displayed when blurred (see `constraints` parameter).
+	var NumberTextBox = declare(
+		'dijit.form.NumberTextBox',
+		[RangeBoundTextBox, NumberTextBoxMixin],
+		{
+			// summary:
+			//		A TextBox for entering numbers, with formatting and range checking
+			// description:
+			//		NumberTextBox is a textbox for entering and displaying numbers, supporting
+			//		the following main features:
+			//
+			//		1. Enforce minimum/maximum allowed values (as well as enforcing that the user types
+			//			a number rather than a random string)
+			//		2. NLS support (altering roles of comma and dot as "thousands-separator" and "decimal-point"
+			//			depending on locale).
+			//		3. Separate modes for editing the value and displaying it, specifically that
+			//			the thousands separator character (typically comma) disappears when editing
+			//			but reappears after the field is blurred.
+			//		4. Formatting and constraints regarding the number of places (digits after the decimal point)
+			//			allowed on input, and number of places displayed when blurred (see `constraints` parameter).
 
-		baseClass: "dijitTextBox dijitNumberTextBox"
-	});
+			baseClass: 'dijitTextBox dijitNumberTextBox',
+		},
+	)
 
-	NumberTextBox.Mixin = NumberTextBoxMixin;	// for monkey patching
+	NumberTextBox.Mixin = NumberTextBoxMixin // for monkey patching
 
 	/*=====
 	 NumberTextBox.__Constraints = declare([RangeBoundTextBox.__Constraints, number.__FormatOptions, number.__ParseOptions], {
@@ -403,5 +491,5 @@ define([
 	 });
 	 =====*/
 
-	return NumberTextBox;
-});
+	return NumberTextBox
+})

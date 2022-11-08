@@ -1,11 +1,11 @@
-define(["./_base/kernel", "./has", "require"], function(kernel, has, require){
-	var nodeRequire = kernel.global.require && kernel.global.require.nodeRequire;
+define(['./_base/kernel', './has', 'require'], function (kernel, has, require) {
+	var nodeRequire = kernel.global.require && kernel.global.require.nodeRequire
 
 	if (!nodeRequire) {
-		throw new Error("Cannot find the Node.js require");
+		throw new Error('Cannot find the Node.js require')
 	}
 
-	var module = nodeRequire("module");
+	var module = nodeRequire('module')
 
 	return {
 		// summary:
@@ -18,7 +18,11 @@ define(["./_base/kernel", "./has", "require"], function(kernel, has, require){
 		//	|		var fileData = fs.readFileSync("foo.txt", "utf-8");
 		//	|	});
 
-		load: function(/*string*/ id, /*Function*/ contextRequire, /*Function*/ load){
+		load: function (
+			/*string*/ id,
+			/*Function*/ contextRequire,
+			/*Function*/ load,
+		) {
 			/*global define:true */
 
 			// The `nodeRequire` function comes from the Node.js module of the AMD loader, so module ID resolution is
@@ -33,45 +37,47 @@ define(["./_base/kernel", "./has", "require"], function(kernel, has, require){
 			// Sooner or later, probably around the time that Node.js internal code is reworked to use ES6, these
 			// methods will no longer be exposed and we will have to find another workaround if they have not exposed
 			// an API for doing this by then.
-			if(module._findPath && module._nodeModulePaths){
-				var localModulePath = module._findPath(id, module._nodeModulePaths(contextRequire.toUrl(".")));
+			if (module._findPath && module._nodeModulePaths) {
+				var localModulePath = module._findPath(
+					id,
+					module._nodeModulePaths(contextRequire.toUrl('.')),
+				)
 				if (localModulePath !== false) {
-					id = localModulePath;
+					id = localModulePath
 				}
 			}
 
 			var oldDefine = define,
-				result;
+				result
 
 			// Some modules attempt to detect an AMD loader by looking for global AMD `define`. This causes issues
 			// when other CommonJS modules attempt to load them via the standard Node.js `require`, so hide it
 			// during the load
-			define = undefined;
+			define = undefined
 
 			try {
-				result = nodeRequire(id);
-			}
-			finally {
-				define = oldDefine;
+				result = nodeRequire(id)
+			} finally {
+				define = oldDefine
 			}
 
-			load(result);
+			load(result)
 		},
 
-		normalize: function (/**string*/ id, /*Function*/ normalize){
+		normalize: function (/**string*/ id, /*Function*/ normalize) {
 			// summary:
 			//		Produces a normalized CommonJS module ID to be used by Node.js `require`. Relative IDs
 			//		are resolved relative to the requesting module's location in the filesystem and will
 			//		return an ID with path separators appropriate for the local filesystem
 
-			if (id.charAt(0) === ".") {
+			if (id.charAt(0) === '.') {
 				// absolute module IDs need to be generated based on the AMD loader's knowledge of the parent module,
 				// since Node.js will try to use the directory containing `dojo.js` as the relative root if a
 				// relative module ID is provided
-				id = require.toUrl(normalize("./" + id));
+				id = require.toUrl(normalize('./' + id))
 			}
 
-			return id;
-		}
-	};
-});
+			return id
+		},
+	}
+})

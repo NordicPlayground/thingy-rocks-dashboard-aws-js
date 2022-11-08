@@ -1,4 +1,4 @@
-import DeveloperError from "./DeveloperError.js";
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Base class for proxying requested made by {@link Resource}.
@@ -9,7 +9,7 @@ import DeveloperError from "./DeveloperError.js";
  * @see DefaultProxy
  */
 function Proxy() {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 /**
@@ -19,6 +19,6 @@ function Proxy() {
  * @returns {String} proxied resource
  * @function
  */
-Proxy.prototype.getURL = DeveloperError.throwInstantiationError;
+Proxy.prototype.getURL = DeveloperError.throwInstantiationError
 
-export default Proxy;
+export default Proxy

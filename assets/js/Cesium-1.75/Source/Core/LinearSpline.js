@@ -1,8 +1,8 @@
-import Cartesian3 from "./Cartesian3.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import Spline from "./Spline.js";
+import Cartesian3 from './Cartesian3.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import Spline from './Spline.js'
 
 /**
  * A spline that uses piecewise linear interpolation to create a curve.
@@ -40,60 +40,60 @@ import Spline from "./Spline.js";
  * @see WeightSpline
  */
 function LinearSpline(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  var points = options.points;
-  var times = options.times;
+	var points = options.points
+	var times = options.times
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(points) || !defined(times)) {
-    throw new DeveloperError("points and times are required.");
-  }
-  if (points.length < 2) {
-    throw new DeveloperError(
-      "points.length must be greater than or equal to 2."
-    );
-  }
-  if (times.length !== points.length) {
-    throw new DeveloperError("times.length must be equal to points.length.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(points) || !defined(times)) {
+		throw new DeveloperError('points and times are required.')
+	}
+	if (points.length < 2) {
+		throw new DeveloperError(
+			'points.length must be greater than or equal to 2.',
+		)
+	}
+	if (times.length !== points.length) {
+		throw new DeveloperError('times.length must be equal to points.length.')
+	}
+	//>>includeEnd('debug');
 
-  this._times = times;
-  this._points = points;
+	this._times = times
+	this._points = points
 
-  this._lastTimeIndex = 0;
+	this._lastTimeIndex = 0
 }
 
 Object.defineProperties(LinearSpline.prototype, {
-  /**
-   * An array of times for the control points.
-   *
-   * @memberof LinearSpline.prototype
-   *
-   * @type {Number[]}
-   * @readonly
-   */
-  times: {
-    get: function () {
-      return this._times;
-    },
-  },
+	/**
+	 * An array of times for the control points.
+	 *
+	 * @memberof LinearSpline.prototype
+	 *
+	 * @type {Number[]}
+	 * @readonly
+	 */
+	times: {
+		get: function () {
+			return this._times
+		},
+	},
 
-  /**
-   * An array of {@link Cartesian3} control points.
-   *
-   * @memberof LinearSpline.prototype
-   *
-   * @type {Cartesian3[]}
-   * @readonly
-   */
-  points: {
-    get: function () {
-      return this._points;
-    },
-  },
-});
+	/**
+	 * An array of {@link Cartesian3} control points.
+	 *
+	 * @memberof LinearSpline.prototype
+	 *
+	 * @type {Cartesian3[]}
+	 * @readonly
+	 */
+	points: {
+		get: function () {
+			return this._points
+		},
+	},
+})
 
 /**
  * Finds an index <code>i</code> in <code>times</code> such that the parameter
@@ -107,7 +107,7 @@ Object.defineProperties(LinearSpline.prototype, {
  *                             is the first element in the array <code>times</code> and <code>t<sub>n</sub></code> is the last element
  *                             in the array <code>times</code>.
  */
-LinearSpline.prototype.findTimeInterval = Spline.prototype.findTimeInterval;
+LinearSpline.prototype.findTimeInterval = Spline.prototype.findTimeInterval
 
 /**
  * Wraps the given time to the period covered by the spline.
@@ -116,7 +116,7 @@ LinearSpline.prototype.findTimeInterval = Spline.prototype.findTimeInterval;
  * @param {Number} time The time.
  * @return {Number} The time, wrapped around to the updated animation.
  */
-LinearSpline.prototype.wrapTime = Spline.prototype.wrapTime;
+LinearSpline.prototype.wrapTime = Spline.prototype.wrapTime
 
 /**
  * Clamps the given time to the period covered by the spline.
@@ -125,7 +125,7 @@ LinearSpline.prototype.wrapTime = Spline.prototype.wrapTime;
  * @param {Number} time The time.
  * @return {Number} The time, clamped to the animation period.
  */
-LinearSpline.prototype.clampTime = Spline.prototype.clampTime;
+LinearSpline.prototype.clampTime = Spline.prototype.clampTime
 
 /**
  * Evaluates the curve at a given time.
@@ -139,19 +139,19 @@ LinearSpline.prototype.clampTime = Spline.prototype.clampTime;
  *                             in the array <code>times</code>.
  */
 LinearSpline.prototype.evaluate = function (time, result) {
-  var points = this.points;
-  var times = this.times;
+	var points = this.points
+	var times = this.times
 
-  var i = (this._lastTimeIndex = this.findTimeInterval(
-    time,
-    this._lastTimeIndex
-  ));
-  var u = (time - times[i]) / (times[i + 1] - times[i]);
+	var i = (this._lastTimeIndex = this.findTimeInterval(
+		time,
+		this._lastTimeIndex,
+	))
+	var u = (time - times[i]) / (times[i + 1] - times[i])
 
-  if (!defined(result)) {
-    result = new Cartesian3();
-  }
+	if (!defined(result)) {
+		result = new Cartesian3()
+	}
 
-  return Cartesian3.lerp(points[i], points[i + 1], u, result);
-};
-export default LinearSpline;
+	return Cartesian3.lerp(points[i], points[i + 1], u, result)
+}
+export default LinearSpline

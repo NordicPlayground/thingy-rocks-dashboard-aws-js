@@ -1,8 +1,8 @@
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Event from "../Core/Event.js";
-import TimeIntervalCollection from "../Core/TimeIntervalCollection.js";
-import Property from "./Property.js";
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Event from '../Core/Event.js'
+import TimeIntervalCollection from '../Core/TimeIntervalCollection.js'
+import Property from './Property.js'
 
 /**
  * A {@link Property} which is defined by a {@link TimeIntervalCollection}, where the
@@ -41,54 +41,54 @@ import Property from "./Property.js";
  * }));
  */
 function TimeIntervalCollectionProperty() {
-  this._definitionChanged = new Event();
-  this._intervals = new TimeIntervalCollection();
-  this._intervals.changedEvent.addEventListener(
-    TimeIntervalCollectionProperty.prototype._intervalsChanged,
-    this
-  );
+	this._definitionChanged = new Event()
+	this._intervals = new TimeIntervalCollection()
+	this._intervals.changedEvent.addEventListener(
+		TimeIntervalCollectionProperty.prototype._intervalsChanged,
+		this,
+	)
 }
 
 Object.defineProperties(TimeIntervalCollectionProperty.prototype, {
-  /**
-   * Gets a value indicating if this property is constant.  A property is considered
-   * constant if getValue always returns the same result for the current definition.
-   * @memberof TimeIntervalCollectionProperty.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   */
-  isConstant: {
-    get: function () {
-      return this._intervals.isEmpty;
-    },
-  },
-  /**
-   * Gets the event that is raised whenever the definition of this property changes.
-   * The definition is changed whenever setValue is called with data different
-   * than the current value.
-   * @memberof TimeIntervalCollectionProperty.prototype
-   *
-   * @type {Event}
-   * @readonly
-   */
-  definitionChanged: {
-    get: function () {
-      return this._definitionChanged;
-    },
-  },
-  /**
-   * Gets the interval collection.
-   * @memberof TimeIntervalCollectionProperty.prototype
-   *
-   * @type {TimeIntervalCollection}
-   */
-  intervals: {
-    get: function () {
-      return this._intervals;
-    },
-  },
-});
+	/**
+	 * Gets a value indicating if this property is constant.  A property is considered
+	 * constant if getValue always returns the same result for the current definition.
+	 * @memberof TimeIntervalCollectionProperty.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	isConstant: {
+		get: function () {
+			return this._intervals.isEmpty
+		},
+	},
+	/**
+	 * Gets the event that is raised whenever the definition of this property changes.
+	 * The definition is changed whenever setValue is called with data different
+	 * than the current value.
+	 * @memberof TimeIntervalCollectionProperty.prototype
+	 *
+	 * @type {Event}
+	 * @readonly
+	 */
+	definitionChanged: {
+		get: function () {
+			return this._definitionChanged
+		},
+	},
+	/**
+	 * Gets the interval collection.
+	 * @memberof TimeIntervalCollectionProperty.prototype
+	 *
+	 * @type {TimeIntervalCollection}
+	 */
+	intervals: {
+		get: function () {
+			return this._intervals
+		},
+	},
+})
 
 /**
  * Gets the value of the property at the provided time.
@@ -98,18 +98,18 @@ Object.defineProperties(TimeIntervalCollectionProperty.prototype, {
  * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 TimeIntervalCollectionProperty.prototype.getValue = function (time, result) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(time)) {
-    throw new DeveloperError("time is required");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(time)) {
+		throw new DeveloperError('time is required')
+	}
+	//>>includeEnd('debug');
 
-  var value = this._intervals.findDataForIntervalContainingDate(time);
-  if (defined(value) && typeof value.clone === "function") {
-    return value.clone(result);
-  }
-  return value;
-};
+	var value = this._intervals.findDataForIntervalContainingDate(time)
+	if (defined(value) && typeof value.clone === 'function') {
+		return value.clone(result)
+	}
+	return value
+}
 
 /**
  * Compares this property to the provided property and returns
@@ -119,17 +119,17 @@ TimeIntervalCollectionProperty.prototype.getValue = function (time, result) {
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
 TimeIntervalCollectionProperty.prototype.equals = function (other) {
-  return (
-    this === other || //
-    (other instanceof TimeIntervalCollectionProperty && //
-      this._intervals.equals(other._intervals, Property.equals))
-  );
-};
+	return (
+		this === other || //
+		(other instanceof TimeIntervalCollectionProperty && //
+			this._intervals.equals(other._intervals, Property.equals))
+	)
+}
 
 /**
  * @private
  */
 TimeIntervalCollectionProperty.prototype._intervalsChanged = function () {
-  this._definitionChanged.raiseEvent(this);
-};
-export default TimeIntervalCollectionProperty;
+	this._definitionChanged.raiseEvent(this)
+}
+export default TimeIntervalCollectionProperty

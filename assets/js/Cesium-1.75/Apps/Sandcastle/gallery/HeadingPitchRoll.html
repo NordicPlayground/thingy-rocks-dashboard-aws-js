@@ -121,10 +121,8 @@
           5000.0
         );
         var speedVector = new Cesium.Cartesian3();
-        var fixedFrameTransform = Cesium.Transforms.localFrameToFixedFrameGenerator(
-          "north",
-          "west"
-        );
+        var fixedFrameTransform =
+          Cesium.Transforms.localFrameToFixedFrameGenerator("north", "west");
 
         var planePrimitive = scene.primitives.add(
           Cesium.Model.fromGltf({

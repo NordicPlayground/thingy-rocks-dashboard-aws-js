@@ -1,8 +1,8 @@
-define(["../has", "require"], function(has, require){
+define(['../has', 'require'], function (has, require) {
 	// module:
 	//		dojo/_base/config
 
-/*=====
+	/*=====
 return {
 	// summary:
 	//		This module defines the user configuration during bootstrap.
@@ -161,37 +161,39 @@ return {
 };
 =====*/
 
-	var result = {};
-	if(has("dojo-config-api")){
+	var result = {}
+	if (has('dojo-config-api')) {
 		// must be the dojo loader; take a shallow copy of require.rawConfig
-		var src = require.rawConfig, p;
-		for(p in src){
-			result[p] = src[p];
+		var src = require.rawConfig,
+			p
+		for (p in src) {
+			result[p] = src[p]
 		}
-	}else{
-		var adviseHas = function(featureSet, prefix, booting){
-			for(p in featureSet){
-				p!="has" && has.add(prefix + p, featureSet[p], 0, booting);
+	} else {
+		var adviseHas = function (featureSet, prefix, booting) {
+			for (p in featureSet) {
+				p != 'has' && has.add(prefix + p, featureSet[p], 0, booting)
 			}
-		};
-		var global = (function () { return this; })();
-		result = has("dojo-loader") ?
-			// must be a built version of the dojo loader; all config stuffed in require.rawConfig
-			require.rawConfig :
-			// a foreign loader
-			global.dojoConfig || global.djConfig || {};
-		adviseHas(result, "config", 1);
-		adviseHas(result.has, "", 1);
+		}
+		var global = (function () {
+			return this
+		})()
+		result = has('dojo-loader')
+			? // must be a built version of the dojo loader; all config stuffed in require.rawConfig
+			  require.rawConfig
+			: // a foreign loader
+			  global.dojoConfig || global.djConfig || {}
+		adviseHas(result, 'config', 1)
+		adviseHas(result.has, '', 1)
 	}
 
-	if(!result.locale && typeof navigator != "undefined"){
+	if (!result.locale && typeof navigator != 'undefined') {
 		// Default locale for browsers.
-		var language = (navigator.language || navigator.userLanguage);
-		if(language){
-			result.locale = language.toLowerCase();
+		var language = navigator.language || navigator.userLanguage
+		if (language) {
+			result.locale = language.toLowerCase()
 		}
 	}
 
-	return result;
-});
-
+	return result
+})

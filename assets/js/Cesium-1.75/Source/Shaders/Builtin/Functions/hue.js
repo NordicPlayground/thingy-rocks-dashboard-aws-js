@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Adjusts the hue of a color.\n\
  * \n\
  * @name czm_hue\n\
@@ -29,4 +29,4 @@ vec3 czm_hue(vec3 rgb, float adjustment)\n\
     vec3 color = vec3(yiq.x, chroma * cos(hue), chroma * sin(hue));\n\
     return toRGB * color;\n\
 }\n\
-";
+'

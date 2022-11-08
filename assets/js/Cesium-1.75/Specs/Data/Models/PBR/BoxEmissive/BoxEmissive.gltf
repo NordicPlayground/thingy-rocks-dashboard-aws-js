@@ -3,16 +3,8 @@
     {
       "componentType": 5126,
       "count": 20,
-      "min": [
-        -1,
-        -1,
-        -1
-      ],
-      "max": [
-        1,
-        1,
-        1
-      ],
+      "min": [-1, -1, -1],
+      "max": [1, 1, 1],
       "type": "VEC3",
       "bufferView": 0,
       "byteOffset": 0
@@ -20,14 +12,8 @@
     {
       "componentType": 5126,
       "count": 20,
-      "min": [
-        0,
-        0
-      ],
-      "max": [
-        1,
-        1
-      ],
+      "min": [0, 0],
+      "max": [1, 1],
       "type": "VEC2",
       "bufferView": 1,
       "byteOffset": 0
@@ -35,12 +21,8 @@
     {
       "componentType": 5123,
       "count": 36,
-      "min": [
-        0
-      ],
-      "max": [
-        19
-      ],
+      "min": [0],
+      "max": [19],
       "type": "SCALAR",
       "bufferView": 2,
       "byteOffset": 0
@@ -96,21 +78,12 @@
   "materials": [
     {
       "pbrMetallicRoughness": {
-        "baseColorFactor": [
-          0,
-          0,
-          0,
-          1
-        ]
+        "baseColorFactor": [0, 0, 0, 1]
       },
       "emissiveTexture": {
         "index": 0
       },
-      "emissiveFactor": [
-        1,
-        1,
-        1
-      ]
+      "emissiveFactor": [1, 1, 1]
     }
   ],
   "meshes": [
@@ -144,9 +117,7 @@
   "scene": 0,
   "scenes": [
     {
-      "nodes": [
-        0
-      ]
+      "nodes": [0]
     }
   ],
   "textures": [

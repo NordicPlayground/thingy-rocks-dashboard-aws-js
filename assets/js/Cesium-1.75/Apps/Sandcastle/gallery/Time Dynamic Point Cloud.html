@@ -62,12 +62,11 @@
           };
         }
 
-        var timeIntervalCollection = Cesium.TimeIntervalCollection.fromIso8601DateArray(
-          {
+        var timeIntervalCollection =
+          Cesium.TimeIntervalCollection.fromIso8601DateArray({
             iso8601Dates: dates,
             dataCallback: dataCallback,
-          }
-        );
+          });
 
         var pointCloud = new Cesium.TimeDynamicPointCloud({
           intervals: timeIntervalCollection,

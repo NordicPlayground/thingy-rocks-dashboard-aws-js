@@ -38,10 +38,10 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dijitRtl .dijitIconFolderClosed,
 .dijitRtl .dijitFolderOpened,
 .dijitRtl .dijitIconFolderOpen,
-.dijitRtl .dijitIconError { 
-	background-image: url('images/commonIconsObjActEnabled_rtl.png'); /* Contains both object and action icons in a sprite image for the enabled state.  */
-	width: 16px;
-	height: 16px;
+.dijitRtl .dijitIconError {
+  background-image: url("images/commonIconsObjActEnabled_rtl.png"); /* Contains both object and action icons in a sprite image for the enabled state.  */
+  width: 16px;
+  height: 16px;
 }
 
 .dj_ie6 .dijitRtl .dijitIconSave,
@@ -79,7 +79,7 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dj_ie6 .dijitRtl .dijitFolderOpened,
 .dj_ie6 .dijitRtl .dijitIconFolderOpen,
 .dj_ie6 .dijitRtl .dijitIconError {
-	background-image: url('images/commonIconsObjActEnabled8bit_rtl.png');
+  background-image: url("images/commonIconsObjActEnabled8bit_rtl.png");
 }
 
 .dijitRtl .dijitDisabled .dijitIconSave,
@@ -117,5 +117,5 @@ The 16 x 16px icons in these sprites are action and object type images which can
 .dijitRtl .dijitDisabled .dijitFolderOpened,
 .dijitRtl .dijitDisabled .dijitIconFolderOpen,
 .dijitRtl .dijitDisabled .dijitIconError {
-	background-image: url('images/commonIconsObjActDisabled_rtl.png'); /* Contains both object and action icons as a sprite image for the disabled state. These would be used by buttons and menus.   */
+  background-image: url("images/commonIconsObjActDisabled_rtl.png"); /* Contains both object and action icons as a sprite image for the disabled state. These would be used by buttons and menus.   */
 }

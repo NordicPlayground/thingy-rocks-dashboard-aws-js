@@ -1,4 +1,11 @@
-define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-attr", "./NodeList-dom"], function(dquery, lang, array, construct, attr){
+define([
+	'./query',
+	'./_base/lang',
+	'./_base/array',
+	'./dom-construct',
+	'./dom-attr',
+	'./NodeList-dom',
+], function (dquery, lang, array, construct, attr) {
 	// module:
 	//		dojo/NodeList-manipulate
 
@@ -10,79 +17,82 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 	};
 	=====*/
 
-	var NodeList = dquery.NodeList;
+	var NodeList = dquery.NodeList
 
 	//TODO: add a way to parse for widgets in the injected markup?
 
-
-	function getWrapInsertion(/*DOMNode*/node){
+	function getWrapInsertion(/*DOMNode*/ node) {
 		// summary:
 		//		finds the innermost element to use for wrap insertion.
 
 		//Make it easy, assume single nesting, no siblings.
-		while(node.childNodes[0] && node.childNodes[0].nodeType == 1){
-			node = node.childNodes[0];
+		while (node.childNodes[0] && node.childNodes[0].nodeType == 1) {
+			node = node.childNodes[0]
 		}
-		return node; //DOMNode
+		return node //DOMNode
 	}
 
-	function makeWrapNode(/*DOMNode||String*/html, /*DOMNode*/refNode){
+	function makeWrapNode(/*DOMNode||String*/ html, /*DOMNode*/ refNode) {
 		// summary:
 		//		convert HTML into nodes if it is not already a node.
-		if(typeof html == "string"){
-			html = construct.toDom(html, (refNode && refNode.ownerDocument));
-			if(html.nodeType == 11){
+		if (typeof html == 'string') {
+			html = construct.toDom(html, refNode && refNode.ownerDocument)
+			if (html.nodeType == 11) {
 				//DocumentFragment cannot handle cloneNode, so choose first child.
-				html = html.childNodes[0];
+				html = html.childNodes[0]
 			}
-		}else if(html.nodeType == 1 && html.parentNode){
+		} else if (html.nodeType == 1 && html.parentNode) {
 			//This element is already in the DOM clone it, but not its children.
-			html = html.cloneNode(false);
+			html = html.cloneNode(false)
 		}
-		return html; /*DOMNode*/
+		return html /*DOMNode*/
 	}
 
 	lang.extend(NodeList, {
-		_placeMultiple: function(/*String||Node||NodeList*/query, /*String*/position){
+		_placeMultiple: function (
+			/*String||Node||NodeList*/ query,
+			/*String*/ position,
+		) {
 			// summary:
 			//		private method for inserting queried nodes into all nodes in this NodeList
 			//		at different positions. Differs from NodeList.place because it will clone
 			//		the nodes in this NodeList if the query matches more than one element.
-			var nl2 = typeof query == "string" || query.nodeType ? dquery(query) : query;
-			var toAdd = [];
-			for(var i = 0; i < nl2.length; i++){
+			var nl2 =
+				typeof query == 'string' || query.nodeType ? dquery(query) : query
+			var toAdd = []
+			for (var i = 0; i < nl2.length; i++) {
 				//Go backwards in DOM to make dom insertions easier via insertBefore
-				var refNode = nl2[i];
-				var length = this.length;
-				for(var j = length - 1, item; item = this[j]; j--){
-					if(i > 0){
+				var refNode = nl2[i]
+				var length = this.length
+				for (var j = length - 1, item; (item = this[j]); j--) {
+					if (i > 0) {
 						//Need to clone the item. This also means
 						//it needs to be added to the current NodeList
 						//so it can also be the target of other chaining operations.
-						item = this._cloneNode(item);
-						toAdd.unshift(item);
+						item = this._cloneNode(item)
+						toAdd.unshift(item)
 					}
-					if(j == length - 1){
-						construct.place(item, refNode, position);
-					}else{
-						refNode.parentNode.insertBefore(item, refNode);
+					if (j == length - 1) {
+						construct.place(item, refNode, position)
+					} else {
+						refNode.parentNode.insertBefore(item, refNode)
 					}
-					refNode = item;
+					refNode = item
 				}
 			}
 
-			if(toAdd.length){
+			if (toAdd.length) {
 				//Add the toAdd items to the current NodeList. Build up list of args
 				//to pass to splice.
-				toAdd.unshift(0);
-				toAdd.unshift(this.length - 1);
-				Array.prototype.splice.apply(this, toAdd);
+				toAdd.unshift(0)
+				toAdd.unshift(this.length - 1)
+				Array.prototype.splice.apply(this, toAdd)
 			}
 
-			return this; // dojo/NodeList
+			return this // dojo/NodeList
 		},
 
-		innerHTML: function(/*String|DOMNode|NodeList?*/ value){
+		innerHTML: function (/*String|DOMNode|NodeList?*/ value) {
 			// summary:
 			//		allows setting the innerHTML of each node in the NodeList,
 			//		if there is a value passed in, otherwise, reads the innerHTML value of the first node.
@@ -119,10 +129,10 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//	|	], function(query){
 			//	|		var message = query("div").innerHTML();
 			//	| 	});
-			if(arguments.length){
-				return this.addContent(value, "only"); // dojo/NodeList
-			}else{
-				return this[0].innerHTML; //String
+			if (arguments.length) {
+				return this.addContent(value, 'only') // dojo/NodeList
+			} else {
+				return this[0].innerHTML //String
 			}
 		},
 
@@ -147,7 +157,7 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 		},
 		=====*/
 
-		text: function(/*String*/value){
+		text: function (/*String*/ value) {
 			// summary:
 			//		allows setting the text value of each node in the NodeList,
 			//		if there is a value passed in, otherwise, returns the text value for all the
@@ -173,23 +183,23 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			// returns:
 			//		if no value is passed, the result is String, the text value of the first node.
 			//		If a value is passed, the return is this dojo/NodeList
-			if(arguments.length){
-				for(var i = 0, node; node = this[i]; i++){
-					if(node.nodeType == 1){
-						attr.set(node, 'textContent', value);
+			if (arguments.length) {
+				for (var i = 0, node; (node = this[i]); i++) {
+					if (node.nodeType == 1) {
+						attr.set(node, 'textContent', value)
 					}
 				}
-				return this; // dojo/NodeList
-			}else{
-				var result = "";
-				for(i = 0; node = this[i]; i++){
-					result += attr.get(node, 'textContent');
+				return this // dojo/NodeList
+			} else {
+				var result = ''
+				for (i = 0; (node = this[i]); i++) {
+					result += attr.get(node, 'textContent')
 				}
-				return result; //String
+				return result //String
 			}
 		},
 
-		val: function(/*String||Array*/value){
+		val: function (/*String||Array*/ value) {
 			// summary:
 			//		If a value is passed, allows seting the value property of form elements in this
 			//		NodeList, or properly selecting/checking the right value for radio/checkbox/select
@@ -217,59 +227,59 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//	| 	});
 
 			//Special work for input elements.
-			if(arguments.length){
-				var isArray = lang.isArray(value);
-				for(var index = 0, node; node = this[index]; index++){
-					var name = node.nodeName.toUpperCase();
-					var type = node.type;
-					var newValue = isArray ? value[index] : value;
+			if (arguments.length) {
+				var isArray = lang.isArray(value)
+				for (var index = 0, node; (node = this[index]); index++) {
+					var name = node.nodeName.toUpperCase()
+					var type = node.type
+					var newValue = isArray ? value[index] : value
 
-					if(name == "SELECT"){
-						var opts = node.options;
-						for(var i = 0; i < opts.length; i++){
-							var opt = opts[i];
-							if(node.multiple){
-								opt.selected = (array.indexOf(value, opt.value) != -1);
-							}else{
-								opt.selected = (opt.value == newValue);
+					if (name == 'SELECT') {
+						var opts = node.options
+						for (var i = 0; i < opts.length; i++) {
+							var opt = opts[i]
+							if (node.multiple) {
+								opt.selected = array.indexOf(value, opt.value) != -1
+							} else {
+								opt.selected = opt.value == newValue
 							}
 						}
-					}else if(type == "checkbox" || type == "radio"){
-						node.checked = (node.value == newValue);
-					}else{
-						node.value = newValue;
+					} else if (type == 'checkbox' || type == 'radio') {
+						node.checked = node.value == newValue
+					} else {
+						node.value = newValue
 					}
 				}
-				return this; // dojo/NodeList
-			}else{
+				return this // dojo/NodeList
+			} else {
 				//node already declared above.
-				node = this[0];
-				if(!node || node.nodeType != 1){
-					return undefined;
+				node = this[0]
+				if (!node || node.nodeType != 1) {
+					return undefined
 				}
-				value = node.value || "";
-				if(node.nodeName.toUpperCase() == "SELECT" && node.multiple){
+				value = node.value || ''
+				if (node.nodeName.toUpperCase() == 'SELECT' && node.multiple) {
 					//A multivalued selectbox. Do the pain.
-					value = [];
+					value = []
 					//opts declared above in if block.
-					opts = node.options;
+					opts = node.options
 					//i declared above in if block;
-					for(i = 0; i < opts.length; i++){
+					for (i = 0; i < opts.length; i++) {
 						//opt declared above in if block
-						opt = opts[i];
-						if(opt.selected){
-							value.push(opt.value);
+						opt = opts[i]
+						if (opt.selected) {
+							value.push(opt.value)
 						}
 					}
-					if(!value.length){
-						value = null;
+					if (!value.length) {
+						value = null
 					}
 				}
-				return value; //String||Array
+				return value //String||Array
 			}
 		},
 
-		append: function(/*String||DOMNode||NodeList*/content){
+		append: function (/*String||DOMNode||NodeList*/ content) {
 			// summary:
 			//		appends the content to every node in the NodeList.
 			// description:
@@ -291,10 +301,10 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//		Results in this DOM structure:
 			//	|	<div id="foo"><p>Hello Mars</p><span>append</span></div>
 			//	|	<div id="bar"><p>Hello World</p><span>append</span></div>
-			return this.addContent(content, "last"); // dojo/NodeList
+			return this.addContent(content, 'last') // dojo/NodeList
 		},
 
-		appendTo: function(/*String*/query){
+		appendTo: function (/*String*/ query) {
 			// summary:
 			//		appends nodes in this NodeList to the nodes matched by
 			//		the query passed to appendTo.
@@ -318,10 +328,10 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//		Results in this DOM structure:
 			//	|	<p>Hello Mars<span>append</span></p>
 			//	|	<p>Hello World<span>append</span></p>
-			return this._placeMultiple(query, "last"); // dojo/NodeList
+			return this._placeMultiple(query, 'last') // dojo/NodeList
 		},
 
-		prepend: function(/*String||DOMNode||NodeList*/content){
+		prepend: function (/*String||DOMNode||NodeList*/ content) {
 			// summary:
 			//		prepends the content to every node in the NodeList.
 			// description:
@@ -342,10 +352,10 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//		Results in this DOM structure:
 			//	|	<div id="foo"><span>prepend</span><p>Hello Mars</p></div>
 			//	|	<div id="bar"><span>prepend</span><p>Hello World</p></div>
-			return this.addContent(content, "first"); // dojo/NodeList
+			return this.addContent(content, 'first') // dojo/NodeList
 		},
 
-		prependTo: function(/*String*/query){
+		prependTo: function (/*String*/ query) {
 			// summary:
 			//		prepends nodes in this NodeList to the nodes matched by
 			//		the query passed to prependTo.
@@ -369,10 +379,10 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//		Results in this DOM structure:
 			//	|	<p><span>prepend</span>Hello Mars</p>
 			//	|	<p><span>prepend</span>Hello World</p>
-			return this._placeMultiple(query, "first"); // dojo/NodeList
+			return this._placeMultiple(query, 'first') // dojo/NodeList
 		},
 
-		after: function(/*String||Element||NodeList*/content){
+		after: function (/*String||Element||NodeList*/ content) {
 			// summary:
 			//		Places the content after every node in the NodeList.
 			// description:
@@ -394,10 +404,10 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//		Results in this DOM structure:
 			//	|	<div id="foo"><p>Hello Mars</p></div><span>after</span>
 			//	|	<div id="bar"><p>Hello World</p></div><span>after</span>
-			return this.addContent(content, "after"); // dojo/NodeList
+			return this.addContent(content, 'after') // dojo/NodeList
 		},
 
-		insertAfter: function(/*String*/query){
+		insertAfter: function (/*String*/ query) {
 			// summary:
 			//		The nodes in this NodeList will be placed after the nodes
 			//		matched by the query passed to insertAfter.
@@ -421,10 +431,10 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//		Results in this DOM structure:
 			//	|	<p>Hello Mars</p><span>after</span>
 			//	|	<p>Hello World</p><span>after</span>
-			return this._placeMultiple(query, "after"); // dojo/NodeList
+			return this._placeMultiple(query, 'after') // dojo/NodeList
 		},
 
-		before: function(/*String||DOMNode||NodeList*/content){
+		before: function (/*String||DOMNode||NodeList*/ content) {
 			// summary:
 			//		Places the content before every node in the NodeList.
 			// description:
@@ -446,10 +456,10 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//		Results in this DOM structure:
 			//	|	<span>before</span><div id="foo"><p>Hello Mars</p></div>
 			//	|	<span>before</span><div id="bar"><p>Hello World</p></div>
-			return this.addContent(content, "before"); // dojo/NodeList
+			return this.addContent(content, 'before') // dojo/NodeList
 		},
 
-		insertBefore: function(/*String*/query){
+		insertBefore: function (/*String*/ query) {
 			// summary:
 			//		The nodes in this NodeList will be placed after the nodes
 			//		matched by the query passed to insertAfter.
@@ -473,7 +483,7 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//		Results in this DOM structure:
 			//	|	<span>before</span><p>Hello Mars</p>
 			//	|	<span>before</span><p>Hello World</p>
-			return this._placeMultiple(query, "before"); // dojo/NodeList
+			return this._placeMultiple(query, 'before') // dojo/NodeList
 		},
 
 		/*=====
@@ -493,7 +503,7 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 		=====*/
 		remove: NodeList.prototype.orphan,
 
-		wrap: function(/*String||DOMNode*/html){
+		wrap: function (/*String||DOMNode*/ html) {
 			// summary:
 			//		Wrap each node in the NodeList with html passed to wrap.
 			// description:
@@ -515,27 +525,27 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//		Results in this DOM structure:
 			//	|	<div><span><b>one</b></span></div>
 			//	|	<div><span><b>two</b></span></div>
-			if(this[0]){
-				html = makeWrapNode(html, this[0]);
+			if (this[0]) {
+				html = makeWrapNode(html, this[0])
 
 				//Now cycle through the elements and do the insertion.
-				for(var i = 0, node; node = this[i]; i++){
+				for (var i = 0, node; (node = this[i]); i++) {
 					//Always clone because if html is used to hold one of
 					//the "this" nodes, then on the clone of html it will contain
 					//that "this" node, and that would be bad.
-					var clone = this._cloneNode(html);
-					if(node.parentNode){
-						node.parentNode.replaceChild(clone, node);
+					var clone = this._cloneNode(html)
+					if (node.parentNode) {
+						node.parentNode.replaceChild(clone, node)
 					}
 					//Find deepest element and insert old node in it.
-					var insertion = getWrapInsertion(clone);
-					insertion.appendChild(node);
+					var insertion = getWrapInsertion(clone)
+					insertion.appendChild(node)
 				}
 			}
-			return this; // dojo/NodeList
+			return this // dojo/NodeList
 		},
 
-		wrapAll: function(/*String||DOMNode*/html){
+		wrapAll: function (/*String||DOMNode*/ html) {
 			// summary:
 			//		Insert html where the first node in this NodeList lives, then place all
 			//		nodes in this NodeList as the child of the html.
@@ -564,23 +574,23 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			// 	|		<div class="blue">Blue One</div>
 			// 	|		<div class="blue">Blue Two</div>
 			//	|	</div>
-			if(this[0]){
-				html = makeWrapNode(html, this[0]);
+			if (this[0]) {
+				html = makeWrapNode(html, this[0])
 
 				//Place the wrap HTML in place of the first node.
-				this[0].parentNode.replaceChild(html, this[0]);
+				this[0].parentNode.replaceChild(html, this[0])
 
 				//Now cycle through the elements and move them inside
 				//the wrap.
-				var insertion = getWrapInsertion(html);
-				for(var i = 0, node; node = this[i]; i++){
-					insertion.appendChild(node);
+				var insertion = getWrapInsertion(html)
+				for (var i = 0, node; (node = this[i]); i++) {
+					insertion.appendChild(node)
 				}
 			}
-			return this; // dojo/NodeList
+			return this // dojo/NodeList
 		},
 
-		wrapInner: function(/*String||DOMNode*/html){
+		wrapInner: function (/*String||DOMNode*/ html) {
 			// summary:
 			//		For each node in the NodeList, wrap all its children with the passed in html.
 			// description:
@@ -610,23 +620,27 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			// 	|		<div class="red"><span class="special">Red Two</span></div>
 			// 	|		<div class="blue">Blue Two</div>
 			//	|	</div>
-			if(this[0]){
-				html = makeWrapNode(html, this[0]);
-				for(var i = 0; i < this.length; i++){
+			if (this[0]) {
+				html = makeWrapNode(html, this[0])
+				for (var i = 0; i < this.length; i++) {
 					//Always clone because if html is used to hold one of
 					//the "this" nodes, then on the clone of html it will contain
 					//that "this" node, and that would be bad.
-					var clone = this._cloneNode(html);
+					var clone = this._cloneNode(html)
 
 					//Need to convert the childNodes to an array since wrapAll modifies the
 					//DOM and can change the live childNodes NodeList.
-					this._wrap(lang._toArray(this[i].childNodes), null, this._NodeListCtor).wrapAll(clone);
+					this._wrap(
+						lang._toArray(this[i].childNodes),
+						null,
+						this._NodeListCtor,
+					).wrapAll(clone)
 				}
 			}
-			return this; // dojo/NodeList
+			return this // dojo/NodeList
 		},
 
-		replaceWith: function(/*String||DOMNode||NodeList*/content){
+		replaceWith: function (/*String||DOMNode||NodeList*/ content) {
 			// summary:
 			//		Replaces each node in ths NodeList with the content passed to replaceWith.
 			// description:
@@ -656,15 +670,15 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			// 	|		<div class="green">Green</div>
 			// 	|		<div class="blue">Blue Two</div>
 			//	|	</div>
-			content = this._normalize(content, this[0]);
-			for(var i = 0, node; node = this[i]; i++){
-				this._place(content, node, "before", i > 0);
-				node.parentNode.removeChild(node);
+			content = this._normalize(content, this[0])
+			for (var i = 0, node; (node = this[i]); i++) {
+				this._place(content, node, 'before', i > 0)
+				node.parentNode.removeChild(node)
 			}
-			return this; // dojo/NodeList
+			return this // dojo/NodeList
 		},
 
-		replaceAll: function(/*String*/query){
+		replaceAll: function (/*String*/ query) {
 			// summary:
 			//		replaces nodes matched by the query passed to replaceAll with the nodes
 			//		in this NodeList.
@@ -704,16 +718,16 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			// 	|		<div class="red">Red One</div>
 			// 	|		<div class="red">Red Two</div>
 			//	|	</div>
-			var nl = dquery(query);
-			var content = this._normalize(this, this[0]);
-			for(var i = 0, node; node = nl[i]; i++){
-				this._place(content, node, "before", i > 0);
-				node.parentNode.removeChild(node);
+			var nl = dquery(query)
+			var content = this._normalize(this, this[0])
+			for (var i = 0, node; (node = nl[i]); i++) {
+				this._place(content, node, 'before', i > 0)
+				node.parentNode.removeChild(node)
 			}
-			return this; // dojo/NodeList
+			return this // dojo/NodeList
 		},
 
-		clone: function(){
+		clone: function () {
 			// summary:
 			//		Clones all the nodes in this NodeList and returns them as a new NodeList.
 			// description:
@@ -744,18 +758,18 @@ define(["./query", "./_base/lang", "./_base/array", "./dom-construct", "./dom-at
 			//	|	</div>
 
 			//TODO: need option to clone events?
-			var ary = [];
-			for(var i = 0; i < this.length; i++){
-				ary.push(this._cloneNode(this[i]));
+			var ary = []
+			for (var i = 0; i < this.length; i++) {
+				ary.push(this._cloneNode(this[i]))
 			}
-			return this._wrap(ary, this, this._NodeListCtor); // dojo/NodeList
-		}
-	});
+			return this._wrap(ary, this, this._NodeListCtor) // dojo/NodeList
+		},
+	})
 
 	//set up html method if one does not exist
-	if(!NodeList.prototype.html){
-		NodeList.prototype.html = NodeList.prototype.innerHTML;
+	if (!NodeList.prototype.html) {
+		NodeList.prototype.html = NodeList.prototype.innerHTML
 	}
 
-	return NodeList;
-});
+	return NodeList
+})

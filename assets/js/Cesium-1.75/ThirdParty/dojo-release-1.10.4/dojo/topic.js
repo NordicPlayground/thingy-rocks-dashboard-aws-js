@@ -1,9 +1,8 @@
-define(["./Evented"], function(Evented){
-
+define(['./Evented'], function (Evented) {
 	// module:
 	//		dojo/topic
 
-	var hub = new Evented;
+	var hub = new Evented()
 	return {
 		// summary:
 		//		Pubsub hub.
@@ -13,7 +12,7 @@ define(["./Evented"], function(Evented){
 		//		|	});
 		//		|	topic.publish("some/topic", {name:"some event", ...});
 
-		publish: function(topic, event){
+		publish: function (topic, event) {
 			// summary:
 			//		Publishes a message to a topic on the pub/sub hub. All arguments after
 			//		the first will be passed to the subscribers, so any number of arguments
@@ -22,17 +21,17 @@ define(["./Evented"], function(Evented){
 			//		The name of the topic to publish to
 			// event: Object
 			//		An event to distribute to the topic listeners
-			return hub.emit.apply(hub, arguments);
+			return hub.emit.apply(hub, arguments)
 		},
 
-		subscribe: function(topic, listener){
+		subscribe: function (topic, listener) {
 			// summary:
 			//		Subscribes to a topic on the pub/sub hub
 			// topic: String
 			//		The topic to subscribe to
 			// listener: Function
 			//		A function to call when a message is published to the given topic
-			return hub.on.apply(hub, arguments);
-		}
-	};
-});
+			return hub.on.apply(hub, arguments)
+		},
+	}
+})

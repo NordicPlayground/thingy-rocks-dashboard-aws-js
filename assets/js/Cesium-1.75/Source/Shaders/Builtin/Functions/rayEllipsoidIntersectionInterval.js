@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * DOC_TBA\n\
  *\n\
  * @name czm_rayEllipsoidIntersectionInterval\n\
@@ -82,4 +82,4 @@ czm_raySegment czm_rayEllipsoidIntersectionInterval(czm_ray ray, vec3 ellipsoid_
         }\n\
     }\n\
 }\n\
-";
+'

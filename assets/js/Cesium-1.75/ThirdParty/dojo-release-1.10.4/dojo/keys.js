@@ -1,9 +1,8 @@
-define(["./_base/kernel", "./sniff"], function(dojo, has){
-
+define(['./_base/kernel', './sniff'], function (dojo, has) {
 	// module:
 	//		dojo/keys
 
-	return dojo.keys = {
+	return (dojo.keys = {
 		// summary:
 		//		Definitions for common key values.  Client code should test keyCode against these named constants,
 		//		as the actual codes can vary by browser.
@@ -15,7 +14,7 @@ define(["./_base/kernel", "./sniff"], function(dojo, has){
 		SHIFT: 16,
 		CTRL: 17,
 		ALT: 18,
-		META: has("webkit") ? 91 : 224,		// the apple key on macs
+		META: has('webkit') ? 91 : 224, // the apple key on macs
 		PAUSE: 19,
 		CAPS_LOCK: 20,
 		ESCAPE: 27,
@@ -72,6 +71,6 @@ define(["./_base/kernel", "./sniff"], function(dojo, has){
 		LEFT_DPAD: 177,
 		RIGHT_DPAD: 178,
 		// virtual key mapping
-		copyKey: has("mac") && !has("air") ? (has("safari") ? 91 : 224 ) : 17
-	};
-});
+		copyKey: has('mac') && !has('air') ? (has('safari') ? 91 : 224) : 17,
+	})
+})

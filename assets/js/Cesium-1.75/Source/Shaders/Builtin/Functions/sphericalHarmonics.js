@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Computes a color from the third order spherical harmonic coefficients and a normalized direction vector.\n\
  * <p>\n\
  * The order of the coefficients is [L00, L1_1, L10, L11, L2_2, L2_1, L20, L21, L22].\n\
@@ -40,4 +40,4 @@ vec3 czm_sphericalHarmonics(vec3 normal, vec3 coefficients[9])\n\
            2.0 * c1 * (L2_2 * x * y + L21 * x * z + L2_1 * y * z) +\n\
            2.0 * c2 * (L11 * x + L1_1 * y + L10 * z);\n\
 }\n\
-";
+'

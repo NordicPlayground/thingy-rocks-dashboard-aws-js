@@ -1,4 +1,4 @@
-import DeveloperError from "../Core/DeveloperError.js";
+import DeveloperError from '../Core/DeveloperError.js'
 
 /**
  * Provides general quadtree tiles to be displayed on or near the surface of an ellipsoid.  It is intended to be
@@ -10,7 +10,7 @@ import DeveloperError from "../Core/DeveloperError.js";
  * @private
  */
 function QuadtreeTileProvider() {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 /**
@@ -22,56 +22,56 @@ function QuadtreeTileProvider() {
  * @returns {Number} The maximum geometric error at level zero, in meters.
  */
 QuadtreeTileProvider.computeDefaultLevelZeroMaximumGeometricError = function (
-  tilingScheme
+	tilingScheme,
 ) {
-  return (
-    (tilingScheme.ellipsoid.maximumRadius * 2 * Math.PI * 0.25) /
-    (65 * tilingScheme.getNumberOfXTilesAtLevel(0))
-  );
-};
+	return (
+		(tilingScheme.ellipsoid.maximumRadius * 2 * Math.PI * 0.25) /
+		(65 * tilingScheme.getNumberOfXTilesAtLevel(0))
+	)
+}
 
 Object.defineProperties(QuadtreeTileProvider.prototype, {
-  /**
-   * Gets or sets the {@link QuadtreePrimitive} for which this provider is
-   * providing tiles.
-   * @memberof QuadtreeTileProvider.prototype
-   * @type {QuadtreePrimitive}
-   */
-  quadtree: {
-    get: DeveloperError.throwInstantiationError,
-    set: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets or sets the {@link QuadtreePrimitive} for which this provider is
+	 * providing tiles.
+	 * @memberof QuadtreeTileProvider.prototype
+	 * @type {QuadtreePrimitive}
+	 */
+	quadtree: {
+		get: DeveloperError.throwInstantiationError,
+		set: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets a value indicating whether or not the provider is ready for use.
-   * @memberof QuadtreeTileProvider.prototype
-   * @type {Boolean}
-   */
-  ready: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets a value indicating whether or not the provider is ready for use.
+	 * @memberof QuadtreeTileProvider.prototype
+	 * @type {Boolean}
+	 */
+	ready: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets the tiling scheme used by the provider.  This property should
-   * not be accessed before {@link QuadtreeTileProvider#ready} returns true.
-   * @memberof QuadtreeTileProvider.prototype
-   * @type {TilingScheme}
-   */
-  tilingScheme: {
-    get: DeveloperError.throwInstantiationError,
-  },
+	/**
+	 * Gets the tiling scheme used by the provider.  This property should
+	 * not be accessed before {@link QuadtreeTileProvider#ready} returns true.
+	 * @memberof QuadtreeTileProvider.prototype
+	 * @type {TilingScheme}
+	 */
+	tilingScheme: {
+		get: DeveloperError.throwInstantiationError,
+	},
 
-  /**
-   * Gets an event that is raised when the geometry provider encounters an asynchronous error.  By subscribing
-   * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
-   * are passed an instance of {@link TileProviderError}.
-   * @memberof QuadtreeTileProvider.prototype
-   * @type {Event}
-   */
-  errorEvent: {
-    get: DeveloperError.throwInstantiationError,
-  },
-});
+	/**
+	 * Gets an event that is raised when the geometry provider encounters an asynchronous error.  By subscribing
+	 * to the event, you will be notified of the error and can potentially recover from it.  Event listeners
+	 * are passed an instance of {@link TileProviderError}.
+	 * @memberof QuadtreeTileProvider.prototype
+	 * @type {Event}
+	 */
+	errorEvent: {
+		get: DeveloperError.throwInstantiationError,
+	},
+})
 
 /**
  * Called at the beginning of the update cycle, regardless of id a new frame is being rendered, before {@link QuadtreeTileProvider#beginUpdate}
@@ -81,7 +81,7 @@ Object.defineProperties(QuadtreeTileProvider.prototype, {
  * @param {Context} context The rendering context.
  * @param {FrameState} frameState The frame state.
  */
-QuadtreeTileProvider.prototype.update = DeveloperError.throwInstantiationError;
+QuadtreeTileProvider.prototype.update = DeveloperError.throwInstantiationError
 
 /**
  * Called at the beginning of the update cycle for each render frame, before {@link QuadtreeTileProvider#showTileThisFrame}
@@ -95,7 +95,7 @@ QuadtreeTileProvider.prototype.update = DeveloperError.throwInstantiationError;
  *        commands into this array.
  */
 QuadtreeTileProvider.prototype.beginUpdate =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Called at the end of the update cycle for each render frame, after {@link QuadtreeTileProvider#showTileThisFrame}
@@ -109,7 +109,7 @@ QuadtreeTileProvider.prototype.beginUpdate =
  *        commands into this array.
  */
 QuadtreeTileProvider.prototype.endUpdate =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Gets the maximum geometric error allowed in a tile at a given level, in meters.  This function should not be
@@ -124,7 +124,7 @@ QuadtreeTileProvider.prototype.endUpdate =
  * @returns {Number} The maximum geometric error in meters.
  */
 QuadtreeTileProvider.prototype.getLevelMaximumGeometricError =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Loads, or continues loading, a given tile.  This function will continue to be called
@@ -140,8 +140,7 @@ QuadtreeTileProvider.prototype.getLevelMaximumGeometricError =
  *
  * @exception {DeveloperError} <code>loadTile</code> must not be called before the tile provider is ready.
  */
-QuadtreeTileProvider.prototype.loadTile =
-  DeveloperError.throwInstantiationError;
+QuadtreeTileProvider.prototype.loadTile = DeveloperError.throwInstantiationError
 
 /**
  * Determines the visibility of a given tile.  The tile may be fully visible, partially visible, or not
@@ -157,7 +156,7 @@ QuadtreeTileProvider.prototype.loadTile =
  * @returns {Visibility} The visibility of the tile.
  */
 QuadtreeTileProvider.prototype.computeTileVisibility =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Shows a specified tile in this frame.  The provider can cause the tile to be shown by adding
@@ -173,7 +172,7 @@ QuadtreeTileProvider.prototype.computeTileVisibility =
  * @param {DrawCommand[]} commandList The list of rendering commands.  This method may add additional commands to this list.
  */
 QuadtreeTileProvider.prototype.showTileThisFrame =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Gets the distance from the camera to the closest point on the tile.  This is used for level-of-detail selection.
@@ -187,7 +186,7 @@ QuadtreeTileProvider.prototype.showTileThisFrame =
  * @returns {Number} The distance from the camera to the closest point on the tile, in meters.
  */
 QuadtreeTileProvider.prototype.computeDistanceToTile =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Returns true if this object was destroyed; otherwise, false.
@@ -202,7 +201,7 @@ QuadtreeTileProvider.prototype.computeDistanceToTile =
  * @see QuadtreeTileProvider#destroy
  */
 QuadtreeTileProvider.prototype.isDestroyed =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Destroys the WebGL resources held by this object.  Destroying an object allows for deterministic
@@ -222,5 +221,5 @@ QuadtreeTileProvider.prototype.isDestroyed =
  *
  * @see QuadtreeTileProvider#isDestroyed
  */
-QuadtreeTileProvider.prototype.destroy = DeveloperError.throwInstantiationError;
-export default QuadtreeTileProvider;
+QuadtreeTileProvider.prototype.destroy = DeveloperError.throwInstantiationError
+export default QuadtreeTileProvider

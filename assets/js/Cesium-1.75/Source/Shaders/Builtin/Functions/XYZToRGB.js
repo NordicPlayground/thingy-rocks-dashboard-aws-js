@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Converts a CIE Yxy color to RGB.\n\
  * <p>The conversion is described in\n\
  * {@link http://content.gpwiki.org/index.php/D3DBook:High-Dynamic_Range_Rendering#Luminance_Transform|Luminance Transform}\n\
@@ -29,4 +29,4 @@ vec3 czm_XYZToRGB(vec3 Yxy)\n\
     \n\
     return XYZ2RGB * xyz;\n\
 }\n\
-";
+'

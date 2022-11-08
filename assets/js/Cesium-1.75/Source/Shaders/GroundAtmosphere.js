@@ -131,4 +131,4 @@ AtmosphereColor computeGroundAtmosphereFromSpace(vec3 v3Pos, bool dynamicLightin
     return color;\n\
 }\n\
 \n\
-";
+"

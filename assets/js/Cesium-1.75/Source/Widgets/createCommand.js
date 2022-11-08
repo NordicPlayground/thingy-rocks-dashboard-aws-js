@@ -1,8 +1,8 @@
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Event from "../Core/Event.js";
-import knockout from "../ThirdParty/knockout.js";
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Event from '../Core/Event.js'
+import knockout from '../ThirdParty/knockout.js'
 
 /**
  * Create a Command from a given function, for use with ViewModels.
@@ -18,50 +18,50 @@ import knockout from "../ThirdParty/knockout.js";
  * @param {Boolean} [canExecute=true] A boolean indicating whether the function can currently be executed.
  */
 function createCommand(func, canExecute) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(func)) {
-    throw new DeveloperError("func is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(func)) {
+		throw new DeveloperError('func is required.')
+	}
+	//>>includeEnd('debug');
 
-  canExecute = defaultValue(canExecute, true);
+	canExecute = defaultValue(canExecute, true)
 
-  var beforeExecute = new Event();
-  var afterExecute = new Event();
+	var beforeExecute = new Event()
+	var afterExecute = new Event()
 
-  function command() {
-    //>>includeStart('debug', pragmas.debug);
-    if (!command.canExecute) {
-      throw new DeveloperError("Cannot execute command, canExecute is false.");
-    }
-    //>>includeEnd('debug');
+	function command() {
+		//>>includeStart('debug', pragmas.debug);
+		if (!command.canExecute) {
+			throw new DeveloperError('Cannot execute command, canExecute is false.')
+		}
+		//>>includeEnd('debug');
 
-    var commandInfo = {
-      args: arguments,
-      cancel: false,
-    };
+		var commandInfo = {
+			args: arguments,
+			cancel: false,
+		}
 
-    var result;
-    beforeExecute.raiseEvent(commandInfo);
-    if (!commandInfo.cancel) {
-      result = func.apply(null, arguments);
-      afterExecute.raiseEvent(result);
-    }
-    return result;
-  }
+		var result
+		beforeExecute.raiseEvent(commandInfo)
+		if (!commandInfo.cancel) {
+			result = func.apply(null, arguments)
+			afterExecute.raiseEvent(result)
+		}
+		return result
+	}
 
-  command.canExecute = canExecute;
-  knockout.track(command, ["canExecute"]);
+	command.canExecute = canExecute
+	knockout.track(command, ['canExecute'])
 
-  Object.defineProperties(command, {
-    beforeExecute: {
-      value: beforeExecute,
-    },
-    afterExecute: {
-      value: afterExecute,
-    },
-  });
+	Object.defineProperties(command, {
+		beforeExecute: {
+			value: beforeExecute,
+		},
+		afterExecute: {
+			value: afterExecute,
+		},
+	})
 
-  return command;
+	return command
 }
-export default createCommand;
+export default createCommand

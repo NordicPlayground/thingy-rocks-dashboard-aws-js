@@ -1,5 +1,5 @@
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Converts an object representing a set of name/value pairs into a query string,
@@ -23,35 +23,35 @@ import DeveloperError from "./DeveloperError.js";
  * // 'key1=some%20value&key2=a%2Fb&key3=x&key3=y'
  */
 function objectToQuery(obj) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(obj)) {
-    throw new DeveloperError("obj is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(obj)) {
+		throw new DeveloperError('obj is required.')
+	}
+	//>>includeEnd('debug');
 
-  var result = "";
-  for (var propName in obj) {
-    if (obj.hasOwnProperty(propName)) {
-      var value = obj[propName];
+	var result = ''
+	for (var propName in obj) {
+		if (obj.hasOwnProperty(propName)) {
+			var value = obj[propName]
 
-      var part = encodeURIComponent(propName) + "=";
-      if (Array.isArray(value)) {
-        for (var i = 0, len = value.length; i < len; ++i) {
-          result += part + encodeURIComponent(value[i]) + "&";
-        }
-      } else {
-        result += part + encodeURIComponent(value) + "&";
-      }
-    }
-  }
+			var part = encodeURIComponent(propName) + '='
+			if (Array.isArray(value)) {
+				for (var i = 0, len = value.length; i < len; ++i) {
+					result += part + encodeURIComponent(value[i]) + '&'
+				}
+			} else {
+				result += part + encodeURIComponent(value) + '&'
+			}
+		}
+	}
 
-  // trim last &
-  result = result.slice(0, -1);
+	// trim last &
+	result = result.slice(0, -1)
 
-  // This function used to replace %20 with + which is more compact and readable.
-  // However, some servers didn't properly handle + as a space.
-  // https://github.com/CesiumGS/cesium/issues/2192
+	// This function used to replace %20 with + which is more compact and readable.
+	// However, some servers didn't properly handle + as a space.
+	// https://github.com/CesiumGS/cesium/issues/2192
 
-  return result;
+	return result
 }
-export default objectToQuery;
+export default objectToQuery

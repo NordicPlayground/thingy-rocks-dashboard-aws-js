@@ -1,6 +1,4 @@
-define(
-({
-		previousMessage: "Prethodni izbori",
-		nextMessage: "Više izbora"
+define({
+	previousMessage: 'Prethodni izbori',
+	nextMessage: 'Više izbora',
 })
-);

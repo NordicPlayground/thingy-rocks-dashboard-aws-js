@@ -1,5 +1,5 @@
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
 
 /**
  * A wrapper around arrays so that the internal length of the array can be manually managed.
@@ -11,54 +11,54 @@ import defaultValue from "./defaultValue.js";
  * @param {Number} [length=0] The initial length of the array.
  */
 function ManagedArray(length) {
-  length = defaultValue(length, 0);
-  this._array = new Array(length);
-  this._length = length;
+	length = defaultValue(length, 0)
+	this._array = new Array(length)
+	this._length = length
 }
 
 Object.defineProperties(ManagedArray.prototype, {
-  /**
-   * Gets or sets the length of the array.
-   * If the set length is greater than the length of the internal array, the internal array is resized.
-   *
-   * @memberof ManagedArray.prototype
-   * @type Number
-   */
-  length: {
-    get: function () {
-      return this._length;
-    },
-    set: function (length) {
-      //>>includeStart('debug', pragmas.debug);
-      Check.typeOf.number.greaterThanOrEquals("length", length, 0);
-      //>>includeEnd('debug');
-      var array = this._array;
-      var originalLength = this._length;
-      if (length < originalLength) {
-        // Remove trailing references
-        for (var i = length; i < originalLength; ++i) {
-          array[i] = undefined;
-        }
-      } else if (length > array.length) {
-        array.length = length;
-      }
-      this._length = length;
-    },
-  },
+	/**
+	 * Gets or sets the length of the array.
+	 * If the set length is greater than the length of the internal array, the internal array is resized.
+	 *
+	 * @memberof ManagedArray.prototype
+	 * @type Number
+	 */
+	length: {
+		get: function () {
+			return this._length
+		},
+		set: function (length) {
+			//>>includeStart('debug', pragmas.debug);
+			Check.typeOf.number.greaterThanOrEquals('length', length, 0)
+			//>>includeEnd('debug');
+			var array = this._array
+			var originalLength = this._length
+			if (length < originalLength) {
+				// Remove trailing references
+				for (var i = length; i < originalLength; ++i) {
+					array[i] = undefined
+				}
+			} else if (length > array.length) {
+				array.length = length
+			}
+			this._length = length
+		},
+	},
 
-  /**
-   * Gets the internal array.
-   *
-   * @memberof ManagedArray.prototype
-   * @type Array
-   * @readonly
-   */
-  values: {
-    get: function () {
-      return this._array;
-    },
-  },
-});
+	/**
+	 * Gets the internal array.
+	 *
+	 * @memberof ManagedArray.prototype
+	 * @type Array
+	 * @readonly
+	 */
+	values: {
+		get: function () {
+			return this._array
+		},
+	},
+})
 
 /**
  * Gets the element at an index.
@@ -66,12 +66,12 @@ Object.defineProperties(ManagedArray.prototype, {
  * @param {Number} index The index to get.
  */
 ManagedArray.prototype.get = function (index) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number.lessThan("index", index, this._array.length);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number.lessThan('index', index, this._array.length)
+	//>>includeEnd('debug');
 
-  return this._array[index];
-};
+	return this._array[index]
+}
 
 /**
  * Sets the element at an index. Resizes the array if index is greater than the length of the array.
@@ -80,15 +80,15 @@ ManagedArray.prototype.get = function (index) {
  * @param {*} element The element to set at index.
  */
 ManagedArray.prototype.set = function (index, element) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number("index", index);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number('index', index)
+	//>>includeEnd('debug');
 
-  if (index >= this._length) {
-    this.length = index + 1;
-  }
-  this._array[index] = element;
-};
+	if (index >= this._length) {
+		this.length = index + 1
+	}
+	this._array[index] = element
+}
 
 /**
  * Returns the last element in the array without modifying the array.
@@ -96,8 +96,8 @@ ManagedArray.prototype.set = function (index, element) {
  * @returns {*} The last element in the array.
  */
 ManagedArray.prototype.peek = function () {
-  return this._array[this._length - 1];
-};
+	return this._array[this._length - 1]
+}
 
 /**
  * Push an element into the array.
@@ -105,9 +105,9 @@ ManagedArray.prototype.peek = function () {
  * @param {*} element The element to push.
  */
 ManagedArray.prototype.push = function (element) {
-  var index = this.length++;
-  this._array[index] = element;
-};
+	var index = this.length++
+	this._array[index] = element
+}
 
 /**
  * Pop an element from the array.
@@ -115,13 +115,13 @@ ManagedArray.prototype.push = function (element) {
  * @returns {*} The last element in the array.
  */
 ManagedArray.prototype.pop = function () {
-  if (this._length === 0) {
-    return undefined;
-  }
-  var element = this._array[this._length - 1];
-  --this.length;
-  return element;
-};
+	if (this._length === 0) {
+		return undefined
+	}
+	var element = this._array[this._length - 1]
+	--this.length
+	return element
+}
 
 /**
  * Resize the internal array if length > _array.length.
@@ -129,14 +129,14 @@ ManagedArray.prototype.pop = function () {
  * @param {Number} length The length.
  */
 ManagedArray.prototype.reserve = function (length) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number.greaterThanOrEquals("length", length, 0);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number.greaterThanOrEquals('length', length, 0)
+	//>>includeEnd('debug');
 
-  if (length > this._array.length) {
-    this._array.length = length;
-  }
-};
+	if (length > this._array.length) {
+		this._array.length = length
+	}
+}
 
 /**
  * Resize the array.
@@ -144,12 +144,12 @@ ManagedArray.prototype.reserve = function (length) {
  * @param {Number} length The length.
  */
 ManagedArray.prototype.resize = function (length) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number.greaterThanOrEquals("length", length, 0);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number.greaterThanOrEquals('length', length, 0)
+	//>>includeEnd('debug');
 
-  this.length = length;
-};
+	this.length = length
+}
 
 /**
  * Trim the internal array to the specified length. Defaults to the current length.
@@ -157,7 +157,7 @@ ManagedArray.prototype.resize = function (length) {
  * @param {Number} [length] The length.
  */
 ManagedArray.prototype.trim = function (length) {
-  length = defaultValue(length, this._length);
-  this._array.length = length;
-};
-export default ManagedArray;
+	length = defaultValue(length, this._length)
+	this._array.length = length
+}
+export default ManagedArray

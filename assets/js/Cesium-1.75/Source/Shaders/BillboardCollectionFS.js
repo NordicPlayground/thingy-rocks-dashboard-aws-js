@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#ifdef GL_OES_standard_derivatives\n\
+export default '#ifdef GL_OES_standard_derivatives\n\
 #extension GL_OES_standard_derivatives : enable\n\
 #endif\n\
 \n\
@@ -41,7 +41,7 @@ float getGlobeDepth(vec2 adjustedST, vec2 depthLookupST, bool applyTranslate, ve
     if (applyTranslate)\n\
     {\n\
         // this is only needed for labels where the horizontal origin is not LEFT\n\
-        // it moves the label back to where the \"origin\" should be since all label glyphs are set to HorizontalOrigin.LEFT\n\
+        // it moves the label back to where the "origin" should be since all label glyphs are set to HorizontalOrigin.LEFT\n\
         translation += (dimensions * v_originTextureCoordinateAndTranslate.xy * vec2(1.0, 0.0));\n\
     }\n\
 \n\
@@ -74,7 +74,7 @@ vec4 getSDFColor(vec2 position, float outlineWidth, vec4 outlineColor, float smo
 \n\
     if (outlineWidth > 0.0)\n\
     {\n\
-        // Don't get the outline edge exceed the SDF_EDGE\n\
+        // Don\'t get the outline edge exceed the SDF_EDGE\n\
         float outlineEdge = clamp(SDF_EDGE - outlineWidth, 0.0, SDF_EDGE);\n\
         float outlineFactor = smoothstep(SDF_EDGE - smoothing, SDF_EDGE + smoothing, distance);\n\
         vec4 sdfColor = mix(outlineColor, v_color, outlineFactor);\n\
@@ -207,4 +207,4 @@ void main()\n\
 #endif\n\
 \n\
 }\n\
-";
+'

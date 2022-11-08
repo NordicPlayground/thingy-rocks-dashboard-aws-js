@@ -4,16 +4,16 @@
  * @enum {Number}
  */
 var StripeOrientation = {
-  /**
-   * Horizontal orientation.
-   * @type {Number}
-   */
-  HORIZONTAL: 0,
+	/**
+	 * Horizontal orientation.
+	 * @type {Number}
+	 */
+	HORIZONTAL: 0,
 
-  /**
-   * Vertical orientation.
-   * @type {Number}
-   */
-  VERTICAL: 1,
-};
-export default Object.freeze(StripeOrientation);
+	/**
+	 * Vertical orientation.
+	 * @type {Number}
+	 */
+	VERTICAL: 1,
+}
+export default Object.freeze(StripeOrientation)

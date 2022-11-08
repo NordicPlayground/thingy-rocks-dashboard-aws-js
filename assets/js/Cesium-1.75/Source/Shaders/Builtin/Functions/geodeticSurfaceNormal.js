@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * DOC_TBA\n\
  *\n\
  * @name czm_geodeticSurfaceNormal\n\
@@ -15,4 +15,4 @@ vec3 czm_geodeticSurfaceNormal(vec3 positionOnEllipsoid, vec3 ellipsoidCenter, v
 {\n\
     return normalize((positionOnEllipsoid - ellipsoidCenter) * oneOverEllipsoidRadiiSquared);\n\
 }\n\
-";
+'

@@ -1,26 +1,25 @@
 define([
-	"dojo/_base/declare", // declare
-	"dojo/dom", // dom.byId
-	"dojo/_base/lang", // lang.trim
-	"dojo/query", // query
-	"dojo/store/Memory",
-	"../registry"	// registry.add registry.remove
-], function(declare, dom, lang, query, MemoryStore, registry){
-
+	'dojo/_base/declare', // declare
+	'dojo/dom', // dom.byId
+	'dojo/_base/lang', // lang.trim
+	'dojo/query', // query
+	'dojo/store/Memory',
+	'../registry', // registry.add registry.remove
+], function (declare, dom, lang, query, MemoryStore, registry) {
 	// module:
 	//		dijit/form/DataList
 
-	function toItem(/*DOMNode*/ option){
+	function toItem(/*DOMNode*/ option) {
 		// summary:
 		//		Convert `<option>` node to hash
 		return {
 			id: option.value,
 			value: option.value,
-			name: lang.trim(option.innerText || option.textContent || '')
-		};
+			name: lang.trim(option.innerText || option.textContent || ''),
+		}
 	}
 
-	return declare("dijit.form.DataList", MemoryStore, {
+	return declare('dijit.form.DataList', MemoryStore, {
 		// summary:
 		//		Inefficient but small data store specialized for inlined data via OPTION tags
 		//
@@ -31,7 +30,7 @@ define([
 		//	|		<option value="AL">Alabama</option>
 		//	|		...
 
-		constructor: function(params, srcNodeRef){
+		constructor: function (params, srcNodeRef) {
 			// summary:
 			//		Create the widget.
 			// params: Object|null
@@ -42,29 +41,33 @@ define([
 			//		Attach widget to this DOM node.
 
 			// store pointer to original DOM tree
-			this.domNode = dom.byId(srcNodeRef);
+			this.domNode = dom.byId(srcNodeRef)
 
-			lang.mixin(this, params);
-			if(this.id){
-				registry.add(this); // add to registry so it can be easily found by id
+			lang.mixin(this, params)
+			if (this.id) {
+				registry.add(this) // add to registry so it can be easily found by id
 			}
-			this.domNode.style.display = "none";
+			this.domNode.style.display = 'none'
 
-			this.inherited(arguments, [{
-				data: query("option", this.domNode).map(toItem)
-			}]);
+			this.inherited(arguments, [
+				{
+					data: query('option', this.domNode).map(toItem),
+				},
+			])
 		},
 
-		destroy: function(){
-			registry.remove(this.id);
+		destroy: function () {
+			registry.remove(this.id)
 		},
 
-		fetchSelectedItem: function(){
+		fetchSelectedItem: function () {
 			// summary:
 			//		Get the option marked as selected, like `<option selected>`.
 			//		Not part of dojo.data API.
-			var option = query("> option[selected]", this.domNode)[0] || query("> option", this.domNode)[0];
-			return option && toItem(option);
-		}
-	});
-});
+			var option =
+				query('> option[selected]', this.domNode)[0] ||
+				query('> option', this.domNode)[0]
+			return option && toItem(option)
+		},
+	})
+})

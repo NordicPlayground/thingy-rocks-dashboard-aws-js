@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#ifdef MRT\n\
+export default '#ifdef MRT\n\
 #extension GL_EXT_draw_buffers : enable\n\
 #endif\n\
 \n\
@@ -23,4 +23,4 @@ void main()\n\
     \n\
     discard;\n\
 }\n\
-";
+'

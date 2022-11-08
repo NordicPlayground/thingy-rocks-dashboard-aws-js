@@ -76,4 +76,4 @@ void czm_writeLogDepth() {\n\
     czm_writeLogDepth(v_depthFromNearPlusOne);\n\
 #endif\n\
 }\n\
-";
+"

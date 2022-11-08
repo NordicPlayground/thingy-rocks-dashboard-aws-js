@@ -1,5 +1,5 @@
-var svgNS = "http://www.w3.org/2000/svg";
-var svgClassName = "cesium-svgPath-svg";
+var svgNS = 'http://www.w3.org/2000/svg'
+var svgClassName = 'cesium-svgPath-svg'
 
 /**
  * A Knockout binding handler that creates a DOM element for a single SVG path.
@@ -29,50 +29,50 @@ var svgClassName = "cesium-svgPath-svg";
  * <div data-bind="cesiumSvgPath: svgPathOptions"></div>
  */
 var SvgPathBindingHandler = {
-  /**
-   * @function
-   */
-  register: function (knockout) {
-    knockout.bindingHandlers.cesiumSvgPath = {
-      init: function (element, valueAccessor) {
-        var svg = document.createElementNS(svgNS, "svg:svg");
-        svg.setAttribute("class", svgClassName);
+	/**
+	 * @function
+	 */
+	register: function (knockout) {
+		knockout.bindingHandlers.cesiumSvgPath = {
+			init: function (element, valueAccessor) {
+				var svg = document.createElementNS(svgNS, 'svg:svg')
+				svg.setAttribute('class', svgClassName)
 
-        var pathElement = document.createElementNS(svgNS, "path");
-        svg.appendChild(pathElement);
+				var pathElement = document.createElementNS(svgNS, 'path')
+				svg.appendChild(pathElement)
 
-        knockout.virtualElements.setDomNodeChildren(element, [svg]);
+				knockout.virtualElements.setDomNodeChildren(element, [svg])
 
-        knockout.computed({
-          read: function () {
-            var value = knockout.unwrap(valueAccessor());
+				knockout.computed({
+					read: function () {
+						var value = knockout.unwrap(valueAccessor())
 
-            pathElement.setAttribute("d", knockout.unwrap(value.path));
+						pathElement.setAttribute('d', knockout.unwrap(value.path))
 
-            var pathWidth = knockout.unwrap(value.width);
-            var pathHeight = knockout.unwrap(value.height);
+						var pathWidth = knockout.unwrap(value.width)
+						var pathHeight = knockout.unwrap(value.height)
 
-            svg.setAttribute("width", pathWidth);
-            svg.setAttribute("height", pathHeight);
-            svg.setAttribute("viewBox", "0 0 " + pathWidth + " " + pathHeight);
+						svg.setAttribute('width', pathWidth)
+						svg.setAttribute('height', pathHeight)
+						svg.setAttribute('viewBox', '0 0 ' + pathWidth + ' ' + pathHeight)
 
-            if (value.css) {
-              svg.setAttribute(
-                "class",
-                svgClassName + " " + knockout.unwrap(value.css)
-              );
-            }
-          },
-          disposeWhenNodeIsRemoved: element,
-        });
+						if (value.css) {
+							svg.setAttribute(
+								'class',
+								svgClassName + ' ' + knockout.unwrap(value.css),
+							)
+						}
+					},
+					disposeWhenNodeIsRemoved: element,
+				})
 
-        return {
-          controlsDescendantBindings: true,
-        };
-      },
-    };
+				return {
+					controlsDescendantBindings: true,
+				}
+			},
+		}
 
-    knockout.virtualElements.allowedBindings.cesiumSvgPath = true;
-  },
-};
-export default SvgPathBindingHandler;
+		knockout.virtualElements.allowedBindings.cesiumSvgPath = true
+	},
+}
+export default SvgPathBindingHandler

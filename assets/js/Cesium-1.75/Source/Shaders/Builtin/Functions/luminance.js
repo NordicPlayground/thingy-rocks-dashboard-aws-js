@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Computes the luminance of a color. \n\
  *\n\
  * @name czm_luminance\n\
@@ -19,4 +19,4 @@ float czm_luminance(vec3 rgb)\n\
     const vec3 W = vec3(0.2125, 0.7154, 0.0721);\n\
     return dot(rgb, W);\n\
 }\n\
-";
+'

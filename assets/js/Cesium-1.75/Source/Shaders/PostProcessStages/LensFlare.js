@@ -152,4 +152,4 @@ void main(void)\n\
 \n\
     gl_FragColor = result;\n\
 }\n\
-";
+"

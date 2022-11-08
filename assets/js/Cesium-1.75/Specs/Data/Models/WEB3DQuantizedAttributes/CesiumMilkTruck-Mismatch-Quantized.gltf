@@ -6,36 +6,15 @@
       "byteStride": 6,
       "componentType": 5123,
       "count": 586,
-      "max": [
-        0.999039,
-        0.999038,
-        1
-      ],
-      "min": [
-        -0.999038,
-        -0.999038,
-        -1
-      ],
+      "max": [0.999039, 0.999038, 1],
+      "min": [-0.999038, -0.999038, -1],
       "type": "VEC3",
       "extensions": {
         "WEB3D_quantized_attributes": {
           "decodeMatrix": [
-            0.000030488700318083645,
-            0,
-            0,
-            0,
-            0,
-            0.000030488684856437786,
-            0,
-            0,
-            0,
-            0,
-            0.000030518043793392844,
-            0,
-            -0.9990379810333252,
-            -0.9990379810333252,
-            -1,
-            1
+            0.000030488700318083645, 0, 0, 0, 0, 0.000030488684856437786, 0, 0,
+            0, 0, 0.000030518043793392844, 0, -0.9990379810333252,
+            -0.9990379810333252, -1, 1
           ]
         }
       }
@@ -46,14 +25,8 @@
       "byteStride": 8,
       "componentType": 5126,
       "count": 586,
-      "max": [
-        0.993657,
-        0.989576
-      ],
-      "min": [
-        0.605093,
-        0.00905001
-      ],
+      "max": [0.993657, 0.989576],
+      "min": [0.605093, 0.00905001],
       "type": "VEC2"
     },
     "accessor_63": {
@@ -86,18 +59,8 @@
       "byteStride": 16,
       "componentType": 5126,
       "count": 2392,
-      "max": [
-        2.438,
-        2.58437,
-        1.396,
-        1
-      ],
-      "min": [
-        -2.43091,
-        0.2668,
-        -1.396,
-        1
-      ],
+      "max": [2.438, 2.58437, 1.396, 1],
+      "min": [-2.43091, 0.2668, -1.396, 1],
       "type": "VEC4"
     },
     "accessor_73": {
@@ -106,16 +69,8 @@
       "byteStride": 12,
       "componentType": 5126,
       "count": 2392,
-      "max": [
-        1,
-        1,
-        1
-      ],
-      "min": [
-        -1,
-        -1,
-        -1
-      ],
+      "max": [1, 1, 1],
+      "min": [-1, -1, -1],
       "type": "VEC3"
     },
     "accessor_75": {
@@ -124,27 +79,14 @@
       "byteStride": 4,
       "componentType": 5123,
       "count": 2392,
-      "max": [
-        0.896458,
-        0.997245
-      ],
-      "min": [
-        0.00295639,
-        0.015672
-      ],
+      "max": [0.896458, 0.997245],
+      "min": [0.00295639, 0.015672],
       "type": "VEC2",
       "extensions": {
         "WEB3D_quantized_attributes": {
           "decodeMatrix": [
-            0.000013633960177419187,
-            0,
-            0,
-            0,
-            0.000014977846409751175,
-            0,
-            0.0029563899151980877,
-            0.015672028064727783,
-            1
+            0.000013633960177419187, 0, 0, 0, 0.000014977846409751175, 0,
+            0.0029563899151980877, 0.015672028064727783, 1
           ]
         }
       }
@@ -163,59 +105,21 @@
       "byteStride": 8,
       "componentType": 5123,
       "count": 586,
-      "max": [
-        0.4278,
-        0.4278,
-        1.058,
-        1
-      ],
-      "min": [
-        -0.4278,
-        -0.4278,
-        -1.058,
-        1
-      ],
+      "max": [0.4278, 0.4278, 1.058, 1],
+      "min": [-0.4278, -0.4278, -1.058, 1],
       "type": "VEC4",
       "extensions": {
         "WEB3D_quantized_attributes": {
           "decodedMin": [
-            -0.4277999997138977,
-            -0.4277999997138977,
-            -1.058000087738037,
-            1
+            -0.4277999997138977, -0.4277999997138977, -1.058000087738037, 1
           ],
           "decodedMax": [
-            0.4277999997138977,
-            0.4277999997138977,
-            1.058000087738037,
-            1
+            0.4277999997138977, 0.4277999997138977, 1.058000087738037, 1
           ],
           "decodeMatrix": [
-            0.000013055619126082177,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0.000013055619126082177,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0.000032288093011002884,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            -0.4277999997138977,
-            -0.4277999997138977,
-            -1.058000087738037,
-            1,
-            1
+            0.000013055619126082177, 0, 0, 0, 0, 0, 0.000013055619126082177, 0,
+            0, 0, 0, 0, 0.000032288093011002884, 0, 0, 0, 0, 0, 0, 0,
+            -0.4277999997138977, -0.4277999997138977, -1.058000087738037, 1, 1
           ]
         }
       }
@@ -327,19 +231,9 @@
       "name": "glass",
       "technique": "technique0",
       "values": {
-        "diffuse": [
-          0,
-          0.0405063,
-          0.0212407,
-          1
-        ],
+        "diffuse": [0, 0.0405063, 0.0212407, 1],
         "shininess": 256,
-        "specular": [
-          0.65,
-          0.65,
-          0.65,
-          1
-        ]
+        "specular": [0.65, 0.65, 0.65, 1]
       }
     },
     "Effect-truck": {
@@ -348,12 +242,7 @@
       "values": {
         "diffuse": "texture_Image0001",
         "shininess": 256,
-        "specular": [
-          0.04,
-          0.04,
-          0.04,
-          1
-        ]
+        "specular": [0.04, 0.04, 0.04, 1]
       }
     },
     "Effect-wheels": {
@@ -362,31 +251,16 @@
       "values": {
         "diffuse": "texture_Image0001",
         "shininess": 256,
-        "specular": [
-          0.04,
-          0.04,
-          0.04,
-          1
-        ]
+        "specular": [0.04, 0.04, 0.04, 1]
       }
     },
     "Effect-window_trim": {
       "name": "window_trim",
       "technique": "technique0",
       "values": {
-        "diffuse": [
-          0.064,
-          0.064,
-          0.064,
-          1
-        ],
+        "diffuse": [0.064, 0.064, 0.064, 1],
         "shininess": 256,
-        "specular": [
-          0.04,
-          0.04,
-          0.04,
-          1
-        ]
+        "specular": [0.04, 0.04, 0.04, 1]
       }
     }
   },
@@ -443,185 +317,55 @@
   "nodes": {
     "Geometry-mesh001Node": {
       "children": [],
-      "meshes": [
-        "Geometry-mesh001"
-      ],
+      "meshes": ["Geometry-mesh001"],
       "name": "Wheels",
-      "rotation": [
-        0,
-        0,
-        -0.0884856,
-        0.996077
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ],
-      "translation": [
-        1.43267,
-        0.427722,
-        -2.98023e-8
-      ]
+      "rotation": [0, 0, -0.0884856, 0.996077],
+      "scale": [1, 1, 1],
+      "translation": [1.43267, 0.427722, -2.98023e-8]
     },
     "Geometry-mesh002Node": {
-      "children": [
-        "Geometry-mesh001Node",
-        "meshInst962Node"
-      ],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
-      "meshes": [
-        "Geometry-mesh002"
-      ],
+      "children": ["Geometry-mesh001Node", "meshInst962Node"],
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      "meshes": ["Geometry-mesh002"],
       "name": "Cesium_Milk_Truck"
     },
     "groupLocator006Node": {
-      "children": [
-        "txtrLocator003Node",
-        "txtrLocator013Node"
-      ],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
+      "children": ["txtrLocator003Node", "txtrLocator013Node"],
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
       "name": "Texture_Group"
     },
     "meshInst962Node": {
       "children": [],
-      "meshes": [
-        "Geometry-mesh001"
-      ],
+      "meshes": ["Geometry-mesh001"],
       "name": "Wheels__2_",
-      "rotation": [
-        0,
-        0,
-        -0.0884856,
-        0.996077
-      ],
-      "scale": [
-        1,
-        1,
-        1
-      ],
-      "translation": [
-        -1.35233,
-        0.427722,
-        -2.98023e-8
-      ]
+      "rotation": [0, 0, -0.0884856, 0.996077],
+      "scale": [1, 1, 1],
+      "translation": [-1.35233, 0.427722, -2.98023e-8]
     },
     "polyRender006": {
       "children": [],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
       "name": "Render"
     },
     "txtrLocator003Node": {
       "children": [],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
       "name": "Cesium_Milk_Truck__2___Image___Texture_"
     },
     "txtrLocator013Node": {
       "children": [],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
       "name": "Cesium_Milk_Truck__2___Image___2___Texture_"
     }
   },
   "programs": {
     "program_0": {
-      "attributes": [
-        "a_normal",
-        "a_position"
-      ],
+      "attributes": ["a_normal", "a_position"],
       "fragmentShader": "CesiumMilkTruck0FS",
       "vertexShader": "CesiumMilkTruck0VS"
     },
     "program_1": {
-      "attributes": [
-        "a_normal",
-        "a_position",
-        "a_texcoord0"
-      ],
+      "attributes": ["a_normal", "a_position", "a_texcoord0"],
       "fragmentShader": "CesiumMilkTruck1FS",
       "vertexShader": "CesiumMilkTruck1VS"
     }
@@ -637,11 +381,7 @@
   "scene": "defaultScene",
   "scenes": {
     "defaultScene": {
-      "nodes": [
-        "polyRender006",
-        "Geometry-mesh002Node",
-        "groupLocator006Node"
-      ]
+      "nodes": ["polyRender006", "Geometry-mesh002Node", "groupLocator006Node"]
     }
   },
   "shaders": {
@@ -702,10 +442,7 @@
       },
       "program": "program_0",
       "states": {
-        "enable": [
-          2929,
-          2884
-        ]
+        "enable": [2929, 2884]
       },
       "uniforms": {
         "u_diffuse": "diffuse",
@@ -759,10 +496,7 @@
       },
       "program": "program_1",
       "states": {
-        "enable": [
-          2929,
-          2884
-        ]
+        "enable": [2929, 2884]
       },
       "uniforms": {
         "u_diffuse": "diffuse",
@@ -784,7 +518,5 @@
       "type": 5121
     }
   },
-  "extensionsUsed": [
-    "WEB3D_quantized_attributes"
-  ]
+  "extensionsUsed": ["WEB3D_quantized_attributes"]
 }

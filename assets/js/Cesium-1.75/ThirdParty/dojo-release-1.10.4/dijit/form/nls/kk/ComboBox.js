@@ -1,6 +1,4 @@
-define(
-({
-		previousMessage: "Алдыңғы нұсқалар",
-		nextMessage: "Басқа нұсқалар"
+define({
+	previousMessage: 'Алдыңғы нұсқалар',
+	nextMessage: 'Басқа нұсқалар',
 })
-);

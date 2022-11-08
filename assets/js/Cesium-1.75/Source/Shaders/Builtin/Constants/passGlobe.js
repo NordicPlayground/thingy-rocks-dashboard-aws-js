@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * The automatic GLSL constant for {@link Pass#GLOBE}\n\
  *\n\
  * @name czm_passGlobe\n\
@@ -8,4 +8,4 @@ export default "/**\n\
  * @see czm_pass\n\
  */\n\
 const float czm_passGlobe = 2.0;\n\
-";
+'

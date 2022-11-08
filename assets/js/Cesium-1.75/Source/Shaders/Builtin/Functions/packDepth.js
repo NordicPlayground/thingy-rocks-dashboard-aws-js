@@ -17,4 +17,4 @@ vec4 czm_packDepth(float depth)\n\
     enc -= enc.yzww * vec4(1.0 / 255.0, 1.0 / 255.0, 1.0 / 255.0, 0.0);\n\
     return enc;\n\
 }\n\
-";
+"

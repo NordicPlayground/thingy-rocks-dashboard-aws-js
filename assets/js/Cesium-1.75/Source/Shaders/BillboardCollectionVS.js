@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#ifdef INSTANCED\n\
+export default '#ifdef INSTANCED\n\
 attribute vec2 direction;\n\
 #endif\n\
 attribute vec4 positionHighAndScale;\n\
@@ -354,7 +354,7 @@ if (lengthSq < disableDepthTestDistance) {\n\
 \n\
     if (disableDepthTestDistance != 0.0)\n\
     {\n\
-        // Don't try to \"multiply both sides\" by w.  Greater/less-than comparisons won't work for negative values of w.\n\
+        // Don\'t try to "multiply both sides" by w.  Greater/less-than comparisons won\'t work for negative values of w.\n\
         float zclip = gl_Position.z / gl_Position.w;\n\
         bool clipped = (zclip < -1.0 || zclip > 1.0);\n\
         if (!clipped && (disableDepthTestDistance < 0.0 || (lengthSq > 0.0 && lengthSq < disableDepthTestDistance)))\n\
@@ -433,4 +433,4 @@ if (lengthSq < disableDepthTestDistance) {\n\
     v_color.a *= translucency;\n\
 \n\
 }\n\
-";
+'

@@ -1,18 +1,16 @@
 define([
-	"dojo/_base/array", // array.forEach array.map array.some
-	"dojo/dom-geometry", // domGeometry.position
-	"dojo/dom-style", // domStyle.getComputedStyle
-	"dojo/_base/kernel", // kernel.deprecated
-	"dojo/_base/window", // win.body
-	"./Viewport", // getEffectiveBox
-	"./main"	// dijit (defining dijit.place to match API doc)
-], function(array, domGeometry, domStyle, kernel, win, Viewport, dijit){
-
+	'dojo/_base/array', // array.forEach array.map array.some
+	'dojo/dom-geometry', // domGeometry.position
+	'dojo/dom-style', // domStyle.getComputedStyle
+	'dojo/_base/kernel', // kernel.deprecated
+	'dojo/_base/window', // win.body
+	'./Viewport', // getEffectiveBox
+	'./main', // dijit (defining dijit.place to match API doc)
+], function (array, domGeometry, domStyle, kernel, win, Viewport, dijit) {
 	// module:
 	//		dijit/place
 
-
-	function _place(/*DomNode*/ node, choices, layoutNode, aroundNodeCoords){
+	function _place(/*DomNode*/ node, choices, layoutNode, aroundNodeCoords) {
 		// summary:
 		//		Given a list of spots to put node, put it at the first spot where it fits,
 		//		of if it doesn't fit anywhere then the place with the least overflow
@@ -31,83 +29,97 @@ define([
 
 		// get {x: 10, y: 10, w: 100, h:100} type obj representing position of
 		// viewport over document
-		var view = Viewport.getEffectiveBox(node.ownerDocument);
+		var view = Viewport.getEffectiveBox(node.ownerDocument)
 
 		// This won't work if the node is inside a <div style="position: relative">,
 		// so reattach it to <body>.	 (Otherwise, the positioning will be wrong
 		// and also it might get cutoff.)
-		if(!node.parentNode || String(node.parentNode.tagName).toLowerCase() != "body"){
-			win.body(node.ownerDocument).appendChild(node);
+		if (
+			!node.parentNode ||
+			String(node.parentNode.tagName).toLowerCase() != 'body'
+		) {
+			win.body(node.ownerDocument).appendChild(node)
 		}
 
-		var best = null;
-		array.some(choices, function(choice){
-			var corner = choice.corner;
-			var pos = choice.pos;
-			var overflow = 0;
+		var best = null
+		array.some(choices, function (choice) {
+			var corner = choice.corner
+			var pos = choice.pos
+			var overflow = 0
 
 			// calculate amount of space available given specified position of node
 			var spaceAvailable = {
 				w: {
-					'L': view.l + view.w - pos.x,
-					'R': pos.x - view.l,
-					'M': view.w
+					L: view.l + view.w - pos.x,
+					R: pos.x - view.l,
+					M: view.w,
 				}[corner.charAt(1)],
 				h: {
-					'T': view.t + view.h - pos.y,
-					'B': pos.y - view.t,
-					'M': view.h
-				}[corner.charAt(0)]
-			};
+					T: view.t + view.h - pos.y,
+					B: pos.y - view.t,
+					M: view.h,
+				}[corner.charAt(0)],
+			}
 
 			// Clear left/right position settings set earlier so they don't interfere with calculations,
 			// specifically when layoutNode() (a.k.a. Tooltip.orient()) measures natural width of Tooltip
-			var s = node.style;
-			s.left = s.right = "auto";
+			var s = node.style
+			s.left = s.right = 'auto'
 
 			// configure node to be displayed in given position relative to button
 			// (need to do this in order to get an accurate size for the node, because
 			// a tooltip's size changes based on position, due to triangle)
-			if(layoutNode){
-				var res = layoutNode(node, choice.aroundCorner, corner, spaceAvailable, aroundNodeCoords);
-				overflow = typeof res == "undefined" ? 0 : res;
+			if (layoutNode) {
+				var res = layoutNode(
+					node,
+					choice.aroundCorner,
+					corner,
+					spaceAvailable,
+					aroundNodeCoords,
+				)
+				overflow = typeof res == 'undefined' ? 0 : res
 			}
 
 			// get node's size
-			var style = node.style;
-			var oldDisplay = style.display;
-			var oldVis = style.visibility;
-			if(style.display == "none"){
-				style.visibility = "hidden";
-				style.display = "";
+			var style = node.style
+			var oldDisplay = style.display
+			var oldVis = style.visibility
+			if (style.display == 'none') {
+				style.visibility = 'hidden'
+				style.display = ''
 			}
-			var bb = domGeometry.position(node);
-			style.display = oldDisplay;
-			style.visibility = oldVis;
+			var bb = domGeometry.position(node)
+			style.display = oldDisplay
+			style.visibility = oldVis
 
 			// coordinates and size of node with specified corner placed at pos,
 			// and clipped by viewport
-			var
-				startXpos = {
-					'L': pos.x,
-					'R': pos.x - bb.w,
-					'M': Math.max(view.l, Math.min(view.l + view.w, pos.x + (bb.w >> 1)) - bb.w) // M orientation is more flexible
+			var startXpos = {
+					L: pos.x,
+					R: pos.x - bb.w,
+					M: Math.max(
+						view.l,
+						Math.min(view.l + view.w, pos.x + (bb.w >> 1)) - bb.w,
+					), // M orientation is more flexible
 				}[corner.charAt(1)],
 				startYpos = {
-					'T': pos.y,
-					'B': pos.y - bb.h,
-					'M': Math.max(view.t, Math.min(view.t + view.h, pos.y + (bb.h >> 1)) - bb.h)
+					T: pos.y,
+					B: pos.y - bb.h,
+					M: Math.max(
+						view.t,
+						Math.min(view.t + view.h, pos.y + (bb.h >> 1)) - bb.h,
+					),
 				}[corner.charAt(0)],
 				startX = Math.max(view.l, startXpos),
 				startY = Math.max(view.t, startYpos),
 				endX = Math.min(view.l + view.w, startXpos + bb.w),
 				endY = Math.min(view.t + view.h, startYpos + bb.h),
 				width = endX - startX,
-				height = endY - startY;
+				height = endY - startY
 
-			overflow += (bb.w - width) + (bb.h - height);
+			overflow += bb.w - width + (bb.h - height)
 
-			if(best == null || overflow < best.overflow){
+			if (best == null || overflow < best.overflow) {
 				best = {
 					corner: corner,
 					aroundCorner: choice.aroundCorner,
@@ -116,17 +128,23 @@ define([
 					w: width,
 					h: height,
 					overflow: overflow,
-					spaceAvailable: spaceAvailable
-				};
+					spaceAvailable: spaceAvailable,
+				}
 			}
 
-			return !overflow;
-		});
+			return !overflow
+		})
 
 		// In case the best position is not the last one we checked, need to call
 		// layoutNode() again.
-		if(best.overflow && layoutNode){
-			layoutNode(node, best.aroundCorner, best.corner, best.spaceAvailable, aroundNodeCoords);
+		if (best.overflow && layoutNode) {
+			layoutNode(
+				node,
+				best.aroundCorner,
+				best.corner,
+				best.spaceAvailable,
+				aroundNodeCoords,
+			)
 		}
 
 		// And then position the node.  Do this last, after the layoutNode() above
@@ -136,36 +154,36 @@ define([
 
 		var top = best.y,
 			side = best.x,
-			body = win.body(node.ownerDocument);
+			body = win.body(node.ownerDocument)
 
-		if(/relative|absolute/.test(domStyle.get(body, "position"))){
+		if (/relative|absolute/.test(domStyle.get(body, 'position'))) {
 			// compensate for margin on <body>, see #16148
-			top -= domStyle.get(body, "marginTop");
-			side -= domStyle.get(body, "marginLeft");
+			top -= domStyle.get(body, 'marginTop')
+			side -= domStyle.get(body, 'marginLeft')
 		}
 
-		var s = node.style;
-		s.top = top + "px";
-		s.left = side + "px";
-		s.right = "auto";	// needed for FF or else tooltip goes to far left
+		var s = node.style
+		s.top = top + 'px'
+		s.left = side + 'px'
+		s.right = 'auto' // needed for FF or else tooltip goes to far left
 
-		return best;
+		return best
 	}
 
 	var reverse = {
 		// Map from corner to kitty-corner
-		"TL": "BR",
-		"TR": "BL",
-		"BL": "TR",
-		"BR": "TL"
-	};
+		TL: 'BR',
+		TR: 'BL',
+		BL: 'TR',
+		BR: 'TL',
+	}
 
 	var place = {
 		// summary:
 		//		Code to place a DOMNode relative to another DOMNode.
 		//		Load using require(["dijit/place"], function(place){ ... }).
 
-		at: function(node, pos, corners, padding, layoutNode){
+		at: function (node, pos, corners, padding, layoutNode) {
 			// summary:
 			//		Positions node kitty-corner to the rectangle centered at (pos.x, pos.y) with width and height of
 			//		padding.x * 2 and padding.y * 2, or zero if padding not specified.  Picks first corner in corners[]
@@ -195,29 +213,29 @@ define([
 			//		If that makes node go (partially) off screen, then try placing
 			//		bottom left corner at (10,20).
 			//	|	place(node, {x: 10, y: 20}, ["TR", "BL"])
-			var choices = array.map(corners, function(corner){
+			var choices = array.map(corners, function (corner) {
 				var c = {
 					corner: corner,
-					aroundCorner: reverse[corner],	// so TooltipDialog.orient() gets aroundCorner argument set
-					pos: {x: pos.x,y: pos.y}
-				};
-				if(padding){
-					c.pos.x += corner.charAt(1) == 'L' ? padding.x : -padding.x;
-					c.pos.y += corner.charAt(0) == 'T' ? padding.y : -padding.y;
+					aroundCorner: reverse[corner], // so TooltipDialog.orient() gets aroundCorner argument set
+					pos: { x: pos.x, y: pos.y },
 				}
-				return c;
-			});
+				if (padding) {
+					c.pos.x += corner.charAt(1) == 'L' ? padding.x : -padding.x
+					c.pos.y += corner.charAt(0) == 'T' ? padding.y : -padding.y
+				}
+				return c
+			})
 
-			return _place(node, choices, layoutNode);
+			return _place(node, choices, layoutNode)
 		},
 
-		around: function(
-			/*DomNode*/		node,
+		around: function (
+			/*DomNode*/ node,
 			/*DomNode|dijit/place.__Rectangle*/ anchor,
-			/*String[]*/	positions,
-			/*Boolean*/		leftToRight,
-			/*Function?*/	layoutNode){
-
+			/*String[]*/ positions,
+			/*Boolean*/ leftToRight,
+			/*Function?*/ layoutNode,
+		) {
 			// summary:
 			//		Position node adjacent or kitty-corner to anchor
 			//		such that it's fully visible in viewport.
@@ -261,128 +279,181 @@ define([
 			//
 
 			// If around is a DOMNode (or DOMNode id), convert to coordinates.
-			var aroundNodePos;
-			if(typeof anchor == "string" || "offsetWidth" in anchor || "ownerSVGElement" in anchor){
-				aroundNodePos = domGeometry.position(anchor, true);
+			var aroundNodePos
+			if (
+				typeof anchor == 'string' ||
+				'offsetWidth' in anchor ||
+				'ownerSVGElement' in anchor
+			) {
+				aroundNodePos = domGeometry.position(anchor, true)
 
 				// For above and below dropdowns, subtract width of border so that popup and aroundNode borders
 				// overlap, preventing a double-border effect.  Unfortunately, difficult to measure the border
 				// width of either anchor or popup because in both cases the border may be on an inner node.
-				if(/^(above|below)/.test(positions[0])){
+				if (/^(above|below)/.test(positions[0])) {
 					var anchorBorder = domGeometry.getBorderExtents(anchor),
-						anchorChildBorder = anchor.firstChild ? domGeometry.getBorderExtents(anchor.firstChild) : {t:0,l:0,b:0,r:0},
-						nodeBorder =  domGeometry.getBorderExtents(node),
-						nodeChildBorder = node.firstChild ? domGeometry.getBorderExtents(node.firstChild) : {t:0,l:0,b:0,r:0};
-					aroundNodePos.y += Math.min(anchorBorder.t + anchorChildBorder.t, nodeBorder.t + nodeChildBorder.t);
-					aroundNodePos.h -=  Math.min(anchorBorder.t + anchorChildBorder.t, nodeBorder.t+ nodeChildBorder.t) +
-						Math.min(anchorBorder.b + anchorChildBorder.b, nodeBorder.b + nodeChildBorder.b);
+						anchorChildBorder = anchor.firstChild
+							? domGeometry.getBorderExtents(anchor.firstChild)
+							: { t: 0, l: 0, b: 0, r: 0 },
+						nodeBorder = domGeometry.getBorderExtents(node),
+						nodeChildBorder = node.firstChild
+							? domGeometry.getBorderExtents(node.firstChild)
+							: { t: 0, l: 0, b: 0, r: 0 }
+					aroundNodePos.y += Math.min(
+						anchorBorder.t + anchorChildBorder.t,
+						nodeBorder.t + nodeChildBorder.t,
+					)
+					aroundNodePos.h -=
+						Math.min(
+							anchorBorder.t + anchorChildBorder.t,
+							nodeBorder.t + nodeChildBorder.t,
+						) +
+						Math.min(
+							anchorBorder.b + anchorChildBorder.b,
+							nodeBorder.b + nodeChildBorder.b,
+						)
 				}
-			}else{
-				aroundNodePos = anchor;
+			} else {
+				aroundNodePos = anchor
 			}
 
 			// Compute position and size of visible part of anchor (it may be partially hidden by ancestor nodes w/scrollbars)
-			if(anchor.parentNode){
+			if (anchor.parentNode) {
 				// ignore nodes between position:relative and position:absolute
-				var sawPosAbsolute = domStyle.getComputedStyle(anchor).position == "absolute";
-				var parent = anchor.parentNode;
-				while(parent && parent.nodeType == 1 && parent.nodeName != "BODY"){  //ignoring the body will help performance
+				var sawPosAbsolute =
+					domStyle.getComputedStyle(anchor).position == 'absolute'
+				var parent = anchor.parentNode
+				while (parent && parent.nodeType == 1 && parent.nodeName != 'BODY') {
+					//ignoring the body will help performance
 					var parentPos = domGeometry.position(parent, true),
-						pcs = domStyle.getComputedStyle(parent);
-					if(/relative|absolute/.test(pcs.position)){
-						sawPosAbsolute = false;
+						pcs = domStyle.getComputedStyle(parent)
+					if (/relative|absolute/.test(pcs.position)) {
+						sawPosAbsolute = false
 					}
-					if(!sawPosAbsolute && /hidden|auto|scroll/.test(pcs.overflow)){
-						var bottomYCoord = Math.min(aroundNodePos.y + aroundNodePos.h, parentPos.y + parentPos.h);
-						var rightXCoord = Math.min(aroundNodePos.x + aroundNodePos.w, parentPos.x + parentPos.w);
-						aroundNodePos.x = Math.max(aroundNodePos.x, parentPos.x);
-						aroundNodePos.y = Math.max(aroundNodePos.y, parentPos.y);
-						aroundNodePos.h = bottomYCoord - aroundNodePos.y;
-						aroundNodePos.w = rightXCoord - aroundNodePos.x;
+					if (!sawPosAbsolute && /hidden|auto|scroll/.test(pcs.overflow)) {
+						var bottomYCoord = Math.min(
+							aroundNodePos.y + aroundNodePos.h,
+							parentPos.y + parentPos.h,
+						)
+						var rightXCoord = Math.min(
+							aroundNodePos.x + aroundNodePos.w,
+							parentPos.x + parentPos.w,
+						)
+						aroundNodePos.x = Math.max(aroundNodePos.x, parentPos.x)
+						aroundNodePos.y = Math.max(aroundNodePos.y, parentPos.y)
+						aroundNodePos.h = bottomYCoord - aroundNodePos.y
+						aroundNodePos.w = rightXCoord - aroundNodePos.x
 					}
-					if(pcs.position == "absolute"){
-						sawPosAbsolute = true;
+					if (pcs.position == 'absolute') {
+						sawPosAbsolute = true
 					}
-					parent = parent.parentNode;
+					parent = parent.parentNode
 				}
-			}			
+			}
 
 			var x = aroundNodePos.x,
 				y = aroundNodePos.y,
-				width = "w" in aroundNodePos ? aroundNodePos.w : (aroundNodePos.w = aroundNodePos.width),
-				height = "h" in aroundNodePos ? aroundNodePos.h : (kernel.deprecated("place.around: dijit/place.__Rectangle: { x:"+x+", y:"+y+", height:"+aroundNodePos.height+", width:"+width+" } has been deprecated.  Please use { x:"+x+", y:"+y+", h:"+aroundNodePos.height+", w:"+width+" }", "", "2.0"), aroundNodePos.h = aroundNodePos.height);
+				width =
+					'w' in aroundNodePos
+						? aroundNodePos.w
+						: (aroundNodePos.w = aroundNodePos.width),
+				height =
+					'h' in aroundNodePos
+						? aroundNodePos.h
+						: (kernel.deprecated(
+								'place.around: dijit/place.__Rectangle: { x:' +
+									x +
+									', y:' +
+									y +
+									', height:' +
+									aroundNodePos.height +
+									', width:' +
+									width +
+									' } has been deprecated.  Please use { x:' +
+									x +
+									', y:' +
+									y +
+									', h:' +
+									aroundNodePos.height +
+									', w:' +
+									width +
+									' }',
+								'',
+								'2.0',
+						  ),
+						  (aroundNodePos.h = aroundNodePos.height))
 
 			// Convert positions arguments into choices argument for _place()
-			var choices = [];
-			function push(aroundCorner, corner){
+			var choices = []
+			function push(aroundCorner, corner) {
 				choices.push({
 					aroundCorner: aroundCorner,
 					corner: corner,
 					pos: {
 						x: {
-							'L': x,
-							'R': x + width,
-							'M': x + (width >> 1)
+							L: x,
+							R: x + width,
+							M: x + (width >> 1),
 						}[aroundCorner.charAt(1)],
 						y: {
-							'T': y,
-							'B': y + height,
-							'M': y + (height >> 1)
-						}[aroundCorner.charAt(0)]
-					}
+							T: y,
+							B: y + height,
+							M: y + (height >> 1),
+						}[aroundCorner.charAt(0)],
+					},
 				})
 			}
-			array.forEach(positions, function(pos){
-				var ltr =  leftToRight;
-				switch(pos){
-					case "above-centered":
-						push("TM", "BM");
-						break;
-					case "below-centered":
-						push("BM", "TM");
-						break;
-					case "after-centered":
-						ltr = !ltr;
-						// fall through
-					case "before-centered":
-						push(ltr ? "ML" : "MR", ltr ? "MR" : "ML");
-						break;
-					case "after":
-						ltr = !ltr;
-						// fall through
-					case "before":
-						push(ltr ? "TL" : "TR", ltr ? "TR" : "TL");
-						push(ltr ? "BL" : "BR", ltr ? "BR" : "BL");
-						break;
-					case "below-alt":
-						ltr = !ltr;
-						// fall through
-					case "below":
+			array.forEach(positions, function (pos) {
+				var ltr = leftToRight
+				switch (pos) {
+					case 'above-centered':
+						push('TM', 'BM')
+						break
+					case 'below-centered':
+						push('BM', 'TM')
+						break
+					case 'after-centered':
+						ltr = !ltr
+					// fall through
+					case 'before-centered':
+						push(ltr ? 'ML' : 'MR', ltr ? 'MR' : 'ML')
+						break
+					case 'after':
+						ltr = !ltr
+					// fall through
+					case 'before':
+						push(ltr ? 'TL' : 'TR', ltr ? 'TR' : 'TL')
+						push(ltr ? 'BL' : 'BR', ltr ? 'BR' : 'BL')
+						break
+					case 'below-alt':
+						ltr = !ltr
+					// fall through
+					case 'below':
 						// first try to align left borders, next try to align right borders (or reverse for RTL mode)
-						push(ltr ? "BL" : "BR", ltr ? "TL" : "TR");
-						push(ltr ? "BR" : "BL", ltr ? "TR" : "TL");
-						break;
-					case "above-alt":
-						ltr = !ltr;
-						// fall through
-					case "above":
+						push(ltr ? 'BL' : 'BR', ltr ? 'TL' : 'TR')
+						push(ltr ? 'BR' : 'BL', ltr ? 'TR' : 'TL')
+						break
+					case 'above-alt':
+						ltr = !ltr
+					// fall through
+					case 'above':
 						// first try to align left borders, next try to align right borders (or reverse for RTL mode)
-						push(ltr ? "TL" : "TR", ltr ? "BL" : "BR");
-						push(ltr ? "TR" : "TL", ltr ? "BR" : "BL");
-						break;
+						push(ltr ? 'TL' : 'TR', ltr ? 'BL' : 'BR')
+						push(ltr ? 'TR' : 'TL', ltr ? 'BR' : 'BL')
+						break
 					default:
 						// To assist dijit/_base/place, accept arguments of type {aroundCorner: "BL", corner: "TL"}.
 						// Not meant to be used directly.  Remove for 2.0.
-						push(pos.aroundCorner, pos.corner);
+						push(pos.aroundCorner, pos.corner)
 				}
-			});
+			})
 
-			var position = _place(node, choices, layoutNode, {w: width, h: height});
-			position.aroundNodePos = aroundNodePos;
+			var position = _place(node, choices, layoutNode, { w: width, h: height })
+			position.aroundNodePos = aroundNodePos
 
-			return position;
-		}
-	};
+			return position
+		},
+	}
 
 	/*=====
 	place.__Position = {
@@ -403,5 +474,5 @@ define([
 	};
 	=====*/
 
-	return dijit.place = place;	// setting dijit.place for back-compat, remove for 2.0
-});
+	return (dijit.place = place) // setting dijit.place for back-compat, remove for 2.0
+})

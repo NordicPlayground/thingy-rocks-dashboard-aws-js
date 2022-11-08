@@ -2,6 +2,6 @@
  * @private
  */
 function isBitSet(bits, mask) {
-  return (bits & mask) !== 0;
+	return (bits & mask) !== 0
 }
-export default isBitSet;
+export default isBitSet

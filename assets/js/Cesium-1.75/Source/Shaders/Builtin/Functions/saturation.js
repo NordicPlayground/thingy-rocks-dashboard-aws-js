@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Adjusts the saturation of a color.\n\
  * \n\
  * @name czm_saturation\n\
@@ -21,4 +21,4 @@ vec3 czm_saturation(vec3 rgb, float adjustment)\n\
     vec3 intensity = vec3(dot(rgb, W));\n\
     return mix(intensity, rgb, adjustment);\n\
 }\n\
-";
+'

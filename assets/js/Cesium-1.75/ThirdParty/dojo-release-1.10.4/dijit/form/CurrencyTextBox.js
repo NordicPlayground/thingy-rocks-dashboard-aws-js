@@ -1,10 +1,9 @@
 define([
-	"dojo/currency", // currency._mixInDefaults currency.format currency.parse currency.regexp
-	"dojo/_base/declare", // declare
-	"dojo/_base/lang", // lang.hitch
-	"./NumberTextBox"
-], function(currency, declare, lang, NumberTextBox){
-
+	'dojo/currency', // currency._mixInDefaults currency.format currency.parse currency.regexp
+	'dojo/_base/declare', // declare
+	'dojo/_base/lang', // lang.hitch
+	'./NumberTextBox',
+], function (currency, declare, lang, NumberTextBox) {
 	// module:
 	//		dijit/form/CurrencyTextBox
 
@@ -24,7 +23,7 @@ define([
 	});
 	=====*/
 
-	return declare("dijit.form.CurrencyTextBox", NumberTextBox, {
+	return declare('dijit.form.CurrencyTextBox', NumberTextBox, {
 		// summary:
 		//		A validating currency textbox
 		// description:
@@ -38,7 +37,7 @@ define([
 
 		// currency: [const] String
 		//		the [ISO4217](http://en.wikipedia.org/wiki/ISO_4217) currency code, a three letter sequence like "USD"
-		currency: "",
+		currency: '',
 
 		/*=====
 		// constraints: __Constraints
@@ -48,7 +47,7 @@ define([
 		constraints: {},
 		======*/
 
-		baseClass: "dijitTextBox dijitCurrencyTextBox",
+		baseClass: 'dijitTextBox dijitCurrencyTextBox',
 
 		// Override NumberTextBox._formatter to deal with currencies, ex: converts "123.45" to "$123.45"
 		_formatter: currency.format,
@@ -57,23 +56,29 @@ define([
 
 		_regExpGenerator: currency.regexp,
 
-		parse: function(/*String*/ value, /*Object*/ constraints){
+		parse: function (/*String*/ value, /*Object*/ constraints) {
 			// summary:
 			//		Parses string value as a Currency, according to the constraints object
 			// tags:
 			//		protected extension
-			var v = this.inherited(arguments);
-			if(isNaN(v) && /\d+/.test(value)){ // currency parse failed, but it could be because they are using NumberTextBox format so try its parse
-				v = lang.hitch(lang.delegate(this, { _parser: NumberTextBox.prototype._parser }), "inherited")(arguments);
+			var v = this.inherited(arguments)
+			if (isNaN(v) && /\d+/.test(value)) {
+				// currency parse failed, but it could be because they are using NumberTextBox format so try its parse
+				v = lang.hitch(
+					lang.delegate(this, { _parser: NumberTextBox.prototype._parser }),
+					'inherited',
+				)(arguments)
 			}
-			return v;
+			return v
 		},
 
-		_setConstraintsAttr: function(/*Object*/ constraints){
-			if(!constraints.currency && this.currency){
-				constraints.currency = this.currency;
+		_setConstraintsAttr: function (/*Object*/ constraints) {
+			if (!constraints.currency && this.currency) {
+				constraints.currency = this.currency
 			}
-			this.inherited(arguments, [ currency._mixInDefaults(lang.mixin(constraints, { exponent: false })) ]); // get places
-		}
-	});
-});
+			this.inherited(arguments, [
+				currency._mixInDefaults(lang.mixin(constraints, { exponent: false })),
+			]) // get places
+		},
+	})
+})

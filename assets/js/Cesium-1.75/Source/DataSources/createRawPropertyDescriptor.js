@@ -1,13 +1,13 @@
-import createPropertyDescriptor from "./createPropertyDescriptor.js";
+import createPropertyDescriptor from './createPropertyDescriptor.js'
 
 function createRawProperty(value) {
-  return value;
+	return value
 }
 
 /**
  * @private
  */
 function createRawPropertyDescriptor(name, configurable) {
-  return createPropertyDescriptor(name, configurable, createRawProperty);
+	return createPropertyDescriptor(name, configurable, createRawProperty)
 }
-export default createRawPropertyDescriptor;
+export default createRawPropertyDescriptor

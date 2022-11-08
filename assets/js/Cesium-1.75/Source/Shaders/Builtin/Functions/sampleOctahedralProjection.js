@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Samples the 4 neighboring pixels and return the weighted average.\n\
  *\n\
  * @private\n\
@@ -77,4 +77,4 @@ vec3 czm_sampleOctahedralProjection(sampler2D projectedMap, vec2 textureSize, ve
 \n\
     return mix(colorNextLod, colorCurrentLod, nextLod - lod);\n\
 }\n\
-";
+'

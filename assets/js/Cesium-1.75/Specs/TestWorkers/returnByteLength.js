@@ -1,9 +1,9 @@
-define(["Workers/createTaskProcessorWorker"], function (
-  createTaskProcessorWorker
+define(['Workers/createTaskProcessorWorker'], function (
+	createTaskProcessorWorker,
 ) {
-  "use strict";
+	'use strict'
 
-  return createTaskProcessorWorker(function (parameters, transferableObjects) {
-    return parameters.byteLength;
-  });
-});
+	return createTaskProcessorWorker(function (parameters, transferableObjects) {
+		return parameters.byteLength
+	})
+})

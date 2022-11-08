@@ -1,7 +1,7 @@
-import Cartesian2 from "./Cartesian2.js";
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
+import Cartesian2 from './Cartesian2.js'
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
 
 /**
  * A 2x2 matrix, indexable as a column-major order array.
@@ -23,17 +23,17 @@ import defined from "./defined.js";
  * @see Matrix4
  */
 function Matrix2(column0Row0, column1Row0, column0Row1, column1Row1) {
-  this[0] = defaultValue(column0Row0, 0.0);
-  this[1] = defaultValue(column0Row1, 0.0);
-  this[2] = defaultValue(column1Row0, 0.0);
-  this[3] = defaultValue(column1Row1, 0.0);
+	this[0] = defaultValue(column0Row0, 0.0)
+	this[1] = defaultValue(column0Row1, 0.0)
+	this[2] = defaultValue(column1Row0, 0.0)
+	this[3] = defaultValue(column1Row1, 0.0)
 }
 
 /**
  * The number of elements used to pack the object into an array.
  * @type {Number}
  */
-Matrix2.packedLength = 4;
+Matrix2.packedLength = 4
 
 /**
  * Stores the provided instance into the provided array.
@@ -45,20 +45,20 @@ Matrix2.packedLength = 4;
  * @returns {Number[]} The array that was packed into
  */
 Matrix2.pack = function (value, array, startingIndex) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("value", value);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('value', value)
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
+	startingIndex = defaultValue(startingIndex, 0)
 
-  array[startingIndex++] = value[0];
-  array[startingIndex++] = value[1];
-  array[startingIndex++] = value[2];
-  array[startingIndex++] = value[3];
+	array[startingIndex++] = value[0]
+	array[startingIndex++] = value[1]
+	array[startingIndex++] = value[2]
+	array[startingIndex++] = value[3]
 
-  return array;
-};
+	return array
+}
 
 /**
  * Retrieves an instance from a packed array.
@@ -69,22 +69,22 @@ Matrix2.pack = function (value, array, startingIndex) {
  * @returns {Matrix2} The modified result parameter or a new Matrix2 instance if one was not provided.
  */
 Matrix2.unpack = function (array, startingIndex, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
+	startingIndex = defaultValue(startingIndex, 0)
 
-  if (!defined(result)) {
-    result = new Matrix2();
-  }
+	if (!defined(result)) {
+		result = new Matrix2()
+	}
 
-  result[0] = array[startingIndex++];
-  result[1] = array[startingIndex++];
-  result[2] = array[startingIndex++];
-  result[3] = array[startingIndex++];
-  return result;
-};
+	result[0] = array[startingIndex++]
+	result[1] = array[startingIndex++]
+	result[2] = array[startingIndex++]
+	result[3] = array[startingIndex++]
+	return result
+}
 
 /**
  * Duplicates a Matrix2 instance.
@@ -94,18 +94,18 @@ Matrix2.unpack = function (array, startingIndex, result) {
  * @returns {Matrix2} The modified result parameter or a new Matrix2 instance if one was not provided. (Returns undefined if matrix is undefined)
  */
 Matrix2.clone = function (matrix, result) {
-  if (!defined(matrix)) {
-    return undefined;
-  }
-  if (!defined(result)) {
-    return new Matrix2(matrix[0], matrix[2], matrix[1], matrix[3]);
-  }
-  result[0] = matrix[0];
-  result[1] = matrix[1];
-  result[2] = matrix[2];
-  result[3] = matrix[3];
-  return result;
-};
+	if (!defined(matrix)) {
+		return undefined
+	}
+	if (!defined(result)) {
+		return new Matrix2(matrix[0], matrix[2], matrix[1], matrix[3])
+	}
+	result[0] = matrix[0]
+	result[1] = matrix[1]
+	result[2] = matrix[2]
+	result[3] = matrix[3]
+	return result
+}
 
 /**
  * Creates a Matrix2 from 4 consecutive elements in an array.
@@ -128,22 +128,22 @@ Matrix2.clone = function (matrix, result) {
  * var m2 = Cesium.Matrix2.fromArray(v2, 2);
  */
 Matrix2.fromArray = function (array, startingIndex, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	//>>includeEnd('debug');
 
-  startingIndex = defaultValue(startingIndex, 0);
+	startingIndex = defaultValue(startingIndex, 0)
 
-  if (!defined(result)) {
-    result = new Matrix2();
-  }
+	if (!defined(result)) {
+		result = new Matrix2()
+	}
 
-  result[0] = array[startingIndex];
-  result[1] = array[startingIndex + 1];
-  result[2] = array[startingIndex + 2];
-  result[3] = array[startingIndex + 3];
-  return result;
-};
+	result[0] = array[startingIndex]
+	result[1] = array[startingIndex + 1]
+	result[2] = array[startingIndex + 2]
+	result[3] = array[startingIndex + 3]
+	return result
+}
 
 /**
  * Creates a Matrix2 instance from a column-major order array.
@@ -153,12 +153,12 @@ Matrix2.fromArray = function (array, startingIndex, result) {
  * @returns {Matrix2} The modified result parameter, or a new Matrix2 instance if one was not provided.
  */
 Matrix2.fromColumnMajorArray = function (values, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("values", values);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('values', values)
+	//>>includeEnd('debug');
 
-  return Matrix2.clone(values, result);
-};
+	return Matrix2.clone(values, result)
+}
 
 /**
  * Creates a Matrix2 instance from a row-major order array.
@@ -169,19 +169,19 @@ Matrix2.fromColumnMajorArray = function (values, result) {
  * @returns {Matrix2} The modified result parameter, or a new Matrix2 instance if one was not provided.
  */
 Matrix2.fromRowMajorArray = function (values, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("values", values);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('values', values)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    return new Matrix2(values[0], values[1], values[2], values[3]);
-  }
-  result[0] = values[0];
-  result[1] = values[2];
-  result[2] = values[1];
-  result[3] = values[3];
-  return result;
-};
+	if (!defined(result)) {
+		return new Matrix2(values[0], values[1], values[2], values[3])
+	}
+	result[0] = values[0]
+	result[1] = values[2]
+	result[2] = values[1]
+	result[3] = values[3]
+	return result
+}
 
 /**
  * Computes a Matrix2 instance representing a non-uniform scale.
@@ -197,20 +197,20 @@ Matrix2.fromRowMajorArray = function (values, result) {
  * var m = Cesium.Matrix2.fromScale(new Cesium.Cartesian2(7.0, 8.0));
  */
 Matrix2.fromScale = function (scale, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("scale", scale);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('scale', scale)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    return new Matrix2(scale.x, 0.0, 0.0, scale.y);
-  }
+	if (!defined(result)) {
+		return new Matrix2(scale.x, 0.0, 0.0, scale.y)
+	}
 
-  result[0] = scale.x;
-  result[1] = 0.0;
-  result[2] = 0.0;
-  result[3] = scale.y;
-  return result;
-};
+	result[0] = scale.x
+	result[1] = 0.0
+	result[2] = 0.0
+	result[3] = scale.y
+	return result
+}
 
 /**
  * Computes a Matrix2 instance representing a uniform scale.
@@ -226,20 +226,20 @@ Matrix2.fromScale = function (scale, result) {
  * var m = Cesium.Matrix2.fromUniformScale(2.0);
  */
 Matrix2.fromUniformScale = function (scale, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number("scale", scale);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number('scale', scale)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    return new Matrix2(scale, 0.0, 0.0, scale);
-  }
+	if (!defined(result)) {
+		return new Matrix2(scale, 0.0, 0.0, scale)
+	}
 
-  result[0] = scale;
-  result[1] = 0.0;
-  result[2] = 0.0;
-  result[3] = scale;
-  return result;
-};
+	result[0] = scale
+	result[1] = 0.0
+	result[2] = 0.0
+	result[3] = scale
+	return result
+}
 
 /**
  * Creates a rotation matrix.
@@ -255,22 +255,22 @@ Matrix2.fromUniformScale = function (scale, result) {
  * var rotated = Cesium.Matrix2.multiplyByVector(m, p, new Cesium.Cartesian2());
  */
 Matrix2.fromRotation = function (angle, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number("angle", angle);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number('angle', angle)
+	//>>includeEnd('debug');
 
-  var cosAngle = Math.cos(angle);
-  var sinAngle = Math.sin(angle);
+	var cosAngle = Math.cos(angle)
+	var sinAngle = Math.sin(angle)
 
-  if (!defined(result)) {
-    return new Matrix2(cosAngle, -sinAngle, sinAngle, cosAngle);
-  }
-  result[0] = cosAngle;
-  result[1] = sinAngle;
-  result[2] = -sinAngle;
-  result[3] = cosAngle;
-  return result;
-};
+	if (!defined(result)) {
+		return new Matrix2(cosAngle, -sinAngle, sinAngle, cosAngle)
+	}
+	result[0] = cosAngle
+	result[1] = sinAngle
+	result[2] = -sinAngle
+	result[3] = cosAngle
+	return result
+}
 
 /**
  * Creates an Array from the provided Matrix2 instance.
@@ -281,19 +281,19 @@ Matrix2.fromRotation = function (angle, result) {
  * @returns {Number[]} The modified Array parameter or a new Array instance if one was not provided.
  */
 Matrix2.toArray = function (matrix, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    return [matrix[0], matrix[1], matrix[2], matrix[3]];
-  }
-  result[0] = matrix[0];
-  result[1] = matrix[1];
-  result[2] = matrix[2];
-  result[3] = matrix[3];
-  return result;
-};
+	if (!defined(result)) {
+		return [matrix[0], matrix[1], matrix[2], matrix[3]]
+	}
+	result[0] = matrix[0]
+	result[1] = matrix[1]
+	result[2] = matrix[2]
+	result[3] = matrix[3]
+	return result
+}
 
 /**
  * Computes the array index of the element at the provided row and column.
@@ -312,16 +312,16 @@ Matrix2.toArray = function (matrix, result) {
  * myMatrix[column1Row0Index] = 10.0;
  */
 Matrix2.getElementIndex = function (column, row) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number.greaterThanOrEquals("row", row, 0);
-  Check.typeOf.number.lessThanOrEquals("row", row, 1);
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number.greaterThanOrEquals('row', row, 0)
+	Check.typeOf.number.lessThanOrEquals('row', row, 1)
 
-  Check.typeOf.number.greaterThanOrEquals("column", column, 0);
-  Check.typeOf.number.lessThanOrEquals("column", column, 1);
-  //>>includeEnd('debug');
+	Check.typeOf.number.greaterThanOrEquals('column', column, 0)
+	Check.typeOf.number.lessThanOrEquals('column', column, 1)
+	//>>includeEnd('debug');
 
-  return column * 2 + row;
-};
+	return column * 2 + row
+}
 
 /**
  * Retrieves a copy of the matrix column at the provided index as a Cartesian2 instance.
@@ -334,23 +334,23 @@ Matrix2.getElementIndex = function (column, row) {
  * @exception {DeveloperError} index must be 0 or 1.
  */
 Matrix2.getColumn = function (matrix, index, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
 
-  Check.typeOf.number.greaterThanOrEquals("index", index, 0);
-  Check.typeOf.number.lessThanOrEquals("index", index, 1);
+	Check.typeOf.number.greaterThanOrEquals('index', index, 0)
+	Check.typeOf.number.lessThanOrEquals('index', index, 1)
 
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  var startIndex = index * 2;
-  var x = matrix[startIndex];
-  var y = matrix[startIndex + 1];
+	var startIndex = index * 2
+	var x = matrix[startIndex]
+	var y = matrix[startIndex + 1]
 
-  result.x = x;
-  result.y = y;
-  return result;
-};
+	result.x = x
+	result.y = y
+	return result
+}
 
 /**
  * Computes a new matrix that replaces the specified column in the provided matrix with the provided Cartesian2 instance.
@@ -364,22 +364,22 @@ Matrix2.getColumn = function (matrix, index, result) {
  * @exception {DeveloperError} index must be 0 or 1.
  */
 Matrix2.setColumn = function (matrix, index, cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
 
-  Check.typeOf.number.greaterThanOrEquals("index", index, 0);
-  Check.typeOf.number.lessThanOrEquals("index", index, 1);
+	Check.typeOf.number.greaterThanOrEquals('index', index, 0)
+	Check.typeOf.number.lessThanOrEquals('index', index, 1)
 
-  Check.typeOf.object("cartesian", cartesian);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	Check.typeOf.object('cartesian', cartesian)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result = Matrix2.clone(matrix, result);
-  var startIndex = index * 2;
-  result[startIndex] = cartesian.x;
-  result[startIndex + 1] = cartesian.y;
-  return result;
-};
+	result = Matrix2.clone(matrix, result)
+	var startIndex = index * 2
+	result[startIndex] = cartesian.x
+	result[startIndex + 1] = cartesian.y
+	return result
+}
 
 /**
  * Retrieves a copy of the matrix row at the provided index as a Cartesian2 instance.
@@ -392,22 +392,22 @@ Matrix2.setColumn = function (matrix, index, cartesian, result) {
  * @exception {DeveloperError} index must be 0 or 1.
  */
 Matrix2.getRow = function (matrix, index, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
 
-  Check.typeOf.number.greaterThanOrEquals("index", index, 0);
-  Check.typeOf.number.lessThanOrEquals("index", index, 1);
+	Check.typeOf.number.greaterThanOrEquals('index', index, 0)
+	Check.typeOf.number.lessThanOrEquals('index', index, 1)
 
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  var x = matrix[index];
-  var y = matrix[index + 2];
+	var x = matrix[index]
+	var y = matrix[index + 2]
 
-  result.x = x;
-  result.y = y;
-  return result;
-};
+	result.x = x
+	result.y = y
+	return result
+}
 
 /**
  * Computes a new matrix that replaces the specified row in the provided matrix with the provided Cartesian2 instance.
@@ -421,23 +421,23 @@ Matrix2.getRow = function (matrix, index, result) {
  * @exception {DeveloperError} index must be 0 or 1.
  */
 Matrix2.setRow = function (matrix, index, cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
 
-  Check.typeOf.number.greaterThanOrEquals("index", index, 0);
-  Check.typeOf.number.lessThanOrEquals("index", index, 1);
+	Check.typeOf.number.greaterThanOrEquals('index', index, 0)
+	Check.typeOf.number.lessThanOrEquals('index', index, 1)
 
-  Check.typeOf.object("cartesian", cartesian);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	Check.typeOf.object('cartesian', cartesian)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result = Matrix2.clone(matrix, result);
-  result[index] = cartesian.x;
-  result[index + 2] = cartesian.y;
-  return result;
-};
+	result = Matrix2.clone(matrix, result)
+	result[index] = cartesian.x
+	result[index + 2] = cartesian.y
+	return result
+}
 
-var scratchColumn = new Cartesian2();
+var scratchColumn = new Cartesian2()
 
 /**
  * Extracts the non-uniform scale assuming the matrix is an affine transformation.
@@ -447,21 +447,21 @@ var scratchColumn = new Cartesian2();
  * @returns {Cartesian2} The modified result parameter.
  */
 Matrix2.getScale = function (matrix, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result.x = Cartesian2.magnitude(
-    Cartesian2.fromElements(matrix[0], matrix[1], scratchColumn)
-  );
-  result.y = Cartesian2.magnitude(
-    Cartesian2.fromElements(matrix[2], matrix[3], scratchColumn)
-  );
-  return result;
-};
+	result.x = Cartesian2.magnitude(
+		Cartesian2.fromElements(matrix[0], matrix[1], scratchColumn),
+	)
+	result.y = Cartesian2.magnitude(
+		Cartesian2.fromElements(matrix[2], matrix[3], scratchColumn),
+	)
+	return result
+}
 
-var scratchScale = new Cartesian2();
+var scratchScale = new Cartesian2()
 
 /**
  * Computes the maximum scale assuming the matrix is an affine transformation.
@@ -471,9 +471,9 @@ var scratchScale = new Cartesian2();
  * @returns {Number} The maximum scale.
  */
 Matrix2.getMaximumScale = function (matrix) {
-  Matrix2.getScale(matrix, scratchScale);
-  return Cartesian2.maximumComponent(scratchScale);
-};
+	Matrix2.getScale(matrix, scratchScale)
+	return Cartesian2.maximumComponent(scratchScale)
+}
 
 /**
  * Computes the product of two matrices.
@@ -484,23 +484,23 @@ Matrix2.getMaximumScale = function (matrix) {
  * @returns {Matrix2} The modified result parameter.
  */
 Matrix2.multiply = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  var column0Row0 = left[0] * right[0] + left[2] * right[1];
-  var column1Row0 = left[0] * right[2] + left[2] * right[3];
-  var column0Row1 = left[1] * right[0] + left[3] * right[1];
-  var column1Row1 = left[1] * right[2] + left[3] * right[3];
+	var column0Row0 = left[0] * right[0] + left[2] * right[1]
+	var column1Row0 = left[0] * right[2] + left[2] * right[3]
+	var column0Row1 = left[1] * right[0] + left[3] * right[1]
+	var column1Row1 = left[1] * right[2] + left[3] * right[3]
 
-  result[0] = column0Row0;
-  result[1] = column0Row1;
-  result[2] = column1Row0;
-  result[3] = column1Row1;
-  return result;
-};
+	result[0] = column0Row0
+	result[1] = column0Row1
+	result[2] = column1Row0
+	result[3] = column1Row1
+	return result
+}
 
 /**
  * Computes the sum of two matrices.
@@ -511,18 +511,18 @@ Matrix2.multiply = function (left, right, result) {
  * @returns {Matrix2} The modified result parameter.
  */
 Matrix2.add = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result[0] = left[0] + right[0];
-  result[1] = left[1] + right[1];
-  result[2] = left[2] + right[2];
-  result[3] = left[3] + right[3];
-  return result;
-};
+	result[0] = left[0] + right[0]
+	result[1] = left[1] + right[1]
+	result[2] = left[2] + right[2]
+	result[3] = left[3] + right[3]
+	return result
+}
 
 /**
  * Computes the difference of two matrices.
@@ -533,18 +533,18 @@ Matrix2.add = function (left, right, result) {
  * @returns {Matrix2} The modified result parameter.
  */
 Matrix2.subtract = function (left, right, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("left", left);
-  Check.typeOf.object("right", right);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('left', left)
+	Check.typeOf.object('right', right)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result[0] = left[0] - right[0];
-  result[1] = left[1] - right[1];
-  result[2] = left[2] - right[2];
-  result[3] = left[3] - right[3];
-  return result;
-};
+	result[0] = left[0] - right[0]
+	result[1] = left[1] - right[1]
+	result[2] = left[2] - right[2]
+	result[3] = left[3] - right[3]
+	return result
+}
 
 /**
  * Computes the product of a matrix and a column vector.
@@ -555,19 +555,19 @@ Matrix2.subtract = function (left, right, result) {
  * @returns {Cartesian2} The modified result parameter.
  */
 Matrix2.multiplyByVector = function (matrix, cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
-  Check.typeOf.object("cartesian", cartesian);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
+	Check.typeOf.object('cartesian', cartesian)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  var x = matrix[0] * cartesian.x + matrix[2] * cartesian.y;
-  var y = matrix[1] * cartesian.x + matrix[3] * cartesian.y;
+	var x = matrix[0] * cartesian.x + matrix[2] * cartesian.y
+	var y = matrix[1] * cartesian.x + matrix[3] * cartesian.y
 
-  result.x = x;
-  result.y = y;
-  return result;
-};
+	result.x = x
+	result.y = y
+	return result
+}
 
 /**
  * Computes the product of a matrix and a scalar.
@@ -578,18 +578,18 @@ Matrix2.multiplyByVector = function (matrix, cartesian, result) {
  * @returns {Matrix2} The modified result parameter.
  */
 Matrix2.multiplyByScalar = function (matrix, scalar, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
-  Check.typeOf.number("scalar", scalar);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
+	Check.typeOf.number('scalar', scalar)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result[0] = matrix[0] * scalar;
-  result[1] = matrix[1] * scalar;
-  result[2] = matrix[2] * scalar;
-  result[3] = matrix[3] * scalar;
-  return result;
-};
+	result[0] = matrix[0] * scalar
+	result[1] = matrix[1] * scalar
+	result[2] = matrix[2] * scalar
+	result[3] = matrix[3] * scalar
+	return result
+}
 
 /**
  * Computes the product of a matrix times a (non-uniform) scale, as if the scale were a scale matrix.
@@ -608,18 +608,18 @@ Matrix2.multiplyByScalar = function (matrix, scalar, result) {
  * @see Matrix2.multiplyByUniformScale
  */
 Matrix2.multiplyByScale = function (matrix, scale, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
-  Check.typeOf.object("scale", scale);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
+	Check.typeOf.object('scale', scale)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result[0] = matrix[0] * scale.x;
-  result[1] = matrix[1] * scale.x;
-  result[2] = matrix[2] * scale.y;
-  result[3] = matrix[3] * scale.y;
-  return result;
-};
+	result[0] = matrix[0] * scale.x
+	result[1] = matrix[1] * scale.x
+	result[2] = matrix[2] * scale.y
+	result[3] = matrix[3] * scale.y
+	return result
+}
 
 /**
  * Creates a negated copy of the provided matrix.
@@ -629,17 +629,17 @@ Matrix2.multiplyByScale = function (matrix, scale, result) {
  * @returns {Matrix2} The modified result parameter.
  */
 Matrix2.negate = function (matrix, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result[0] = -matrix[0];
-  result[1] = -matrix[1];
-  result[2] = -matrix[2];
-  result[3] = -matrix[3];
-  return result;
-};
+	result[0] = -matrix[0]
+	result[1] = -matrix[1]
+	result[2] = -matrix[2]
+	result[3] = -matrix[3]
+	return result
+}
 
 /**
  * Computes the transpose of the provided matrix.
@@ -649,22 +649,22 @@ Matrix2.negate = function (matrix, result) {
  * @returns {Matrix2} The modified result parameter.
  */
 Matrix2.transpose = function (matrix, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  var column0Row0 = matrix[0];
-  var column0Row1 = matrix[2];
-  var column1Row0 = matrix[1];
-  var column1Row1 = matrix[3];
+	var column0Row0 = matrix[0]
+	var column0Row1 = matrix[2]
+	var column1Row0 = matrix[1]
+	var column1Row1 = matrix[3]
 
-  result[0] = column0Row0;
-  result[1] = column0Row1;
-  result[2] = column1Row0;
-  result[3] = column1Row1;
-  return result;
-};
+	result[0] = column0Row0
+	result[1] = column0Row1
+	result[2] = column1Row0
+	result[3] = column1Row1
+	return result
+}
 
 /**
  * Computes a matrix, which contains the absolute (unsigned) values of the provided matrix's elements.
@@ -674,18 +674,18 @@ Matrix2.transpose = function (matrix, result) {
  * @returns {Matrix2} The modified result parameter.
  */
 Matrix2.abs = function (matrix, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("matrix", matrix);
-  Check.typeOf.object("result", result);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('matrix', matrix)
+	Check.typeOf.object('result', result)
+	//>>includeEnd('debug');
 
-  result[0] = Math.abs(matrix[0]);
-  result[1] = Math.abs(matrix[1]);
-  result[2] = Math.abs(matrix[2]);
-  result[3] = Math.abs(matrix[3]);
+	result[0] = Math.abs(matrix[0])
+	result[1] = Math.abs(matrix[1])
+	result[2] = Math.abs(matrix[2])
+	result[3] = Math.abs(matrix[3])
 
-  return result;
-};
+	return result
+}
 
 /**
  * Compares the provided matrices componentwise and returns
@@ -696,28 +696,28 @@ Matrix2.abs = function (matrix, result) {
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
 Matrix2.equals = function (left, right) {
-  return (
-    left === right ||
-    (defined(left) &&
-      defined(right) &&
-      left[0] === right[0] &&
-      left[1] === right[1] &&
-      left[2] === right[2] &&
-      left[3] === right[3])
-  );
-};
+	return (
+		left === right ||
+		(defined(left) &&
+			defined(right) &&
+			left[0] === right[0] &&
+			left[1] === right[1] &&
+			left[2] === right[2] &&
+			left[3] === right[3])
+	)
+}
 
 /**
  * @private
  */
 Matrix2.equalsArray = function (matrix, array, offset) {
-  return (
-    matrix[0] === array[offset] &&
-    matrix[1] === array[offset + 1] &&
-    matrix[2] === array[offset + 2] &&
-    matrix[3] === array[offset + 3]
-  );
-};
+	return (
+		matrix[0] === array[offset] &&
+		matrix[1] === array[offset + 1] &&
+		matrix[2] === array[offset + 2] &&
+		matrix[3] === array[offset + 3]
+	)
+}
 
 /**
  * Compares the provided matrices componentwise and returns
@@ -730,17 +730,17 @@ Matrix2.equalsArray = function (matrix, array, offset) {
  * @returns {Boolean} <code>true</code> if left and right are within the provided epsilon, <code>false</code> otherwise.
  */
 Matrix2.equalsEpsilon = function (left, right, epsilon) {
-  epsilon = defaultValue(epsilon, 0);
-  return (
-    left === right ||
-    (defined(left) &&
-      defined(right) &&
-      Math.abs(left[0] - right[0]) <= epsilon &&
-      Math.abs(left[1] - right[1]) <= epsilon &&
-      Math.abs(left[2] - right[2]) <= epsilon &&
-      Math.abs(left[3] - right[3]) <= epsilon)
-  );
-};
+	epsilon = defaultValue(epsilon, 0)
+	return (
+		left === right ||
+		(defined(left) &&
+			defined(right) &&
+			Math.abs(left[0] - right[0]) <= epsilon &&
+			Math.abs(left[1] - right[1]) <= epsilon &&
+			Math.abs(left[2] - right[2]) <= epsilon &&
+			Math.abs(left[3] - right[3]) <= epsilon)
+	)
+}
 
 /**
  * An immutable Matrix2 instance initialized to the identity matrix.
@@ -748,7 +748,7 @@ Matrix2.equalsEpsilon = function (left, right, epsilon) {
  * @type {Matrix2}
  * @constant
  */
-Matrix2.IDENTITY = Object.freeze(new Matrix2(1.0, 0.0, 0.0, 1.0));
+Matrix2.IDENTITY = Object.freeze(new Matrix2(1.0, 0.0, 0.0, 1.0))
 
 /**
  * An immutable Matrix2 instance initialized to the zero matrix.
@@ -756,7 +756,7 @@ Matrix2.IDENTITY = Object.freeze(new Matrix2(1.0, 0.0, 0.0, 1.0));
  * @type {Matrix2}
  * @constant
  */
-Matrix2.ZERO = Object.freeze(new Matrix2(0.0, 0.0, 0.0, 0.0));
+Matrix2.ZERO = Object.freeze(new Matrix2(0.0, 0.0, 0.0, 0.0))
 
 /**
  * The index into Matrix2 for column 0, row 0.
@@ -768,7 +768,7 @@ Matrix2.ZERO = Object.freeze(new Matrix2(0.0, 0.0, 0.0, 0.0));
  * var matrix = new Cesium.Matrix2();
  * matrix[Cesium.Matrix2.COLUMN0ROW0] = 5.0; // set column 0, row 0 to 5.0
  */
-Matrix2.COLUMN0ROW0 = 0;
+Matrix2.COLUMN0ROW0 = 0
 
 /**
  * The index into Matrix2 for column 0, row 1.
@@ -780,7 +780,7 @@ Matrix2.COLUMN0ROW0 = 0;
  * var matrix = new Cesium.Matrix2();
  * matrix[Cesium.Matrix2.COLUMN0ROW1] = 5.0; // set column 0, row 1 to 5.0
  */
-Matrix2.COLUMN0ROW1 = 1;
+Matrix2.COLUMN0ROW1 = 1
 
 /**
  * The index into Matrix2 for column 1, row 0.
@@ -792,7 +792,7 @@ Matrix2.COLUMN0ROW1 = 1;
  * var matrix = new Cesium.Matrix2();
  * matrix[Cesium.Matrix2.COLUMN1ROW0] = 5.0; // set column 1, row 0 to 5.0
  */
-Matrix2.COLUMN1ROW0 = 2;
+Matrix2.COLUMN1ROW0 = 2
 
 /**
  * The index into Matrix2 for column 1, row 1.
@@ -804,21 +804,21 @@ Matrix2.COLUMN1ROW0 = 2;
  * var matrix = new Cesium.Matrix2();
  * matrix[Cesium.Matrix2.COLUMN1ROW1] = 5.0; // set column 1, row 1 to 5.0
  */
-Matrix2.COLUMN1ROW1 = 3;
+Matrix2.COLUMN1ROW1 = 3
 
 Object.defineProperties(Matrix2.prototype, {
-  /**
-   * Gets the number of items in the collection.
-   * @memberof Matrix2.prototype
-   *
-   * @type {Number}
-   */
-  length: {
-    get: function () {
-      return Matrix2.packedLength;
-    },
-  },
-});
+	/**
+	 * Gets the number of items in the collection.
+	 * @memberof Matrix2.prototype
+	 *
+	 * @type {Number}
+	 */
+	length: {
+		get: function () {
+			return Matrix2.packedLength
+		},
+	},
+})
 
 /**
  * Duplicates the provided Matrix2 instance.
@@ -827,8 +827,8 @@ Object.defineProperties(Matrix2.prototype, {
  * @returns {Matrix2} The modified result parameter or a new Matrix2 instance if one was not provided.
  */
 Matrix2.prototype.clone = function (result) {
-  return Matrix2.clone(this, result);
-};
+	return Matrix2.clone(this, result)
+}
 
 /**
  * Compares this matrix to the provided matrix componentwise and returns
@@ -838,8 +838,8 @@ Matrix2.prototype.clone = function (result) {
  * @returns {Boolean} <code>true</code> if they are equal, <code>false</code> otherwise.
  */
 Matrix2.prototype.equals = function (right) {
-  return Matrix2.equals(this, right);
-};
+	return Matrix2.equals(this, right)
+}
 
 /**
  * Compares this matrix to the provided matrix componentwise and returns
@@ -851,8 +851,8 @@ Matrix2.prototype.equals = function (right) {
  * @returns {Boolean} <code>true</code> if they are within the provided epsilon, <code>false</code> otherwise.
  */
 Matrix2.prototype.equalsEpsilon = function (right, epsilon) {
-  return Matrix2.equalsEpsilon(this, right, epsilon);
-};
+	return Matrix2.equalsEpsilon(this, right, epsilon)
+}
 
 /**
  * Creates a string representing this Matrix with each row being
@@ -861,17 +861,17 @@ Matrix2.prototype.equalsEpsilon = function (right, epsilon) {
  * @returns {String} A string representing the provided Matrix with each row being on a separate line and in the format '(column0, column1)'.
  */
 Matrix2.prototype.toString = function () {
-  return (
-    "(" +
-    this[0] +
-    ", " +
-    this[2] +
-    ")\n" +
-    "(" +
-    this[1] +
-    ", " +
-    this[3] +
-    ")"
-  );
-};
-export default Matrix2;
+	return (
+		'(' +
+		this[0] +
+		', ' +
+		this[2] +
+		')\n' +
+		'(' +
+		this[1] +
+		', ' +
+		this[3] +
+		')'
+	)
+}
+export default Matrix2

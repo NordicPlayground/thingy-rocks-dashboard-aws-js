@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * The constant identifier for the 3D {@link SceneMode}\n\
  *\n\
  * @name czm_sceneMode3D\n\
@@ -10,4 +10,4 @@ export default "/**\n\
  * @see czm_sceneModeMorphing\n\
  */\n\
 const float czm_sceneMode3D = 3.0;\n\
-";
+'

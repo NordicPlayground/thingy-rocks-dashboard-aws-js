@@ -1,4 +1,4 @@
-import DeveloperError from "../Core/DeveloperError.js";
+import DeveloperError from '../Core/DeveloperError.js'
 
 /**
  * A policy for discarding tile images according to some criteria.  This type describes an
@@ -11,7 +11,7 @@ import DeveloperError from "../Core/DeveloperError.js";
  * @see NeverTileDiscardPolicy
  */
 function TileDiscardPolicy(options) {
-  DeveloperError.throwInstantiationError();
+	DeveloperError.throwInstantiationError()
 }
 
 /**
@@ -20,7 +20,7 @@ function TileDiscardPolicy(options) {
  *
  * @returns {Boolean} True if the discard policy is ready to process images; otherwise, false.
  */
-TileDiscardPolicy.prototype.isReady = DeveloperError.throwInstantiationError;
+TileDiscardPolicy.prototype.isReady = DeveloperError.throwInstantiationError
 
 /**
  * Given a tile image, decide whether to discard that image.
@@ -30,5 +30,5 @@ TileDiscardPolicy.prototype.isReady = DeveloperError.throwInstantiationError;
  * @returns {Boolean} True if the image should be discarded; otherwise, false.
  */
 TileDiscardPolicy.prototype.shouldDiscardImage =
-  DeveloperError.throwInstantiationError;
-export default TileDiscardPolicy;
+	DeveloperError.throwInstantiationError
+export default TileDiscardPolicy

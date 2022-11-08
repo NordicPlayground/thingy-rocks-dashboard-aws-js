@@ -1,4 +1,4 @@
-import DeveloperError from "./DeveloperError.js";
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Determines if a given date is a leap year.
@@ -12,12 +12,12 @@ import DeveloperError from "./DeveloperError.js";
  * var leapYear = Cesium.isLeapYear(2000); // true
  */
 function isLeapYear(year) {
-  //>>includeStart('debug', pragmas.debug);
-  if (year === null || isNaN(year)) {
-    throw new DeveloperError("year is required and must be a number.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (year === null || isNaN(year)) {
+		throw new DeveloperError('year is required and must be a number.')
+	}
+	//>>includeEnd('debug');
 
-  return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+	return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0
 }
-export default isLeapYear;
+export default isLeapYear

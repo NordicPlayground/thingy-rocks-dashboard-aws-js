@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "#ifdef GL_EXT_frag_depth\n\
+export default '#ifdef GL_EXT_frag_depth\n\
 #extension GL_EXT_frag_depth : enable\n\
 #endif\n\
 \n\
@@ -52,7 +52,7 @@ void main(void)\n\
     // For computing unskewed lengthwise texture coordinate.\n\
     // Can also be used for clipping extremely pointy miters, but in practice unnecessary because of miter breaking.\n\
 \n\
-    // aligned plane: cross the right plane normal with miter plane normal, then cross the result with right again to point it more \"forward\"\n\
+    // aligned plane: cross the right plane normal with miter plane normal, then cross the result with right again to point it more "forward"\n\
     vec3 alignedPlaneNormal;\n\
 \n\
     // start aligned plane\n\
@@ -89,4 +89,4 @@ void main(void)\n\
 \n\
     czm_writeDepthClamp();\n\
 }\n\
-";
+'

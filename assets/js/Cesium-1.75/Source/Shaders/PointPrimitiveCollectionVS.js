@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "uniform float u_maxTotalPointSize;\n\
+export default 'uniform float u_maxTotalPointSize;\n\
 \n\
 attribute vec4 positionHighAndSize;\n\
 attribute vec4 positionLowAndOutline;\n\
@@ -115,7 +115,7 @@ void main()\n\
     // Clamp to max point size.\n\
     totalSize = min(totalSize, u_maxTotalPointSize);\n\
     // If size is too small, push vertex behind near plane for clipping.\n\
-    // Note that context.minimumAliasedPointSize \"will be at most 1.0\".\n\
+    // Note that context.minimumAliasedPointSize "will be at most 1.0".\n\
     if (totalSize < 1.0)\n\
     {\n\
         positionEC.xyz = vec3(0.0);\n\
@@ -153,7 +153,7 @@ void main()\n\
 \n\
     if (disableDepthTestDistance != 0.0)\n\
     {\n\
-        // Don't try to \"multiply both sides\" by w.  Greater/less-than comparisons won't work for negative values of w.\n\
+        // Don\'t try to "multiply both sides" by w.  Greater/less-than comparisons won\'t work for negative values of w.\n\
         float zclip = gl_Position.z / gl_Position.w;\n\
         bool clipped = (zclip < -1.0 || zclip > 1.0);\n\
         if (!clipped && (disableDepthTestDistance < 0.0 || (lengthSq > 0.0 && lengthSq < disableDepthTestDistance)))\n\
@@ -179,4 +179,4 @@ void main()\n\
 \n\
     v_pickColor = pickColor;\n\
 }\n\
-";
+'

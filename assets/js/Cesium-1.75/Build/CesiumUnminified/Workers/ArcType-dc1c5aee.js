@@ -21,41 +21,41 @@
  * See https://github.com/CesiumGS/cesium/blob/master/LICENSE.md for full licensing details.
  */
 
-define(['exports'], function (exports) { 'use strict';
+define(['exports'], function (exports) {
+	'use strict'
 
-  /**
-   * ArcType defines the path that should be taken connecting vertices.
-   *
-   * @enum {Number}
-   */
-  var ArcType = {
-    /**
-     * Straight line that does not conform to the surface of the ellipsoid.
-     *
-     * @type {Number}
-     * @constant
-     */
-    NONE: 0,
+	/**
+	 * ArcType defines the path that should be taken connecting vertices.
+	 *
+	 * @enum {Number}
+	 */
+	var ArcType = {
+		/**
+		 * Straight line that does not conform to the surface of the ellipsoid.
+		 *
+		 * @type {Number}
+		 * @constant
+		 */
+		NONE: 0,
 
-    /**
-     * Follow geodesic path.
-     *
-     * @type {Number}
-     * @constant
-     */
-    GEODESIC: 1,
+		/**
+		 * Follow geodesic path.
+		 *
+		 * @type {Number}
+		 * @constant
+		 */
+		GEODESIC: 1,
 
-    /**
-     * Follow rhumb or loxodrome path.
-     *
-     * @type {Number}
-     * @constant
-     */
-    RHUMB: 2,
-  };
-  var ArcType$1 = Object.freeze(ArcType);
+		/**
+		 * Follow rhumb or loxodrome path.
+		 *
+		 * @type {Number}
+		 * @constant
+		 */
+		RHUMB: 2,
+	}
+	var ArcType$1 = Object.freeze(ArcType)
 
-  exports.ArcType = ArcType$1;
-
-});
+	exports.ArcType = ArcType$1
+})
 //# sourceMappingURL=ArcType-dc1c5aee.js.map

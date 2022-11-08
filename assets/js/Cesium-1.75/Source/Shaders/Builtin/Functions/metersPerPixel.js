@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * Computes the size of a pixel in meters at a distance from the eye.\n\
  * <p>\n\
  * Use this version when passing in a custom pixel ratio. For example, passing in 1.0 will return meters per native device pixel.\n\
@@ -60,4 +60,4 @@ float czm_metersPerPixel(vec4 positionEC)\n\
 {\n\
     return czm_metersPerPixel(positionEC, czm_pixelRatio);\n\
 }\n\
-";
+'

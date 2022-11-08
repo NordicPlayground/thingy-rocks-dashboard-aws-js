@@ -1,4 +1,4 @@
-import DeveloperError from "./DeveloperError.js";
+import DeveloperError from './DeveloperError.js'
 
 /**
  * The interface for interpolation algorithms.
@@ -9,13 +9,13 @@ import DeveloperError from "./DeveloperError.js";
  * @see LinearApproximation
  * @see HermitePolynomialApproximation
  */
-var InterpolationAlgorithm = {};
+var InterpolationAlgorithm = {}
 
 /**
  * Gets the name of this interpolation algorithm.
  * @type {String}
  */
-InterpolationAlgorithm.type = undefined;
+InterpolationAlgorithm.type = undefined
 
 /**
  * Given the desired degree, returns the number of data points required for interpolation.
@@ -25,7 +25,7 @@ InterpolationAlgorithm.type = undefined;
  * @returns {Number} The number of required data points needed for the desired degree of interpolation.
  */
 InterpolationAlgorithm.getRequiredDataPoints =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Performs zero order interpolation.
@@ -43,7 +43,7 @@ InterpolationAlgorithm.getRequiredDataPoints =
  * @returns {Number[]} The array of interpolated values, or the result parameter if one was provided.
  */
 InterpolationAlgorithm.interpolateOrderZero =
-  DeveloperError.throwInstantiationError;
+	DeveloperError.throwInstantiationError
 
 /**
  * Performs higher order interpolation.  Not all interpolators need to support high-order interpolation,
@@ -61,5 +61,5 @@ InterpolationAlgorithm.interpolateOrderZero =
  * @param {Number[]} [result] An existing array into which to store the result.
  * @returns {Number[]} The array of interpolated values, or the result parameter if one was provided.
  */
-InterpolationAlgorithm.interpolate = DeveloperError.throwInstantiationError;
-export default InterpolationAlgorithm;
+InterpolationAlgorithm.interpolate = DeveloperError.throwInstantiationError
+export default InterpolationAlgorithm

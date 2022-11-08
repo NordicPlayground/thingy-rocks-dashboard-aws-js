@@ -1,14 +1,13 @@
 define([
-	"dojo/_base/array", // array.forEach array.map
-	"dojo/_base/declare", // declare
-	"dojo/_base/kernel", // kernel.global
-	"./registry"	// to add functions to dijit.registry
-], function(array, declare, kernel, registry){
-
+	'dojo/_base/array', // array.forEach array.map
+	'dojo/_base/declare', // declare
+	'dojo/_base/kernel', // kernel.global
+	'./registry', // to add functions to dijit.registry
+], function (array, declare, kernel, registry) {
 	// module:
 	//		dijit/WidgetSet
 
-	var WidgetSet = declare("dijit.WidgetSet", null, {
+	var WidgetSet = declare('dijit.WidgetSet', null, {
 		// summary:
 		//		A set of widgets indexed by id.
 		//		Deprecated, will be removed in 2.0.
@@ -24,35 +23,39 @@ define([
 		//		|		ws.forEach(function(w){ w.destroy(); });
 		//		|	});
 
-		constructor: function(){
-			this._hash = {};
-			this.length = 0;
+		constructor: function () {
+			this._hash = {}
+			this.length = 0
 		},
 
-		add: function(/*dijit/_WidgetBase*/ widget){
+		add: function (/*dijit/_WidgetBase*/ widget) {
 			// summary:
 			//		Add a widget to this list. If a duplicate ID is detected, a error is thrown.
 			//
 			// widget: dijit/_WidgetBase
 			//		Any dijit/_WidgetBase subclass.
-			if(this._hash[widget.id]){
-				throw new Error("Tried to register widget with id==" + widget.id + " but that id is already registered");
+			if (this._hash[widget.id]) {
+				throw new Error(
+					'Tried to register widget with id==' +
+						widget.id +
+						' but that id is already registered',
+				)
 			}
-			this._hash[widget.id] = widget;
-			this.length++;
+			this._hash[widget.id] = widget
+			this.length++
 		},
 
-		remove: function(/*String*/ id){
+		remove: function (/*String*/ id) {
 			// summary:
 			//		Remove a widget from this WidgetSet. Does not destroy the widget; simply
 			//		removes the reference.
-			if(this._hash[id]){
-				delete this._hash[id];
-				this.length--;
+			if (this._hash[id]) {
+				delete this._hash[id]
+				this.length--
 			}
 		},
 
-		forEach: function(/*Function*/ func, /* Object? */thisObj){
+		forEach: function (/*Function*/ func, /* Object? */ thisObj) {
 			// summary:
 			//		Call specified function for each widget in this set.
 			//
@@ -75,15 +78,16 @@ define([
 			// returns:
 			//		Returns self, in order to allow for further chaining.
 
-			thisObj = thisObj || kernel.global;
-			var i = 0, id;
-			for(id in this._hash){
-				func.call(thisObj, this._hash[id], i++, this._hash);
+			thisObj = thisObj || kernel.global
+			var i = 0,
+				id
+			for (id in this._hash) {
+				func.call(thisObj, this._hash[id], i++, this._hash)
 			}
-			return this;	// dijit/WidgetSet
+			return this // dijit/WidgetSet
 		},
 
-		filter: function(/*Function*/ filter, /* Object? */thisObj){
+		filter: function (/*Function*/ filter, /* Object? */ thisObj) {
 			// summary:
 			//		Filter down this WidgetSet to a smaller new WidgetSet
 			//		Works the same as `array.filter` and `NodeList.filter`
@@ -97,9 +101,9 @@ define([
 			//
 			// example:
 			//		Arbitrary: select the odd widgets in this list
-			//		|	
-			//		|		
-			//		|	
+			//		|
+			//		|
+			//		|
 			//		|	require(["dijit/WidgetSet", "dijit/registry"],
 			//		|		function(WidgetSet, registry){
 			//		|		registry.filter(function(w, i){
@@ -107,18 +111,20 @@ define([
 			//		|		}).forEach(function(w){ /* odd ones */ });
 			//		|	});
 
-			thisObj = thisObj || kernel.global;
-			var res = new WidgetSet(), i = 0, id;
-			for(id in this._hash){
-				var w = this._hash[id];
-				if(filter.call(thisObj, w, i++, this._hash)){
-					res.add(w);
+			thisObj = thisObj || kernel.global
+			var res = new WidgetSet(),
+				i = 0,
+				id
+			for (id in this._hash) {
+				var w = this._hash[id]
+				if (filter.call(thisObj, w, i++, this._hash)) {
+					res.add(w)
 				}
 			}
-			return res; // dijit/WidgetSet
+			return res // dijit/WidgetSet
 		},
 
-		byId: function(/*String*/ id){
+		byId: function (/*String*/ id) {
 			// summary:
 			//		Find a widget in this list by it's id.
 			// example:
@@ -131,10 +137,10 @@ define([
 			//		|		var x = ws.byId("foo"); // returns undefined
 			//		|	});
 
-			return this._hash[id];	// dijit/_WidgetBase
+			return this._hash[id] // dijit/_WidgetBase
 		},
 
-		byClass: function(/*String*/ cls){
+		byClass: function (/*String*/ cls) {
 			// summary:
 			//		Reduce this widgetset to a new WidgetSet of a particular `declaredClass`
 			//
@@ -148,17 +154,19 @@ define([
 			//		|		registry.byClass("dijit.TitlePane").forEach(function(tp){ tp.close(); });
 			//		|	});
 
-			var res = new WidgetSet(), id, widget;
-			for(id in this._hash){
-				widget = this._hash[id];
-				if(widget.declaredClass == cls){
-					res.add(widget);
+			var res = new WidgetSet(),
+				id,
+				widget
+			for (id in this._hash) {
+				widget = this._hash[id]
+				if (widget.declaredClass == cls) {
+					res.add(widget)
 				}
-			 }
-			 return res; // dijit/WidgetSet
+			}
+			return res // dijit/WidgetSet
 		},
 
-		toArray: function(){
+		toArray: function () {
 			// summary:
 			//		Convert this WidgetSet into a true Array
 			//
@@ -169,15 +177,14 @@ define([
 			//		|		array.map(registry.toArray(), function(w){ return w.domNode; });
 			//		|	});
 
-
-			var ar = [];
-			for(var id in this._hash){
-				ar.push(this._hash[id]);
+			var ar = []
+			for (var id in this._hash) {
+				ar.push(this._hash[id])
 			}
-			return ar;	// dijit/_WidgetBase[]
+			return ar // dijit/_WidgetBase[]
 		},
 
-		map: function(/* Function */func, /* Object? */thisObj){
+		map: function (/* Function */ func, /* Object? */ thisObj) {
 			// summary:
 			//		Create a new Array from this WidgetSet, following the same rules as `array.map`
 			// example:
@@ -188,10 +195,10 @@ define([
 			//
 			// returns:
 			//		A new array of the returned values.
-			return array.map(this.toArray(), func, thisObj); // Array
+			return array.map(this.toArray(), func, thisObj) // Array
 		},
 
-		every: function(func, thisObj){
+		every: function (func, thisObj) {
 			// summary:
 			//		A synthetic clone of `array.every` acting explicitly on this WidgetSet
 			//
@@ -202,17 +209,18 @@ define([
 			// thisObj: Object?
 			//		Optional scope parameter to use for the callback
 
-			thisObj = thisObj || kernel.global;
-			var x = 0, i;
-			for(i in this._hash){
-				if(!func.call(thisObj, this._hash[i], x++, this._hash)){
-					return false; // Boolean
+			thisObj = thisObj || kernel.global
+			var x = 0,
+				i
+			for (i in this._hash) {
+				if (!func.call(thisObj, this._hash[i], x++, this._hash)) {
+					return false // Boolean
 				}
 			}
-			return true; // Boolean
+			return true // Boolean
 		},
 
-		some: function(func, thisObj){
+		some: function (func, thisObj) {
 			// summary:
 			//		A synthetic clone of `array.some` acting explicitly on this WidgetSet
 			//
@@ -223,25 +231,27 @@ define([
 			// thisObj: Object?
 			//		Optional scope parameter to use for the callback
 
-			thisObj = thisObj || kernel.global;
-			var x = 0, i;
-			for(i in this._hash){
-				if(func.call(thisObj, this._hash[i], x++, this._hash)){
-					return true; // Boolean
+			thisObj = thisObj || kernel.global
+			var x = 0,
+				i
+			for (i in this._hash) {
+				if (func.call(thisObj, this._hash[i], x++, this._hash)) {
+					return true // Boolean
 				}
 			}
-			return false; // Boolean
-		}
-
-	});
+			return false // Boolean
+		},
+	})
 
 	// Add in 1.x compatibility methods to dijit/registry.
 	// These functions won't show up in the API doc but since they are deprecated anyway,
 	// that's probably for the best.
-	array.forEach(["forEach", "filter", "byClass", "map", "every", "some"], function(func){
-		registry[func] = WidgetSet.prototype[func];
-	});
+	array.forEach(
+		['forEach', 'filter', 'byClass', 'map', 'every', 'some'],
+		function (func) {
+			registry[func] = WidgetSet.prototype[func]
+		},
+	)
 
-
-	return WidgetSet;
-});
+	return WidgetSet
+})

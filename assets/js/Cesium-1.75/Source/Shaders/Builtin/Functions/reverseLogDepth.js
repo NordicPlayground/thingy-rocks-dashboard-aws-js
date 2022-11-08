@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "float czm_reverseLogDepth(float logZ)\n\
+export default 'float czm_reverseLogDepth(float logZ)\n\
 {\n\
 #ifdef LOG_DEPTH\n\
     float near = czm_currentFrustum.x;\n\
@@ -10,4 +10,4 @@ export default "float czm_reverseLogDepth(float logZ)\n\
 #endif\n\
     return logZ;\n\
 }\n\
-";
+'

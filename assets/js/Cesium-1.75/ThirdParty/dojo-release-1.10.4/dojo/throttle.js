@@ -1,10 +1,10 @@
-define([], function(){
+define([], function () {
 	// module:
 	//		dojo/throttle
 	// summary:
 	//		This module provide a throttler
 
-	return function(cb, wait){
+	return function (cb, wait) {
 		// summary:
 		//		Create a function that will only execute once per `wait` periods.
 		// description:
@@ -16,16 +16,16 @@ define([], function(){
 		//		The callback to fire.
 		// wait: Integer
 		//		time to delay before allowing cb to call again.
-		var canrun = true;
-		return function(){
-			if(!canrun){
-				return;
+		var canrun = true
+		return function () {
+			if (!canrun) {
+				return
 			}
-			canrun = false;
-			cb.apply(this, arguments);
-			setTimeout(function(){
-				canrun = true;
-			}, wait);
-		};
-	};
-});
+			canrun = false
+			cb.apply(this, arguments)
+			setTimeout(function () {
+				canrun = true
+			}, wait)
+		}
+	}
+})

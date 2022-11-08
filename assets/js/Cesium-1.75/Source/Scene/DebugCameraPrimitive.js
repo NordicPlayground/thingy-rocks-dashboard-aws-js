@@ -1,21 +1,21 @@
-import Cartesian3 from "../Core/Cartesian3.js";
-import Color from "../Core/Color.js";
-import ColorGeometryInstanceAttribute from "../Core/ColorGeometryInstanceAttribute.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import destroyObject from "../Core/destroyObject.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import FrustumGeometry from "../Core/FrustumGeometry.js";
-import FrustumOutlineGeometry from "../Core/FrustumOutlineGeometry.js";
-import GeometryInstance from "../Core/GeometryInstance.js";
-import Matrix3 from "../Core/Matrix3.js";
-import OrthographicFrustum from "../Core/OrthographicFrustum.js";
-import OrthographicOffCenterFrustum from "../Core/OrthographicOffCenterFrustum.js";
-import PerspectiveFrustum from "../Core/PerspectiveFrustum.js";
-import PerspectiveOffCenterFrustum from "../Core/PerspectiveOffCenterFrustum.js";
-import Quaternion from "../Core/Quaternion.js";
-import PerInstanceColorAppearance from "./PerInstanceColorAppearance.js";
-import Primitive from "./Primitive.js";
+import Cartesian3 from '../Core/Cartesian3.js'
+import Color from '../Core/Color.js'
+import ColorGeometryInstanceAttribute from '../Core/ColorGeometryInstanceAttribute.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import destroyObject from '../Core/destroyObject.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import FrustumGeometry from '../Core/FrustumGeometry.js'
+import FrustumOutlineGeometry from '../Core/FrustumOutlineGeometry.js'
+import GeometryInstance from '../Core/GeometryInstance.js'
+import Matrix3 from '../Core/Matrix3.js'
+import OrthographicFrustum from '../Core/OrthographicFrustum.js'
+import OrthographicOffCenterFrustum from '../Core/OrthographicOffCenterFrustum.js'
+import PerspectiveFrustum from '../Core/PerspectiveFrustum.js'
+import PerspectiveOffCenterFrustum from '../Core/PerspectiveOffCenterFrustum.js'
+import Quaternion from '../Core/Quaternion.js'
+import PerInstanceColorAppearance from './PerInstanceColorAppearance.js'
+import Primitive from './Primitive.js'
 
 /**
  * Draws the outline of the camera's view frustum.
@@ -38,180 +38,179 @@ import Primitive from "./Primitive.js";
  * }));
  */
 function DebugCameraPrimitive(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(options.camera)) {
-    throw new DeveloperError("options.camera is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(options.camera)) {
+		throw new DeveloperError('options.camera is required.')
+	}
+	//>>includeEnd('debug');
 
-  this._camera = options.camera;
-  this._frustumSplits = options.frustumSplits;
-  this._color = defaultValue(options.color, Color.CYAN);
-  this._updateOnChange = defaultValue(options.updateOnChange, true);
+	this._camera = options.camera
+	this._frustumSplits = options.frustumSplits
+	this._color = defaultValue(options.color, Color.CYAN)
+	this._updateOnChange = defaultValue(options.updateOnChange, true)
 
-  /**
-   * Determines if this primitive will be shown.
-   *
-   * @type Boolean
-   * @default true
-   */
-  this.show = defaultValue(options.show, true);
+	/**
+	 * Determines if this primitive will be shown.
+	 *
+	 * @type Boolean
+	 * @default true
+	 */
+	this.show = defaultValue(options.show, true)
 
-  /**
-   * User-defined value returned when the primitive is picked.
-   *
-   * @type {*}
-   * @default undefined
-   *
-   * @see Scene#pick
-   */
-  this.id = options.id;
-  this._id = undefined;
+	/**
+	 * User-defined value returned when the primitive is picked.
+	 *
+	 * @type {*}
+	 * @default undefined
+	 *
+	 * @see Scene#pick
+	 */
+	this.id = options.id
+	this._id = undefined
 
-  this._outlinePrimitives = [];
-  this._planesPrimitives = [];
+	this._outlinePrimitives = []
+	this._planesPrimitives = []
 }
 
-var scratchRight = new Cartesian3();
-var scratchRotation = new Matrix3();
-var scratchOrientation = new Quaternion();
-var scratchPerspective = new PerspectiveFrustum();
-var scratchPerspectiveOffCenter = new PerspectiveOffCenterFrustum();
-var scratchOrthographic = new OrthographicFrustum();
-var scratchOrthographicOffCenter = new OrthographicOffCenterFrustum();
+var scratchRight = new Cartesian3()
+var scratchRotation = new Matrix3()
+var scratchOrientation = new Quaternion()
+var scratchPerspective = new PerspectiveFrustum()
+var scratchPerspectiveOffCenter = new PerspectiveOffCenterFrustum()
+var scratchOrthographic = new OrthographicFrustum()
+var scratchOrthographicOffCenter = new OrthographicOffCenterFrustum()
 
-var scratchColor = new Color();
-var scratchSplits = [1.0, 100000.0];
+var scratchColor = new Color()
+var scratchSplits = [1.0, 100000.0]
 
 /**
  * @private
  */
 DebugCameraPrimitive.prototype.update = function (frameState) {
-  if (!this.show) {
-    return;
-  }
+	if (!this.show) {
+		return
+	}
 
-  var planesPrimitives = this._planesPrimitives;
-  var outlinePrimitives = this._outlinePrimitives;
-  var i;
-  var length;
+	var planesPrimitives = this._planesPrimitives
+	var outlinePrimitives = this._outlinePrimitives
+	var i
+	var length
 
-  if (this._updateOnChange) {
-    // Recreate the primitive every frame
-    length = planesPrimitives.length;
-    for (i = 0; i < length; ++i) {
-      outlinePrimitives[i] =
-        outlinePrimitives[i] && outlinePrimitives[i].destroy();
-      planesPrimitives[i] =
-        planesPrimitives[i] && planesPrimitives[i].destroy();
-    }
-    planesPrimitives.length = 0;
-    outlinePrimitives.length = 0;
-  }
+	if (this._updateOnChange) {
+		// Recreate the primitive every frame
+		length = planesPrimitives.length
+		for (i = 0; i < length; ++i) {
+			outlinePrimitives[i] =
+				outlinePrimitives[i] && outlinePrimitives[i].destroy()
+			planesPrimitives[i] = planesPrimitives[i] && planesPrimitives[i].destroy()
+		}
+		planesPrimitives.length = 0
+		outlinePrimitives.length = 0
+	}
 
-  if (planesPrimitives.length === 0) {
-    var camera = this._camera;
-    var cameraFrustum = camera.frustum;
-    var frustum;
-    if (cameraFrustum instanceof PerspectiveFrustum) {
-      frustum = scratchPerspective;
-    } else if (cameraFrustum instanceof PerspectiveOffCenterFrustum) {
-      frustum = scratchPerspectiveOffCenter;
-    } else if (cameraFrustum instanceof OrthographicFrustum) {
-      frustum = scratchOrthographic;
-    } else {
-      frustum = scratchOrthographicOffCenter;
-    }
-    frustum = cameraFrustum.clone(frustum);
+	if (planesPrimitives.length === 0) {
+		var camera = this._camera
+		var cameraFrustum = camera.frustum
+		var frustum
+		if (cameraFrustum instanceof PerspectiveFrustum) {
+			frustum = scratchPerspective
+		} else if (cameraFrustum instanceof PerspectiveOffCenterFrustum) {
+			frustum = scratchPerspectiveOffCenter
+		} else if (cameraFrustum instanceof OrthographicFrustum) {
+			frustum = scratchOrthographic
+		} else {
+			frustum = scratchOrthographicOffCenter
+		}
+		frustum = cameraFrustum.clone(frustum)
 
-    var numFrustums;
-    var frustumSplits = this._frustumSplits;
-    if (!defined(frustumSplits) || frustumSplits.length <= 1) {
-      // Use near and far planes if no splits created
-      frustumSplits = scratchSplits;
-      frustumSplits[0] = this._camera.frustum.near;
-      frustumSplits[1] = this._camera.frustum.far;
-      numFrustums = 1;
-    } else {
-      numFrustums = frustumSplits.length - 1;
-    }
+		var numFrustums
+		var frustumSplits = this._frustumSplits
+		if (!defined(frustumSplits) || frustumSplits.length <= 1) {
+			// Use near and far planes if no splits created
+			frustumSplits = scratchSplits
+			frustumSplits[0] = this._camera.frustum.near
+			frustumSplits[1] = this._camera.frustum.far
+			numFrustums = 1
+		} else {
+			numFrustums = frustumSplits.length - 1
+		}
 
-    var position = camera.positionWC;
-    var direction = camera.directionWC;
-    var up = camera.upWC;
-    var right = camera.rightWC;
-    right = Cartesian3.negate(right, scratchRight);
+		var position = camera.positionWC
+		var direction = camera.directionWC
+		var up = camera.upWC
+		var right = camera.rightWC
+		right = Cartesian3.negate(right, scratchRight)
 
-    var rotation = scratchRotation;
-    Matrix3.setColumn(rotation, 0, right, rotation);
-    Matrix3.setColumn(rotation, 1, up, rotation);
-    Matrix3.setColumn(rotation, 2, direction, rotation);
+		var rotation = scratchRotation
+		Matrix3.setColumn(rotation, 0, right, rotation)
+		Matrix3.setColumn(rotation, 1, up, rotation)
+		Matrix3.setColumn(rotation, 2, direction, rotation)
 
-    var orientation = Quaternion.fromRotationMatrix(
-      rotation,
-      scratchOrientation
-    );
+		var orientation = Quaternion.fromRotationMatrix(
+			rotation,
+			scratchOrientation,
+		)
 
-    planesPrimitives.length = outlinePrimitives.length = numFrustums;
+		planesPrimitives.length = outlinePrimitives.length = numFrustums
 
-    for (i = 0; i < numFrustums; ++i) {
-      frustum.near = frustumSplits[i];
-      frustum.far = frustumSplits[i + 1];
+		for (i = 0; i < numFrustums; ++i) {
+			frustum.near = frustumSplits[i]
+			frustum.far = frustumSplits[i + 1]
 
-      planesPrimitives[i] = new Primitive({
-        geometryInstances: new GeometryInstance({
-          geometry: new FrustumGeometry({
-            origin: position,
-            orientation: orientation,
-            frustum: frustum,
-            _drawNearPlane: i === 0,
-          }),
-          attributes: {
-            color: ColorGeometryInstanceAttribute.fromColor(
-              Color.fromAlpha(this._color, 0.1, scratchColor)
-            ),
-          },
-          id: this.id,
-          pickPrimitive: this,
-        }),
-        appearance: new PerInstanceColorAppearance({
-          translucent: true,
-          flat: true,
-        }),
-        asynchronous: false,
-      });
+			planesPrimitives[i] = new Primitive({
+				geometryInstances: new GeometryInstance({
+					geometry: new FrustumGeometry({
+						origin: position,
+						orientation: orientation,
+						frustum: frustum,
+						_drawNearPlane: i === 0,
+					}),
+					attributes: {
+						color: ColorGeometryInstanceAttribute.fromColor(
+							Color.fromAlpha(this._color, 0.1, scratchColor),
+						),
+					},
+					id: this.id,
+					pickPrimitive: this,
+				}),
+				appearance: new PerInstanceColorAppearance({
+					translucent: true,
+					flat: true,
+				}),
+				asynchronous: false,
+			})
 
-      outlinePrimitives[i] = new Primitive({
-        geometryInstances: new GeometryInstance({
-          geometry: new FrustumOutlineGeometry({
-            origin: position,
-            orientation: orientation,
-            frustum: frustum,
-            _drawNearPlane: i === 0,
-          }),
-          attributes: {
-            color: ColorGeometryInstanceAttribute.fromColor(this._color),
-          },
-          id: this.id,
-          pickPrimitive: this,
-        }),
-        appearance: new PerInstanceColorAppearance({
-          translucent: false,
-          flat: true,
-        }),
-        asynchronous: false,
-      });
-    }
-  }
+			outlinePrimitives[i] = new Primitive({
+				geometryInstances: new GeometryInstance({
+					geometry: new FrustumOutlineGeometry({
+						origin: position,
+						orientation: orientation,
+						frustum: frustum,
+						_drawNearPlane: i === 0,
+					}),
+					attributes: {
+						color: ColorGeometryInstanceAttribute.fromColor(this._color),
+					},
+					id: this.id,
+					pickPrimitive: this,
+				}),
+				appearance: new PerInstanceColorAppearance({
+					translucent: false,
+					flat: true,
+				}),
+				asynchronous: false,
+			})
+		}
+	}
 
-  length = planesPrimitives.length;
-  for (i = 0; i < length; ++i) {
-    outlinePrimitives[i].update(frameState);
-    planesPrimitives[i].update(frameState);
-  }
-};
+	length = planesPrimitives.length
+	for (i = 0; i < length; ++i) {
+		outlinePrimitives[i].update(frameState)
+		planesPrimitives[i].update(frameState)
+	}
+}
 
 /**
  * Returns true if this object was destroyed; otherwise, false.
@@ -225,8 +224,8 @@ DebugCameraPrimitive.prototype.update = function (frameState) {
  * @see DebugCameraPrimitive#destroy
  */
 DebugCameraPrimitive.prototype.isDestroyed = function () {
-  return false;
-};
+	return false
+}
 
 /**
  * Destroys the WebGL resources held by this object.  Destroying an object allows for deterministic
@@ -245,13 +244,13 @@ DebugCameraPrimitive.prototype.isDestroyed = function () {
  * @see DebugCameraPrimitive#isDestroyed
  */
 DebugCameraPrimitive.prototype.destroy = function () {
-  var length = this._planesPrimitives.length;
-  for (var i = 0; i < length; ++i) {
-    this._outlinePrimitives[i] =
-      this._outlinePrimitives[i] && this._outlinePrimitives[i].destroy();
-    this._planesPrimitives[i] =
-      this._planesPrimitives[i] && this._planesPrimitives[i].destroy();
-  }
-  return destroyObject(this);
-};
-export default DebugCameraPrimitive;
+	var length = this._planesPrimitives.length
+	for (var i = 0; i < length; ++i) {
+		this._outlinePrimitives[i] =
+			this._outlinePrimitives[i] && this._outlinePrimitives[i].destroy()
+		this._planesPrimitives[i] =
+			this._planesPrimitives[i] && this._planesPrimitives[i].destroy()
+	}
+	return destroyObject(this)
+}
+export default DebugCameraPrimitive

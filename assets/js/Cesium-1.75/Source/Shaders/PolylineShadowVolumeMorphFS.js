@@ -44,4 +44,4 @@ void main(void)\n\
     gl_FragColor = vec4(material.diffuse + material.emission, material.alpha);\n\
 #endif // PER_INSTANCE_COLOR\n\
 }\n\
-";
+"

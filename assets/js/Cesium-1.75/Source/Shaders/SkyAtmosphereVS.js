@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "attribute vec4 position;\n\
+export default 'attribute vec4 position;\n\
 \n\
 varying vec3 v_outerPositionWC;\n\
 \n\
@@ -18,4 +18,4 @@ void main(void)\n\
     v_outerPositionWC = positionWC.xyz;\n\
     gl_Position = czm_modelViewProjection * position;\n\
 }\n\
-";
+'

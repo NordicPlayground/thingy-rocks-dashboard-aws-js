@@ -11,44 +11,44 @@
  * @private
  */
 function IauOrientationParameters(
-  rightAscension,
-  declination,
-  rotation,
-  rotationRate
+	rightAscension,
+	declination,
+	rotation,
+	rotationRate,
 ) {
-  /**
-   * The right ascension of the north pole of the body with respect to
-   * the International Celestial Reference Frame, in radians.
-   * @type {Number}
-   *
-   * @private
-   */
-  this.rightAscension = rightAscension;
+	/**
+	 * The right ascension of the north pole of the body with respect to
+	 * the International Celestial Reference Frame, in radians.
+	 * @type {Number}
+	 *
+	 * @private
+	 */
+	this.rightAscension = rightAscension
 
-  /**
-   * The declination of the north pole of the body with respect to
-   * the International Celestial Reference Frame, in radians.
-   * @type {Number}
-   *
-   * @private
-   */
-  this.declination = declination;
+	/**
+	 * The declination of the north pole of the body with respect to
+	 * the International Celestial Reference Frame, in radians.
+	 * @type {Number}
+	 *
+	 * @private
+	 */
+	this.declination = declination
 
-  /**
-   * The rotation about the north pole used to align a set of axes with
-   * the meridian defined by the IAU report, in radians.
-   * @type {Number}
-   *
-   * @private
-   */
-  this.rotation = rotation;
+	/**
+	 * The rotation about the north pole used to align a set of axes with
+	 * the meridian defined by the IAU report, in radians.
+	 * @type {Number}
+	 *
+	 * @private
+	 */
+	this.rotation = rotation
 
-  /**
-   * The instantaneous rotation rate about the north pole, in radians per second.
-   * @type {Number}
-   *
-   * @private
-   */
-  this.rotationRate = rotationRate;
+	/**
+	 * The instantaneous rotation rate about the north pole, in radians per second.
+	 * @type {Number}
+	 *
+	 * @private
+	 */
+	this.rotationRate = rotationRate
 }
-export default IauOrientationParameters;
+export default IauOrientationParameters

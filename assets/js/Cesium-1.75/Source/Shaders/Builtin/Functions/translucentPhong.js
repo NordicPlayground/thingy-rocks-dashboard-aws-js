@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * @private\n\
  */\n\
 vec4 czm_translucentPhong(vec3 toEye, czm_material material, vec3 lightDirectionEC)\n\
@@ -26,4 +26,4 @@ vec4 czm_translucentPhong(vec3 toEye, czm_material material, vec3 lightDirection
 \n\
     return vec4(color, material.alpha);\n\
 }\n\
-";
+'

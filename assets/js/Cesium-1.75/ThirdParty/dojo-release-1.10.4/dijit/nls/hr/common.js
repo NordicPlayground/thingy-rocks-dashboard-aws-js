@@ -1,8 +1,6 @@
-define(
-({
-	buttonOk: "OK",
-	buttonCancel: "Opoziv",
-	buttonSave: "Spremi",
-	itemClose: "Zatvori"
+define({
+	buttonOk: 'OK',
+	buttonCancel: 'Opoziv',
+	buttonSave: 'Spremi',
+	itemClose: 'Zatvori',
 })
-);

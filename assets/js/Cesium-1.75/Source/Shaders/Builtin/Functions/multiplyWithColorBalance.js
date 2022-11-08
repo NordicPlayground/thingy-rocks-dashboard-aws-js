@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "/**\n\
+export default '/**\n\
  * DOC_TBA\n\
  *\n\
  * @name czm_multiplyWithColorBalance\n\
@@ -17,4 +17,4 @@ vec3 czm_multiplyWithColorBalance(vec3 left, vec3 right)\n\
     \n\
     return ((leftLuminance + rightLuminance) / (2.0 * targetLuminance)) * target;\n\
 }\n\
-";
+'

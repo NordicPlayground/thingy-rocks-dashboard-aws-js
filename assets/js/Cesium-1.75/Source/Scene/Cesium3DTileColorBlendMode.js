@@ -25,28 +25,28 @@
  * @enum {Number}
  */
 var Cesium3DTileColorBlendMode = {
-  /**
-   * Multiplies the source color by the feature color.
-   *
-   * @type {Number}
-   * @constant
-   */
-  HIGHLIGHT: 0,
+	/**
+	 * Multiplies the source color by the feature color.
+	 *
+	 * @type {Number}
+	 * @constant
+	 */
+	HIGHLIGHT: 0,
 
-  /**
-   * Replaces the source color with the feature color.
-   *
-   * @type {Number}
-   * @constant
-   */
-  REPLACE: 1,
+	/**
+	 * Replaces the source color with the feature color.
+	 *
+	 * @type {Number}
+	 * @constant
+	 */
+	REPLACE: 1,
 
-  /**
-   * Blends the source color and feature color together.
-   *
-   * @type {Number}
-   * @constant
-   */
-  MIX: 2,
-};
-export default Object.freeze(Cesium3DTileColorBlendMode);
+	/**
+	 * Blends the source color and feature color together.
+	 *
+	 * @type {Number}
+	 * @constant
+	 */
+	MIX: 2,
+}
+export default Object.freeze(Cesium3DTileColorBlendMode)

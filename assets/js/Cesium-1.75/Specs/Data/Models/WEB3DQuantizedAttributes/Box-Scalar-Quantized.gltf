@@ -7,12 +7,8 @@
       "componentType": 5123,
       "count": 36,
       "type": "SCALAR",
-      "min": [
-        0
-      ],
-      "max": [
-        23
-      ]
+      "min": [0],
+      "max": [23]
     },
     "accessor_23": {
       "bufferView": "bufferView_0",
@@ -20,46 +16,16 @@
       "byteStride": 0,
       "componentType": 5123,
       "count": 24,
-      "max": [
-        65535,
-        65535,
-        65535
-      ],
-      "min": [
-        0,
-        0,
-        0
-      ],
+      "max": [65535, 65535, 65535],
+      "min": [0, 0, 0],
       "type": "VEC3",
       "extensions": {
         "WEB3D_quantized_attributes": {
-          "decodedMin": [
-            -0.5,
-            -0.5,
-            -0.5
-          ],
-          "decodedMax": [
-            0.5,
-            0.5,
-            0.5
-          ],
+          "decodedMin": [-0.5, -0.5, -0.5],
+          "decodedMax": [0.5, 0.5, 0.5],
           "decodeMatrix": [
-            0.000015259021896696422,
-            0,
-            0,
-            0,
-            0,
-            0.000015259021896696422,
-            0,
-            0,
-            0,
-            0,
-            0.000015259021896696422,
-            0,
-            -0.5,
-            -0.5,
-            -0.5,
-            1
+            0.000015259021896696422, 0, 0, 0, 0, 0.000015259021896696422, 0, 0,
+            0, 0, 0.000015259021896696422, 0, -0.5, -0.5, -0.5, 1
           ]
         }
       }
@@ -70,46 +36,16 @@
       "byteStride": 0,
       "componentType": 5123,
       "count": 24,
-      "max": [
-        65535,
-        65535,
-        65535
-      ],
-      "min": [
-        0,
-        0,
-        0
-      ],
+      "max": [65535, 65535, 65535],
+      "min": [0, 0, 0],
       "type": "VEC3",
       "extensions": {
         "WEB3D_quantized_attributes": {
-          "decodedMin": [
-            -1,
-            -1,
-            -1
-          ],
-          "decodedMax": [
-            1,
-            1,
-            1
-          ],
+          "decodedMin": [-1, -1, -1],
+          "decodedMax": [1, 1, 1],
           "decodeMatrix": [
-            0.000030518043793392844,
-            0,
-            0,
-            0,
-            0,
-            0.000030518043793392844,
-            0,
-            0,
-            0,
-            0,
-            0.000030518043793392844,
-            0,
-            -1,
-            -1,
-            -1,
-            1
+            0.000030518043793392844, 0, 0, 0, 0, 0.000030518043793392844, 0, 0,
+            0, 0, 0.000030518043793392844, 0, -1, -1, -1, 1
           ]
         }
       }
@@ -120,27 +56,14 @@
       "byteStride": 0,
       "componentType": 5123,
       "count": 24,
-      "max": [
-        65535
-      ],
-      "min": [
-        0
-      ],
+      "max": [65535],
+      "min": [0],
       "type": "SCALAR",
       "extensions": {
         "WEB3D_quantized_attributes": {
-          "decodedMin": [
-            1
-          ],
-          "decodedMax": [
-            1
-          ],
-          "decodeMatrix": [
-            0,
-            0,
-            1,
-            1
-          ]
+          "decodedMin": [1],
+          "decodedMax": [1],
+          "decodeMatrix": [0, 0, 1, 1]
         }
       }
     }
@@ -181,19 +104,9 @@
       "name": "Red",
       "technique": "technique0",
       "values": {
-        "diffuse": [
-          0.8,
-          0,
-          0,
-          1
-        ],
+        "diffuse": [0.8, 0, 0, 1],
         "shininess": 256,
-        "specular": [
-          0.2,
-          0.2,
-          0.2,
-          1
-        ]
+        "specular": [0.2, 0.2, 0.2, 1]
       }
     }
   },
@@ -217,61 +130,19 @@
   "nodes": {
     "Geometry-mesh002Node": {
       "children": [],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
-      "meshes": [
-        "Geometry-mesh002"
-      ],
+      "matrix": [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+      "meshes": ["Geometry-mesh002"],
       "name": "Mesh"
     },
     "node_1": {
-      "children": [
-        "Geometry-mesh002Node"
-      ],
-      "matrix": [
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        -1,
-        0,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1
-      ],
+      "children": ["Geometry-mesh002Node"],
+      "matrix": [1, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0, 0, 0, 0, 1],
       "name": "Y_UP_Transform"
     }
   },
   "programs": {
     "program_0": {
-      "attributes": [
-        "a_normal",
-        "a_position",
-        "a_scalar_test"
-      ],
+      "attributes": ["a_normal", "a_position", "a_scalar_test"],
       "fragmentShader": "Box0FS",
       "vertexShader": "Box0VS"
     }
@@ -279,9 +150,7 @@
   "scene": "defaultScene",
   "scenes": {
     "defaultScene": {
-      "nodes": [
-        "node_1"
-      ]
+      "nodes": ["node_1"]
     }
   },
   "shaders": {
@@ -339,10 +208,7 @@
       },
       "program": "program_0",
       "states": {
-        "enable": [
-          2929,
-          2884
-        ],
+        "enable": [2929, 2884],
         "disable": []
       },
       "uniforms": {
@@ -355,9 +221,7 @@
       }
     }
   },
-  "extensionsUsed": [
-    "WEB3D_quantized_attributes"
-  ],
+  "extensionsUsed": ["WEB3D_quantized_attributes"],
   "cameras": {},
   "images": {},
   "extensions": {

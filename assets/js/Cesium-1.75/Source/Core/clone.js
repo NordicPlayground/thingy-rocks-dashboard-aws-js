@@ -1,4 +1,4 @@
-import defaultValue from "./defaultValue.js";
+import defaultValue from './defaultValue.js'
 
 /**
  * Clones an object, returning a new object containing the same properties.
@@ -10,23 +10,23 @@ import defaultValue from "./defaultValue.js";
  * @returns {Object} The cloned object.
  */
 function clone(object, deep) {
-  if (object === null || typeof object !== "object") {
-    return object;
-  }
+	if (object === null || typeof object !== 'object') {
+		return object
+	}
 
-  deep = defaultValue(deep, false);
+	deep = defaultValue(deep, false)
 
-  var result = new object.constructor();
-  for (var propertyName in object) {
-    if (object.hasOwnProperty(propertyName)) {
-      var value = object[propertyName];
-      if (deep) {
-        value = clone(value, deep);
-      }
-      result[propertyName] = value;
-    }
-  }
+	var result = new object.constructor()
+	for (var propertyName in object) {
+		if (object.hasOwnProperty(propertyName)) {
+			var value = object[propertyName]
+			if (deep) {
+				value = clone(value, deep)
+			}
+			result[propertyName] = value
+		}
+	}
 
-  return result;
+	return result
 }
-export default clone;
+export default clone

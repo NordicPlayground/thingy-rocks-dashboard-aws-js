@@ -1,6 +1,6 @@
-import Check from "./Check.js";
-import defined from "./defined.js";
-import FeatureDetection from "./FeatureDetection.js";
+import Check from './Check.js'
+import defined from './defined.js'
+import FeatureDetection from './FeatureDetection.js'
 
 /**
  * Create a shallow copy of an array from begin to end.
@@ -13,30 +13,30 @@ import FeatureDetection from "./FeatureDetection.js";
  * @private
  */
 function arraySlice(array, begin, end) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("array", array);
-  if (defined(begin)) {
-    Check.typeOf.number("begin", begin);
-  }
-  if (defined(end)) {
-    Check.typeOf.number("end", end);
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('array', array)
+	if (defined(begin)) {
+		Check.typeOf.number('begin', begin)
+	}
+	if (defined(end)) {
+		Check.typeOf.number('end', end)
+	}
+	//>>includeEnd('debug');
 
-  if (typeof array.slice === "function") {
-    return array.slice(begin, end);
-  }
+	if (typeof array.slice === 'function') {
+		return array.slice(begin, end)
+	}
 
-  var copy = Array.prototype.slice.call(array, begin, end);
-  var typedArrayTypes = FeatureDetection.typedArrayTypes;
-  var length = typedArrayTypes.length;
-  for (var i = 0; i < length; ++i) {
-    if (array instanceof typedArrayTypes[i]) {
-      copy = new typedArrayTypes[i](copy);
-      break;
-    }
-  }
+	var copy = Array.prototype.slice.call(array, begin, end)
+	var typedArrayTypes = FeatureDetection.typedArrayTypes
+	var length = typedArrayTypes.length
+	for (var i = 0; i < length; ++i) {
+		if (array instanceof typedArrayTypes[i]) {
+			copy = new typedArrayTypes[i](copy)
+			break
+		}
+	}
 
-  return copy;
+	return copy
 }
-export default arraySlice;
+export default arraySlice

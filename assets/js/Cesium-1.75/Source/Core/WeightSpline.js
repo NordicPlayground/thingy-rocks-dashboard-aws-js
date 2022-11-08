@@ -1,8 +1,8 @@
-import Check from "./Check.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import Spline from "./Spline.js";
+import Check from './Check.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import Spline from './Spline.js'
 
 /**
  * A spline that linearly interpolates over an array of weight values used by morph targets.
@@ -38,58 +38,56 @@ import Spline from "./Spline.js";
  * @see QuaternionSpline
  */
 function WeightSpline(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  var weights = options.weights;
-  var times = options.times;
+	var weights = options.weights
+	var times = options.times
 
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("weights", weights);
-  Check.defined("times", times);
-  Check.typeOf.number.greaterThanOrEquals("weights.length", weights.length, 3);
-  if (weights.length % times.length !== 0) {
-    throw new DeveloperError(
-      "times.length must be a factor of weights.length."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('weights', weights)
+	Check.defined('times', times)
+	Check.typeOf.number.greaterThanOrEquals('weights.length', weights.length, 3)
+	if (weights.length % times.length !== 0) {
+		throw new DeveloperError('times.length must be a factor of weights.length.')
+	}
+	//>>includeEnd('debug');
 
-  this._times = times;
-  this._weights = weights;
-  this._count = weights.length / times.length;
+	this._times = times
+	this._weights = weights
+	this._count = weights.length / times.length
 
-  this._lastTimeIndex = 0;
+	this._lastTimeIndex = 0
 }
 
 Object.defineProperties(WeightSpline.prototype, {
-  /**
-   * An array of times for the control weights.
-   *
-   * @memberof WeightSpline.prototype
-   *
-   * @type {Number[]}
-   * @readonly
-   */
-  times: {
-    get: function () {
-      return this._times;
-    },
-  },
+	/**
+	 * An array of times for the control weights.
+	 *
+	 * @memberof WeightSpline.prototype
+	 *
+	 * @type {Number[]}
+	 * @readonly
+	 */
+	times: {
+		get: function () {
+			return this._times
+		},
+	},
 
-  /**
-   * An array of floating-point array control weights.
-   *
-   * @memberof WeightSpline.prototype
-   *
-   * @type {Number[]}
-   * @readonly
-   */
-  weights: {
-    get: function () {
-      return this._weights;
-    },
-  },
-});
+	/**
+	 * An array of floating-point array control weights.
+	 *
+	 * @memberof WeightSpline.prototype
+	 *
+	 * @type {Number[]}
+	 * @readonly
+	 */
+	weights: {
+		get: function () {
+			return this._weights
+		},
+	},
+})
 
 /**
  * Finds an index <code>i</code> in <code>times</code> such that the parameter
@@ -103,7 +101,7 @@ Object.defineProperties(WeightSpline.prototype, {
  *                             is the first element in the array <code>times</code> and <code>t<sub>n</sub></code> is the last element
  *                             in the array <code>times</code>.
  */
-WeightSpline.prototype.findTimeInterval = Spline.prototype.findTimeInterval;
+WeightSpline.prototype.findTimeInterval = Spline.prototype.findTimeInterval
 
 /**
  * Wraps the given time to the period covered by the spline.
@@ -112,7 +110,7 @@ WeightSpline.prototype.findTimeInterval = Spline.prototype.findTimeInterval;
  * @param {Number} time The time.
  * @return {Number} The time, wrapped around to the updated animation.
  */
-WeightSpline.prototype.wrapTime = Spline.prototype.wrapTime;
+WeightSpline.prototype.wrapTime = Spline.prototype.wrapTime
 
 /**
  * Clamps the given time to the period covered by the spline.
@@ -121,7 +119,7 @@ WeightSpline.prototype.wrapTime = Spline.prototype.wrapTime;
  * @param {Number} time The time.
  * @return {Number} The time, clamped to the animation period.
  */
-WeightSpline.prototype.clampTime = Spline.prototype.clampTime;
+WeightSpline.prototype.clampTime = Spline.prototype.clampTime
 
 /**
  * Evaluates the curve at a given time.
@@ -135,24 +133,24 @@ WeightSpline.prototype.clampTime = Spline.prototype.clampTime;
  *                             in the array <code>times</code>.
  */
 WeightSpline.prototype.evaluate = function (time, result) {
-  var weights = this.weights;
-  var times = this.times;
+	var weights = this.weights
+	var times = this.times
 
-  var i = (this._lastTimeIndex = this.findTimeInterval(
-    time,
-    this._lastTimeIndex
-  ));
-  var u = (time - times[i]) / (times[i + 1] - times[i]);
+	var i = (this._lastTimeIndex = this.findTimeInterval(
+		time,
+		this._lastTimeIndex,
+	))
+	var u = (time - times[i]) / (times[i + 1] - times[i])
 
-  if (!defined(result)) {
-    result = new Array(this._count);
-  }
+	if (!defined(result)) {
+		result = new Array(this._count)
+	}
 
-  for (var j = 0; j < this._count; j++) {
-    var index = i * this._count + j;
-    result[j] = weights[index] * (1.0 - u) + weights[index + this._count] * u;
-  }
+	for (var j = 0; j < this._count; j++) {
+		var index = i * this._count + j
+		result[j] = weights[index] * (1.0 - u) + weights[index + this._count] * u
+	}
 
-  return result;
-};
-export default WeightSpline;
+	return result
+}
+export default WeightSpline

@@ -1,22 +1,34 @@
 define([
-	"dojo/_base/array", // array.forEach array.map
-	"dojo/_base/declare", // declare
-	"dojo/dom", // dom.isDescendant()
-	"dojo/dom-class", // domClass.toggle
-	"dojo/has",
-	"dojo/_base/lang", // lang.hitch
-	"dojo/on",
-	"dojo/domReady",
-	"dojo/touch",
-	"dojo/_base/window", // win.body
-	"./a11yclick",
-	"./registry"
-], function(array, declare, dom, domClass, has, lang, on, domReady, touch, win, a11yclick, registry){
-
+	'dojo/_base/array', // array.forEach array.map
+	'dojo/_base/declare', // declare
+	'dojo/dom', // dom.isDescendant()
+	'dojo/dom-class', // domClass.toggle
+	'dojo/has',
+	'dojo/_base/lang', // lang.hitch
+	'dojo/on',
+	'dojo/domReady',
+	'dojo/touch',
+	'dojo/_base/window', // win.body
+	'./a11yclick',
+	'./registry',
+], function (
+	array,
+	declare,
+	dom,
+	domClass,
+	has,
+	lang,
+	on,
+	domReady,
+	touch,
+	win,
+	a11yclick,
+	registry,
+) {
 	// module:
 	//		dijit/_CssStateMixin
 
-	var CssStateMixin = declare("dijit._CssStateMixin", [], {
+	var CssStateMixin = declare('dijit._CssStateMixin', [], {
 		// summary:
 		//		Mixin for widgets to set CSS classes on the widget DOM nodes depending on hover/mouse press/focus
 		//		state changes, and also higher-level state changes such becoming disabled or selected.
@@ -56,67 +68,81 @@ define([
 		//		True if mouse was pressed while over this widget, and hasn't been released yet
 		active: false,
 
-		_applyAttributes: function(){
+		_applyAttributes: function () {
 			// This code would typically be in postCreate(), but putting in _applyAttributes() for
 			// performance: so the class changes happen before DOM is inserted into the document.
 			// Change back to postCreate() in 2.0.  See #11635.
 
-			this.inherited(arguments);
+			this.inherited(arguments)
 
 			// Monitoring changes to disabled, readonly, etc. state, and update CSS class of root node
-			array.forEach(["disabled", "readOnly", "checked", "selected", "focused", "state", "hovering", "active", "_opened"], function(attr){
-				this.watch(attr, lang.hitch(this, "_setStateClass"));
-			}, this);
+			array.forEach(
+				[
+					'disabled',
+					'readOnly',
+					'checked',
+					'selected',
+					'focused',
+					'state',
+					'hovering',
+					'active',
+					'_opened',
+				],
+				function (attr) {
+					this.watch(attr, lang.hitch(this, '_setStateClass'))
+				},
+				this,
+			)
 
 			// Track hover and active mouse events on widget root node, plus possibly on subnodes
-			for(var ap in this.cssStateNodes || {}){
-				this._trackMouseState(this[ap], this.cssStateNodes[ap]);
+			for (var ap in this.cssStateNodes || {}) {
+				this._trackMouseState(this[ap], this.cssStateNodes[ap])
 			}
-			this._trackMouseState(this.domNode, this.baseClass);
+			this._trackMouseState(this.domNode, this.baseClass)
 
 			// Set state initially; there's probably no hover/active/focus state but widget might be
 			// disabled/readonly/checked/selected so we want to set CSS classes for those conditions.
-			this._setStateClass();
+			this._setStateClass()
 		},
 
-		_cssMouseEvent: function(/*Event*/ event){
+		_cssMouseEvent: function (/*Event*/ event) {
 			// summary:
 			//		Handler for CSS event on this.domNode. Sets hovering and active properties depending on mouse state,
 			//		which triggers _setStateClass() to set appropriate CSS classes for this.domNode.
 
-			if(!this.disabled){
-				switch(event.type){
-					case "mouseover":
-					case "MSPointerOver":
-					case "pointerover":
-						this._set("hovering", true);
-						this._set("active", this._mouseDown);
-						break;
-					case "mouseout":
-					case "MSPointerOut":
-					case "pointerout":
-						this._set("hovering", false);
-						this._set("active", false);
-						break;
-					case "mousedown":
-					case "touchstart":
-					case "MSPointerDown":
-					case "pointerdown":
-					case "keydown":
-						this._set("active", true);
-						break;
-					case "mouseup":
-					case "dojotouchend":
-					case "MSPointerUp":
-					case "pointerup":
-					case "keyup":
-						this._set("active", false);
-						break;
+			if (!this.disabled) {
+				switch (event.type) {
+					case 'mouseover':
+					case 'MSPointerOver':
+					case 'pointerover':
+						this._set('hovering', true)
+						this._set('active', this._mouseDown)
+						break
+					case 'mouseout':
+					case 'MSPointerOut':
+					case 'pointerout':
+						this._set('hovering', false)
+						this._set('active', false)
+						break
+					case 'mousedown':
+					case 'touchstart':
+					case 'MSPointerDown':
+					case 'pointerdown':
+					case 'keydown':
+						this._set('active', true)
+						break
+					case 'mouseup':
+					case 'dojotouchend':
+					case 'MSPointerUp':
+					case 'pointerup':
+					case 'keyup':
+						this._set('active', false)
+						break
 				}
 			}
 		},
 
-		_setStateClass: function(){
+		_setStateClass: function () {
 			// summary:
 			//		Update the visual state of the widget by setting the css classes on this.domNode
 			//		(or this.stateNode if defined) by combining this.baseClass with
@@ -145,134 +171,138 @@ define([
 			//		- Hover		- if the mouse is over the widget
 
 			// Compute new set of classes
-			var newStateClasses = this.baseClass.split(" ");
+			var newStateClasses = this.baseClass.split(' ')
 
-			function multiply(modifier){
-				newStateClasses = newStateClasses.concat(array.map(newStateClasses, function(c){
-					return c + modifier;
-				}), "dijit" + modifier);
+			function multiply(modifier) {
+				newStateClasses = newStateClasses.concat(
+					array.map(newStateClasses, function (c) {
+						return c + modifier
+					}),
+					'dijit' + modifier,
+				)
 			}
 
-			if(!this.isLeftToRight()){
+			if (!this.isLeftToRight()) {
 				// For RTL mode we need to set an addition class like dijitTextBoxRtl.
-				multiply("Rtl");
+				multiply('Rtl')
 			}
 
-			var checkedState = this.checked == "mixed" ? "Mixed" : (this.checked ? "Checked" : "");
-			if(this.checked){
-				multiply(checkedState);
+			var checkedState =
+				this.checked == 'mixed' ? 'Mixed' : this.checked ? 'Checked' : ''
+			if (this.checked) {
+				multiply(checkedState)
 			}
-			if(this.state){
-				multiply(this.state);
+			if (this.state) {
+				multiply(this.state)
 			}
-			if(this.selected){
-				multiply("Selected");
+			if (this.selected) {
+				multiply('Selected')
 			}
-			if(this._opened){
-				multiply("Opened");
+			if (this._opened) {
+				multiply('Opened')
 			}
 
-			if(this.disabled){
-				multiply("Disabled");
-			}else if(this.readOnly){
-				multiply("ReadOnly");
-			}else{
-				if(this.active){
-					multiply("Active");
-				}else if(this.hovering){
-					multiply("Hover");
+			if (this.disabled) {
+				multiply('Disabled')
+			} else if (this.readOnly) {
+				multiply('ReadOnly')
+			} else {
+				if (this.active) {
+					multiply('Active')
+				} else if (this.hovering) {
+					multiply('Hover')
 				}
 			}
 
-			if(this.focused){
-				multiply("Focused");
+			if (this.focused) {
+				multiply('Focused')
 			}
 
 			// Remove old state classes and add new ones.
 			// For performance concerns we only write into domNode.className once.
 			var tn = this.stateNode || this.domNode,
-				classHash = {};	// set of all classes (state and otherwise) for node
+				classHash = {} // set of all classes (state and otherwise) for node
 
-			array.forEach(tn.className.split(" "), function(c){
-				classHash[c] = true;
-			});
+			array.forEach(tn.className.split(' '), function (c) {
+				classHash[c] = true
+			})
 
-			if("_stateClasses" in this){
-				array.forEach(this._stateClasses, function(c){
-					delete classHash[c];
-				});
+			if ('_stateClasses' in this) {
+				array.forEach(this._stateClasses, function (c) {
+					delete classHash[c]
+				})
 			}
 
-			array.forEach(newStateClasses, function(c){
-				classHash[c] = true;
-			});
+			array.forEach(newStateClasses, function (c) {
+				classHash[c] = true
+			})
 
-			var newClasses = [];
-			for(var c in classHash){
-				newClasses.push(c);
+			var newClasses = []
+			for (var c in classHash) {
+				newClasses.push(c)
 			}
-			tn.className = newClasses.join(" ");
+			tn.className = newClasses.join(' ')
 
-			this._stateClasses = newStateClasses;
+			this._stateClasses = newStateClasses
 		},
 
-		_subnodeCssMouseEvent: function(node, clazz, evt){
+		_subnodeCssMouseEvent: function (node, clazz, evt) {
 			// summary:
 			//		Handler for hover/active mouse event on widget's subnode
-			if(this.disabled || this.readOnly){
-				return;
+			if (this.disabled || this.readOnly) {
+				return
 			}
 
-			function hover(isHovering){
-				domClass.toggle(node, clazz + "Hover", isHovering);
+			function hover(isHovering) {
+				domClass.toggle(node, clazz + 'Hover', isHovering)
 			}
 
-			function active(isActive){
-				domClass.toggle(node, clazz + "Active", isActive);
+			function active(isActive) {
+				domClass.toggle(node, clazz + 'Active', isActive)
 			}
 
-			function focused(isFocused){
-				domClass.toggle(node, clazz + "Focused", isFocused);
+			function focused(isFocused) {
+				domClass.toggle(node, clazz + 'Focused', isFocused)
 			}
 
-			switch(evt.type){
-				case "mouseover":
-				case "MSPointerOver":
-				case "pointerover":
-					hover(true);
-					break;
-				case "mouseout":
-				case "MSPointerOut":
-				case "pointerout":
-					hover(false);
-					active(false);
-					break;
-				case "mousedown":
-				case "touchstart":
-				case "MSPointerDown":
-				case "pointerdown":
-				case "keydown":
-					active(true);
-					break;
-				case "mouseup":
-				case "MSPointerUp":
-				case "pointerup":
-				case "dojotouchend":
-				case "keyup":
-					active(false);
-					break;
-				case "focus":
-				case "focusin":
-					focused(true);
-					break;
-				case "blur":
-				case "focusout":
-					focused(false);
-					break;
+			switch (evt.type) {
+				case 'mouseover':
+				case 'MSPointerOver':
+				case 'pointerover':
+					hover(true)
+					break
+				case 'mouseout':
+				case 'MSPointerOut':
+				case 'pointerout':
+					hover(false)
+					active(false)
+					break
+				case 'mousedown':
+				case 'touchstart':
+				case 'MSPointerDown':
+				case 'pointerdown':
+				case 'keydown':
+					active(true)
+					break
+				case 'mouseup':
+				case 'MSPointerUp':
+				case 'pointerup':
+				case 'dojotouchend':
+				case 'keyup':
+					active(false)
+					break
+				case 'focus':
+				case 'focusin':
+					focused(true)
+					break
+				case 'blur':
+				case 'focusout':
+					focused(false)
+					break
 			}
 		},
 
-		_trackMouseState: function(/*DomNode*/ node, /*String*/ clazz){
+		_trackMouseState: function (/*DomNode*/ node, /*String*/ clazz) {
 			// summary:
 			//		Track mouse/focus events on specified node and set CSS class on that node to indicate
 			//		current state.   Usually not called directly, but via cssStateNodes attribute.
@@ -292,81 +322,86 @@ define([
 
 			// Flag for listener code below to call this._cssMouseEvent() or this._subnodeCssMouseEvent()
 			// when node is hovered/active
-			node._cssState = clazz;
-		}
-	});
+			node._cssState = clazz
+		},
+	})
 
-	domReady(function(){
+	domReady(function () {
 		// Document level listener to catch hover etc. events on widget root nodes and subnodes.
 		// Note that when the mouse is moved quickly, a single onmouseenter event could signal that multiple widgets
 		// have been hovered or unhovered (try test_Accordion.html)
 
-		function pointerHandler(evt, target, relatedTarget){
+		function pointerHandler(evt, target, relatedTarget) {
 			// Handler for mouseover, mouseout, a11yclick.press and a11click.release events
 
 			// Poor man's event propagation.  Don't propagate event to ancestors of evt.relatedTarget,
 			// to avoid processing mouseout events moving from a widget's domNode to a descendant node;
 			// such events shouldn't be interpreted as a mouseleave on the widget.
-			if(relatedTarget && dom.isDescendant(relatedTarget, target)){
-				return;
+			if (relatedTarget && dom.isDescendant(relatedTarget, target)) {
+				return
 			}
 
-			for(var node = target; node && node != relatedTarget; node = node.parentNode){
+			for (
+				var node = target;
+				node && node != relatedTarget;
+				node = node.parentNode
+			) {
 				// Process any nodes with _cssState property.   They are generally widget root nodes,
 				// but could also be sub-nodes within a widget
-				if(node._cssState){
-					var widget = registry.getEnclosingWidget(node);
-					if(widget){
-						if(node == widget.domNode){
+				if (node._cssState) {
+					var widget = registry.getEnclosingWidget(node)
+					if (widget) {
+						if (node == widget.domNode) {
 							// event on the widget's root node
-							widget._cssMouseEvent(evt);
-						}else{
+							widget._cssMouseEvent(evt)
+						} else {
 							// event on widget's sub-node
-							widget._subnodeCssMouseEvent(node, node._cssState, evt);
+							widget._subnodeCssMouseEvent(node, node._cssState, evt)
 						}
 					}
 				}
 			}
 		}
 
-		var body = win.body(), activeNode;
+		var body = win.body(),
+			activeNode
 
 		// Handle pointer related events (i.e. mouse or touch)
-		on(body, touch.over, function(evt){
+		on(body, touch.over, function (evt) {
 			// Using touch.over rather than mouseover mainly to ignore phantom mouse events on iOS.
-			pointerHandler(evt, evt.target, evt.relatedTarget);
-		});
-		on(body, touch.out, function(evt){
+			pointerHandler(evt, evt.target, evt.relatedTarget)
+		})
+		on(body, touch.out, function (evt) {
 			// Using touch.out rather than mouseout mainly to ignore phantom mouse events on iOS.
-			pointerHandler(evt, evt.target, evt.relatedTarget);
-		});
-		on(body, a11yclick.press, function(evt){
+			pointerHandler(evt, evt.target, evt.relatedTarget)
+		})
+		on(body, a11yclick.press, function (evt) {
 			// Save the a11yclick.press target to reference when the a11yclick.release comes.
-			activeNode = evt.target;
+			activeNode = evt.target
 			pointerHandler(evt, activeNode)
-		});
-		on(body, a11yclick.release, function(evt){
+		})
+		on(body, a11yclick.release, function (evt) {
 			// The release event could come on a separate node than the press event, if for example user slid finger.
 			// Reference activeNode to reset the state of the node that got state set in the a11yclick.press handler.
-			pointerHandler(evt, activeNode);
-			activeNode = null;
-		});
+			pointerHandler(evt, activeNode)
+			activeNode = null
+		})
 
 		// Track focus events on widget sub-nodes that have been registered via _trackMouseState().
 		// However, don't track focus events on the widget root nodes, because focus is tracked via the
 		// focus manager (and it's not really tracking focus, but rather tracking that focus is on one of the widget's
 		// nodes or a subwidget's node or a popup node, etc.)
 		// Remove for 2.0 (if focus CSS needed, just use :focus pseudo-selector).
-		on(body, "focusin, focusout", function(evt){
-			var node = evt.target;
-			if(node._cssState && !node.getAttribute("widgetId")){
-				var widget = registry.getEnclosingWidget(node);
-				if(widget){
-					widget._subnodeCssMouseEvent(node, node._cssState, evt);
+		on(body, 'focusin, focusout', function (evt) {
+			var node = evt.target
+			if (node._cssState && !node.getAttribute('widgetId')) {
+				var widget = registry.getEnclosingWidget(node)
+				if (widget) {
+					widget._subnodeCssMouseEvent(node, node._cssState, evt)
 				}
 			}
-		});
-	});
+		})
+	})
 
-	return CssStateMixin;
-});
+	return CssStateMixin
+})

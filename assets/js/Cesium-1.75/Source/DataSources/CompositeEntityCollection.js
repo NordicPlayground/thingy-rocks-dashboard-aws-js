@@ -1,117 +1,116 @@
-import createGuid from "../Core/createGuid.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import CesiumMath from "../Core/Math.js";
-import Entity from "./Entity.js";
-import EntityCollection from "./EntityCollection.js";
+import createGuid from '../Core/createGuid.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import CesiumMath from '../Core/Math.js'
+import Entity from './Entity.js'
+import EntityCollection from './EntityCollection.js'
 
 var entityOptionsScratch = {
-  id: undefined,
-};
-var entityIdScratch = new Array(2);
+	id: undefined,
+}
+var entityIdScratch = new Array(2)
 
 function clean(entity) {
-  var propertyNames = entity.propertyNames;
-  var propertyNamesLength = propertyNames.length;
-  for (var i = 0; i < propertyNamesLength; i++) {
-    entity[propertyNames[i]] = undefined;
-  }
-  entity._name = undefined;
-  entity._availability = undefined;
+	var propertyNames = entity.propertyNames
+	var propertyNamesLength = propertyNames.length
+	for (var i = 0; i < propertyNamesLength; i++) {
+		entity[propertyNames[i]] = undefined
+	}
+	entity._name = undefined
+	entity._availability = undefined
 }
 
 function subscribeToEntity(that, eventHash, collectionId, entity) {
-  entityIdScratch[0] = collectionId;
-  entityIdScratch[1] = entity.id;
-  eventHash[
-    JSON.stringify(entityIdScratch)
-  ] = entity.definitionChanged.addEventListener(
-    CompositeEntityCollection.prototype._onDefinitionChanged,
-    that
-  );
+	entityIdScratch[0] = collectionId
+	entityIdScratch[1] = entity.id
+	eventHash[JSON.stringify(entityIdScratch)] =
+		entity.definitionChanged.addEventListener(
+			CompositeEntityCollection.prototype._onDefinitionChanged,
+			that,
+		)
 }
 
 function unsubscribeFromEntity(that, eventHash, collectionId, entity) {
-  entityIdScratch[0] = collectionId;
-  entityIdScratch[1] = entity.id;
-  var id = JSON.stringify(entityIdScratch);
-  eventHash[id]();
-  eventHash[id] = undefined;
+	entityIdScratch[0] = collectionId
+	entityIdScratch[1] = entity.id
+	var id = JSON.stringify(entityIdScratch)
+	eventHash[id]()
+	eventHash[id] = undefined
 }
 
 function recomposite(that) {
-  that._shouldRecomposite = true;
-  if (that._suspendCount !== 0) {
-    return;
-  }
+	that._shouldRecomposite = true
+	if (that._suspendCount !== 0) {
+		return
+	}
 
-  var collections = that._collections;
-  var collectionsLength = collections.length;
+	var collections = that._collections
+	var collectionsLength = collections.length
 
-  var collectionsCopy = that._collectionsCopy;
-  var collectionsCopyLength = collectionsCopy.length;
+	var collectionsCopy = that._collectionsCopy
+	var collectionsCopyLength = collectionsCopy.length
 
-  var i;
-  var entity;
-  var entities;
-  var iEntities;
-  var collection;
-  var composite = that._composite;
-  var newEntities = new EntityCollection(that);
-  var eventHash = that._eventHash;
-  var collectionId;
+	var i
+	var entity
+	var entities
+	var iEntities
+	var collection
+	var composite = that._composite
+	var newEntities = new EntityCollection(that)
+	var eventHash = that._eventHash
+	var collectionId
 
-  for (i = 0; i < collectionsCopyLength; i++) {
-    collection = collectionsCopy[i];
-    collection.collectionChanged.removeEventListener(
-      CompositeEntityCollection.prototype._onCollectionChanged,
-      that
-    );
-    entities = collection.values;
-    collectionId = collection.id;
-    for (iEntities = entities.length - 1; iEntities > -1; iEntities--) {
-      entity = entities[iEntities];
-      unsubscribeFromEntity(that, eventHash, collectionId, entity);
-    }
-  }
+	for (i = 0; i < collectionsCopyLength; i++) {
+		collection = collectionsCopy[i]
+		collection.collectionChanged.removeEventListener(
+			CompositeEntityCollection.prototype._onCollectionChanged,
+			that,
+		)
+		entities = collection.values
+		collectionId = collection.id
+		for (iEntities = entities.length - 1; iEntities > -1; iEntities--) {
+			entity = entities[iEntities]
+			unsubscribeFromEntity(that, eventHash, collectionId, entity)
+		}
+	}
 
-  for (i = collectionsLength - 1; i >= 0; i--) {
-    collection = collections[i];
-    collection.collectionChanged.addEventListener(
-      CompositeEntityCollection.prototype._onCollectionChanged,
-      that
-    );
+	for (i = collectionsLength - 1; i >= 0; i--) {
+		collection = collections[i]
+		collection.collectionChanged.addEventListener(
+			CompositeEntityCollection.prototype._onCollectionChanged,
+			that,
+		)
 
-    //Merge all of the existing entities.
-    entities = collection.values;
-    collectionId = collection.id;
-    for (iEntities = entities.length - 1; iEntities > -1; iEntities--) {
-      entity = entities[iEntities];
-      subscribeToEntity(that, eventHash, collectionId, entity);
+		//Merge all of the existing entities.
+		entities = collection.values
+		collectionId = collection.id
+		for (iEntities = entities.length - 1; iEntities > -1; iEntities--) {
+			entity = entities[iEntities]
+			subscribeToEntity(that, eventHash, collectionId, entity)
 
-      var compositeEntity = newEntities.getById(entity.id);
-      if (!defined(compositeEntity)) {
-        compositeEntity = composite.getById(entity.id);
-        if (!defined(compositeEntity)) {
-          entityOptionsScratch.id = entity.id;
-          compositeEntity = new Entity(entityOptionsScratch);
-        } else {
-          clean(compositeEntity);
-        }
-        newEntities.add(compositeEntity);
-      }
-      compositeEntity.merge(entity);
-    }
-  }
-  that._collectionsCopy = collections.slice(0);
+			var compositeEntity = newEntities.getById(entity.id)
+			if (!defined(compositeEntity)) {
+				compositeEntity = composite.getById(entity.id)
+				if (!defined(compositeEntity)) {
+					entityOptionsScratch.id = entity.id
+					compositeEntity = new Entity(entityOptionsScratch)
+				} else {
+					clean(compositeEntity)
+				}
+				newEntities.add(compositeEntity)
+			}
+			compositeEntity.merge(entity)
+		}
+	}
+	that._collectionsCopy = collections.slice(0)
 
-  composite.suspendEvents();
-  composite.removeAll();
-  var newEntitiesArray = newEntities.values;
-  for (i = 0; i < newEntitiesArray.length; i++) {
-    composite.add(newEntitiesArray[i]);
-  }
-  composite.resumeEvents();
+	composite.suspendEvents()
+	composite.removeAll()
+	var newEntitiesArray = newEntities.values
+	for (i = 0; i < newEntitiesArray.length; i++) {
+		composite.add(newEntitiesArray[i])
+	}
+	composite.resumeEvents()
 }
 
 /**
@@ -129,65 +128,65 @@ function recomposite(that) {
  * @param {DataSource|CompositeEntityCollection} [owner] The data source (or composite entity collection) which created this collection.
  */
 function CompositeEntityCollection(collections, owner) {
-  this._owner = owner;
-  this._composite = new EntityCollection(this);
-  this._suspendCount = 0;
-  this._collections = defined(collections) ? collections.slice() : [];
-  this._collectionsCopy = [];
-  this._id = createGuid();
-  this._eventHash = {};
-  recomposite(this);
-  this._shouldRecomposite = false;
+	this._owner = owner
+	this._composite = new EntityCollection(this)
+	this._suspendCount = 0
+	this._collections = defined(collections) ? collections.slice() : []
+	this._collectionsCopy = []
+	this._id = createGuid()
+	this._eventHash = {}
+	recomposite(this)
+	this._shouldRecomposite = false
 }
 
 Object.defineProperties(CompositeEntityCollection.prototype, {
-  /**
-   * Gets the event that is fired when entities are added or removed from the collection.
-   * The generated event is a {@link EntityCollection.collectionChangedEventCallback}.
-   * @memberof CompositeEntityCollection.prototype
-   * @readonly
-   * @type {Event}
-   */
-  collectionChanged: {
-    get: function () {
-      return this._composite._collectionChanged;
-    },
-  },
-  /**
-   * Gets a globally unique identifier for this collection.
-   * @memberof CompositeEntityCollection.prototype
-   * @readonly
-   * @type {String}
-   */
-  id: {
-    get: function () {
-      return this._id;
-    },
-  },
-  /**
-   * Gets the array of Entity instances in the collection.
-   * This array should not be modified directly.
-   * @memberof CompositeEntityCollection.prototype
-   * @readonly
-   * @type {Entity[]}
-   */
-  values: {
-    get: function () {
-      return this._composite.values;
-    },
-  },
-  /**
-   * Gets the owner of this composite entity collection, ie. the data source or composite entity collection which created it.
-   * @memberof CompositeEntityCollection.prototype
-   * @readonly
-   * @type {DataSource|CompositeEntityCollection}
-   */
-  owner: {
-    get: function () {
-      return this._owner;
-    },
-  },
-});
+	/**
+	 * Gets the event that is fired when entities are added or removed from the collection.
+	 * The generated event is a {@link EntityCollection.collectionChangedEventCallback}.
+	 * @memberof CompositeEntityCollection.prototype
+	 * @readonly
+	 * @type {Event}
+	 */
+	collectionChanged: {
+		get: function () {
+			return this._composite._collectionChanged
+		},
+	},
+	/**
+	 * Gets a globally unique identifier for this collection.
+	 * @memberof CompositeEntityCollection.prototype
+	 * @readonly
+	 * @type {String}
+	 */
+	id: {
+		get: function () {
+			return this._id
+		},
+	},
+	/**
+	 * Gets the array of Entity instances in the collection.
+	 * This array should not be modified directly.
+	 * @memberof CompositeEntityCollection.prototype
+	 * @readonly
+	 * @type {Entity[]}
+	 */
+	values: {
+		get: function () {
+			return this._composite.values
+		},
+	},
+	/**
+	 * Gets the owner of this composite entity collection, ie. the data source or composite entity collection which created it.
+	 * @memberof CompositeEntityCollection.prototype
+	 * @readonly
+	 * @type {DataSource|CompositeEntityCollection}
+	 */
+	owner: {
+		get: function () {
+			return this._owner
+		},
+	},
+})
 
 /**
  * Adds a collection to the composite.
@@ -199,34 +198,34 @@ Object.defineProperties(CompositeEntityCollection.prototype, {
  * @exception {DeveloperError} index, if supplied, must be greater than or equal to zero and less than or equal to the number of collections.
  */
 CompositeEntityCollection.prototype.addCollection = function (
-  collection,
-  index
+	collection,
+	index,
 ) {
-  var hasIndex = defined(index);
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(collection)) {
-    throw new DeveloperError("collection is required.");
-  }
-  if (hasIndex) {
-    if (index < 0) {
-      throw new DeveloperError("index must be greater than or equal to zero.");
-    } else if (index > this._collections.length) {
-      throw new DeveloperError(
-        "index must be less than or equal to the number of collections."
-      );
-    }
-  }
-  //>>includeEnd('debug');
+	var hasIndex = defined(index)
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(collection)) {
+		throw new DeveloperError('collection is required.')
+	}
+	if (hasIndex) {
+		if (index < 0) {
+			throw new DeveloperError('index must be greater than or equal to zero.')
+		} else if (index > this._collections.length) {
+			throw new DeveloperError(
+				'index must be less than or equal to the number of collections.',
+			)
+		}
+	}
+	//>>includeEnd('debug');
 
-  if (!hasIndex) {
-    index = this._collections.length;
-    this._collections.push(collection);
-  } else {
-    this._collections.splice(index, 0, collection);
-  }
+	if (!hasIndex) {
+		index = this._collections.length
+		this._collections.push(collection)
+	} else {
+		this._collections.splice(index, 0, collection)
+	}
 
-  recomposite(this);
-};
+	recomposite(this)
+}
 
 /**
  * Removes a collection from this composite, if present.
@@ -236,22 +235,22 @@ CompositeEntityCollection.prototype.addCollection = function (
  *                    false if the collection was not in the composite.
  */
 CompositeEntityCollection.prototype.removeCollection = function (collection) {
-  var index = this._collections.indexOf(collection);
-  if (index !== -1) {
-    this._collections.splice(index, 1);
-    recomposite(this);
-    return true;
-  }
-  return false;
-};
+	var index = this._collections.indexOf(collection)
+	if (index !== -1) {
+		this._collections.splice(index, 1)
+		recomposite(this)
+		return true
+	}
+	return false
+}
 
 /**
  * Removes all collections from this composite.
  */
 CompositeEntityCollection.prototype.removeAllCollections = function () {
-  this._collections.length = 0;
-  recomposite(this);
-};
+	this._collections.length = 0
+	recomposite(this)
+}
 
 /**
  * Checks to see if the composite contains a given collection.
@@ -260,8 +259,8 @@ CompositeEntityCollection.prototype.removeAllCollections = function () {
  * @returns {Boolean} true if the composite contains the collection, false otherwise.
  */
 CompositeEntityCollection.prototype.containsCollection = function (collection) {
-  return this._collections.indexOf(collection) !== -1;
-};
+	return this._collections.indexOf(collection) !== -1
+}
 
 /**
  * Returns true if the provided entity is in this collection, false otherwise.
@@ -270,8 +269,8 @@ CompositeEntityCollection.prototype.containsCollection = function (collection) {
  * @returns {Boolean} true if the provided entity is in this collection, false otherwise.
  */
 CompositeEntityCollection.prototype.contains = function (entity) {
-  return this._composite.contains(entity);
-};
+	return this._composite.contains(entity)
+}
 
 /**
  * Determines the index of a given collection in the composite.
@@ -280,8 +279,8 @@ CompositeEntityCollection.prototype.contains = function (entity) {
  * @returns {Number} The index of the collection in the composite, or -1 if the collection does not exist in the composite.
  */
 CompositeEntityCollection.prototype.indexOfCollection = function (collection) {
-  return this._collections.indexOf(collection);
-};
+	return this._collections.indexOf(collection)
+}
 
 /**
  * Gets a collection by index from the composite.
@@ -289,54 +288,54 @@ CompositeEntityCollection.prototype.indexOfCollection = function (collection) {
  * @param {Number} index the index to retrieve.
  */
 CompositeEntityCollection.prototype.getCollection = function (index) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(index)) {
-    throw new DeveloperError("index is required.", "index");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(index)) {
+		throw new DeveloperError('index is required.', 'index')
+	}
+	//>>includeEnd('debug');
 
-  return this._collections[index];
-};
+	return this._collections[index]
+}
 
 /**
  * Gets the number of collections in this composite.
  */
 CompositeEntityCollection.prototype.getCollectionsLength = function () {
-  return this._collections.length;
-};
+	return this._collections.length
+}
 
 function getCollectionIndex(collections, collection) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(collection)) {
-    throw new DeveloperError("collection is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(collection)) {
+		throw new DeveloperError('collection is required.')
+	}
+	//>>includeEnd('debug');
 
-  var index = collections.indexOf(collection);
+	var index = collections.indexOf(collection)
 
-  //>>includeStart('debug', pragmas.debug);
-  if (index === -1) {
-    throw new DeveloperError("collection is not in this composite.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (index === -1) {
+		throw new DeveloperError('collection is not in this composite.')
+	}
+	//>>includeEnd('debug');
 
-  return index;
+	return index
 }
 
 function swapCollections(composite, i, j) {
-  var arr = composite._collections;
-  i = CesiumMath.clamp(i, 0, arr.length - 1);
-  j = CesiumMath.clamp(j, 0, arr.length - 1);
+	var arr = composite._collections
+	i = CesiumMath.clamp(i, 0, arr.length - 1)
+	j = CesiumMath.clamp(j, 0, arr.length - 1)
 
-  if (i === j) {
-    return;
-  }
+	if (i === j) {
+		return
+	}
 
-  var temp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = temp;
+	var temp = arr[i]
+	arr[i] = arr[j]
+	arr[j] = temp
 
-  recomposite(composite);
+	recomposite(composite)
 }
 
 /**
@@ -347,9 +346,9 @@ function swapCollections(composite, i, j) {
  * @exception {DeveloperError} collection is not in this composite.
  */
 CompositeEntityCollection.prototype.raiseCollection = function (collection) {
-  var index = getCollectionIndex(this._collections, collection);
-  swapCollections(this, index, index + 1);
-};
+	var index = getCollectionIndex(this._collections, collection)
+	swapCollections(this, index, index + 1)
+}
 
 /**
  * Lowers a collection down one position in the composite.
@@ -359,9 +358,9 @@ CompositeEntityCollection.prototype.raiseCollection = function (collection) {
  * @exception {DeveloperError} collection is not in this composite.
  */
 CompositeEntityCollection.prototype.lowerCollection = function (collection) {
-  var index = getCollectionIndex(this._collections, collection);
-  swapCollections(this, index, index - 1);
-};
+	var index = getCollectionIndex(this._collections, collection)
+	swapCollections(this, index, index - 1)
+}
 
 /**
  * Raises a collection to the top of the composite.
@@ -371,17 +370,17 @@ CompositeEntityCollection.prototype.lowerCollection = function (collection) {
  * @exception {DeveloperError} collection is not in this composite.
  */
 CompositeEntityCollection.prototype.raiseCollectionToTop = function (
-  collection
+	collection,
 ) {
-  var index = getCollectionIndex(this._collections, collection);
-  if (index === this._collections.length - 1) {
-    return;
-  }
-  this._collections.splice(index, 1);
-  this._collections.push(collection);
+	var index = getCollectionIndex(this._collections, collection)
+	if (index === this._collections.length - 1) {
+		return
+	}
+	this._collections.splice(index, 1)
+	this._collections.push(collection)
 
-  recomposite(this);
-};
+	recomposite(this)
+}
 
 /**
  * Lowers a collection to the bottom of the composite.
@@ -391,17 +390,17 @@ CompositeEntityCollection.prototype.raiseCollectionToTop = function (
  * @exception {DeveloperError} collection is not in this composite.
  */
 CompositeEntityCollection.prototype.lowerCollectionToBottom = function (
-  collection
+	collection,
 ) {
-  var index = getCollectionIndex(this._collections, collection);
-  if (index === 0) {
-    return;
-  }
-  this._collections.splice(index, 1);
-  this._collections.splice(0, 0, collection);
+	var index = getCollectionIndex(this._collections, collection)
+	if (index === 0) {
+		return
+	}
+	this._collections.splice(index, 1)
+	this._collections.splice(0, 0, collection)
 
-  recomposite(this);
-};
+	recomposite(this)
+}
 
 /**
  * Prevents {@link EntityCollection#collectionChanged} events from being raised
@@ -414,9 +413,9 @@ CompositeEntityCollection.prototype.lowerCollectionToBottom = function (
  * are corresponding calls to {@link EntityCollection#resumeEvents}.
  */
 CompositeEntityCollection.prototype.suspendEvents = function () {
-  this._suspendCount++;
-  this._composite.suspendEvents();
-};
+	this._suspendCount++
+	this._composite.suspendEvents()
+}
 
 /**
  * Resumes raising {@link EntityCollection#collectionChanged} events immediately
@@ -429,23 +428,23 @@ CompositeEntityCollection.prototype.suspendEvents = function () {
  * @exception {DeveloperError} resumeEvents can not be called before suspendEvents.
  */
 CompositeEntityCollection.prototype.resumeEvents = function () {
-  //>>includeStart('debug', pragmas.debug);
-  if (this._suspendCount === 0) {
-    throw new DeveloperError(
-      "resumeEvents can not be called before suspendEvents."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (this._suspendCount === 0) {
+		throw new DeveloperError(
+			'resumeEvents can not be called before suspendEvents.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  this._suspendCount--;
-  // recomposite before triggering events (but only if required for performance) that might depend on a composited collection
-  if (this._shouldRecomposite && this._suspendCount === 0) {
-    recomposite(this);
-    this._shouldRecomposite = false;
-  }
+	this._suspendCount--
+	// recomposite before triggering events (but only if required for performance) that might depend on a composited collection
+	if (this._shouldRecomposite && this._suspendCount === 0) {
+		recomposite(this)
+		this._shouldRecomposite = false
+	}
 
-  this._composite.resumeEvents();
-};
+	this._composite.resumeEvents()
+}
 
 /**
  * Computes the maximum availability of the entities in the collection.
@@ -456,8 +455,8 @@ CompositeEntityCollection.prototype.resumeEvents = function () {
  * @returns {TimeInterval} The availability of entities in the collection.
  */
 CompositeEntityCollection.prototype.computeAvailability = function () {
-  return this._composite.computeAvailability();
-};
+	return this._composite.computeAvailability()
+}
 
 /**
  * Gets an entity with the specified id.
@@ -466,127 +465,127 @@ CompositeEntityCollection.prototype.computeAvailability = function () {
  * @returns {Entity|undefined} The entity with the provided id or undefined if the id did not exist in the collection.
  */
 CompositeEntityCollection.prototype.getById = function (id) {
-  return this._composite.getById(id);
-};
+	return this._composite.getById(id)
+}
 
 CompositeEntityCollection.prototype._onCollectionChanged = function (
-  collection,
-  added,
-  removed
+	collection,
+	added,
+	removed,
 ) {
-  var collections = this._collectionsCopy;
-  var collectionsLength = collections.length;
-  var composite = this._composite;
-  composite.suspendEvents();
+	var collections = this._collectionsCopy
+	var collectionsLength = collections.length
+	var composite = this._composite
+	composite.suspendEvents()
 
-  var i;
-  var q;
-  var entity;
-  var compositeEntity;
-  var removedLength = removed.length;
-  var eventHash = this._eventHash;
-  var collectionId = collection.id;
-  for (i = 0; i < removedLength; i++) {
-    var removedEntity = removed[i];
-    unsubscribeFromEntity(this, eventHash, collectionId, removedEntity);
+	var i
+	var q
+	var entity
+	var compositeEntity
+	var removedLength = removed.length
+	var eventHash = this._eventHash
+	var collectionId = collection.id
+	for (i = 0; i < removedLength; i++) {
+		var removedEntity = removed[i]
+		unsubscribeFromEntity(this, eventHash, collectionId, removedEntity)
 
-    var removedId = removedEntity.id;
-    //Check if the removed entity exists in any of the remaining collections
-    //If so, we clean and remerge it.
-    for (q = collectionsLength - 1; q >= 0; q--) {
-      entity = collections[q].getById(removedId);
-      if (defined(entity)) {
-        if (!defined(compositeEntity)) {
-          compositeEntity = composite.getById(removedId);
-          clean(compositeEntity);
-        }
-        compositeEntity.merge(entity);
-      }
-    }
-    //We never retrieved the compositeEntity, which means it no longer
-    //exists in any of the collections, remove it from the composite.
-    if (!defined(compositeEntity)) {
-      composite.removeById(removedId);
-    }
-    compositeEntity = undefined;
-  }
+		var removedId = removedEntity.id
+		//Check if the removed entity exists in any of the remaining collections
+		//If so, we clean and remerge it.
+		for (q = collectionsLength - 1; q >= 0; q--) {
+			entity = collections[q].getById(removedId)
+			if (defined(entity)) {
+				if (!defined(compositeEntity)) {
+					compositeEntity = composite.getById(removedId)
+					clean(compositeEntity)
+				}
+				compositeEntity.merge(entity)
+			}
+		}
+		//We never retrieved the compositeEntity, which means it no longer
+		//exists in any of the collections, remove it from the composite.
+		if (!defined(compositeEntity)) {
+			composite.removeById(removedId)
+		}
+		compositeEntity = undefined
+	}
 
-  var addedLength = added.length;
-  for (i = 0; i < addedLength; i++) {
-    var addedEntity = added[i];
-    subscribeToEntity(this, eventHash, collectionId, addedEntity);
+	var addedLength = added.length
+	for (i = 0; i < addedLength; i++) {
+		var addedEntity = added[i]
+		subscribeToEntity(this, eventHash, collectionId, addedEntity)
 
-    var addedId = addedEntity.id;
-    //We know the added entity exists in at least one collection,
-    //but we need to check all collections and re-merge in order
-    //to maintain the priority of properties.
-    for (q = collectionsLength - 1; q >= 0; q--) {
-      entity = collections[q].getById(addedId);
-      if (defined(entity)) {
-        if (!defined(compositeEntity)) {
-          compositeEntity = composite.getById(addedId);
-          if (!defined(compositeEntity)) {
-            entityOptionsScratch.id = addedId;
-            compositeEntity = new Entity(entityOptionsScratch);
-            composite.add(compositeEntity);
-          } else {
-            clean(compositeEntity);
-          }
-        }
-        compositeEntity.merge(entity);
-      }
-    }
-    compositeEntity = undefined;
-  }
+		var addedId = addedEntity.id
+		//We know the added entity exists in at least one collection,
+		//but we need to check all collections and re-merge in order
+		//to maintain the priority of properties.
+		for (q = collectionsLength - 1; q >= 0; q--) {
+			entity = collections[q].getById(addedId)
+			if (defined(entity)) {
+				if (!defined(compositeEntity)) {
+					compositeEntity = composite.getById(addedId)
+					if (!defined(compositeEntity)) {
+						entityOptionsScratch.id = addedId
+						compositeEntity = new Entity(entityOptionsScratch)
+						composite.add(compositeEntity)
+					} else {
+						clean(compositeEntity)
+					}
+				}
+				compositeEntity.merge(entity)
+			}
+		}
+		compositeEntity = undefined
+	}
 
-  composite.resumeEvents();
-};
+	composite.resumeEvents()
+}
 
 CompositeEntityCollection.prototype._onDefinitionChanged = function (
-  entity,
-  propertyName,
-  newValue,
-  oldValue
+	entity,
+	propertyName,
+	newValue,
+	oldValue,
 ) {
-  var collections = this._collections;
-  var composite = this._composite;
+	var collections = this._collections
+	var composite = this._composite
 
-  var collectionsLength = collections.length;
-  var id = entity.id;
-  var compositeEntity = composite.getById(id);
-  var compositeProperty = compositeEntity[propertyName];
-  var newProperty = !defined(compositeProperty);
+	var collectionsLength = collections.length
+	var id = entity.id
+	var compositeEntity = composite.getById(id)
+	var compositeProperty = compositeEntity[propertyName]
+	var newProperty = !defined(compositeProperty)
 
-  var firstTime = true;
-  for (var q = collectionsLength - 1; q >= 0; q--) {
-    var innerEntity = collections[q].getById(entity.id);
-    if (defined(innerEntity)) {
-      var property = innerEntity[propertyName];
-      if (defined(property)) {
-        if (firstTime) {
-          firstTime = false;
-          //We only want to clone if the property is also mergeable.
-          //This ensures that leaf properties are referenced and not copied,
-          //which is the entire point of compositing.
-          if (defined(property.merge) && defined(property.clone)) {
-            compositeProperty = property.clone(compositeProperty);
-          } else {
-            compositeProperty = property;
-            break;
-          }
-        }
-        compositeProperty.merge(property);
-      }
-    }
-  }
+	var firstTime = true
+	for (var q = collectionsLength - 1; q >= 0; q--) {
+		var innerEntity = collections[q].getById(entity.id)
+		if (defined(innerEntity)) {
+			var property = innerEntity[propertyName]
+			if (defined(property)) {
+				if (firstTime) {
+					firstTime = false
+					//We only want to clone if the property is also mergeable.
+					//This ensures that leaf properties are referenced and not copied,
+					//which is the entire point of compositing.
+					if (defined(property.merge) && defined(property.clone)) {
+						compositeProperty = property.clone(compositeProperty)
+					} else {
+						compositeProperty = property
+						break
+					}
+				}
+				compositeProperty.merge(property)
+			}
+		}
+	}
 
-  if (
-    newProperty &&
-    compositeEntity.propertyNames.indexOf(propertyName) === -1
-  ) {
-    compositeEntity.addProperty(propertyName);
-  }
+	if (
+		newProperty &&
+		compositeEntity.propertyNames.indexOf(propertyName) === -1
+	) {
+		compositeEntity.addProperty(propertyName)
+	}
 
-  compositeEntity[propertyName] = compositeProperty;
-};
-export default CompositeEntityCollection;
+	compositeEntity[propertyName] = compositeProperty
+}
+export default CompositeEntityCollection

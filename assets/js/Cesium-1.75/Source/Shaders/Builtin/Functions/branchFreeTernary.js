@@ -70,4 +70,4 @@ vec4 czm_branchFreeTernary(bool comparison, vec4 a, vec4 b) {\n\
     float useA = float(comparison);\n\
     return a * useA + b * (1.0 - useA);\n\
 }\n\
-";
+"

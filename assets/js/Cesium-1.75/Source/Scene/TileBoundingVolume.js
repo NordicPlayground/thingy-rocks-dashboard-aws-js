@@ -1,4 +1,4 @@
-import DeveloperError from "../Core/DeveloperError.js";
+import DeveloperError from '../Core/DeveloperError.js'
 
 /**
  * Defines a bounding volume for a tile. This type describes an interface
@@ -21,7 +21,7 @@ function TileBoundingVolume() {}
  * @type {Object}
  * @readonly
  */
-TileBoundingVolume.prototype.boundingVolume = undefined;
+TileBoundingVolume.prototype.boundingVolume = undefined
 
 /**
  * The underlying bounding sphere.
@@ -29,7 +29,7 @@ TileBoundingVolume.prototype.boundingVolume = undefined;
  * @type {BoundingSphere}
  * @readonly
  */
-TileBoundingVolume.prototype.boundingSphere = undefined;
+TileBoundingVolume.prototype.boundingSphere = undefined
 
 /**
  * Calculates the distance between the tile and the camera.
@@ -39,8 +39,8 @@ TileBoundingVolume.prototype.boundingSphere = undefined;
  *                  Returns 0.0 if the camera is inside the tile.
  */
 TileBoundingVolume.prototype.distanceToCamera = function (frameState) {
-  DeveloperError.throwInstantiationError();
-};
+	DeveloperError.throwInstantiationError()
+}
 
 /**
  * Determines which side of a plane this volume is located.
@@ -52,8 +52,8 @@ TileBoundingVolume.prototype.distanceToCamera = function (frameState) {
  *                      intersects the plane.
  */
 TileBoundingVolume.prototype.intersectPlane = function (plane) {
-  DeveloperError.throwInstantiationError();
-};
+	DeveloperError.throwInstantiationError()
+}
 
 /**
  * Creates a debug primitive that shows the outline of the tile bounding
@@ -63,6 +63,6 @@ TileBoundingVolume.prototype.intersectPlane = function (plane) {
  * @return {Primitive}
  */
 TileBoundingVolume.prototype.createDebugVolume = function (color) {
-  DeveloperError.throwInstantiationError();
-};
-export default TileBoundingVolume;
+	DeveloperError.throwInstantiationError()
+}
+export default TileBoundingVolume

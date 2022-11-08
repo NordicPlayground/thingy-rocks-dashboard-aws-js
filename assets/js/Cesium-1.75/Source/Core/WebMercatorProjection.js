@@ -1,10 +1,10 @@
-import Cartesian3 from "./Cartesian3.js";
-import Cartographic from "./Cartographic.js";
-import defaultValue from "./defaultValue.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
-import Ellipsoid from "./Ellipsoid.js";
-import CesiumMath from "./Math.js";
+import Cartesian3 from './Cartesian3.js'
+import Cartographic from './Cartographic.js'
+import defaultValue from './defaultValue.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
+import Ellipsoid from './Ellipsoid.js'
+import CesiumMath from './Math.js'
 
 /**
  * The map projection used by Google Maps, Bing Maps, and most of ArcGIS Online, EPSG:3857.  This
@@ -19,26 +19,26 @@ import CesiumMath from "./Math.js";
  * @see GeographicProjection
  */
 function WebMercatorProjection(ellipsoid) {
-  this._ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84);
-  this._semimajorAxis = this._ellipsoid.maximumRadius;
-  this._oneOverSemimajorAxis = 1.0 / this._semimajorAxis;
+	this._ellipsoid = defaultValue(ellipsoid, Ellipsoid.WGS84)
+	this._semimajorAxis = this._ellipsoid.maximumRadius
+	this._oneOverSemimajorAxis = 1.0 / this._semimajorAxis
 }
 
 Object.defineProperties(WebMercatorProjection.prototype, {
-  /**
-   * Gets the {@link Ellipsoid}.
-   *
-   * @memberof WebMercatorProjection.prototype
-   *
-   * @type {Ellipsoid}
-   * @readonly
-   */
-  ellipsoid: {
-    get: function () {
-      return this._ellipsoid;
-    },
-  },
-});
+	/**
+	 * Gets the {@link Ellipsoid}.
+	 *
+	 * @memberof WebMercatorProjection.prototype
+	 *
+	 * @type {Ellipsoid}
+	 * @readonly
+	 */
+	ellipsoid: {
+		get: function () {
+			return this._ellipsoid
+		},
+	},
+})
 
 /**
  * Converts a Mercator angle, in the range -PI to PI, to a geodetic latitude
@@ -48,10 +48,10 @@ Object.defineProperties(WebMercatorProjection.prototype, {
  * @returns {Number} The geodetic latitude in radians.
  */
 WebMercatorProjection.mercatorAngleToGeodeticLatitude = function (
-  mercatorAngle
+	mercatorAngle,
 ) {
-  return CesiumMath.PI_OVER_TWO - 2.0 * Math.atan(Math.exp(-mercatorAngle));
-};
+	return CesiumMath.PI_OVER_TWO - 2.0 * Math.atan(Math.exp(-mercatorAngle))
+}
 
 /**
  * Converts a geodetic latitude in radians, in the range -PI/2 to PI/2, to a Mercator
@@ -61,15 +61,15 @@ WebMercatorProjection.mercatorAngleToGeodeticLatitude = function (
  * @returns {Number} The Mercator angle.
  */
 WebMercatorProjection.geodeticLatitudeToMercatorAngle = function (latitude) {
-  // Clamp the latitude coordinate to the valid Mercator bounds.
-  if (latitude > WebMercatorProjection.MaximumLatitude) {
-    latitude = WebMercatorProjection.MaximumLatitude;
-  } else if (latitude < -WebMercatorProjection.MaximumLatitude) {
-    latitude = -WebMercatorProjection.MaximumLatitude;
-  }
-  var sinLatitude = Math.sin(latitude);
-  return 0.5 * Math.log((1.0 + sinLatitude) / (1.0 - sinLatitude));
-};
+	// Clamp the latitude coordinate to the valid Mercator bounds.
+	if (latitude > WebMercatorProjection.MaximumLatitude) {
+		latitude = WebMercatorProjection.MaximumLatitude
+	} else if (latitude < -WebMercatorProjection.MaximumLatitude) {
+		latitude = -WebMercatorProjection.MaximumLatitude
+	}
+	var sinLatitude = Math.sin(latitude)
+	return 0.5 * Math.log((1.0 + sinLatitude) / (1.0 - sinLatitude))
+}
 
 /**
  * The maximum latitude (both North and South) supported by a Web Mercator
@@ -85,9 +85,8 @@ WebMercatorProjection.geodeticLatitudeToMercatorAngle = function (latitude) {
  *
  * @type {Number}
  */
-WebMercatorProjection.MaximumLatitude = WebMercatorProjection.mercatorAngleToGeodeticLatitude(
-  Math.PI
-);
+WebMercatorProjection.MaximumLatitude =
+	WebMercatorProjection.mercatorAngleToGeodeticLatitude(Math.PI)
 
 /**
  * Converts geodetic ellipsoid coordinates, in radians, to the equivalent Web Mercator
@@ -100,23 +99,23 @@ WebMercatorProjection.MaximumLatitude = WebMercatorProjection.mercatorAngleToGeo
  * @returns {Cartesian3} The equivalent web mercator X, Y, Z coordinates, in meters.
  */
 WebMercatorProjection.prototype.project = function (cartographic, result) {
-  var semimajorAxis = this._semimajorAxis;
-  var x = cartographic.longitude * semimajorAxis;
-  var y =
-    WebMercatorProjection.geodeticLatitudeToMercatorAngle(
-      cartographic.latitude
-    ) * semimajorAxis;
-  var z = cartographic.height;
+	var semimajorAxis = this._semimajorAxis
+	var x = cartographic.longitude * semimajorAxis
+	var y =
+		WebMercatorProjection.geodeticLatitudeToMercatorAngle(
+			cartographic.latitude,
+		) * semimajorAxis
+	var z = cartographic.height
 
-  if (!defined(result)) {
-    return new Cartesian3(x, y, z);
-  }
+	if (!defined(result)) {
+		return new Cartesian3(x, y, z)
+	}
 
-  result.x = x;
-  result.y = y;
-  result.z = z;
-  return result;
-};
+	result.x = x
+	result.y = y
+	result.z = z
+	return result
+}
 
 /**
  * Converts Web Mercator X, Y coordinates, expressed in meters, to a {@link Cartographic}
@@ -129,26 +128,26 @@ WebMercatorProjection.prototype.project = function (cartographic, result) {
  * @returns {Cartographic} The equivalent cartographic coordinates.
  */
 WebMercatorProjection.prototype.unproject = function (cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(cartesian)) {
-    throw new DeveloperError("cartesian is required");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(cartesian)) {
+		throw new DeveloperError('cartesian is required')
+	}
+	//>>includeEnd('debug');
 
-  var oneOverEarthSemimajorAxis = this._oneOverSemimajorAxis;
-  var longitude = cartesian.x * oneOverEarthSemimajorAxis;
-  var latitude = WebMercatorProjection.mercatorAngleToGeodeticLatitude(
-    cartesian.y * oneOverEarthSemimajorAxis
-  );
-  var height = cartesian.z;
+	var oneOverEarthSemimajorAxis = this._oneOverSemimajorAxis
+	var longitude = cartesian.x * oneOverEarthSemimajorAxis
+	var latitude = WebMercatorProjection.mercatorAngleToGeodeticLatitude(
+		cartesian.y * oneOverEarthSemimajorAxis,
+	)
+	var height = cartesian.z
 
-  if (!defined(result)) {
-    return new Cartographic(longitude, latitude, height);
-  }
+	if (!defined(result)) {
+		return new Cartographic(longitude, latitude, height)
+	}
 
-  result.longitude = longitude;
-  result.latitude = latitude;
-  result.height = height;
-  return result;
-};
-export default WebMercatorProjection;
+	result.longitude = longitude
+	result.latitude = latitude
+	result.height = height
+	return result
+}
+export default WebMercatorProjection

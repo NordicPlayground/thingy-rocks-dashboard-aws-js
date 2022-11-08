@@ -1,9 +1,9 @@
-import Cartesian3 from "./Cartesian3.js";
-import Check from "./Check.js";
-import defined from "./defined.js";
-import GeocodeType from "./GeocodeType.js";
-import Rectangle from "./Rectangle.js";
-import Resource from "./Resource.js";
+import Cartesian3 from './Cartesian3.js'
+import Check from './Check.js'
+import defined from './defined.js'
+import GeocodeType from './GeocodeType.js'
+import Rectangle from './Rectangle.js'
+import Resource from './Resource.js'
 
 /**
  * Provides geocoding via a {@link https://pelias.io/|Pelias} server.
@@ -24,27 +24,27 @@ import Resource from "./Resource.js";
  * });
  */
 function PeliasGeocoderService(url) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("url", url);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('url', url)
+	//>>includeEnd('debug');
 
-  this._url = Resource.createIfNeeded(url);
-  this._url.appendForwardSlash();
+	this._url = Resource.createIfNeeded(url)
+	this._url.appendForwardSlash()
 }
 
 Object.defineProperties(PeliasGeocoderService.prototype, {
-  /**
-   * The Resource used to access the Pelias endpoint.
-   * @type {Resource}
-   * @memberof PeliasGeocoderService.prototype
-   * @readonly
-   */
-  url: {
-    get: function () {
-      return this._url;
-    },
-  },
-});
+	/**
+	 * The Resource used to access the Pelias endpoint.
+	 * @type {Resource}
+	 * @memberof PeliasGeocoderService.prototype
+	 * @readonly
+	 */
+	url: {
+		get: function () {
+			return this._url
+		},
+	},
+})
 
 /**
  * @function
@@ -54,40 +54,40 @@ Object.defineProperties(PeliasGeocoderService.prototype, {
  * @returns {Promise<GeocoderService.Result[]>}
  */
 PeliasGeocoderService.prototype.geocode = function (query, type) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.string("query", query);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.string('query', query)
+	//>>includeEnd('debug');
 
-  var resource = this._url.getDerivedResource({
-    url: type === GeocodeType.AUTOCOMPLETE ? "autocomplete" : "search",
-    queryParameters: {
-      text: query,
-    },
-  });
+	var resource = this._url.getDerivedResource({
+		url: type === GeocodeType.AUTOCOMPLETE ? 'autocomplete' : 'search',
+		queryParameters: {
+			text: query,
+		},
+	})
 
-  return resource.fetchJson().then(function (results) {
-    return results.features.map(function (resultObject) {
-      var destination;
-      var bboxDegrees = resultObject.bbox;
+	return resource.fetchJson().then(function (results) {
+		return results.features.map(function (resultObject) {
+			var destination
+			var bboxDegrees = resultObject.bbox
 
-      if (defined(bboxDegrees)) {
-        destination = Rectangle.fromDegrees(
-          bboxDegrees[0],
-          bboxDegrees[1],
-          bboxDegrees[2],
-          bboxDegrees[3]
-        );
-      } else {
-        var lon = resultObject.geometry.coordinates[0];
-        var lat = resultObject.geometry.coordinates[1];
-        destination = Cartesian3.fromDegrees(lon, lat);
-      }
+			if (defined(bboxDegrees)) {
+				destination = Rectangle.fromDegrees(
+					bboxDegrees[0],
+					bboxDegrees[1],
+					bboxDegrees[2],
+					bboxDegrees[3],
+				)
+			} else {
+				var lon = resultObject.geometry.coordinates[0]
+				var lat = resultObject.geometry.coordinates[1]
+				destination = Cartesian3.fromDegrees(lon, lat)
+			}
 
-      return {
-        displayName: resultObject.properties.label,
-        destination: destination,
-      };
-    });
-  });
-};
-export default PeliasGeocoderService;
+			return {
+				displayName: resultObject.properties.label,
+				destination: destination,
+			}
+		})
+	})
+}
+export default PeliasGeocoderService

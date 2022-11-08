@@ -1,6 +1,6 @@
-import clone from "../Core/clone.js";
-import defined from "../Core/defined.js";
-import Expression from "./Expression.js";
+import clone from '../Core/clone.js'
+import defined from '../Core/defined.js'
+import Expression from './Expression.js'
 
 /**
  * An expression for a style applied to a {@link Cesium3DTileset}.
@@ -29,55 +29,55 @@ import Expression from "./Expression.js";
  * expression.evaluateColor(feature, result); // returns a Cesium.Color object
  */
 function ConditionsExpression(conditionsExpression, defines) {
-  this._conditionsExpression = clone(conditionsExpression, true);
-  this._conditions = conditionsExpression.conditions;
-  this._runtimeConditions = undefined;
+	this._conditionsExpression = clone(conditionsExpression, true)
+	this._conditions = conditionsExpression.conditions
+	this._runtimeConditions = undefined
 
-  setRuntime(this, defines);
+	setRuntime(this, defines)
 }
 
 Object.defineProperties(ConditionsExpression.prototype, {
-  /**
-   * Gets the conditions expression defined in the 3D Tiles Styling language.
-   *
-   * @memberof ConditionsExpression.prototype
-   *
-   * @type {Object}
-   * @readonly
-   *
-   * @default undefined
-   */
-  conditionsExpression: {
-    get: function () {
-      return this._conditionsExpression;
-    },
-  },
-});
+	/**
+	 * Gets the conditions expression defined in the 3D Tiles Styling language.
+	 *
+	 * @memberof ConditionsExpression.prototype
+	 *
+	 * @type {Object}
+	 * @readonly
+	 *
+	 * @default undefined
+	 */
+	conditionsExpression: {
+		get: function () {
+			return this._conditionsExpression
+		},
+	},
+})
 
 function Statement(condition, expression) {
-  this.condition = condition;
-  this.expression = expression;
+	this.condition = condition
+	this.expression = expression
 }
 
 function setRuntime(expression, defines) {
-  var runtimeConditions = [];
-  var conditions = expression._conditions;
-  if (!defined(conditions)) {
-    return;
-  }
-  var length = conditions.length;
-  for (var i = 0; i < length; ++i) {
-    var statement = conditions[i];
-    var cond = String(statement[0]);
-    var condExpression = String(statement[1]);
-    runtimeConditions.push(
-      new Statement(
-        new Expression(cond, defines),
-        new Expression(condExpression, defines)
-      )
-    );
-  }
-  expression._runtimeConditions = runtimeConditions;
+	var runtimeConditions = []
+	var conditions = expression._conditions
+	if (!defined(conditions)) {
+		return
+	}
+	var length = conditions.length
+	for (var i = 0; i < length; ++i) {
+		var statement = conditions[i]
+		var cond = String(statement[0])
+		var condExpression = String(statement[1])
+		runtimeConditions.push(
+			new Statement(
+				new Expression(cond, defines),
+				new Expression(condExpression, defines),
+			),
+		)
+	}
+	expression._runtimeConditions = runtimeConditions
 }
 
 /**
@@ -95,18 +95,18 @@ function setRuntime(expression, defines) {
  * @returns {Boolean|Number|String|RegExp|Cartesian2|Cartesian3|Cartesian4|Color} The result of evaluating the expression.
  */
 ConditionsExpression.prototype.evaluate = function (feature, result) {
-  var conditions = this._runtimeConditions;
-  if (!defined(conditions)) {
-    return undefined;
-  }
-  var length = conditions.length;
-  for (var i = 0; i < length; ++i) {
-    var statement = conditions[i];
-    if (statement.condition.evaluate(feature)) {
-      return statement.expression.evaluate(feature, result);
-    }
-  }
-};
+	var conditions = this._runtimeConditions
+	if (!defined(conditions)) {
+		return undefined
+	}
+	var length = conditions.length
+	for (var i = 0; i < length; ++i) {
+		var statement = conditions[i]
+		if (statement.condition.evaluate(feature)) {
+			return statement.expression.evaluate(feature, result)
+		}
+	}
+}
 
 /**
  * Evaluates the result of a Color expression, using the values defined by a feature.
@@ -118,18 +118,18 @@ ConditionsExpression.prototype.evaluate = function (feature, result) {
  * @returns {Color} The modified result parameter or a new Color instance if one was not provided.
  */
 ConditionsExpression.prototype.evaluateColor = function (feature, result) {
-  var conditions = this._runtimeConditions;
-  if (!defined(conditions)) {
-    return undefined;
-  }
-  var length = conditions.length;
-  for (var i = 0; i < length; ++i) {
-    var statement = conditions[i];
-    if (statement.condition.evaluate(feature)) {
-      return statement.expression.evaluateColor(feature, result);
-    }
-  }
-};
+	var conditions = this._runtimeConditions
+	if (!defined(conditions)) {
+		return undefined
+	}
+	var length = conditions.length
+	for (var i = 0; i < length; ++i) {
+		var statement = conditions[i]
+		if (statement.condition.evaluate(feature)) {
+			return statement.expression.evaluateColor(feature, result)
+		}
+	}
+}
 
 /**
  * Gets the shader function for this expression.
@@ -145,56 +145,56 @@ ConditionsExpression.prototype.evaluateColor = function (feature, result) {
  * @private
  */
 ConditionsExpression.prototype.getShaderFunction = function (
-  functionName,
-  propertyNameMap,
-  shaderState,
-  returnType
+	functionName,
+	propertyNameMap,
+	shaderState,
+	returnType,
 ) {
-  var conditions = this._runtimeConditions;
-  if (!defined(conditions) || conditions.length === 0) {
-    return undefined;
-  }
+	var conditions = this._runtimeConditions
+	if (!defined(conditions) || conditions.length === 0) {
+		return undefined
+	}
 
-  var shaderFunction = "";
-  var length = conditions.length;
-  for (var i = 0; i < length; ++i) {
-    var statement = conditions[i];
+	var shaderFunction = ''
+	var length = conditions.length
+	for (var i = 0; i < length; ++i) {
+		var statement = conditions[i]
 
-    var condition = statement.condition.getShaderExpression(
-      propertyNameMap,
-      shaderState
-    );
-    var expression = statement.expression.getShaderExpression(
-      propertyNameMap,
-      shaderState
-    );
+		var condition = statement.condition.getShaderExpression(
+			propertyNameMap,
+			shaderState,
+		)
+		var expression = statement.expression.getShaderExpression(
+			propertyNameMap,
+			shaderState,
+		)
 
-    // Build the if/else chain from the list of conditions
-    shaderFunction +=
-      "    " +
-      (i === 0 ? "if" : "else if") +
-      " (" +
-      condition +
-      ") \n" +
-      "    { \n" +
-      "        return " +
-      expression +
-      "; \n" +
-      "    } \n";
-  }
+		// Build the if/else chain from the list of conditions
+		shaderFunction +=
+			'    ' +
+			(i === 0 ? 'if' : 'else if') +
+			' (' +
+			condition +
+			') \n' +
+			'    { \n' +
+			'        return ' +
+			expression +
+			'; \n' +
+			'    } \n'
+	}
 
-  shaderFunction =
-    returnType +
-    " " +
-    functionName +
-    "() \n" +
-    "{ \n" +
-    shaderFunction +
-    "    return " +
-    returnType +
-    "(1.0); \n" + // Return a default value if no conditions are met
-    "} \n";
+	shaderFunction =
+		returnType +
+		' ' +
+		functionName +
+		'() \n' +
+		'{ \n' +
+		shaderFunction +
+		'    return ' +
+		returnType +
+		'(1.0); \n' + // Return a default value if no conditions are met
+		'} \n'
 
-  return shaderFunction;
-};
-export default ConditionsExpression;
+	return shaderFunction
+}
+export default ConditionsExpression

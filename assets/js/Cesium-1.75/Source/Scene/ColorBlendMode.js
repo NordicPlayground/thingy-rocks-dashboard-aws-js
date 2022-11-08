@@ -1,4 +1,4 @@
-import CesiumMath from "../Core/Math.js";
+import CesiumMath from '../Core/Math.js'
 
 /**
  * Defines different modes for blending between a target color and a primitive's source color.
@@ -12,22 +12,22 @@ import CesiumMath from "../Core/Math.js";
  * @see Model.colorBlendMode
  */
 var ColorBlendMode = {
-  HIGHLIGHT: 0,
-  REPLACE: 1,
-  MIX: 2,
-};
+	HIGHLIGHT: 0,
+	REPLACE: 1,
+	MIX: 2,
+}
 
 /**
  * @private
  */
 ColorBlendMode.getColorBlend = function (colorBlendMode, colorBlendAmount) {
-  if (colorBlendMode === ColorBlendMode.HIGHLIGHT) {
-    return 0.0;
-  } else if (colorBlendMode === ColorBlendMode.REPLACE) {
-    return 1.0;
-  } else if (colorBlendMode === ColorBlendMode.MIX) {
-    // The value 0.0 is reserved for highlight, so clamp to just above 0.0.
-    return CesiumMath.clamp(colorBlendAmount, CesiumMath.EPSILON4, 1.0);
-  }
-};
-export default Object.freeze(ColorBlendMode);
+	if (colorBlendMode === ColorBlendMode.HIGHLIGHT) {
+		return 0.0
+	} else if (colorBlendMode === ColorBlendMode.REPLACE) {
+		return 1.0
+	} else if (colorBlendMode === ColorBlendMode.MIX) {
+		// The value 0.0 is reserved for highlight, so clamp to just above 0.0.
+		return CesiumMath.clamp(colorBlendAmount, CesiumMath.EPSILON4, 1.0)
+	}
+}
+export default Object.freeze(ColorBlendMode)

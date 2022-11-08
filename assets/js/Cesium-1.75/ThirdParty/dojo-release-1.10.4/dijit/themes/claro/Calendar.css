@@ -39,10 +39,26 @@
   background-color: #cfe5fa;
   background-image: url("images/calendar.png");
   background-repeat: repeat-x;
-  background-image: -moz-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0.4) 2px, rgba(255, 255, 255, 0) 100%);
-  background-image: -webkit-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0.4) 2px, rgba(255, 255, 255, 0) 100%);
-  background-image: -o-linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0.4) 2px, rgba(255, 255, 255, 0) 100%);
-  background-image: linear-gradient(#ffffff 0px, rgba(255, 255, 255, 0.4) 2px, rgba(255, 255, 255, 0) 100%);
+  background-image: -moz-linear-gradient(
+    #ffffff 0px,
+    rgba(255, 255, 255, 0.4) 2px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -webkit-linear-gradient(
+    #ffffff 0px,
+    rgba(255, 255, 255, 0.4) 2px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: -o-linear-gradient(
+    #ffffff 0px,
+    rgba(255, 255, 255, 0.4) 2px,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-image: linear-gradient(
+    #ffffff 0px,
+    rgba(255, 255, 255, 0.4) 2px,
+    rgba(255, 255, 255, 0) 100%
+  );
   text-align: center;
   padding: 6px 5px 3px 5px;
 }
@@ -126,7 +142,7 @@
   font-size: 0.909em;
   font-family: Arial;
   font-weight: bold;
-  letter-spacing: .05em;
+  letter-spacing: 0.05em;
   text-align: center;
   color: #000000;
 }
@@ -162,7 +178,6 @@
   color: #759dc0;
   border-color: #e5f2fe;
   /* intentionally matches background-color, no visible border until hover/selection */
-
 }
 .claro .dijitCalendarYearContainer {
   vertical-align: middle;
@@ -195,7 +210,10 @@
 /* End Normal Calendar Style */
 /* Hovered Calendar Style */
 .claro .dijitCalendarHoveredDate .dijitCalendarDateLabel,
-.claro .dijitCalendarLite .dijitCalendarEnabledDate:hover .dijitCalendarDateLabel {
+.claro
+  .dijitCalendarLite
+  .dijitCalendarEnabledDate:hover
+  .dijitCalendarDateLabel {
   background-color: #abd6ff;
   border: solid 1px #759dc0;
   color: #000000;
@@ -291,9 +309,21 @@
   border-color: #759dc0;
   border-width: 1px 0;
   background-color: #abd6ff;
-  background-image: -moz-linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
-  background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
-  background-image: -o-linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
-  background-image: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0));
+  background-image: -moz-linear-gradient(
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0)
+  );
+  background-image: -webkit-linear-gradient(
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0)
+  );
+  background-image: -o-linear-gradient(
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0)
+  );
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0.7),
+    rgba(255, 255, 255, 0)
+  );
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr= #ffffff , endColorstr= #abd6ff );
 }

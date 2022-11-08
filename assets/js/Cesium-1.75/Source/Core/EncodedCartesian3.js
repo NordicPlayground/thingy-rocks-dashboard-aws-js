@@ -1,6 +1,6 @@
-import Cartesian3 from "./Cartesian3.js";
-import Check from "./Check.js";
-import defined from "./defined.js";
+import Cartesian3 from './Cartesian3.js'
+import Check from './Check.js'
+import defined from './defined.js'
 
 /**
  * A fixed-point encoding of a {@link Cartesian3} with 64-bit floating-point components, as two {@link Cartesian3}
@@ -16,21 +16,21 @@ import defined from "./defined.js";
  * @private
  */
 function EncodedCartesian3() {
-  /**
-   * The high bits for each component.  Bits 0 to 22 store the whole value.  Bits 23 to 31 are not used.
-   *
-   * @type {Cartesian3}
-   * @default {@link Cartesian3.ZERO}
-   */
-  this.high = Cartesian3.clone(Cartesian3.ZERO);
+	/**
+	 * The high bits for each component.  Bits 0 to 22 store the whole value.  Bits 23 to 31 are not used.
+	 *
+	 * @type {Cartesian3}
+	 * @default {@link Cartesian3.ZERO}
+	 */
+	this.high = Cartesian3.clone(Cartesian3.ZERO)
 
-  /**
-   * The low bits for each component.  Bits 7 to 22 store the whole value, and bits 0 to 6 store the fraction.  Bits 23 to 31 are not used.
-   *
-   * @type {Cartesian3}
-   * @default {@link Cartesian3.ZERO}
-   */
-  this.low = Cartesian3.clone(Cartesian3.ZERO);
+	/**
+	 * The low bits for each component.  Bits 7 to 22 store the whole value, and bits 0 to 6 store the fraction.  Bits 23 to 31 are not used.
+	 *
+	 * @type {Cartesian3}
+	 * @default {@link Cartesian3.ZERO}
+	 */
+	this.low = Cartesian3.clone(Cartesian3.ZERO)
 }
 
 /**
@@ -50,35 +50,35 @@ function EncodedCartesian3() {
  * var splitValue = Cesium.EncodedCartesian3.encode(value);
  */
 EncodedCartesian3.encode = function (value, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.number("value", value);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.number('value', value)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = {
-      high: 0.0,
-      low: 0.0,
-    };
-  }
+	if (!defined(result)) {
+		result = {
+			high: 0.0,
+			low: 0.0,
+		}
+	}
 
-  var doubleHigh;
-  if (value >= 0.0) {
-    doubleHigh = Math.floor(value / 65536.0) * 65536.0;
-    result.high = doubleHigh;
-    result.low = value - doubleHigh;
-  } else {
-    doubleHigh = Math.floor(-value / 65536.0) * 65536.0;
-    result.high = -doubleHigh;
-    result.low = value + doubleHigh;
-  }
+	var doubleHigh
+	if (value >= 0.0) {
+		doubleHigh = Math.floor(value / 65536.0) * 65536.0
+		result.high = doubleHigh
+		result.low = value - doubleHigh
+	} else {
+		doubleHigh = Math.floor(-value / 65536.0) * 65536.0
+		result.high = -doubleHigh
+		result.low = value + doubleHigh
+	}
 
-  return result;
-};
+	return result
+}
 
 var scratchEncode = {
-  high: 0.0,
-  low: 0.0,
-};
+	high: 0.0,
+	low: 0.0,
+}
 
 /**
  * Encodes a {@link Cartesian3} with 64-bit floating-point components as two {@link Cartesian3}
@@ -96,33 +96,33 @@ var scratchEncode = {
  * var encoded = Cesium.EncodedCartesian3.fromCartesian(cart);
  */
 EncodedCartesian3.fromCartesian = function (cartesian, result) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.object("cartesian", cartesian);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.object('cartesian', cartesian)
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = new EncodedCartesian3();
-  }
+	if (!defined(result)) {
+		result = new EncodedCartesian3()
+	}
 
-  var high = result.high;
-  var low = result.low;
+	var high = result.high
+	var low = result.low
 
-  EncodedCartesian3.encode(cartesian.x, scratchEncode);
-  high.x = scratchEncode.high;
-  low.x = scratchEncode.low;
+	EncodedCartesian3.encode(cartesian.x, scratchEncode)
+	high.x = scratchEncode.high
+	low.x = scratchEncode.low
 
-  EncodedCartesian3.encode(cartesian.y, scratchEncode);
-  high.y = scratchEncode.high;
-  low.y = scratchEncode.low;
+	EncodedCartesian3.encode(cartesian.y, scratchEncode)
+	high.y = scratchEncode.high
+	low.y = scratchEncode.low
 
-  EncodedCartesian3.encode(cartesian.z, scratchEncode);
-  high.z = scratchEncode.high;
-  low.z = scratchEncode.low;
+	EncodedCartesian3.encode(cartesian.z, scratchEncode)
+	high.z = scratchEncode.high
+	low.z = scratchEncode.low
 
-  return result;
-};
+	return result
+}
 
-var encodedP = new EncodedCartesian3();
+var encodedP = new EncodedCartesian3()
 
 /**
  * Encodes the provided <code>cartesian</code>, and writes it to an array with <code>high</code>
@@ -150,21 +150,21 @@ var encodedP = new EncodedCartesian3();
  * }
  */
 EncodedCartesian3.writeElements = function (cartesian, cartesianArray, index) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.defined("cartesianArray", cartesianArray);
-  Check.typeOf.number("index", index);
-  Check.typeOf.number.greaterThanOrEquals("index", index, 0);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.defined('cartesianArray', cartesianArray)
+	Check.typeOf.number('index', index)
+	Check.typeOf.number.greaterThanOrEquals('index', index, 0)
+	//>>includeEnd('debug');
 
-  EncodedCartesian3.fromCartesian(cartesian, encodedP);
-  var high = encodedP.high;
-  var low = encodedP.low;
+	EncodedCartesian3.fromCartesian(cartesian, encodedP)
+	var high = encodedP.high
+	var low = encodedP.low
 
-  cartesianArray[index] = high.x;
-  cartesianArray[index + 1] = high.y;
-  cartesianArray[index + 2] = high.z;
-  cartesianArray[index + 3] = low.x;
-  cartesianArray[index + 4] = low.y;
-  cartesianArray[index + 5] = low.z;
-};
-export default EncodedCartesian3;
+	cartesianArray[index] = high.x
+	cartesianArray[index + 1] = high.y
+	cartesianArray[index + 2] = high.z
+	cartesianArray[index + 3] = low.x
+	cartesianArray[index + 4] = low.y
+	cartesianArray[index + 5] = low.z
+}
+export default EncodedCartesian3

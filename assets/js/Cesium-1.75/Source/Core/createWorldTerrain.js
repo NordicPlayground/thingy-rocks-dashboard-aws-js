@@ -1,6 +1,6 @@
-import CesiumTerrainProvider from "./CesiumTerrainProvider.js";
-import defaultValue from "./defaultValue.js";
-import IonResource from "./IonResource.js";
+import CesiumTerrainProvider from './CesiumTerrainProvider.js'
+import defaultValue from './defaultValue.js'
+import IonResource from './IonResource.js'
 
 /**
  * Creates a {@link CesiumTerrainProvider} instance for the {@link https://cesium.com/content/#cesium-world-terrain|Cesium World Terrain}.
@@ -31,12 +31,12 @@ import IonResource from "./IonResource.js";
  *
  */
 function createWorldTerrain(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  return new CesiumTerrainProvider({
-    url: IonResource.fromAssetId(1),
-    requestVertexNormals: defaultValue(options.requestVertexNormals, false),
-    requestWaterMask: defaultValue(options.requestWaterMask, false),
-  });
+	return new CesiumTerrainProvider({
+		url: IonResource.fromAssetId(1),
+		requestVertexNormals: defaultValue(options.requestVertexNormals, false),
+		requestWaterMask: defaultValue(options.requestWaterMask, false),
+	})
 }
-export default createWorldTerrain;
+export default createWorldTerrain

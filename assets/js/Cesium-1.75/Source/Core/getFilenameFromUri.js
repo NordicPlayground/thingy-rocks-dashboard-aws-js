@@ -1,6 +1,6 @@
-import Uri from "../ThirdParty/Uri.js";
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import Uri from '../ThirdParty/Uri.js'
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Given a URI, returns the last segment of the URI, removing any path or query information.
@@ -14,19 +14,19 @@ import DeveloperError from "./DeveloperError.js";
  * var fileName = Cesium.getFilenameFromUri('/Gallery/simple.czml?value=true&example=false');
  */
 function getFilenameFromUri(uri) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(uri)) {
-    throw new DeveloperError("uri is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(uri)) {
+		throw new DeveloperError('uri is required.')
+	}
+	//>>includeEnd('debug');
 
-  var uriObject = new Uri(uri);
-  uriObject.normalize();
-  var path = uriObject.path;
-  var index = path.lastIndexOf("/");
-  if (index !== -1) {
-    path = path.substr(index + 1);
-  }
-  return path;
+	var uriObject = new Uri(uri)
+	uriObject.normalize()
+	var path = uriObject.path
+	var index = path.lastIndexOf('/')
+	if (index !== -1) {
+		path = path.substr(index + 1)
+	}
+	return path
 }
-export default getFilenameFromUri;
+export default getFilenameFromUri

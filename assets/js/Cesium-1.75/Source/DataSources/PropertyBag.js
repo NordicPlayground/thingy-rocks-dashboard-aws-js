@@ -1,10 +1,10 @@
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import Event from "../Core/Event.js";
-import ConstantProperty from "./ConstantProperty.js";
-import createPropertyDescriptor from "./createPropertyDescriptor.js";
-import Property from "./Property.js";
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import Event from '../Core/Event.js'
+import ConstantProperty from './ConstantProperty.js'
+import createPropertyDescriptor from './createPropertyDescriptor.js'
+import Property from './Property.js'
 
 /**
  * A {@link Property} whose value is a key-value mapping of property names to the computed value of other properties.
@@ -17,59 +17,59 @@ import Property from "./Property.js";
  * @param {Function} [createPropertyCallback] A function that will be called when the value of any of the properties in value are not a Property.
  */
 function PropertyBag(value, createPropertyCallback) {
-  this._propertyNames = [];
-  this._definitionChanged = new Event();
+	this._propertyNames = []
+	this._definitionChanged = new Event()
 
-  if (defined(value)) {
-    this.merge(value, createPropertyCallback);
-  }
+	if (defined(value)) {
+		this.merge(value, createPropertyCallback)
+	}
 }
 
 Object.defineProperties(PropertyBag.prototype, {
-  /**
-   * Gets the names of all properties registered on this instance.
-   * @memberof PropertyBag.prototype
-   * @type {Array}
-   */
-  propertyNames: {
-    get: function () {
-      return this._propertyNames;
-    },
-  },
-  /**
-   * Gets a value indicating if this property is constant.  This property
-   * is considered constant if all property items in this object are constant.
-   * @memberof PropertyBag.prototype
-   *
-   * @type {Boolean}
-   * @readonly
-   */
-  isConstant: {
-    get: function () {
-      var propertyNames = this._propertyNames;
-      for (var i = 0, len = propertyNames.length; i < len; i++) {
-        if (!Property.isConstant(this[propertyNames[i]])) {
-          return false;
-        }
-      }
-      return true;
-    },
-  },
-  /**
-   * Gets the event that is raised whenever the set of properties contained in this
-   * object changes, or one of the properties itself changes.
-   *
-   * @memberof PropertyBag.prototype
-   *
-   * @type {Event}
-   * @readonly
-   */
-  definitionChanged: {
-    get: function () {
-      return this._definitionChanged;
-    },
-  },
-});
+	/**
+	 * Gets the names of all properties registered on this instance.
+	 * @memberof PropertyBag.prototype
+	 * @type {Array}
+	 */
+	propertyNames: {
+		get: function () {
+			return this._propertyNames
+		},
+	},
+	/**
+	 * Gets a value indicating if this property is constant.  This property
+	 * is considered constant if all property items in this object are constant.
+	 * @memberof PropertyBag.prototype
+	 *
+	 * @type {Boolean}
+	 * @readonly
+	 */
+	isConstant: {
+		get: function () {
+			var propertyNames = this._propertyNames
+			for (var i = 0, len = propertyNames.length; i < len; i++) {
+				if (!Property.isConstant(this[propertyNames[i]])) {
+					return false
+				}
+			}
+			return true
+		},
+	},
+	/**
+	 * Gets the event that is raised whenever the set of properties contained in this
+	 * object changes, or one of the properties itself changes.
+	 *
+	 * @memberof PropertyBag.prototype
+	 *
+	 * @type {Event}
+	 * @readonly
+	 */
+	definitionChanged: {
+		get: function () {
+			return this._definitionChanged
+		},
+	},
+})
 
 /**
  * Determines if this object has defined a property with the given name.
@@ -79,11 +79,11 @@ Object.defineProperties(PropertyBag.prototype, {
  * @returns {Boolean} True if this object has defined a property with the given name, false otherwise.
  */
 PropertyBag.prototype.hasProperty = function (propertyName) {
-  return this._propertyNames.indexOf(propertyName) !== -1;
-};
+	return this._propertyNames.indexOf(propertyName) !== -1
+}
 
 function createConstantProperty(value) {
-  return new ConstantProperty(value);
+	return new ConstantProperty(value)
 }
 
 /**
@@ -96,40 +96,40 @@ function createConstantProperty(value) {
  * @exception {DeveloperError} "propertyName" is already a registered property.
  */
 PropertyBag.prototype.addProperty = function (
-  propertyName,
-  value,
-  createPropertyCallback
+	propertyName,
+	value,
+	createPropertyCallback,
 ) {
-  var propertyNames = this._propertyNames;
+	var propertyNames = this._propertyNames
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(propertyName)) {
-    throw new DeveloperError("propertyName is required.");
-  }
-  if (propertyNames.indexOf(propertyName) !== -1) {
-    throw new DeveloperError(
-      propertyName + " is already a registered property."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(propertyName)) {
+		throw new DeveloperError('propertyName is required.')
+	}
+	if (propertyNames.indexOf(propertyName) !== -1) {
+		throw new DeveloperError(
+			propertyName + ' is already a registered property.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  propertyNames.push(propertyName);
-  Object.defineProperty(
-    this,
-    propertyName,
-    createPropertyDescriptor(
-      propertyName,
-      true,
-      defaultValue(createPropertyCallback, createConstantProperty)
-    )
-  );
+	propertyNames.push(propertyName)
+	Object.defineProperty(
+		this,
+		propertyName,
+		createPropertyDescriptor(
+			propertyName,
+			true,
+			defaultValue(createPropertyCallback, createConstantProperty),
+		),
+	)
 
-  if (defined(value)) {
-    this[propertyName] = value;
-  }
+	if (defined(value)) {
+		this[propertyName] = value
+	}
 
-  this._definitionChanged.raiseEvent(this);
-};
+	this._definitionChanged.raiseEvent(this)
+}
 
 /**
  * Removed a property previously added with addProperty.
@@ -139,23 +139,23 @@ PropertyBag.prototype.addProperty = function (
  * @exception {DeveloperError} "propertyName" is not a registered property.
  */
 PropertyBag.prototype.removeProperty = function (propertyName) {
-  var propertyNames = this._propertyNames;
-  var index = propertyNames.indexOf(propertyName);
+	var propertyNames = this._propertyNames
+	var index = propertyNames.indexOf(propertyName)
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(propertyName)) {
-    throw new DeveloperError("propertyName is required.");
-  }
-  if (index === -1) {
-    throw new DeveloperError(propertyName + " is not a registered property.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(propertyName)) {
+		throw new DeveloperError('propertyName is required.')
+	}
+	if (index === -1) {
+		throw new DeveloperError(propertyName + ' is not a registered property.')
+	}
+	//>>includeEnd('debug');
 
-  this._propertyNames.splice(index, 1);
-  delete this[propertyName];
+	this._propertyNames.splice(index, 1)
+	delete this[propertyName]
 
-  this._definitionChanged.raiseEvent(this);
-};
+	this._definitionChanged.raiseEvent(this)
+}
 
 /**
  * Gets the value of this property.  Each contained property will be evaluated at the given time, and the overall
@@ -167,27 +167,27 @@ PropertyBag.prototype.removeProperty = function (propertyName) {
  * @returns {Object} The modified result parameter or a new instance if the result parameter was not supplied.
  */
 PropertyBag.prototype.getValue = function (time, result) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(time)) {
-    throw new DeveloperError("time is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(time)) {
+		throw new DeveloperError('time is required.')
+	}
+	//>>includeEnd('debug');
 
-  if (!defined(result)) {
-    result = {};
-  }
+	if (!defined(result)) {
+		result = {}
+	}
 
-  var propertyNames = this._propertyNames;
-  for (var i = 0, len = propertyNames.length; i < len; i++) {
-    var propertyName = propertyNames[i];
-    result[propertyName] = Property.getValueOrUndefined(
-      this[propertyName],
-      time,
-      result[propertyName]
-    );
-  }
-  return result;
-};
+	var propertyNames = this._propertyNames
+	for (var i = 0, len = propertyNames.length; i < len; i++) {
+		var propertyName = propertyNames[i]
+		result[propertyName] = Property.getValueOrUndefined(
+			this[propertyName],
+			time,
+			result[propertyName],
+		)
+	}
+	return result
+}
 
 /**
  * Assigns each unassigned property on this object to the value
@@ -197,65 +197,65 @@ PropertyBag.prototype.getValue = function (time, result) {
  * @param {Function} [createPropertyCallback] A function that will be called when the value of any of the properties in value are not a Property.
  */
 PropertyBag.prototype.merge = function (source, createPropertyCallback) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(source)) {
-    throw new DeveloperError("source is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(source)) {
+		throw new DeveloperError('source is required.')
+	}
+	//>>includeEnd('debug');
 
-  var propertyNames = this._propertyNames;
-  var sourcePropertyNames = defined(source._propertyNames)
-    ? source._propertyNames
-    : Object.keys(source);
-  for (var i = 0, len = sourcePropertyNames.length; i < len; i++) {
-    var name = sourcePropertyNames[i];
+	var propertyNames = this._propertyNames
+	var sourcePropertyNames = defined(source._propertyNames)
+		? source._propertyNames
+		: Object.keys(source)
+	for (var i = 0, len = sourcePropertyNames.length; i < len; i++) {
+		var name = sourcePropertyNames[i]
 
-    var targetProperty = this[name];
-    var sourceProperty = source[name];
+		var targetProperty = this[name]
+		var sourceProperty = source[name]
 
-    //Custom properties that are registered on the source must also be added to this.
-    if (targetProperty === undefined && propertyNames.indexOf(name) === -1) {
-      this.addProperty(name, undefined, createPropertyCallback);
-    }
+		//Custom properties that are registered on the source must also be added to this.
+		if (targetProperty === undefined && propertyNames.indexOf(name) === -1) {
+			this.addProperty(name, undefined, createPropertyCallback)
+		}
 
-    if (sourceProperty !== undefined) {
-      if (targetProperty !== undefined) {
-        if (defined(targetProperty) && defined(targetProperty.merge)) {
-          targetProperty.merge(sourceProperty);
-        }
-      } else if (
-        defined(sourceProperty) &&
-        defined(sourceProperty.merge) &&
-        defined(sourceProperty.clone)
-      ) {
-        this[name] = sourceProperty.clone();
-      } else {
-        this[name] = sourceProperty;
-      }
-    }
-  }
-};
+		if (sourceProperty !== undefined) {
+			if (targetProperty !== undefined) {
+				if (defined(targetProperty) && defined(targetProperty.merge)) {
+					targetProperty.merge(sourceProperty)
+				}
+			} else if (
+				defined(sourceProperty) &&
+				defined(sourceProperty.merge) &&
+				defined(sourceProperty.clone)
+			) {
+				this[name] = sourceProperty.clone()
+			} else {
+				this[name] = sourceProperty
+			}
+		}
+	}
+}
 
 function propertiesEqual(a, b) {
-  var aPropertyNames = a._propertyNames;
-  var bPropertyNames = b._propertyNames;
+	var aPropertyNames = a._propertyNames
+	var bPropertyNames = b._propertyNames
 
-  var len = aPropertyNames.length;
-  if (len !== bPropertyNames.length) {
-    return false;
-  }
+	var len = aPropertyNames.length
+	if (len !== bPropertyNames.length) {
+		return false
+	}
 
-  for (var aIndex = 0; aIndex < len; ++aIndex) {
-    var name = aPropertyNames[aIndex];
-    var bIndex = bPropertyNames.indexOf(name);
-    if (bIndex === -1) {
-      return false;
-    }
-    if (!Property.equals(a[name], b[name])) {
-      return false;
-    }
-  }
-  return true;
+	for (var aIndex = 0; aIndex < len; ++aIndex) {
+		var name = aPropertyNames[aIndex]
+		var bIndex = bPropertyNames.indexOf(name)
+		if (bIndex === -1) {
+			return false
+		}
+		if (!Property.equals(a[name], b[name])) {
+			return false
+		}
+	}
+	return true
 }
 
 /**
@@ -266,10 +266,10 @@ function propertiesEqual(a, b) {
  * @returns {Boolean} <code>true</code> if left and right are equal, <code>false</code> otherwise.
  */
 PropertyBag.prototype.equals = function (other) {
-  return (
-    this === other || //
-    (other instanceof PropertyBag && //
-      propertiesEqual(this, other))
-  );
-};
-export default PropertyBag;
+	return (
+		this === other || //
+		(other instanceof PropertyBag && //
+			propertiesEqual(this, other))
+	)
+}
+export default PropertyBag

@@ -1,5 +1,5 @@
-import defined from "./defined.js";
-import DeveloperError from "./DeveloperError.js";
+import defined from './defined.js'
+import DeveloperError from './DeveloperError.js'
 
 /**
  * Parses a query string into an object, where the keys and values of the object are the
@@ -23,38 +23,38 @@ import DeveloperError from "./DeveloperError.js";
  * @see objectToQuery
  */
 function queryToObject(queryString) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(queryString)) {
-    throw new DeveloperError("queryString is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(queryString)) {
+		throw new DeveloperError('queryString is required.')
+	}
+	//>>includeEnd('debug');
 
-  var result = {};
-  if (queryString === "") {
-    return result;
-  }
-  var parts = queryString.replace(/\+/g, "%20").split(/[&;]/);
-  for (var i = 0, len = parts.length; i < len; ++i) {
-    var subparts = parts[i].split("=");
+	var result = {}
+	if (queryString === '') {
+		return result
+	}
+	var parts = queryString.replace(/\+/g, '%20').split(/[&;]/)
+	for (var i = 0, len = parts.length; i < len; ++i) {
+		var subparts = parts[i].split('=')
 
-    var name = decodeURIComponent(subparts[0]);
-    var value = subparts[1];
-    if (defined(value)) {
-      value = decodeURIComponent(value);
-    } else {
-      value = "";
-    }
+		var name = decodeURIComponent(subparts[0])
+		var value = subparts[1]
+		if (defined(value)) {
+			value = decodeURIComponent(value)
+		} else {
+			value = ''
+		}
 
-    var resultValue = result[name];
-    if (typeof resultValue === "string") {
-      // expand the single value to an array
-      result[name] = [resultValue, value];
-    } else if (Array.isArray(resultValue)) {
-      resultValue.push(value);
-    } else {
-      result[name] = value;
-    }
-  }
-  return result;
+		var resultValue = result[name]
+		if (typeof resultValue === 'string') {
+			// expand the single value to an array
+			result[name] = [resultValue, value]
+		} else if (Array.isArray(resultValue)) {
+			resultValue.push(value)
+		} else {
+			result[name] = value
+		}
+	}
+	return result
 }
-export default queryToObject;
+export default queryToObject

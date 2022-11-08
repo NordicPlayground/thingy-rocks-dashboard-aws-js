@@ -1,8 +1,8 @@
-import createGuid from "../Core/createGuid.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import destroyObject from "../Core/destroyObject.js";
-import DeveloperError from "../Core/DeveloperError.js";
+import createGuid from '../Core/createGuid.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import destroyObject from '../Core/destroyObject.js'
+import DeveloperError from '../Core/DeveloperError.js'
 
 /**
  * A collection of primitives.  This is most often used with {@link Scene#primitives},
@@ -27,64 +27,64 @@ import DeveloperError from "../Core/DeveloperError.js";
  * scene.primitives.add(labels);      // Add regular primitive
  */
 function PrimitiveCollection(options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  this._primitives = [];
-  this._guid = createGuid();
+	this._primitives = []
+	this._guid = createGuid()
 
-  // Used by the OrderedGroundPrimitiveCollection
-  this._zIndex = undefined;
+	// Used by the OrderedGroundPrimitiveCollection
+	this._zIndex = undefined
 
-  /**
-   * Determines if primitives in this collection will be shown.
-   *
-   * @type {Boolean}
-   * @default true
-   */
-  this.show = defaultValue(options.show, true);
+	/**
+	 * Determines if primitives in this collection will be shown.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 */
+	this.show = defaultValue(options.show, true)
 
-  /**
-   * Determines if primitives in the collection are destroyed when they are removed by
-   * {@link PrimitiveCollection#destroy} or  {@link PrimitiveCollection#remove} or implicitly
-   * by {@link PrimitiveCollection#removeAll}.
-   *
-   * @type {Boolean}
-   * @default true
-   *
-   * @example
-   * // Example 1. Primitives are destroyed by default.
-   * var primitives = new Cesium.PrimitiveCollection();
-   * var labels = primitives.add(new Cesium.LabelCollection());
-   * primitives = primitives.destroy();
-   * var b = labels.isDestroyed(); // true
-   *
-   * @example
-   * // Example 2. Do not destroy primitives in a collection.
-   * var primitives = new Cesium.PrimitiveCollection();
-   * primitives.destroyPrimitives = false;
-   * var labels = primitives.add(new Cesium.LabelCollection());
-   * primitives = primitives.destroy();
-   * var b = labels.isDestroyed(); // false
-   * labels = labels.destroy();    // explicitly destroy
-   */
-  this.destroyPrimitives = defaultValue(options.destroyPrimitives, true);
+	/**
+	 * Determines if primitives in the collection are destroyed when they are removed by
+	 * {@link PrimitiveCollection#destroy} or  {@link PrimitiveCollection#remove} or implicitly
+	 * by {@link PrimitiveCollection#removeAll}.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 *
+	 * @example
+	 * // Example 1. Primitives are destroyed by default.
+	 * var primitives = new Cesium.PrimitiveCollection();
+	 * var labels = primitives.add(new Cesium.LabelCollection());
+	 * primitives = primitives.destroy();
+	 * var b = labels.isDestroyed(); // true
+	 *
+	 * @example
+	 * // Example 2. Do not destroy primitives in a collection.
+	 * var primitives = new Cesium.PrimitiveCollection();
+	 * primitives.destroyPrimitives = false;
+	 * var labels = primitives.add(new Cesium.LabelCollection());
+	 * primitives = primitives.destroy();
+	 * var b = labels.isDestroyed(); // false
+	 * labels = labels.destroy();    // explicitly destroy
+	 */
+	this.destroyPrimitives = defaultValue(options.destroyPrimitives, true)
 }
 
 Object.defineProperties(PrimitiveCollection.prototype, {
-  /**
-   * Gets the number of primitives in the collection.
-   *
-   * @memberof PrimitiveCollection.prototype
-   *
-   * @type {Number}
-   * @readonly
-   */
-  length: {
-    get: function () {
-      return this._primitives.length;
-    },
-  },
-});
+	/**
+	 * Gets the number of primitives in the collection.
+	 *
+	 * @memberof PrimitiveCollection.prototype
+	 *
+	 * @type {Number}
+	 * @readonly
+	 */
+	length: {
+		get: function () {
+			return this._primitives.length
+		},
+	},
+})
 
 /**
  * Adds a primitive to the collection.
@@ -99,37 +99,37 @@ Object.defineProperties(PrimitiveCollection.prototype, {
  * var billboards = scene.primitives.add(new Cesium.BillboardCollection());
  */
 PrimitiveCollection.prototype.add = function (primitive, index) {
-  var hasIndex = defined(index);
+	var hasIndex = defined(index)
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(primitive)) {
-    throw new DeveloperError("primitive is required.");
-  }
-  if (hasIndex) {
-    if (index < 0) {
-      throw new DeveloperError("index must be greater than or equal to zero.");
-    } else if (index > this._primitives.length) {
-      throw new DeveloperError(
-        "index must be less than or equal to the number of primitives."
-      );
-    }
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(primitive)) {
+		throw new DeveloperError('primitive is required.')
+	}
+	if (hasIndex) {
+		if (index < 0) {
+			throw new DeveloperError('index must be greater than or equal to zero.')
+		} else if (index > this._primitives.length) {
+			throw new DeveloperError(
+				'index must be less than or equal to the number of primitives.',
+			)
+		}
+	}
+	//>>includeEnd('debug');
 
-  var external = (primitive._external = primitive._external || {});
-  var composites = (external._composites = external._composites || {});
-  composites[this._guid] = {
-    collection: this,
-  };
+	var external = (primitive._external = primitive._external || {})
+	var composites = (external._composites = external._composites || {})
+	composites[this._guid] = {
+		collection: this,
+	}
 
-  if (!hasIndex) {
-    this._primitives.push(primitive);
-  } else {
-    this._primitives.splice(index, 0, primitive);
-  }
+	if (!hasIndex) {
+		this._primitives.push(primitive)
+	} else {
+		this._primitives.splice(index, 0, primitive)
+	}
 
-  return primitive;
-};
+	return primitive
+}
 
 /**
  * Removes a primitive from the collection.
@@ -147,37 +147,37 @@ PrimitiveCollection.prototype.add = function (primitive, index) {
  * @see PrimitiveCollection#destroyPrimitives
  */
 PrimitiveCollection.prototype.remove = function (primitive) {
-  // PERFORMANCE_IDEA:  We can obviously make this a lot faster.
-  if (this.contains(primitive)) {
-    var index = this._primitives.indexOf(primitive);
-    if (index !== -1) {
-      this._primitives.splice(index, 1);
+	// PERFORMANCE_IDEA:  We can obviously make this a lot faster.
+	if (this.contains(primitive)) {
+		var index = this._primitives.indexOf(primitive)
+		if (index !== -1) {
+			this._primitives.splice(index, 1)
 
-      delete primitive._external._composites[this._guid];
+			delete primitive._external._composites[this._guid]
 
-      if (this.destroyPrimitives) {
-        primitive.destroy();
-      }
+			if (this.destroyPrimitives) {
+				primitive.destroy()
+			}
 
-      return true;
-    }
-    // else ... this is not possible, I swear.
-  }
+			return true
+		}
+		// else ... this is not possible, I swear.
+	}
 
-  return false;
-};
+	return false
+}
 
 /**
  * Removes and destroys a primitive, regardless of destroyPrimitives setting.
  * @private
  */
 PrimitiveCollection.prototype.removeAndDestroy = function (primitive) {
-  var removed = this.remove(primitive);
-  if (removed && !this.destroyPrimitives) {
-    primitive.destroy();
-  }
-  return removed;
-};
+	var removed = this.remove(primitive)
+	if (removed && !this.destroyPrimitives) {
+		primitive.destroy()
+	}
+	return removed
+}
 
 /**
  * Removes all primitives in the collection.
@@ -187,16 +187,16 @@ PrimitiveCollection.prototype.removeAndDestroy = function (primitive) {
  * @see PrimitiveCollection#destroyPrimitives
  */
 PrimitiveCollection.prototype.removeAll = function () {
-  var primitives = this._primitives;
-  var length = primitives.length;
-  for (var i = 0; i < length; ++i) {
-    delete primitives[i]._external._composites[this._guid];
-    if (this.destroyPrimitives) {
-      primitives[i].destroy();
-    }
-  }
-  this._primitives = [];
-};
+	var primitives = this._primitives
+	var length = primitives.length
+	for (var i = 0; i < length; ++i) {
+		delete primitives[i]._external._composites[this._guid]
+		if (this.destroyPrimitives) {
+			primitives[i].destroy()
+		}
+	}
+	this._primitives = []
+}
 
 /**
  * Determines if this collection contains a primitive.
@@ -209,22 +209,22 @@ PrimitiveCollection.prototype.removeAll = function () {
  * @see PrimitiveCollection#get
  */
 PrimitiveCollection.prototype.contains = function (primitive) {
-  return !!(
-    defined(primitive) &&
-    primitive._external &&
-    primitive._external._composites &&
-    primitive._external._composites[this._guid]
-  );
-};
+	return !!(
+		defined(primitive) &&
+		primitive._external &&
+		primitive._external._composites &&
+		primitive._external._composites[this._guid]
+	)
+}
 
 function getPrimitiveIndex(compositePrimitive, primitive) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!compositePrimitive.contains(primitive)) {
-    throw new DeveloperError("primitive is not in this collection.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!compositePrimitive.contains(primitive)) {
+		throw new DeveloperError('primitive is not in this collection.')
+	}
+	//>>includeEnd('debug');
 
-  return compositePrimitive._primitives.indexOf(primitive);
+	return compositePrimitive._primitives.indexOf(primitive)
 }
 
 /**
@@ -241,17 +241,17 @@ function getPrimitiveIndex(compositePrimitive, primitive) {
  * @see PrimitiveCollection#lowerToBottom
  */
 PrimitiveCollection.prototype.raise = function (primitive) {
-  if (defined(primitive)) {
-    var index = getPrimitiveIndex(this, primitive);
-    var primitives = this._primitives;
+	if (defined(primitive)) {
+		var index = getPrimitiveIndex(this, primitive)
+		var primitives = this._primitives
 
-    if (index !== primitives.length - 1) {
-      var p = primitives[index];
-      primitives[index] = primitives[index + 1];
-      primitives[index + 1] = p;
-    }
-  }
-};
+		if (index !== primitives.length - 1) {
+			var p = primitives[index]
+			primitives[index] = primitives[index + 1]
+			primitives[index + 1] = p
+		}
+	}
+}
 
 /**
  * Raises a primitive to the "top" of the collection.  If all primitives in the collection are drawn
@@ -267,17 +267,17 @@ PrimitiveCollection.prototype.raise = function (primitive) {
  * @see PrimitiveCollection#lowerToBottom
  */
 PrimitiveCollection.prototype.raiseToTop = function (primitive) {
-  if (defined(primitive)) {
-    var index = getPrimitiveIndex(this, primitive);
-    var primitives = this._primitives;
+	if (defined(primitive)) {
+		var index = getPrimitiveIndex(this, primitive)
+		var primitives = this._primitives
 
-    if (index !== primitives.length - 1) {
-      // PERFORMANCE_IDEA:  Could be faster
-      primitives.splice(index, 1);
-      primitives.push(primitive);
-    }
-  }
-};
+		if (index !== primitives.length - 1) {
+			// PERFORMANCE_IDEA:  Could be faster
+			primitives.splice(index, 1)
+			primitives.push(primitive)
+		}
+	}
+}
 
 /**
  * Lowers a primitive "down one" in the collection.  If all primitives in the collection are drawn
@@ -293,17 +293,17 @@ PrimitiveCollection.prototype.raiseToTop = function (primitive) {
  * @see PrimitiveCollection#raiseToTop
  */
 PrimitiveCollection.prototype.lower = function (primitive) {
-  if (defined(primitive)) {
-    var index = getPrimitiveIndex(this, primitive);
-    var primitives = this._primitives;
+	if (defined(primitive)) {
+		var index = getPrimitiveIndex(this, primitive)
+		var primitives = this._primitives
 
-    if (index !== 0) {
-      var p = primitives[index];
-      primitives[index] = primitives[index - 1];
-      primitives[index - 1] = p;
-    }
-  }
-};
+		if (index !== 0) {
+			var p = primitives[index]
+			primitives[index] = primitives[index - 1]
+			primitives[index - 1] = p
+		}
+	}
+}
 
 /**
  * Lowers a primitive to the "bottom" of the collection.  If all primitives in the collection are drawn
@@ -319,17 +319,17 @@ PrimitiveCollection.prototype.lower = function (primitive) {
  * @see PrimitiveCollection#raiseToTop
  */
 PrimitiveCollection.prototype.lowerToBottom = function (primitive) {
-  if (defined(primitive)) {
-    var index = getPrimitiveIndex(this, primitive);
-    var primitives = this._primitives;
+	if (defined(primitive)) {
+		var index = getPrimitiveIndex(this, primitive)
+		var primitives = this._primitives
 
-    if (index !== 0) {
-      // PERFORMANCE_IDEA:  Could be faster
-      primitives.splice(index, 1);
-      primitives.unshift(primitive);
-    }
-  }
-};
+		if (index !== 0) {
+			// PERFORMANCE_IDEA:  Could be faster
+			primitives.splice(index, 1)
+			primitives.unshift(primitive)
+		}
+	}
+}
 
 /**
  * Returns the primitive in the collection at the specified index.
@@ -352,79 +352,79 @@ PrimitiveCollection.prototype.lowerToBottom = function (primitive) {
  * @see PrimitiveCollection#length
  */
 PrimitiveCollection.prototype.get = function (index) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(index)) {
-    throw new DeveloperError("index is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(index)) {
+		throw new DeveloperError('index is required.')
+	}
+	//>>includeEnd('debug');
 
-  return this._primitives[index];
-};
+	return this._primitives[index]
+}
 
 /**
  * @private
  */
 PrimitiveCollection.prototype.update = function (frameState) {
-  if (!this.show) {
-    return;
-  }
+	if (!this.show) {
+		return
+	}
 
-  var primitives = this._primitives;
-  // Using primitives.length in the loop is a temporary workaround
-  // to allow quadtree updates to add and remove primitives in
-  // update().  This will be changed to manage added and removed lists.
-  for (var i = 0; i < primitives.length; ++i) {
-    primitives[i].update(frameState);
-  }
-};
+	var primitives = this._primitives
+	// Using primitives.length in the loop is a temporary workaround
+	// to allow quadtree updates to add and remove primitives in
+	// update().  This will be changed to manage added and removed lists.
+	for (var i = 0; i < primitives.length; ++i) {
+		primitives[i].update(frameState)
+	}
+}
 
 /**
  * @private
  */
 PrimitiveCollection.prototype.prePassesUpdate = function (frameState) {
-  var primitives = this._primitives;
-  // Using primitives.length in the loop is a temporary workaround
-  // to allow quadtree updates to add and remove primitives in
-  // update().  This will be changed to manage added and removed lists.
-  for (var i = 0; i < primitives.length; ++i) {
-    var primitive = primitives[i];
-    if (defined(primitive.prePassesUpdate)) {
-      primitive.prePassesUpdate(frameState);
-    }
-  }
-};
+	var primitives = this._primitives
+	// Using primitives.length in the loop is a temporary workaround
+	// to allow quadtree updates to add and remove primitives in
+	// update().  This will be changed to manage added and removed lists.
+	for (var i = 0; i < primitives.length; ++i) {
+		var primitive = primitives[i]
+		if (defined(primitive.prePassesUpdate)) {
+			primitive.prePassesUpdate(frameState)
+		}
+	}
+}
 
 /**
  * @private
  */
 PrimitiveCollection.prototype.updateForPass = function (frameState, passState) {
-  var primitives = this._primitives;
-  // Using primitives.length in the loop is a temporary workaround
-  // to allow quadtree updates to add and remove primitives in
-  // update().  This will be changed to manage added and removed lists.
-  for (var i = 0; i < primitives.length; ++i) {
-    var primitive = primitives[i];
-    if (defined(primitive.updateForPass)) {
-      primitive.updateForPass(frameState, passState);
-    }
-  }
-};
+	var primitives = this._primitives
+	// Using primitives.length in the loop is a temporary workaround
+	// to allow quadtree updates to add and remove primitives in
+	// update().  This will be changed to manage added and removed lists.
+	for (var i = 0; i < primitives.length; ++i) {
+		var primitive = primitives[i]
+		if (defined(primitive.updateForPass)) {
+			primitive.updateForPass(frameState, passState)
+		}
+	}
+}
 
 /**
  * @private
  */
 PrimitiveCollection.prototype.postPassesUpdate = function (frameState) {
-  var primitives = this._primitives;
-  // Using primitives.length in the loop is a temporary workaround
-  // to allow quadtree updates to add and remove primitives in
-  // update().  This will be changed to manage added and removed lists.
-  for (var i = 0; i < primitives.length; ++i) {
-    var primitive = primitives[i];
-    if (defined(primitive.postPassesUpdate)) {
-      primitive.postPassesUpdate(frameState);
-    }
-  }
-};
+	var primitives = this._primitives
+	// Using primitives.length in the loop is a temporary workaround
+	// to allow quadtree updates to add and remove primitives in
+	// update().  This will be changed to manage added and removed lists.
+	for (var i = 0; i < primitives.length; ++i) {
+		var primitive = primitives[i]
+		if (defined(primitive.postPassesUpdate)) {
+			primitive.postPassesUpdate(frameState)
+		}
+	}
+}
 
 /**
  * Returns true if this object was destroyed; otherwise, false.
@@ -437,8 +437,8 @@ PrimitiveCollection.prototype.postPassesUpdate = function (frameState) {
  * @see PrimitiveCollection#destroy
  */
 PrimitiveCollection.prototype.isDestroyed = function () {
-  return false;
-};
+	return false
+}
 
 /**
  * Destroys the WebGL resources held by each primitive in this collection.  Explicitly destroying this
@@ -461,7 +461,7 @@ PrimitiveCollection.prototype.isDestroyed = function () {
  * @see PrimitiveCollection#isDestroyed
  */
 PrimitiveCollection.prototype.destroy = function () {
-  this.removeAll();
-  return destroyObject(this);
-};
-export default PrimitiveCollection;
+	this.removeAll()
+	return destroyObject(this)
+}
+export default PrimitiveCollection

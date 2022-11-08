@@ -1,5 +1,5 @@
 //This file is automatically rebuilt by the Cesium build process.
-export default "varying vec3 v_positionMC;\n\
+export default 'varying vec3 v_positionMC;\n\
 varying vec3 v_positionEC;\n\
 varying vec2 v_st;\n\
 \n\
@@ -32,4 +32,4 @@ void main()\n\
     gl_FragColor = czm_phong(normalize(positionToEyeEC), material, czm_lightDirectionEC);\n\
 #endif\n\
 }\n\
-";
+'

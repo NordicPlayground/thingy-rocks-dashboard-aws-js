@@ -1,11 +1,11 @@
-import clone from "../Core/clone.js";
-import defaultValue from "../Core/defaultValue.js";
-import defined from "../Core/defined.js";
-import DeveloperError from "../Core/DeveloperError.js";
-import EasingFunction from "../Core/EasingFunction.js";
-import getTimestamp from "../Core/getTimestamp.js";
-import TimeConstants from "../Core/TimeConstants.js";
-import TweenJS from "../ThirdParty/Tween.js";
+import clone from '../Core/clone.js'
+import defaultValue from '../Core/defaultValue.js'
+import defined from '../Core/defined.js'
+import DeveloperError from '../Core/DeveloperError.js'
+import EasingFunction from '../Core/EasingFunction.js'
+import getTimestamp from '../Core/getTimestamp.js'
+import TimeConstants from '../Core/TimeConstants.js'
+import TweenJS from '../ThirdParty/Tween.js'
 
 /**
  * A tween is an animation that interpolates the properties of two objects using an {@link EasingFunction}.  Create
@@ -17,155 +17,155 @@ import TweenJS from "../ThirdParty/Tween.js";
  * @private
  */
 function Tween(
-  tweens,
-  tweenjs,
-  startObject,
-  stopObject,
-  duration,
-  delay,
-  easingFunction,
-  update,
-  complete,
-  cancel
+	tweens,
+	tweenjs,
+	startObject,
+	stopObject,
+	duration,
+	delay,
+	easingFunction,
+	update,
+	complete,
+	cancel,
 ) {
-  this._tweens = tweens;
-  this._tweenjs = tweenjs;
+	this._tweens = tweens
+	this._tweenjs = tweenjs
 
-  this._startObject = clone(startObject);
-  this._stopObject = clone(stopObject);
+	this._startObject = clone(startObject)
+	this._stopObject = clone(stopObject)
 
-  this._duration = duration;
-  this._delay = delay;
-  this._easingFunction = easingFunction;
+	this._duration = duration
+	this._delay = delay
+	this._easingFunction = easingFunction
 
-  this._update = update;
-  this._complete = complete;
+	this._update = update
+	this._complete = complete
 
-  /**
-   * The callback to call if the tween is canceled either because {@link Tween#cancelTween}
-   * was called or because the tween was removed from the collection.
-   *
-   * @type {TweenCollection.TweenCancelledCallback}
-   */
-  this.cancel = cancel;
+	/**
+	 * The callback to call if the tween is canceled either because {@link Tween#cancelTween}
+	 * was called or because the tween was removed from the collection.
+	 *
+	 * @type {TweenCollection.TweenCancelledCallback}
+	 */
+	this.cancel = cancel
 
-  /**
-   * @private
-   */
-  this.needsStart = true;
+	/**
+	 * @private
+	 */
+	this.needsStart = true
 }
 
 Object.defineProperties(Tween.prototype, {
-  /**
-   * An object with properties for initial values of the tween.  The properties of this object are changed during the tween's animation.
-   * @memberof Tween.prototype
-   *
-   * @type {Object}
-   * @readonly
-   */
-  startObject: {
-    get: function () {
-      return this._startObject;
-    },
-  },
+	/**
+	 * An object with properties for initial values of the tween.  The properties of this object are changed during the tween's animation.
+	 * @memberof Tween.prototype
+	 *
+	 * @type {Object}
+	 * @readonly
+	 */
+	startObject: {
+		get: function () {
+			return this._startObject
+		},
+	},
 
-  /**
-   * An object with properties for the final values of the tween.
-   * @memberof Tween.prototype
-   *
-   * @type {Object}
-   * @readonly
-   */
-  stopObject: {
-    get: function () {
-      return this._stopObject;
-    },
-  },
+	/**
+	 * An object with properties for the final values of the tween.
+	 * @memberof Tween.prototype
+	 *
+	 * @type {Object}
+	 * @readonly
+	 */
+	stopObject: {
+		get: function () {
+			return this._stopObject
+		},
+	},
 
-  /**
-   * The duration, in seconds, for the tween.  The tween is automatically removed from the collection when it stops.
-   * @memberof Tween.prototype
-   *
-   * @type {Number}
-   * @readonly
-   */
-  duration: {
-    get: function () {
-      return this._duration;
-    },
-  },
+	/**
+	 * The duration, in seconds, for the tween.  The tween is automatically removed from the collection when it stops.
+	 * @memberof Tween.prototype
+	 *
+	 * @type {Number}
+	 * @readonly
+	 */
+	duration: {
+		get: function () {
+			return this._duration
+		},
+	},
 
-  /**
-   * The delay, in seconds, before the tween starts animating.
-   * @memberof Tween.prototype
-   *
-   * @type {Number}
-   * @readonly
-   */
-  delay: {
-    get: function () {
-      return this._delay;
-    },
-  },
+	/**
+	 * The delay, in seconds, before the tween starts animating.
+	 * @memberof Tween.prototype
+	 *
+	 * @type {Number}
+	 * @readonly
+	 */
+	delay: {
+		get: function () {
+			return this._delay
+		},
+	},
 
-  /**
-   * Determines the curve for animtion.
-   * @memberof Tween.prototype
-   *
-   * @type {EasingFunction}
-   * @readonly
-   */
-  easingFunction: {
-    get: function () {
-      return this._easingFunction;
-    },
-  },
+	/**
+	 * Determines the curve for animtion.
+	 * @memberof Tween.prototype
+	 *
+	 * @type {EasingFunction}
+	 * @readonly
+	 */
+	easingFunction: {
+		get: function () {
+			return this._easingFunction
+		},
+	},
 
-  /**
-   * The callback to call at each animation update (usually tied to the a rendered frame).
-   * @memberof Tween.prototype
-   *
-   * @type {TweenCollection.TweenUpdateCallback}
-   * @readonly
-   */
-  update: {
-    get: function () {
-      return this._update;
-    },
-  },
+	/**
+	 * The callback to call at each animation update (usually tied to the a rendered frame).
+	 * @memberof Tween.prototype
+	 *
+	 * @type {TweenCollection.TweenUpdateCallback}
+	 * @readonly
+	 */
+	update: {
+		get: function () {
+			return this._update
+		},
+	},
 
-  /**
-   * The callback to call when the tween finishes animating.
-   * @memberof Tween.prototype
-   *
-   * @type {TweenCollection.TweenCompleteCallback}
-   * @readonly
-   */
-  complete: {
-    get: function () {
-      return this._complete;
-    },
-  },
+	/**
+	 * The callback to call when the tween finishes animating.
+	 * @memberof Tween.prototype
+	 *
+	 * @type {TweenCollection.TweenCompleteCallback}
+	 * @readonly
+	 */
+	complete: {
+		get: function () {
+			return this._complete
+		},
+	},
 
-  /**
-   * @memberof Tween.prototype
-   *
-   * @private
-   */
-  tweenjs: {
-    get: function () {
-      return this._tweenjs;
-    },
-  },
-});
+	/**
+	 * @memberof Tween.prototype
+	 *
+	 * @private
+	 */
+	tweenjs: {
+		get: function () {
+			return this._tweenjs
+		},
+	},
+})
 
 /**
  * Cancels the tween calling the {@link Tween#cancel} callback if one exists.  This
  * has no effect if the tween finished or was already canceled.
  */
 Tween.prototype.cancelTween = function () {
-  this._tweens.remove(this);
-};
+	this._tweens.remove(this)
+}
 
 /**
  * A collection of tweens for animating properties.  Commonly accessed using {@link Scene#tweens}.
@@ -176,23 +176,23 @@ Tween.prototype.cancelTween = function () {
  * @private
  */
 function TweenCollection() {
-  this._tweens = [];
+	this._tweens = []
 }
 
 Object.defineProperties(TweenCollection.prototype, {
-  /**
-   * The number of tweens in the collection.
-   * @memberof TweenCollection.prototype
-   *
-   * @type {Number}
-   * @readonly
-   */
-  length: {
-    get: function () {
-      return this._tweens.length;
-    },
-  },
-});
+	/**
+	 * The number of tweens in the collection.
+	 * @memberof TweenCollection.prototype
+	 *
+	 * @type {Number}
+	 * @readonly
+	 */
+	length: {
+		get: function () {
+			return this._tweens.length
+		},
+	},
+})
 
 /**
  * Creates a tween for animating between two sets of properties.  The tween starts animating at the next call to {@link TweenCollection#update}, which
@@ -212,65 +212,65 @@ Object.defineProperties(TweenCollection.prototype, {
  * @exception {DeveloperError} options.duration must be positive.
  */
 TweenCollection.prototype.add = function (options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(options.startObject) || !defined(options.stopObject)) {
-    throw new DeveloperError(
-      "options.startObject and options.stopObject are required."
-    );
-  }
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(options.startObject) || !defined(options.stopObject)) {
+		throw new DeveloperError(
+			'options.startObject and options.stopObject are required.',
+		)
+	}
 
-  if (!defined(options.duration) || options.duration < 0.0) {
-    throw new DeveloperError(
-      "options.duration is required and must be positive."
-    );
-  }
-  //>>includeEnd('debug');
+	if (!defined(options.duration) || options.duration < 0.0) {
+		throw new DeveloperError(
+			'options.duration is required and must be positive.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  if (options.duration === 0.0) {
-    if (defined(options.complete)) {
-      options.complete();
-    }
-    return new Tween(this);
-  }
+	if (options.duration === 0.0) {
+		if (defined(options.complete)) {
+			options.complete()
+		}
+		return new Tween(this)
+	}
 
-  var duration = options.duration / TimeConstants.SECONDS_PER_MILLISECOND;
-  var delayInSeconds = defaultValue(options.delay, 0.0);
-  var delay = delayInSeconds / TimeConstants.SECONDS_PER_MILLISECOND;
-  var easingFunction = defaultValue(
-    options.easingFunction,
-    EasingFunction.LINEAR_NONE
-  );
+	var duration = options.duration / TimeConstants.SECONDS_PER_MILLISECOND
+	var delayInSeconds = defaultValue(options.delay, 0.0)
+	var delay = delayInSeconds / TimeConstants.SECONDS_PER_MILLISECOND
+	var easingFunction = defaultValue(
+		options.easingFunction,
+		EasingFunction.LINEAR_NONE,
+	)
 
-  var value = options.startObject;
-  var tweenjs = new TweenJS.Tween(value);
-  tweenjs.to(clone(options.stopObject), duration);
-  tweenjs.delay(delay);
-  tweenjs.easing(easingFunction);
-  if (defined(options.update)) {
-    tweenjs.onUpdate(function () {
-      options.update(value);
-    });
-  }
-  tweenjs.onComplete(defaultValue(options.complete, null));
-  tweenjs.repeat(defaultValue(options._repeat, 0.0));
+	var value = options.startObject
+	var tweenjs = new TweenJS.Tween(value)
+	tweenjs.to(clone(options.stopObject), duration)
+	tweenjs.delay(delay)
+	tweenjs.easing(easingFunction)
+	if (defined(options.update)) {
+		tweenjs.onUpdate(function () {
+			options.update(value)
+		})
+	}
+	tweenjs.onComplete(defaultValue(options.complete, null))
+	tweenjs.repeat(defaultValue(options._repeat, 0.0))
 
-  var tween = new Tween(
-    this,
-    tweenjs,
-    options.startObject,
-    options.stopObject,
-    options.duration,
-    delayInSeconds,
-    easingFunction,
-    options.update,
-    options.complete,
-    options.cancel
-  );
-  this._tweens.push(tween);
-  return tween;
-};
+	var tween = new Tween(
+		this,
+		tweenjs,
+		options.startObject,
+		options.stopObject,
+		options.duration,
+		delayInSeconds,
+		easingFunction,
+		options.update,
+		options.complete,
+		options.cancel,
+	)
+	this._tweens.push(tween)
+	return tween
+}
 
 /**
  * Creates a tween for animating a scalar property on the given object.  The tween starts animating at the next call to {@link TweenCollection#update}, which
@@ -293,51 +293,49 @@ TweenCollection.prototype.add = function (options) {
  * @exception {DeveloperError} options.duration must be positive.
  */
 TweenCollection.prototype.addProperty = function (options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  var object = options.object;
-  var property = options.property;
-  var startValue = options.startValue;
-  var stopValue = options.stopValue;
+	var object = options.object
+	var property = options.property
+	var startValue = options.startValue
+	var stopValue = options.stopValue
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(object) || !defined(options.property)) {
-    throw new DeveloperError(
-      "options.object and options.property are required."
-    );
-  }
-  if (!defined(object[property])) {
-    throw new DeveloperError(
-      "options.object must have the specified property."
-    );
-  }
-  if (!defined(startValue) || !defined(stopValue)) {
-    throw new DeveloperError(
-      "options.startValue and options.stopValue are required."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(object) || !defined(options.property)) {
+		throw new DeveloperError(
+			'options.object and options.property are required.',
+		)
+	}
+	if (!defined(object[property])) {
+		throw new DeveloperError('options.object must have the specified property.')
+	}
+	if (!defined(startValue) || !defined(stopValue)) {
+		throw new DeveloperError(
+			'options.startValue and options.stopValue are required.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  function update(value) {
-    object[property] = value.value;
-  }
+	function update(value) {
+		object[property] = value.value
+	}
 
-  return this.add({
-    startObject: {
-      value: startValue,
-    },
-    stopObject: {
-      value: stopValue,
-    },
-    duration: defaultValue(options.duration, 3.0),
-    delay: options.delay,
-    easingFunction: options.easingFunction,
-    update: update,
-    complete: options.complete,
-    cancel: options.cancel,
-    _repeat: options._repeat,
-  });
-};
+	return this.add({
+		startObject: {
+			value: startValue,
+		},
+		stopObject: {
+			value: stopValue,
+		},
+		duration: defaultValue(options.duration, 3.0),
+		delay: options.delay,
+		easingFunction: options.easingFunction,
+		update: update,
+		complete: options.complete,
+		cancel: options.cancel,
+		_repeat: options._repeat,
+	})
+}
 
 /**
  * Creates a tween for animating the alpha of all color uniforms on a {@link Material}.  The tween starts animating at the next call to {@link TweenCollection#update}, which
@@ -359,58 +357,58 @@ TweenCollection.prototype.addProperty = function (options) {
  * @exception {DeveloperError} options.duration must be positive.
  */
 TweenCollection.prototype.addAlpha = function (options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  var material = options.material;
+	var material = options.material
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(material)) {
-    throw new DeveloperError("options.material is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(material)) {
+		throw new DeveloperError('options.material is required.')
+	}
+	//>>includeEnd('debug');
 
-  var properties = [];
+	var properties = []
 
-  for (var property in material.uniforms) {
-    if (
-      material.uniforms.hasOwnProperty(property) &&
-      defined(material.uniforms[property]) &&
-      defined(material.uniforms[property].alpha)
-    ) {
-      properties.push(property);
-    }
-  }
+	for (var property in material.uniforms) {
+		if (
+			material.uniforms.hasOwnProperty(property) &&
+			defined(material.uniforms[property]) &&
+			defined(material.uniforms[property].alpha)
+		) {
+			properties.push(property)
+		}
+	}
 
-  //>>includeStart('debug', pragmas.debug);
-  if (properties.length === 0) {
-    throw new DeveloperError(
-      "material has no properties with alpha components."
-    );
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (properties.length === 0) {
+		throw new DeveloperError(
+			'material has no properties with alpha components.',
+		)
+	}
+	//>>includeEnd('debug');
 
-  function update(value) {
-    var length = properties.length;
-    for (var i = 0; i < length; ++i) {
-      material.uniforms[properties[i]].alpha = value.alpha;
-    }
-  }
+	function update(value) {
+		var length = properties.length
+		for (var i = 0; i < length; ++i) {
+			material.uniforms[properties[i]].alpha = value.alpha
+		}
+	}
 
-  return this.add({
-    startObject: {
-      alpha: defaultValue(options.startValue, 0.0), // Default to fade in
-    },
-    stopObject: {
-      alpha: defaultValue(options.stopValue, 1.0),
-    },
-    duration: defaultValue(options.duration, 3.0),
-    delay: options.delay,
-    easingFunction: options.easingFunction,
-    update: update,
-    complete: options.complete,
-    cancel: options.cancel,
-  });
-};
+	return this.add({
+		startObject: {
+			alpha: defaultValue(options.startValue, 0.0), // Default to fade in
+		},
+		stopObject: {
+			alpha: defaultValue(options.stopValue, 1.0),
+		},
+		duration: defaultValue(options.duration, 3.0),
+		delay: options.delay,
+		easingFunction: options.easingFunction,
+		update: update,
+		complete: options.complete,
+		cancel: options.cancel,
+	})
+}
 
 /**
  * Creates a tween for animating the offset uniform of a {@link Material}.  The tween starts animating at the next call to {@link TweenCollection#update}, which
@@ -431,33 +429,33 @@ TweenCollection.prototype.addAlpha = function (options) {
  * @exception {DeveloperError} options.duration must be positive.
  */
 TweenCollection.prototype.addOffsetIncrement = function (options) {
-  options = defaultValue(options, defaultValue.EMPTY_OBJECT);
+	options = defaultValue(options, defaultValue.EMPTY_OBJECT)
 
-  var material = options.material;
+	var material = options.material
 
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(material)) {
-    throw new DeveloperError("material is required.");
-  }
-  if (!defined(material.uniforms.offset)) {
-    throw new DeveloperError("material.uniforms must have an offset property.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(material)) {
+		throw new DeveloperError('material is required.')
+	}
+	if (!defined(material.uniforms.offset)) {
+		throw new DeveloperError('material.uniforms must have an offset property.')
+	}
+	//>>includeEnd('debug');
 
-  var uniforms = material.uniforms;
-  return this.addProperty({
-    object: uniforms,
-    property: "offset",
-    startValue: uniforms.offset,
-    stopValue: uniforms.offset + 1,
-    duration: options.duration,
-    delay: options.delay,
-    easingFunction: options.easingFunction,
-    update: options.update,
-    cancel: options.cancel,
-    _repeat: Infinity,
-  });
-};
+	var uniforms = material.uniforms
+	return this.addProperty({
+		object: uniforms,
+		property: 'offset',
+		startValue: uniforms.offset,
+		stopValue: uniforms.offset + 1,
+		duration: options.duration,
+		delay: options.delay,
+		easingFunction: options.easingFunction,
+		update: options.update,
+		cancel: options.cancel,
+		_repeat: Infinity,
+	})
+}
 
 /**
  * Removes a tween from the collection.
@@ -469,22 +467,22 @@ TweenCollection.prototype.addOffsetIncrement = function (options) {
  * @returns {Boolean} <code>true</code> if the tween was removed; <code>false</code> if the tween was not found in the collection.
  */
 TweenCollection.prototype.remove = function (tween) {
-  if (!defined(tween)) {
-    return false;
-  }
+	if (!defined(tween)) {
+		return false
+	}
 
-  var index = this._tweens.indexOf(tween);
-  if (index !== -1) {
-    tween.tweenjs.stop();
-    if (defined(tween.cancel)) {
-      tween.cancel();
-    }
-    this._tweens.splice(index, 1);
-    return true;
-  }
+	var index = this._tweens.indexOf(tween)
+	if (index !== -1) {
+		tween.tweenjs.stop()
+		if (defined(tween.cancel)) {
+			tween.cancel()
+		}
+		this._tweens.splice(index, 1)
+		return true
+	}
 
-  return false;
-};
+	return false
+}
 
 /**
  * Removes all tweens from the collection.
@@ -493,17 +491,17 @@ TweenCollection.prototype.remove = function (tween) {
  * </p>
  */
 TweenCollection.prototype.removeAll = function () {
-  var tweens = this._tweens;
+	var tweens = this._tweens
 
-  for (var i = 0; i < tweens.length; ++i) {
-    var tween = tweens[i];
-    tween.tweenjs.stop();
-    if (defined(tween.cancel)) {
-      tween.cancel();
-    }
-  }
-  tweens.length = 0;
-};
+	for (var i = 0; i < tweens.length; ++i) {
+		var tween = tweens[i]
+		tween.tweenjs.stop()
+		if (defined(tween.cancel)) {
+			tween.cancel()
+		}
+	}
+	tweens.length = 0
+}
 
 /**
  * Determines whether this collection contains a given tween.
@@ -512,8 +510,8 @@ TweenCollection.prototype.removeAll = function () {
  * @returns {Boolean} <code>true</code> if this collection contains the tween, <code>false</code> otherwise.
  */
 TweenCollection.prototype.contains = function (tween) {
-  return defined(tween) && this._tweens.indexOf(tween) !== -1;
-};
+	return defined(tween) && this._tweens.indexOf(tween) !== -1
+}
 
 /**
  * Returns the tween in the collection at the specified index.  Indices are zero-based
@@ -533,14 +531,14 @@ TweenCollection.prototype.contains = function (tween) {
  * }
  */
 TweenCollection.prototype.get = function (index) {
-  //>>includeStart('debug', pragmas.debug);
-  if (!defined(index)) {
-    throw new DeveloperError("index is required.");
-  }
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	if (!defined(index)) {
+		throw new DeveloperError('index is required.')
+	}
+	//>>includeEnd('debug');
 
-  return this._tweens[index];
-};
+	return this._tweens[index]
+}
 
 /**
  * Updates the tweens in the collection to be at the provide time.  When a tween finishes, it is removed
@@ -549,27 +547,27 @@ TweenCollection.prototype.get = function (index) {
  * @param {Number} [time=getTimestamp()] The time in seconds.  By default tweens are synced to the system clock.
  */
 TweenCollection.prototype.update = function (time) {
-  var tweens = this._tweens;
+	var tweens = this._tweens
 
-  var i = 0;
-  time = defined(time)
-    ? time / TimeConstants.SECONDS_PER_MILLISECOND
-    : getTimestamp();
-  while (i < tweens.length) {
-    var tween = tweens[i];
-    var tweenjs = tween.tweenjs;
+	var i = 0
+	time = defined(time)
+		? time / TimeConstants.SECONDS_PER_MILLISECOND
+		: getTimestamp()
+	while (i < tweens.length) {
+		var tween = tweens[i]
+		var tweenjs = tween.tweenjs
 
-    if (tween.needsStart) {
-      tween.needsStart = false;
-      tweenjs.start(time);
-    } else if (tweenjs.update(time)) {
-      i++;
-    } else {
-      tweenjs.stop();
-      tweens.splice(i, 1);
-    }
-  }
-};
+		if (tween.needsStart) {
+			tween.needsStart = false
+			tweenjs.start(time)
+		} else if (tweenjs.update(time)) {
+			i++
+		} else {
+			tweenjs.stop()
+			tweens.splice(i, 1)
+		}
+	}
+}
 
 /**
  * A function that will execute when a tween completes.
@@ -585,4 +583,4 @@ TweenCollection.prototype.update = function (time) {
  * A function that will execute when a tween is cancelled.
  * @callback TweenCollection.TweenCancelledCallback
  */
-export default TweenCollection;
+export default TweenCollection

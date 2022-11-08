@@ -1,7 +1,7 @@
 /* ContentPane */
 
 .soria .dijitContentPane {
-    padding: 0;
+  padding: 0;
 }
 
 /* nested layouts */
@@ -10,12 +10,12 @@
 .soria .dijitTabContainerBottom-dijitContentPane,
 .soria .dijitTabContainerRight-dijitContentPane,
 .soria .dijitAccordionContainer-dijitContentPane {
-    background-color: #fff;
-    padding: 5px;
+  background-color: #fff;
+  padding: 5px;
 }
 
 .soria .dijitSplitContainer-dijitContentPane,
 .soria .dijitBorderContainer-dijitContentPane {
-    background-color: #fff;		/* override background-color setting on parent .dijitBorderContainer */
-    padding: 5px;
+  background-color: #fff; /* override background-color setting on parent .dijitBorderContainer */
+  padding: 5px;
 }

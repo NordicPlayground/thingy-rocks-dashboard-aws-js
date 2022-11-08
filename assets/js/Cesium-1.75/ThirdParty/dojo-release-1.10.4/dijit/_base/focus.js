@@ -1,14 +1,13 @@
 define([
-	"dojo/_base/array", // array.forEach
-	"dojo/dom", // dom.isDescendant
-	"dojo/_base/lang", // lang.isArray
-	"dojo/topic", // publish
-	"dojo/_base/window", // win.doc win.doc.selection win.global win.global.getSelection win.withGlobal
-	"../focus",
-	"../selection",
-	"../main"	// for exporting symbols to dijit
-], function(array, dom, lang, topic, win, focus, selection, dijit){
-
+	'dojo/_base/array', // array.forEach
+	'dojo/dom', // dom.isDescendant
+	'dojo/_base/lang', // lang.isArray
+	'dojo/topic', // publish
+	'dojo/_base/window', // win.doc win.doc.selection win.global win.global.getSelection win.withGlobal
+	'../focus',
+	'../selection',
+	'../main', // for exporting symbols to dijit
+], function (array, dom, lang, topic, win, focus, selection, dijit) {
 	// module:
 	//		dijit/_base/focus
 
@@ -25,30 +24,36 @@ define([
 		//		Previously focused item on screen
 		_prevFocus: null,
 
-		isCollapsed: function(){
+		isCollapsed: function () {
 			// summary:
 			//		Returns true if there is no text selected
-			return dijit.getBookmark().isCollapsed;
+			return dijit.getBookmark().isCollapsed
 		},
 
-		getBookmark: function(){
+		getBookmark: function () {
 			// summary:
 			//		Retrieves a bookmark that can be used with moveToBookmark to return to the same range
-			var sel = win.global == window ? selection : new selection.SelectionManager(win.global);
-			return sel.getBookmark();
+			var sel =
+				win.global == window
+					? selection
+					: new selection.SelectionManager(win.global)
+			return sel.getBookmark()
 		},
 
-		moveToBookmark: function(/*Object*/ bookmark){
+		moveToBookmark: function (/*Object*/ bookmark) {
 			// summary:
 			//		Moves current selection to a bookmark
 			// bookmark:
 			//		This should be a returned object from dijit.getBookmark()
 
-			var sel = win.global == window ? selection : new selection.SelectionManager(win.global);
-			return sel.moveToBookmark(bookmark);
+			var sel =
+				win.global == window
+					? selection
+					: new selection.SelectionManager(win.global)
+			return sel.moveToBookmark(bookmark)
 		},
 
-		getFocus: function(/*Widget?*/ menu, /*Window?*/ openedForWindow){
+		getFocus: function (/*Widget?*/ menu, /*Window?*/ openedForWindow) {
 			// summary:
 			//		Called as getFocus(), this returns an Object showing the current focus
 			//		and selected text.
@@ -69,19 +74,26 @@ define([
 			//
 			// returns:
 			//		A handle to restore focus/selection, to be passed to `dijit.focus`
-			var node = !focus.curNode || (menu && dom.isDescendant(focus.curNode, menu.domNode)) ? dijit._prevFocus : focus.curNode;
+			var node =
+				!focus.curNode ||
+				(menu && dom.isDescendant(focus.curNode, menu.domNode))
+					? dijit._prevFocus
+					: focus.curNode
 			return {
 				node: node,
-				bookmark: node && (node == focus.curNode) && win.withGlobal(openedForWindow || win.global, dijit.getBookmark),
-				openedForWindow: openedForWindow
-			}; // Object
+				bookmark:
+					node &&
+					node == focus.curNode &&
+					win.withGlobal(openedForWindow || win.global, dijit.getBookmark),
+				openedForWindow: openedForWindow,
+			} // Object
 		},
 
 		// _activeStack: dijit/_WidgetBase[]
 		//		List of currently active widgets (focused widget and it's ancestors)
 		_activeStack: [],
 
-		registerIframe: function(/*DomNode*/ iframe){
+		registerIframe: function (/*DomNode*/ iframe) {
 			// summary:
 			//		Registers listeners on the specified iframe so that any click
 			//		or focus event on that iframe (or anything in it) is reported
@@ -90,20 +102,23 @@ define([
 			//		Currently only used by editor.
 			// returns:
 			//		Handle to pass to unregisterIframe()
-			return focus.registerIframe(iframe);
+			return focus.registerIframe(iframe)
 		},
 
-		unregisterIframe: function(/*Object*/ handle){
+		unregisterIframe: function (/*Object*/ handle) {
 			// summary:
 			//		Unregisters listeners on the specified iframe created by registerIframe.
 			//		After calling be sure to delete or null out the handle itself.
 			// handle:
 			//		Handle returned by registerIframe()
 
-			handle && handle.remove();
+			handle && handle.remove()
 		},
 
-		registerWin: function(/*Window?*/targetWindow, /*DomNode?*/ effectiveNode){
+		registerWin: function (
+			/*Window?*/ targetWindow,
+			/*DomNode?*/ effectiveNode,
+		) {
 			// summary:
 			//		Registers listeners on the specified window (either the main
 			//		window or an iframe's window) to detect when the user has clicked somewhere
@@ -119,89 +134,103 @@ define([
 			// returns:
 			//		Handle to pass to unregisterWin()
 
-			return focus.registerWin(targetWindow, effectiveNode);
+			return focus.registerWin(targetWindow, effectiveNode)
 		},
 
-		unregisterWin: function(/*Handle*/ handle){
+		unregisterWin: function (/*Handle*/ handle) {
 			// summary:
 			//		Unregisters listeners on the specified window (either the main
 			//		window or an iframe's window) according to handle returned from registerWin().
 			//		After calling be sure to delete or null out the handle itself.
 
-			handle && handle.remove();
-		}
-	};
+			handle && handle.remove()
+		},
+	}
 
 	// Override focus singleton's focus function so that dijit.focus()
 	// has backwards compatible behavior of restoring selection (although
 	// probably no one is using that).
-	focus.focus = function(/*Object|DomNode */ handle){
+	focus.focus = function (/*Object|DomNode */ handle) {
 		// summary:
 		//		Sets the focused node and the selection according to argument.
 		//		To set focus to an iframe's content, pass in the iframe itself.
 		// handle:
 		//		object returned by get(), or a DomNode
 
-		if(!handle){ return; }
+		if (!handle) {
+			return
+		}
 
-		var node = "node" in handle ? handle.node : handle,		// because handle is either DomNode or a composite object
+		var node = 'node' in handle ? handle.node : handle, // because handle is either DomNode or a composite object
 			bookmark = handle.bookmark,
 			openedForWindow = handle.openedForWindow,
-			collapsed = bookmark ? bookmark.isCollapsed : false;
+			collapsed = bookmark ? bookmark.isCollapsed : false
 
 		// Set the focus
 		// Note that for iframe's we need to use the <iframe> to follow the parentNode chain,
 		// but we need to set focus to iframe.contentWindow
-		if(node){
-			var focusNode = (node.tagName.toLowerCase() == "iframe") ? node.contentWindow : node;
-			if(focusNode && focusNode.focus){
-				try{
+		if (node) {
+			var focusNode =
+				node.tagName.toLowerCase() == 'iframe' ? node.contentWindow : node
+			if (focusNode && focusNode.focus) {
+				try {
 					// Gecko throws sometimes if setting focus is impossible,
 					// node not displayed or something like that
-					focusNode.focus();
-				}catch(e){/*quiet*/}
+					focusNode.focus()
+				} catch (e) {
+					/*quiet*/
+				}
 			}
-			focus._onFocusNode(node);
+			focus._onFocusNode(node)
 		}
 
 		// set the selection
 		// do not need to restore if current selection is not empty
 		// (use keyboard to select a menu item) or if previous selection was collapsed
 		// as it may cause focus shift (Esp in IE).
-		if(bookmark && win.withGlobal(openedForWindow || win.global, dijit.isCollapsed) && !collapsed){
-			if(openedForWindow){
-				openedForWindow.focus();
+		if (
+			bookmark &&
+			win.withGlobal(openedForWindow || win.global, dijit.isCollapsed) &&
+			!collapsed
+		) {
+			if (openedForWindow) {
+				openedForWindow.focus()
 			}
-			try{
-				win.withGlobal(openedForWindow || win.global, dijit.moveToBookmark, null, [bookmark]);
-			}catch(e2){
+			try {
+				win.withGlobal(
+					openedForWindow || win.global,
+					dijit.moveToBookmark,
+					null,
+					[bookmark],
+				)
+			} catch (e2) {
 				/*squelch IE internal error, see http://trac.dojotoolkit.org/ticket/1984 */
 			}
 		}
-	};
+	}
 
 	// For back compatibility, monitor changes to focused node and active widget stack,
 	// publishing events and copying changes from focus manager variables into dijit (top level) variables
-	focus.watch("curNode", function(name, oldVal, newVal){
-		dijit._curFocus = newVal;
-		dijit._prevFocus = oldVal;
-		if(newVal){
-			topic.publish("focusNode", newVal);	// publish
+	focus.watch('curNode', function (name, oldVal, newVal) {
+		dijit._curFocus = newVal
+		dijit._prevFocus = oldVal
+		if (newVal) {
+			topic.publish('focusNode', newVal) // publish
 		}
-	});
-	focus.watch("activeStack", function(name, oldVal, newVal){
-		dijit._activeStack = newVal;
-	});
+	})
+	focus.watch('activeStack', function (name, oldVal, newVal) {
+		dijit._activeStack = newVal
+	})
 
-	focus.on("widget-blur", function(widget, by){
-		topic.publish("widgetBlur", widget, by);	// publish
-	});
-	focus.on("widget-focus", function(widget, by){
-		topic.publish("widgetFocus", widget, by);	// publish
-	});
+	focus.on('widget-blur', function (widget, by) {
+		topic.publish('widgetBlur', widget, by) // publish
+	})
+	focus.on('widget-focus', function (widget, by) {
+		topic.publish('widgetFocus', widget, by) // publish
+	})
 
-	lang.mixin(dijit, exports);
+	lang.mixin(dijit, exports)
 
 	/*===== return exports; =====*/
-	return dijit;	// for back compat :-(
-});
+	return dijit // for back compat :-(
+})

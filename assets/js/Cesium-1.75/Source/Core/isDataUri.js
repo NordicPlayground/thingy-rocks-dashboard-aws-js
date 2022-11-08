@@ -1,6 +1,6 @@
-import Check from "./Check.js";
+import Check from './Check.js'
 
-var dataUriRegex = /^data:/i;
+var dataUriRegex = /^data:/i
 
 /**
  * Determines if the specified uri is a data uri.
@@ -13,10 +13,10 @@ var dataUriRegex = /^data:/i;
  * @private
  */
 function isDataUri(uri) {
-  //>>includeStart('debug', pragmas.debug);
-  Check.typeOf.string("uri", uri);
-  //>>includeEnd('debug');
+	//>>includeStart('debug', pragmas.debug);
+	Check.typeOf.string('uri', uri)
+	//>>includeEnd('debug');
 
-  return dataUriRegex.test(uri);
+	return dataUriRegex.test(uri)
 }
-export default isDataUri;
+export default isDataUri

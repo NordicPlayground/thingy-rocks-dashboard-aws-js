@@ -51,11 +51,13 @@
           terrainProvider: Cesium.createWorldTerrain(),
         });
 
-        Sandcastle.addToggleButton("Shadows", viewer.shadows, function (
-          checked
-        ) {
-          viewer.shadows = checked;
-        });
+        Sandcastle.addToggleButton(
+          "Shadows",
+          viewer.shadows,
+          function (checked) {
+            viewer.shadows = checked;
+          }
+        );
 
         viewer.scene.globe.enableLighting = true;
         viewer.scene.globe.depthTestAgainstTerrain = true;
@@ -156,36 +158,32 @@
               text: "Front reflection",
               onselect: function () {
                 viewer.scene.camera.flyTo(frontView);
-                viewer.clockViewModel.clock.currentTime = Cesium.JulianDate.fromIso8601(
-                  "2017-07-11T20:00:00Z"
-                );
+                viewer.clockViewModel.clock.currentTime =
+                  Cesium.JulianDate.fromIso8601("2017-07-11T20:00:00Z");
               },
             },
             {
               text: "Three quarters sunrise",
               onselect: function () {
                 viewer.scene.camera.flyTo(threeQuartersView);
-                viewer.clockViewModel.clock.currentTime = Cesium.JulianDate.fromIso8601(
-                  "2017-07-11T11:00:00Z"
-                );
+                viewer.clockViewModel.clock.currentTime =
+                  Cesium.JulianDate.fromIso8601("2017-07-11T11:00:00Z");
               },
             },
             {
               text: "Top reflection",
               onselect: function () {
                 viewer.scene.camera.flyTo(topView);
-                viewer.clockViewModel.clock.currentTime = Cesium.JulianDate.fromIso8601(
-                  "2017-07-11T12:00:00Z"
-                );
+                viewer.clockViewModel.clock.currentTime =
+                  Cesium.JulianDate.fromIso8601("2017-07-11T12:00:00Z");
               },
             },
             {
               text: "Upward angle side reflection",
               onselect: function () {
                 viewer.scene.camera.flyTo(upwardsView);
-                viewer.clockViewModel.clock.currentTime = Cesium.JulianDate.fromIso8601(
-                  "2017-07-11T23:00:00Z"
-                );
+                viewer.clockViewModel.clock.currentTime =
+                  Cesium.JulianDate.fromIso8601("2017-07-11T23:00:00Z");
               },
             },
           ],

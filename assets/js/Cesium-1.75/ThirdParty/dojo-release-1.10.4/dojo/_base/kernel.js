@@ -1,16 +1,22 @@
-define(["../has", "./config", "require", "module"], function(has, config, require, module){
+define(['../has', './config', 'require', 'module'], function (
+	has,
+	config,
+	require,
+	module,
+) {
 	// module:
 	//		dojo/_base/kernel
 
 	// This module is the foundational module of the dojo boot sequence; it defines the dojo object.
 
-	var
-		// loop variables for this module
-		i, p,
-
+	var // loop variables for this module
+		i,
+		p,
 		// create dojo, dijit, and dojox
 		// FIXME: in 2.0 remove dijit, dojox being created by dojo
-		global = (function () { return this; })(),
+		global = (function () {
+			return this
+		})(),
 		dijit = {},
 		dojox = {},
 		dojo = {
@@ -18,12 +24,11 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 			//		This module is the foundational module of the dojo boot sequence; it defines the dojo object.
 
 			// notice dojo takes ownership of the value of the config module
-			config:config,
-			global:global,
-			dijit:dijit,
-			dojox:dojox
-		};
-
+			config: config,
+			global: global,
+			dijit: dijit,
+			dojox: dojox,
+		}
 
 	// Configure the scope map. For a 100% AMD application, the scope map is not needed other than to provide
 	// a _scopeName property for the dojo, dijit, and dojox root object so those packages can create
@@ -40,47 +45,44 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 			// a map from a name used in a legacy module to the (global variable name, object addressed by that name)
 			// always map dojo, dijit, and dojox
 			{
-				dojo:["dojo", dojo],
-				dijit:["dijit", dijit],
-				dojox:["dojox", dojox]
+				dojo: ['dojo', dojo],
+				dijit: ['dijit', dijit],
+				dojox: ['dojox', dojox],
 			},
-
 		packageMap =
 			// the package map for this dojo instance; note, a foreign loader or no pacakgeMap results in the above default config
-			(require.map && require.map[module.id.match(/[^\/]+/)[0]]),
-
-		item;
-
+			require.map && require.map[module.id.match(/[^\/]+/)[0]],
+		item
 
 	// process all mapped top-level names for this instance of dojo
-	for(p in packageMap){
-		if(scopeMap[p]){
+	for (p in packageMap) {
+		if (scopeMap[p]) {
 			// mapped dojo, dijit, or dojox
-			scopeMap[p][0] = packageMap[p];
-		}else{
+			scopeMap[p][0] = packageMap[p]
+		} else {
 			// some other top-level name
-			scopeMap[p] = [packageMap[p], {}];
+			scopeMap[p] = [packageMap[p], {}]
 		}
 	}
 
 	// publish those names to _scopeName and, optionally, the global namespace
-	for(p in scopeMap){
-		item = scopeMap[p];
-		item[1]._scopeName = item[0];
-		if(!config.noGlobals){
-			global[item[0]] = item[1];
+	for (p in scopeMap) {
+		item = scopeMap[p]
+		item[1]._scopeName = item[0]
+		if (!config.noGlobals) {
+			global[item[0]] = item[1]
 		}
 	}
-	dojo.scopeMap = scopeMap;
+	dojo.scopeMap = scopeMap
 
 	/*===== dojo.__docParserConfigureScopeMap(scopeMap); =====*/
 
 	// FIXME: dojo.baseUrl and dojo.config.baseUrl should be deprecated
-	dojo.baseUrl = dojo.config.baseUrl = require.baseUrl;
-	dojo.isAsync = !has("dojo-loader") || require.async;
-	dojo.locale = config.locale;
+	dojo.baseUrl = dojo.config.baseUrl = require.baseUrl
+	dojo.isAsync = !has('dojo-loader') || require.async
+	dojo.locale = config.locale
 
-	var rev = "$Rev: f4fef70 $".match(/[0-9a-f]{7,}/);
+	var rev = '$Rev: f4fef70 $'.match(/[0-9a-f]{7,}/)
 	dojo.version = {
 		// summary:
 		//		Version number of the Dojo Toolkit
@@ -93,22 +95,37 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 		//		- flag: String: Descriptor flag. If total version is "1.2.0beta1", will be "beta1"
 		//		- revision: Number: The Git rev from which dojo was pulled
 
-		major: 1, minor: 10, patch: 4, flag: "",
+		major: 1,
+		minor: 10,
+		patch: 4,
+		flag: '',
 		revision: rev ? rev[0] : NaN,
-		toString: function(){
-			var v = dojo.version;
-			return v.major + "." + v.minor + "." + v.patch + v.flag + " (" + v.revision + ")";	// String
-		}
-	};
+		toString: function () {
+			var v = dojo.version
+			return (
+				v.major +
+				'.' +
+				v.minor +
+				'.' +
+				v.patch +
+				v.flag +
+				' (' +
+				v.revision +
+				')'
+			) // String
+		},
+	}
 
 	// If has("extend-dojo") is truthy, then as a dojo module is defined it should push it's definitions
 	// into the dojo object, and conversely. In 2.0, it will likely be unusual to augment another object
 	// as a result of defining a module. This has feature gives a way to force 2.0 behavior as the code
 	// is migrated. Absent specific advice otherwise, set extend-dojo to truthy.
-	has.add("extend-dojo", 1);
+	has.add('extend-dojo', 1)
 
-
-	(Function("d", "d.eval = function(){return d.global.eval ? d.global.eval(arguments[0]) : eval(arguments[0]);}"))(dojo);
+	Function(
+		'd',
+		'd.eval = function(){return d.global.eval ? d.global.eval(arguments[0]) : eval(arguments[0]);}',
+	)(dojo)
 	/*=====
 	dojo.eval = function(scriptText){
 		// summary:
@@ -136,52 +153,72 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 	};
 	=====*/
 
-
-	if(has("host-rhino")){
-		dojo.exit = function(exitcode){
-			quit(exitcode);
-		};
-	}else{
-		dojo.exit = function(){
-		};
+	if (has('host-rhino')) {
+		dojo.exit = function (exitcode) {
+			quit(exitcode)
+		}
+	} else {
+		dojo.exit = function () {}
 	}
 
-	has.add("dojo-guarantee-console",
+	has.add(
+		'dojo-guarantee-console',
 		// ensure that console.log, console.warn, etc. are defined
-		1
-	);
-	if(has("dojo-guarantee-console")){
-		typeof console != "undefined" || (console = {});
+		1,
+	)
+	if (has('dojo-guarantee-console')) {
+		typeof console != 'undefined' || (console = {})
 		//	Be careful to leave 'log' always at the end
 		var cn = [
-			"assert", "count", "debug", "dir", "dirxml", "error", "group",
-			"groupEnd", "info", "profile", "profileEnd", "time", "timeEnd",
-			"trace", "warn", "log"
-		];
-		var tn;
-		i = 0;
-		while((tn = cn[i++])){
-			if(!console[tn]){
-				(function(){
-					var tcn = tn + "";
-					console[tcn] = ('log' in console) ? function(){
-						var a = Array.prototype.slice.call(arguments);
-						a.unshift(tcn + ":");
-						console["log"](a.join(" "));
-					} : function(){};
-					console[tcn]._fake = true;
-				})();
+			'assert',
+			'count',
+			'debug',
+			'dir',
+			'dirxml',
+			'error',
+			'group',
+			'groupEnd',
+			'info',
+			'profile',
+			'profileEnd',
+			'time',
+			'timeEnd',
+			'trace',
+			'warn',
+			'log',
+		]
+		var tn
+		i = 0
+		while ((tn = cn[i++])) {
+			if (!console[tn]) {
+				;(function () {
+					var tcn = tn + ''
+					console[tcn] =
+						'log' in console
+							? function () {
+									var a = Array.prototype.slice.call(arguments)
+									a.unshift(tcn + ':')
+									console['log'](a.join(' '))
+							  }
+							: function () {}
+					console[tcn]._fake = true
+				})()
 			}
 		}
 	}
 
-	has.add("dojo-debug-messages",
+	has.add(
+		'dojo-debug-messages',
 		// include dojo.deprecated/dojo.experimental implementations
-		!!config.isDebug
-	);
-	dojo.deprecated = dojo.experimental =  function(){};
-	if(has("dojo-debug-messages")){
-		dojo.deprecated = function(/*String*/ behaviour, /*String?*/ extra, /*String?*/ removal){
+		!!config.isDebug,
+	)
+	dojo.deprecated = dojo.experimental = function () {}
+	if (has('dojo-debug-messages')) {
+		dojo.deprecated = function (
+			/*String*/ behaviour,
+			/*String?*/ extra,
+			/*String?*/ removal,
+		) {
 			// summary:
 			//		Log a debug message to indicate that a behavior has been
 			//		deprecated.
@@ -198,13 +235,20 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 			// example:
 			//	| dojo.deprecated("myApp.getTemp()", "use myApp.getLocaleTemp() instead", "1.0");
 
-			var message = "DEPRECATED: " + behaviour;
-			if(extra){ message += " " + extra; }
-			if(removal){ message += " -- will be removed in version: " + removal; }
-			console.warn(message);
-		};
+			var message = 'DEPRECATED: ' + behaviour
+			if (extra) {
+				message += ' ' + extra
+			}
+			if (removal) {
+				message += ' -- will be removed in version: ' + removal
+			}
+			console.warn(message)
+		}
 
-		dojo.experimental = function(/* String */ moduleName, /* String? */ extra){
+		dojo.experimental = function (
+			/* String */ moduleName,
+			/* String? */ extra,
+		) {
 			// summary:
 			//		Marks code as experimental.
 			// description:
@@ -223,35 +267,42 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 			// example:
 			//	| dojo.experimental("dojo.weather.toKelvin()", "PENDING approval from NOAA");
 
-			var message = "EXPERIMENTAL: " + moduleName + " -- APIs subject to change without notice.";
-			if(extra){ message += " " + extra; }
-			console.warn(message);
-		};
-	}
-
-	has.add("dojo-modulePaths",
-		// consume dojo.modulePaths processing
-		1
-	);
-	if(has("dojo-modulePaths")){
-		// notice that modulePaths won't be applied to any require's before the dojo/_base/kernel factory is run;
-		// this is the v1.6- behavior.
-		if(config.modulePaths){
-			dojo.deprecated("dojo.modulePaths", "use paths configuration");
-			var paths = {};
-			for(p in config.modulePaths){
-				paths[p.replace(/\./g, "/")] = config.modulePaths[p];
+			var message =
+				'EXPERIMENTAL: ' +
+				moduleName +
+				' -- APIs subject to change without notice.'
+			if (extra) {
+				message += ' ' + extra
 			}
-			require({paths:paths});
+			console.warn(message)
 		}
 	}
 
-	has.add("dojo-moduleUrl",
+	has.add(
+		'dojo-modulePaths',
+		// consume dojo.modulePaths processing
+		1,
+	)
+	if (has('dojo-modulePaths')) {
+		// notice that modulePaths won't be applied to any require's before the dojo/_base/kernel factory is run;
+		// this is the v1.6- behavior.
+		if (config.modulePaths) {
+			dojo.deprecated('dojo.modulePaths', 'use paths configuration')
+			var paths = {}
+			for (p in config.modulePaths) {
+				paths[p.replace(/\./g, '/')] = config.modulePaths[p]
+			}
+			require({ paths: paths })
+		}
+	}
+
+	has.add(
+		'dojo-moduleUrl',
 		// include dojo.moduleUrl
-		1
-	);
-	if(has("dojo-moduleUrl")){
-		dojo.moduleUrl = function(/*String*/module, /*String?*/url){
+		1,
+	)
+	if (has('dojo-moduleUrl')) {
+		dojo.moduleUrl = function (/*String*/ module, /*String?*/ url) {
 			// summary:
 			//		Returns a URL relative to a module.
 			// example:
@@ -280,21 +331,24 @@ define(["../has", "./config", "require", "module"], function(has, config, requir
 			//	|	var tmpltPath = dojo.moduleUrl("acme.widget","templates/template.html");
 			//	|	var dataPath = dojo.moduleUrl("acme.util","resources/data.json");
 
-			dojo.deprecated("dojo.moduleUrl()", "use require.toUrl", "2.0");
+			dojo.deprecated('dojo.moduleUrl()', 'use require.toUrl', '2.0')
 
 			// require.toUrl requires a filetype; therefore, just append the suffix "/*.*" to guarantee a filetype, then
 			// remove the suffix from the result. This way clients can request a url w/out a filetype. This should be
 			// rare, but it maintains backcompat for the v1.x line (note: dojo.moduleUrl will be removed in v2.0).
 			// Notice * is an illegal filename so it won't conflict with any real path map that may exist the paths config.
-			var result = null;
-			if(module){
-				result = require.toUrl(module.replace(/\./g, "/") + (url ? ("/" + url) : "") + "/*.*").replace(/\/\*\.\*/, "") + (url ? "" : "/");
+			var result = null
+			if (module) {
+				result =
+					require
+						.toUrl(module.replace(/\./g, '/') + (url ? '/' + url : '') + '/*.*')
+						.replace(/\/\*\.\*/, '') + (url ? '' : '/')
 			}
-			return result;
-		};
+			return result
+		}
 	}
 
-	dojo._hasResource = {}; // for backward compatibility with layers built with 1.6 tooling
+	dojo._hasResource = {} // for backward compatibility with layers built with 1.6 tooling
 
-	return dojo;
-});
+	return dojo
+})
