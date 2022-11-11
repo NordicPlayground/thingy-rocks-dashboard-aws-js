@@ -105,9 +105,14 @@
     margin-bottom: 60px;
     .device-info {
       .device-img {
-        max-width: 80%;
-        width: 147px;
         margin-top: 50px;
+        &.thingy {
+          max-width: 80%;
+          width: 147px;
+        }
+        &.dk {
+          width: 100%;
+        }
       }
       .device-location-name {
         border-bottom: 1px solid $lightBlue;

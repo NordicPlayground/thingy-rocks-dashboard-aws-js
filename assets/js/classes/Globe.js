@@ -489,8 +489,10 @@ class Globe {
 		var image = document.querySelector('.device-img')
 		if (props.name.getValue().includes('#nRF9160DK')) {
 			image.src = 'img/nRF9160DK.png'
+			image.className = 'device-img dk'
 		} else {
 			image.src = 'img/thingy.svg'
+			image.className = 'device-img thingy'
 		}
 
 		name.innerHTML = props.name
