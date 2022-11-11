@@ -1,6 +1,6 @@
 # ThingyWorld
 
-A web application that shows Thingy91s around the world displaying their
+A web application that shows Thingy:91s around the world displaying their
 location, humidity, temperature, and connection status. The application does
 this by consuming the [Device API](https://api.nrfcloud.com/v1) from nRF Cloud.
 This is a static site that uses an apiKey that is restricted to viewing only.

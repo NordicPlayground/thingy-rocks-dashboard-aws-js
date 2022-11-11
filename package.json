@@ -1,7 +1,7 @@
 {
   "name": "thingy-world-app",
   "version": "0.0.0-development",
-  "description": "A web application that shows Thingy91s around the world displaying their location, humidity, temperature, and connection status.",
+  "description": "A web application that shows Thingy:91s around the world displaying their location, humidity, temperature, and connection status.",
   "main": "assets/index.html",
   "scripts": {
     "build": "rm -rf build/ && gulp",
