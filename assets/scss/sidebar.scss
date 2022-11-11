@@ -87,12 +87,19 @@
     }
   }
   .sidebar-heading {
-    font-family: "Overpass";
-    font-size: 18px;
-    color: #65cdf5;
-    letter-spacing: 0.43px;
-    line-height: 20px;
-    font-weight: 500;
+    a {
+      font-family: "Overpass";
+      font-size: 18px;
+      color: #65cdf5;
+      letter-spacing: 0.43px;
+      line-height: 20px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+    a + a {
+      border-left: 1px solid #65cdf5;
+      padding-left: 0.5rem;
+    }
   }
   .data-display {
     margin-bottom: 60px;

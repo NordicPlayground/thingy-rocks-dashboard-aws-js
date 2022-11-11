@@ -60,14 +60,32 @@ class Globe {
 	loadDeviceMarkers() {
 		var globe = this
 		var call = getAjaxSettings(
-			'https://api.nrfcloud.com/v1/devices?includeState=true&includeStateMeta=true&pageSort=desc&pageLimit=100',
+			`https://api.nrfcloud.com/v1/devices?includeState=true&includeStateMeta=true&pageSort=desc&pageLimit=100`,
 			false,
 		)
-
 		$.ajax(call).done(function (response) {
 			var devices = response.items
-			for (let i = 0; i < devices.length; i++) {
-				const deviceId = devices[i].id
+
+			const availableTags = devices.reduce(
+				(allTags, { tags }) => new Set([...allTags, ...(tags ?? [])]),
+				[],
+			)
+			console.log(`Known thing tags`, ...availableTags)
+
+			const showOnlyThisTag = [...availableTags].find(
+				(s) => document.location.hash.slice(1) === s,
+			)
+			console.log(
+				`Showing devices in`,
+				showOnlyThisTag === undefined ? 'all groups' : showOnlyThisTag,
+			)
+			const filteredDevices =
+				showOnlyThisTag !== undefined
+					? devices.filter(({ tags }) => tags.includes(showOnlyThisTag))
+					: devices
+
+			for (const device of filteredDevices) {
+				const deviceId = device.id
 				$.ajax({
 					...getAjaxSettings(
 						'https://api.nrfcloud.com/v1/location/history?deviceId=' +
@@ -93,7 +111,7 @@ class Globe {
 										legacyLocationHistoryResponse.items[0].message.data
 
 									if (legacyDeviceLocationHistoryResult === undefined) {
-										globe.addDeviceMarker(new Device(devices[i], {}))
+										globe.addDeviceMarker(new Device(device, {}))
 										return
 									}
 
@@ -122,7 +140,7 @@ class Globe {
 									var lng = lng_degrees * lng_multiplier
 
 									globe.addDeviceMarker(
-										new Device(devices[i], {
+										new Device(device, {
 											lat,
 											lon: lng,
 											locationUpdate:
@@ -133,7 +151,7 @@ class Globe {
 								},
 							})
 						} else {
-							globe.addDeviceMarker(new Device(devices[i], locationResult))
+							globe.addDeviceMarker(new Device(device, locationResult))
 						}
 					},
 				})
@@ -184,7 +202,7 @@ class Globe {
 
 	createListEntry(data, deviceList) {
 		let listEntry = document.createElement('li')
-		listEntry.innerHTML = `<a href="#" class=${data.properties.connected} id=${data.id}>${data.properties.name}</a>`
+		listEntry.innerHTML = `<a href="${document.location.hash}" class=${data.properties.connected} id=${data.id}>${data.properties.name}</a>`
 		deviceList.appendChild(listEntry)
 
 		return listEntry
