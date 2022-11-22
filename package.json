@@ -1,0 +1,63 @@
+{
+  "name": "@nordicsemiconductor/thingy-rocks-dashboard",
+  "version": "0.0.0-development",
+  "description": "thingy.rocks AWS IoT dashboard developed using Preact in TypeScript",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NordicPlayground/thingy-rocks-dashboard-aws-js.git"
+  },
+  "keywords": [
+    "iot",
+    "aws",
+    "demo",
+    "preact"
+  ],
+  "author": "Nordic Semiconductor ASA | nordicsemi.no",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/NordicPlayground/thingy-rocks-dashboard-aws-js/issues"
+  },
+  "homepage": "https://github.com/NordicPlayground/thingy-rocks-dashboard-aws-js#readme",
+  "scripts": {
+    "start": "vite"
+  },
+  "dependencies": {
+    "preact": "10.11.3",
+    "preact-router": "4.1.0"
+  },
+  "devDependencies": {
+    "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.145",
+    "@nordicsemiconductor/eslint-config-asset-tracker-cloud-typescript": "10.0.51",
+    "@nordicsemiconductor/from-env": "1.0.3",
+    "@preact/preset-vite": "2.4.0",
+    "@swc/core": "1.3.19",
+    "@types/node": "18.11.9",
+    "@typescript-eslint/eslint-plugin": "5.44.0",
+    "bootstrap": "5.2.3",
+    "chalk": "5.1.2",
+    "eslint": "8.28.0",
+    "eslint-plugin-unicorn": "45.0.0",
+    "husky": "8.0.2",
+    "lint-staged": "13.0.3",
+    "prettier": "2.7.1",
+    "prettier-plugin-organize-imports": "3.2.0",
+    "regenerator-runtime": "0.13.11",
+    "tsx": "3.12.1",
+    "typescript": "4.9.3"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --ext .js,.ts,.jsx,.tsx"
+    ],
+    "*.{md,json,yaml,yml,html}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": "@nordicsemiconductor/asset-tracker-cloud-code-style/.prettierrc"
+}
