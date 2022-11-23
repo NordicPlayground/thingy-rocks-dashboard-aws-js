@@ -1,3 +1,5 @@
+import { formatDistanceToNow } from 'date-fns'
+import { useEffect, useState } from 'preact/hooks'
 import { useDeviceMessages } from './context/DeviceMessage'
 import { useWebsocket } from './context/WebsocketConnection'
 
@@ -7,7 +9,7 @@ export const Dashboard = () => {
 
 	return (
 		<section>
-			<h1>Hello World!</h1>
+			<h1>thingy.rocks Dashboard</h1>
 			<dl>
 				<dt>Connected</dt>
 				<dd>
@@ -20,7 +22,8 @@ export const Dashboard = () => {
 					<ul>
 						{v.map(({ ts, message }) => (
 							<li>
-								<time dateTime={ts}>{ts}</time> {JSON.stringify(message)}
+								<RelativeTime time={new Date(ts)} />{' '}
+								<code>{JSON.stringify(message)}</code>
 							</li>
 						))}
 					</ul>
@@ -28,4 +31,22 @@ export const Dashboard = () => {
 			))}
 		</section>
 	)
+}
+
+const RelativeTime = ({ time }: { time: Date }) => {
+	const format = () =>
+		formatDistanceToNow(time, { includeSeconds: true, addSuffix: true })
+	const [formatted, setFormatted] = useState<string>(format())
+
+	useEffect(() => {
+		const i = setInterval(() => {
+			setFormatted(format())
+		}, 1000)
+
+		return () => {
+			clearInterval(i)
+		}
+	}, [time])
+
+	return <time dateTime={time.toISOString()}>{formatted}</time>
 }

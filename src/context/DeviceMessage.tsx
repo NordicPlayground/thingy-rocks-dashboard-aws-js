@@ -37,12 +37,12 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					setMessages((messages) => ({
 						...messages,
 						[deviceId]: [
-							...(messages[deviceId] ?? []),
 							{
 								ts: new Date().toISOString(),
 								message,
 							},
-						],
+							...(messages[deviceId] ?? []),
+						].slice(0, 10),
 					}))
 				},
 			}}
