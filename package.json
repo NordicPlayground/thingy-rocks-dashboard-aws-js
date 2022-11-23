@@ -8,6 +8,7 @@
     "url": "git+https://github.com/NordicPlayground/thingy-rocks-dashboard-aws-js.git"
   },
   "keywords": [
+    "thingy-world",
     "iot",
     "aws",
     "demo",
