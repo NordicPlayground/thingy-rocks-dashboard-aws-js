@@ -23,7 +23,9 @@ export const Dashboard = () => {
 						{v.map(({ ts, message }) => (
 							<li>
 								<RelativeTime time={new Date(ts)} />{' '}
-								<code>{JSON.stringify(message)}</code>
+								<pre>
+									<small>{JSON.stringify(message, null, 2)}</small>
+								</pre>
 							</li>
 						))}
 					</ul>

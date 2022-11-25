@@ -37,8 +37,11 @@ export const Provider = ({
 				const message = JSON.parse(msg.data)
 				console.log(`[WS]`, message)
 				switch (message['@context']) {
-					case 'https://thingy.rocks/device-event':
+					case 'https://thingy.rocks/device-shadow':
 						deviceMessages.addDeviceMessage(message.deviceId, message.reported)
+						break
+					case 'https://thingy.rocks/device-message':
+						deviceMessages.addDeviceMessage(message.deviceId, message.message)
 						break
 					default:
 						console.error(`[WS]`, 'Unknown message', message)
