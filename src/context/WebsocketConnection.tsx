@@ -6,18 +6,14 @@ export const WebsocketContext = createContext({
 	connected: false,
 })
 
-export const Provider = ({
-	children,
-	websocketEndpoint,
-}: {
-	children: ComponentChildren
-	websocketEndpoint: URL
-}) => {
+console.debug('websocketEndpoint', WEBSOCKET_ENDPOINT)
+
+export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [connection, setConnection] = useState<WebSocket>()
 	const deviceMessages = useDeviceMessages()
 
 	useEffect(() => {
-		const socket = new WebSocket(websocketEndpoint.toString())
+		const socket = new WebSocket(WEBSOCKET_ENDPOINT)
 
 		socket.addEventListener('open', () => {
 			console.debug(`[WS]`, 'connected')
@@ -55,7 +51,7 @@ export const Provider = ({
 			console.debug(`[WS]`, 'closing ...')
 			socket.close()
 		}
-	}, [websocketEndpoint])
+	}, [])
 
 	useEffect(() => {
 		if (connection === undefined) return

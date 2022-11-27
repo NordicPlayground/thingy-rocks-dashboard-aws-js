@@ -23,7 +23,7 @@ npm ci
 
 Provide the websocket endpoint from the
 [backend](https://github.com/NordicPlayground/thingy-rocks-cloud-aws-js) in the
-environment variable `PUBLIC_WEBSOCKET_ENDPOINT`.
+environment variable `WEBSOCKET_ENDPOINT`.
 
 ## Run
 

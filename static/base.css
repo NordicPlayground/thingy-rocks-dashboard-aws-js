@@ -1,0 +1,4 @@
+:root {
+  --highlight: #cfdd49;
+  --error: var(--bs-red);
+}
