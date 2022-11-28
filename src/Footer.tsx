@@ -8,7 +8,7 @@ const StyledFooter = styled.footer`
 	bottom: 0;
 	left: 0;
 	z-index: 1000;
-	font-family: 'Share Tech Mono', monospace;
+	font-family: var(--monospace-font);
 	padding: 1rem;
 `
 

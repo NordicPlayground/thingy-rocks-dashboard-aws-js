@@ -1,4 +1,5 @@
 :root {
   --highlight: #cfdd49;
   --error: var(--bs-red);
+  --monospace-font: "Share Tech Mono", monospace;
 }

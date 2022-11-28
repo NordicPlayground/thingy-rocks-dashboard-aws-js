@@ -21,25 +21,29 @@ const StyledMap = styled.div`
 	z-index: -1000;
 `
 
-const createGeoJSONCircle = (
+/**
+ * GeoJSON has no support for circles, so they have to be expressed as polygons.
+ */
+const geoJSONPolygonFromCircle = (
 	center: [lng: number, lat: number],
-	radiusMeter: number,
-	points = 6,
+	radiusMeters: number,
+	corners = 6,
+	rotation = 0,
 ): GeoJSONSourceSpecification => {
 	const coords = {
 		latitude: center[1],
 		longitude: center[0],
 	}
 
-	const km = radiusMeter / 1000
+	const km = radiusMeters / 1000
 
 	const ret = []
 	const distanceX = km / (111.32 * Math.cos((coords.latitude * Math.PI) / 180))
 	const distanceY = km / 110.574
 
 	let theta, x, y
-	for (let i = 0; i < points; i++) {
-		theta = (i / points) * (2 * Math.PI)
+	for (let i = 0; i < corners; i++) {
+		theta = (i / corners) * (2 * Math.PI) + rotation
 		x = distanceX * Math.cos(theta)
 		y = distanceY * Math.sin(theta)
 
@@ -70,6 +74,8 @@ const transformRequest = (
 	return (url: string, resourceType?: string) => {
 		if (resourceType === 'Style' && !url.includes('://')) {
 			url = `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${url}/style-descriptor`
+		} else if (resourceType === 'Glyphs' && !url.includes('://')) {
+			url = `https://maps.geo.${region}.amazonaws.com/maps/v0/maps/${url}`
 		}
 
 		if (url.includes('amazonaws.com')) {
@@ -115,8 +121,10 @@ export const Map = () => {
 			for (const [deviceId, { lat, lng, accuracy }] of Object.entries(
 				deviceLocations,
 			)) {
-				map.addSource(deviceId, createGeoJSONCircle([lng, lat], accuracy))
-
+				map.addSource(
+					deviceId,
+					geoJSONPolygonFromCircle([lng, lat], accuracy, 6, Math.PI / 2),
+				)
 				map.addLayer({
 					id: deviceId,
 					type: 'line',
@@ -124,15 +132,30 @@ export const Map = () => {
 					layout: {},
 					paint: {
 						'line-color': '#cfdd49',
-						'line-opacity': 0.6,
+						'line-opacity': 1,
+						'line-width': 2,
+					},
+				})
+				map.addLayer({
+					id: 'device-label',
+					type: 'symbol',
+					source: deviceId,
+					layout: {
+						'symbol-placement': 'point',
+						'text-field': deviceId,
+						'text-font': ['Ubuntu Medium'],
+					},
+					paint: {
+						'text-color': '#cfdd49',
 					},
 				})
 			}
 		})
 
 		return () => {
-			// map.remove()
+			//map.remove()
 		}
 	}, [credentials, id])
+
 	return <StyledMap id={id} />
 }

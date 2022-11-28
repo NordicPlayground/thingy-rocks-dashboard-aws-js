@@ -1,3 +1,4 @@
+import { merge } from 'lodash'
 import { ComponentChildren, createContext } from 'preact'
 import { useContext, useState } from 'preact/hooks'
 
@@ -9,8 +10,8 @@ export const DeviceMessagesContext = createContext<{
 		string,
 		{
 			ts: string
-			message: DeviceMessage
-		}[]
+			state: DeviceMessage
+		}
 	>
 	addDeviceMessage: (deviceId: string, message: DeviceMessage) => void
 }>({
@@ -24,8 +25,8 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			string,
 			{
 				ts: string
-				message: DeviceMessage
-			}[]
+				state: DeviceMessage
+			}
 		>
 	>({})
 
@@ -36,13 +37,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				addDeviceMessage: (deviceId, message) => {
 					setMessages((messages) => ({
 						...messages,
-						[deviceId]: [
-							{
-								ts: new Date().toISOString(),
-								message,
-							},
-							...(messages[deviceId] ?? []),
-						].slice(0, 10),
+						[deviceId]: merge(messages[deviceId] ?? {}, {
+							ts: new Date().toISOString(),
+							state: message,
+						}),
 					}))
 				},
 			}}
