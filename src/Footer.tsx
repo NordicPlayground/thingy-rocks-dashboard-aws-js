@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useWebsocket } from './context/WebsocketConnection'
 
 const StyledFooter = styled.footer`
-	color: var(--highlight);
+	color: var(--color-nordic-grass);
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -13,7 +13,7 @@ const StyledFooter = styled.footer`
 `
 
 const Disconnected = styled.span`
-	color: var(--error);
+	color: var(--color-nordic-red);
 `
 
 export const Footer = () => {

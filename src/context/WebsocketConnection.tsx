@@ -1,6 +1,6 @@
 import { ComponentChildren, createContext } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
-import { useDeviceMessages } from './DeviceMessage'
+import { useDevices } from './Devices'
 
 export const WebsocketContext = createContext({
 	connected: false,
@@ -10,7 +10,7 @@ console.debug('websocketEndpoint', WEBSOCKET_ENDPOINT)
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [connection, setConnection] = useState<WebSocket>()
-	const deviceMessages = useDeviceMessages()
+	const deviceMessages = useDevices()
 
 	useEffect(() => {
 		const socket = new WebSocket(WEBSOCKET_ENDPOINT)
@@ -34,10 +34,13 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				console.log(`[WS]`, message)
 				switch (message['@context']) {
 					case 'https://thingy.rocks/device-shadow':
-						deviceMessages.addDeviceMessage(message.deviceId, message.reported)
+						deviceMessages.updateState(message.deviceId, message.reported)
 						break
 					case 'https://thingy.rocks/device-message':
-						deviceMessages.addDeviceMessage(message.deviceId, message.message)
+						deviceMessages.updateState(message.deviceId, message.message)
+						break
+					case 'https://thingy.rocks/device-location':
+						deviceMessages.updateLocation(message.deviceId, message.location)
 						break
 					default:
 						console.error(`[WS]`, 'Unknown message', message)

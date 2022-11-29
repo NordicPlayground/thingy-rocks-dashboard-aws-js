@@ -8,7 +8,9 @@ import {
 } from 'maplibre-gl'
 import { useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
+import { colors } from './colors'
 import { useCredentials } from './context/credentials'
+import { LocationSource, useDevices } from './context/Devices'
 
 const region = COGNITO_IDENTITY_POOL_ID.split(':')[0] as string
 
@@ -93,18 +95,18 @@ const transformRequest = (
 	}
 }
 
+const locationSourceColors = {
+	[LocationSource.GNSS]: colors['nordic-grass'],
+	[LocationSource.SINGLE_CELL]: colors['nordic-sun'],
+	[LocationSource.MULTI_CELL]: colors['nordic-fall'],
+	[LocationSource.WIFI]: colors['nordic-power'],
+} as const
+
 export const Map = () => {
 	const { credentials } = useCredentials()
 	const [id] = useState<string>(Ulid.generate().toCanonical())
-
-	const deviceLocations = {
-		'351358815341265': {
-			lat: 63.42148461054351,
-			lng: 10.437581513483195,
-			accuracy: 2000,
-			source: 'GNSS',
-		},
-	}
+	const { devices } = useDevices()
+	const [map, setMap] = useState<MapLibreGlMap>()
 
 	useEffect(() => {
 		if (credentials === undefined) return
@@ -118,44 +120,100 @@ export const Map = () => {
 		})
 
 		map.on('load', () => {
-			for (const [deviceId, { lat, lng, accuracy }] of Object.entries(
-				deviceLocations,
-			)) {
+			setMap(map)
+		})
+
+		return () => {
+			//map.remove()
+			setMap(undefined)
+		}
+	}, [credentials, id])
+
+	// Render device locations
+	useEffect(() => {
+		if (map === undefined) return
+
+		const sources: string[] = []
+		const layers: string[] = []
+
+		for (const [deviceId, { location }] of Object.entries(devices)) {
+			if (location === undefined) continue
+			for (const { lat, lng, accuracy, source } of Object.values(location)) {
+				const areaSourceId = `${deviceId}-location-${source}-area`
+				sources.push(areaSourceId)
 				map.addSource(
-					deviceId,
+					areaSourceId,
 					geoJSONPolygonFromCircle([lng, lat], accuracy, 6, Math.PI / 2),
 				)
+				// Render hexagon
+				const areaLayerId = areaSourceId
+				layers.push(areaLayerId)
 				map.addLayer({
-					id: deviceId,
+					id: areaLayerId,
 					type: 'line',
-					source: deviceId,
+					source: areaSourceId,
 					layout: {},
 					paint: {
-						'line-color': '#cfdd49',
+						'line-color': locationSourceColors[source],
 						'line-opacity': 1,
 						'line-width': 2,
 					},
 				})
+				// Render label on Hexagon
+				const areaLayerLabelId = `${deviceId}-label-source-${source}`
+				layers.push(areaLayerLabelId)
 				map.addLayer({
-					id: 'device-label',
+					id: areaLayerLabelId,
 					type: 'symbol',
-					source: deviceId,
+					source: areaSourceId,
+					layout: {
+						'symbol-placement': 'line',
+						'text-field': source,
+						'text-font': ['Ubuntu Medium'],
+					},
+					paint: {
+						'text-color': locationSourceColors[source],
+						'text-halo-color': colors['nordic-dark-grey'],
+						'text-halo-width': 2,
+						'text-halo-blur': 1,
+					},
+				})
+				// Render deviceID in center
+				const centerSourceId = `${deviceId}-location-${source}-center`
+				sources.push(centerSourceId)
+				map.addSource(centerSourceId, {
+					type: 'geojson',
+					data: {
+						type: 'Feature',
+						geometry: {
+							type: 'Point',
+							coordinates: [lng, lat],
+						},
+					},
+				})
+				const centerLabelId = `${deviceId}-deviceId-${source}`
+				layers.push(centerLabelId)
+				map.addLayer({
+					id: centerLabelId,
+					type: 'symbol',
+					source: centerSourceId,
 					layout: {
 						'symbol-placement': 'point',
 						'text-field': deviceId,
 						'text-font': ['Ubuntu Medium'],
 					},
 					paint: {
-						'text-color': '#cfdd49',
+						'text-color': locationSourceColors[source],
 					},
 				})
 			}
-		})
+		}
 
 		return () => {
-			//map.remove()
+			layers.map((source) => map.removeLayer(source))
+			sources.map((source) => map.removeSource(source))
 		}
-	}, [credentials, id])
+	}, [devices, id, map])
 
 	return <StyledMap id={id} />
 }

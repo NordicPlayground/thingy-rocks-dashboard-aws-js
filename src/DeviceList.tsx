@@ -2,10 +2,10 @@ import { formatDistanceToNow } from 'date-fns'
 import { Radio } from 'lucide-preact'
 import { useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
-import { useDeviceMessages } from './context/DeviceMessage'
+import { useDevices } from './context/Devices'
 
 const DeviceState = styled.section`
-	color: var(--highlight);
+	color: var(--color-nordic-grass);
 	font-family: var(--monospace-font);
 	position: absolute;
 	right: 0;
@@ -28,7 +28,7 @@ const DeviceState = styled.section`
 `
 
 export const DeviceList = () => {
-	const { messages } = useDeviceMessages()
+	const { devices: messages } = useDevices()
 
 	return (
 		<DeviceState>

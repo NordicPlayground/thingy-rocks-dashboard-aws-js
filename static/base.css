@@ -1,5 +1,22 @@
 :root {
-  --highlight: #cfdd49;
-  --error: var(--bs-red);
   --monospace-font: "Share Tech Mono", monospace;
+
+  /* Nordic Style Guide: Primary colors */
+  --color-nordic-blue: #00a9ce;
+  --color-nordic-sky: #6ad1e3;
+  --color-nordic-blueslate: #0032a0;
+  --color-nordic-lake: #0077c8;
+
+  /* Nordic Style Guide: Supporting colors */
+  --color-nordic-grass: #cedd50; /* nRF51 Series */
+  --color-nordic-sun: #f4cb43; /* nRF52 Series */
+  --color-nordic-fall: #de823b; /* nRF91 Series */
+  --color-nordic-power: #8bc058; /* nPM Family   */
+  --color-nordic-red: #d1314f; /* nRF53 Series */
+  --color-nordic-pink: #c6007e; /* nRF21 Series */
+
+  /* Nordic Style Guide: Neutral colors */
+  --color-nordic-light-grey: #d9e1e2;
+  --color-nordic-middle-grey: #768692;
+  --color-nordic-dark-grey: #333f48;
 }
