@@ -1,0 +1,49 @@
+name: Build and Release
+
+on: push
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CNAME: world.thingy.rocks
+  WEBSOCKET_ENDPOINT: wss://le9lg9ga5m.execute-api.eu-central-1.amazonaws.com/2022-11-22
+  MAP_NAME: thingy-rocks
+  COGNITO_IDENTITY_POOL_ID: eu-central-1:4cd06b58-0a09-426f-81a4-330851271b4d
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "18.x"
+
+      - name: Keep npm cache around to speed up installs
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.OS }}-build-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to GitHub pages
+        if: github.ref == 'refs/heads/saga'
+        working-directory: build
+        run: |
+          echo "machine github.com login accesskey password ${{ secrets.GITHUB_TOKEN }}" > ~/.netrc
+          git config --global user.email "actions@example.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global init.defaultBranch gh-pages
+          touch .nojekyll
+          echo ${{ env.CNAME }} > CNAME
+          git init
+          git add -A
+          git commit -m "update website"
+          git remote add origin https://github.com/${GITHUB_REPOSITORY}.git
+          git push -f origin HEAD:gh-pages

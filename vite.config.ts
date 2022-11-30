@@ -25,7 +25,15 @@ export default defineConfig({
 		host: 'localhost',
 		port: 8080,
 	},
-	resolve: {},
+	resolve: {
+		alias: [
+			// https://ui.docs.amplify.aws/getting-started/installation?platform=vue#vite
+			{
+				find: './runtimeConfig',
+				replacement: './runtimeConfig.browser',
+			},
+		],
+	},
 	build: {
 		outDir: './build',
 	},

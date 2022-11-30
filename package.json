@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/NordicPlayground/thingy-rocks-dashboard-aws-js#readme",
   "scripts": {
-    "start": "vite"
+    "start": "vite",
+    "build": "node --max_old_space_size=8192 ./node_modules/vite/bin/vite.js build --emptyOutDir"
   },
   "dependencies": {
     "@aws-amplify/core": "5.0.4",
