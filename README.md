@@ -1,6 +1,6 @@
-# thingy.rocks AWS IoT dashboard developed using Preact in TypeScript
+# world.thingy.rocks
 
-[![GitHub Actions](https://github.com/NordicPlayground/thingy-rocks-dashboard-aws-js/workflows/Test%20and%20Release/badge.svg)](https://github.com/NordicPlayground/thingy-rocks-dashboard-aws-js/actions)
+[![GitHub Actions](https://github.com/NordicPlayground/thingy-rocks-dashboard-aws-js/actions/workflows/build-and-publish.yaml/badge.svg)](https://github.com/NordicPlayground/thingy-rocks-dashboard-aws-js/actions/workflows/build-and-publish.yaml)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![Renovate](https://img.shields.io/badge/renovate-enabled-brightgreen.svg)](https://renovatebot.com)
 [![Mergify Status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/NordicPlayground/thingy-rocks-dashboard-aws-js)](https://mergify.io)
@@ -21,9 +21,12 @@ npm ci
 
 ## Configure
 
-Provide the websocket endpoint from the
-[backend](https://github.com/NordicPlayground/thingy-rocks-cloud-aws-js) in the
-environment variable `WEBSOCKET_ENDPOINT`.
+Provide these configuration settings from the
+[backend](https://github.com/NordicPlayground/thingy-rocks-cloud-aws-js):
+
+- `WEBSOCKET_ENDPOINT`
+- `MAP_NAME`
+- `COGNITO_IDENTITY_POOL_ID`
 
 ## Run
 
