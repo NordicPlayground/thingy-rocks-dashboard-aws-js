@@ -41,6 +41,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global init.defaultBranch gh-pages
           touch .nojekyll
+          cp -r ../static ./
           echo ${{ env.CNAME }} > CNAME
           git init
           git add -A
