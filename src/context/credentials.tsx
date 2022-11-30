@@ -18,7 +18,7 @@ console.debug(`COGNITO_IDENTITY_POOL_ID`, COGNITO_IDENTITY_POOL_ID)
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [credentials, setCredentials] = useState<CognitoIdentityCredentials>()
 
-	const refreshCredentials = () =>
+	const refreshCredentials = async () =>
 		fromCognitoIdentityPool({
 			identityPoolId: COGNITO_IDENTITY_POOL_ID,
 			client: new CognitoIdentityClient({ region }),
@@ -28,7 +28,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 
 	// Create credentials for unauthenticated users
 	useEffect(() => {
-		refreshCredentials()
+		refreshCredentials().catch(console.error)
 	}, [])
 
 	// Refresh credentials
@@ -36,7 +36,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		if (credentials === undefined) return
 
 		const t = setTimeout(() => {
-			refreshCredentials()
+			refreshCredentials().catch(console.error)
 		}, (credentials.expiration as Date).getTime() - new Date().getTime())
 
 		return () => {

@@ -103,7 +103,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 
 	// Test device
 	const testDeviceId = useRef<string>(
-		`test-${Ulid.generate().toCanonical().substring(16)}`,
+		`test-${Ulid.generate().toCanonical().slice(16)}`,
 	)
 	const fakeLocation = () => {
 		deviceMessages.updateLocation(testDeviceId.current, {
