@@ -8,7 +8,7 @@ const Container = styled.div`
 	left: 15px;
 	background-color: #fff;
 	img {
-		padding: 30px 14px 30px 20px;
+		padding: 29px 19px 0 25px;
 	}
 `
 
