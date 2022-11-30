@@ -2,7 +2,7 @@ import { merge } from 'lodash'
 import { ComponentChildren, createContext } from 'preact'
 import { useContext, useState } from 'preact/hooks'
 
-type Reported = Partial<{
+export type Reported = Partial<{
 	cfg: {
 		act: boolean
 		loct: number
@@ -54,18 +54,18 @@ type Reported = Partial<{
 	}
 }>
 
-export enum LocationSource {
+export enum GeoLocationSource {
 	SINGLE_CELL = 'single-cell',
 	MULTI_CELL = 'multi-cell',
 	WIFI = 'wifi',
 	GNSS = 'gnss',
 }
 
-type Location = {
+export type GeoLocation = {
 	lat: number
 	lng: number
 	accuracy: number
-	source: LocationSource
+	source: GeoLocationSource
 }
 
 type Devices = Record<
@@ -73,14 +73,14 @@ type Devices = Record<
 	{
 		ts: string
 		state?: Reported
-		location?: Record<LocationSource, Location>
+		location?: Record<GeoLocationSource, GeoLocation>
 	}
 >
 
 export const DevicesContext = createContext<{
 	devices: Devices
 	updateState: (deviceId: string, reported: Reported) => void
-	updateLocation: (deviceId: string, location: Location) => void
+	updateLocation: (deviceId: string, location: GeoLocation) => void
 }>({
 	updateState: () => undefined,
 	updateLocation: () => undefined,
@@ -89,8 +89,6 @@ export const DevicesContext = createContext<{
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [devices, updateDevices] = useState<Devices>({})
-
-	console.log(`rerender`)
 
 	return (
 		<DevicesContext.Provider
@@ -114,7 +112,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 							ts: new Date().toISOString(),
 							location: merge(devices[deviceId]?.location ?? {}, {
 								[location.source]: location,
-							}) as Record<LocationSource, Location>,
+							}) as Record<GeoLocationSource, GeoLocation>,
 						},
 					}))
 				},

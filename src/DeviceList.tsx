@@ -1,5 +1,5 @@
 import { formatDistanceToNow } from 'date-fns'
-import { Radio } from 'lucide-preact'
+import { Cpu, Radio } from 'lucide-preact'
 import { useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
 import { useDevices } from './context/Devices'
@@ -37,11 +37,12 @@ export const DeviceList = () => {
 				.map(([k, { ts }]) => (
 					<ul>
 						<li>
-							<Radio />
+							<Cpu />
 							<span>
 								{k}
 								<br />
 								<small>
+									<Radio strokeWidth={1} />
 									<RelativeTime time={new Date(ts)} />
 								</small>
 							</span>
