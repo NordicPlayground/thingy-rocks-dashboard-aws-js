@@ -40,6 +40,7 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 			const areaSource = map.getSource(locationAreaSourceId)
 			if (areaSource === undefined) {
 				// Create new sources and layers
+				// For properties, see https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
 				// Data for Hexagon
 				map.addSource(
 					locationAreaSourceId,
@@ -79,11 +80,14 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 						'symbol-placement': 'line',
 						'text-field': `${deviceId} (${LocationSourceLabels[source]})`,
 						'text-font': ['Ubuntu Regular'],
+						'text-offset': [0, -1],
+						'text-size': 14,
 					},
 					paint: {
 						'text-color': locationSourceColors[source],
 						'text-halo-color': '#222222',
-						'text-halo-width': 2,
+						'text-halo-width': 1,
+						'text-halo-blur': 1,
 					},
 				})
 				// Render deviceID in center
