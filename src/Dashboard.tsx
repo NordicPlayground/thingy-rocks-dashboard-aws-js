@@ -1,7 +1,7 @@
 import { DeviceList } from './DeviceList'
 import { Footer } from './Footer'
 import { Logo } from './Logo'
-import { Map } from './map/Map'
+import { DeviceLocations } from './map/DeviceLocations'
 
 export const Dashboard = () => {
 	return (
@@ -9,7 +9,7 @@ export const Dashboard = () => {
 			<Logo />
 			<DeviceList />
 			<Footer />
-			<Map />
+			<DeviceLocations />
 		</>
 	)
 }

@@ -1,11 +1,16 @@
-import type { GeoJSONSource, Map as MapLibreGlMap } from 'maplibre-gl'
-import { createContext } from 'preact'
-import { useContext } from 'preact/hooks'
+import type { GeoJSONSource } from 'maplibre-gl'
+import { Map as MapLibreGlMap } from 'maplibre-gl'
+import { ComponentChildren, createContext } from 'preact'
+import { useContext, useEffect, useRef, useState } from 'preact/hooks'
 import { locationSourceColors } from '../colors'
 import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle'
+import { transformRequest } from '../map/transformRequest'
+import { useCredentials } from './credentials'
 import { GeoLocation, GeoLocationSource } from './Devices'
 
-export const MapContext = createContext<DeviceMap>(undefined as any)
+export const MapContext = createContext<{
+	map?: DeviceMap
+}>({})
 
 export const Consumer = MapContext.Consumer
 
@@ -16,9 +21,10 @@ type DeviceMap = {
 		deviceId: string
 		location: GeoLocation
 	}) => void
+	center: (center: GeoLocation) => void
 }
 
-export const deviceMap = (map: MapLibreGlMap): DeviceMap => {
+const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 	return {
 		showDeviceLocation: ({
 			deviceId,
@@ -110,6 +116,7 @@ export const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 				} as GeoJSON.Feature)
 			}
 		},
+		center: (center) => map.flyTo({ center: center, zoom: 12 }),
 	}
 }
 
@@ -118,4 +125,38 @@ const LocationSourceLabels = {
 	[GeoLocationSource.MULTI_CELL]: 'multi-cell',
 	[GeoLocationSource.SINGLE_CELL]: 'single-cell',
 	[GeoLocationSource.WIFI]: 'WiFi',
+}
+
+export const Provider = ({ children }: { children: ComponentChildren }) => {
+	const { credentials } = useCredentials()
+	const mapRef = useRef<MapLibreGlMap>()
+	const [map, setMap] = useState<DeviceMap>()
+
+	useEffect(() => {
+		if (credentials === undefined) return
+		const map = new MapLibreGlMap({
+			container: 'map',
+			style: MAP_NAME,
+			center: [10.437581513483195, 63.42148461054351],
+			zoom: 12,
+			transformRequest: transformRequest(credentials),
+		})
+
+		map.on('load', () => {
+			mapRef.current = map
+			setMap(deviceMap(map))
+		})
+
+		return () => {
+			mapRef.current?.remove()
+			setMap(undefined)
+		}
+	}, [credentials])
+
+	const v: {
+		map?: DeviceMap
+	} = {}
+	if (map !== undefined) v.map = map
+
+	return <MapContext.Provider value={v}>{children}</MapContext.Provider>
 }

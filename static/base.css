@@ -20,3 +20,12 @@
   --color-nordic-middle-grey: #768692;
   --color-nordic-dark-grey: #333f48;
 }
+
+#map {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  z-index: -1000;
+}
