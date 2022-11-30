@@ -13,8 +13,6 @@ export const CredentialsContext = createContext<{
 
 const region = COGNITO_IDENTITY_POOL_ID.split(':')[0] as string
 
-console.debug(`COGNITO_IDENTITY_POOL_ID`, COGNITO_IDENTITY_POOL_ID)
-
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [credentials, setCredentials] = useState<CognitoIdentityCredentials>()
 

@@ -7,8 +7,6 @@ export const WebsocketContext = createContext({
 	connected: false,
 })
 
-console.debug('websocketEndpoint', WEBSOCKET_ENDPOINT)
-
 enum MessageContext {
 	DeviceShadow = 'https://thingy.rocks/device-shadow',
 	DeviceMessage = 'https://thingy.rocks/device-message',
