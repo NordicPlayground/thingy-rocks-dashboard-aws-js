@@ -2,6 +2,11 @@ import { merge } from 'lodash'
 import { ComponentChildren, createContext } from 'preact'
 import { useContext, useState } from 'preact/hooks'
 
+export type ButtonPress = {
+	v: number // 4398
+	ts: number // 1669741244042
+}
+
 export type Reported = Partial<{
 	cfg: {
 		act: boolean
@@ -48,10 +53,7 @@ export type Reported = Partial<{
 		v: number // 4398
 		ts: number // 1669741244042
 	}
-	btn: {
-		v: number // 4398
-		ts: number // 1669741244042
-	}
+	btn: ButtonPress
 }>
 
 export enum GeoLocationSource {
