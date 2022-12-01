@@ -1,15 +1,20 @@
 import styled from 'styled-components'
 
 const Container = styled.div`
-	width: 150px;
-	height: 150px;
+	width: 15vw;
+	height: 15vw;
+	max-width: 150px;
+	max-height: 150px;
+	min-width: 32px;
+	min-height: 32px;
 	position: absolute;
 	z-index: 10000;
-	left: 15px;
+	left: clamp(5px, 2vw, 15px);
 	background-color: #fff;
 	img {
-		padding: 29px 19px 0 25px;
+		padding: 20% 13% 0 17%;
 	}
+	top: -1px;
 `
 
 export const Logo = () => (
