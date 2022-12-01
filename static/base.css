@@ -1,5 +1,6 @@
 :root {
-  --monospace-font: "Share Tech Mono", monospace;
+  --monospace-font: "Overpass Mono", monospace;
+  --monospace-font-weight-bold: 700;
 
   /* Nordic Style Guide: Primary colors */
   --color-nordic-blue: #00a9ce;
@@ -32,4 +33,8 @@
 
 abbr[title] {
   text-decoration: none;
+}
+
+body {
+  font-family: var(--monospace-font);
 }

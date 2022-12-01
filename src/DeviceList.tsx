@@ -8,12 +8,16 @@ import { LocationSourceLabels } from './context/LocationSourceLabels'
 import { useMap } from './context/Map'
 
 const DeviceState = styled.section`
-	color: var(--color-nordic-grass);
-	font-family: var(--monospace-font);
+	color: var(--color-nordic-blue);
 	position: absolute;
 	right: 0;
 	top: 0;
-	padding: 1rem 1rem 8rem 8rem;
+	font-size: 14px;
+	padding: 0.5rem;
+	@media (min-width: 600px) {
+		padding: 1rem 1rem 8rem 8rem;
+		font-size: 16px;
+	}
 	ul {
 		list-style: none;
 		margin: 0;
@@ -28,7 +32,6 @@ const DeviceState = styled.section`
 				margin-right: 0.5rem;
 			}
 			dl {
-				opacity: 0.7;
 				display: grid;
 				grid-template-columns: auto auto;
 				grid-template-rows: 1fr;
@@ -51,7 +54,8 @@ const DeviceState = styled.section`
 `
 
 const LocationSourceLabel = styled.span`
-	font-size: 75%;
+	font-size: 90%;
+	font-weight: var(--monospace-font-weight-bold);
 	& + & {
 		margin-left: 0.25rem;
 	}
@@ -85,7 +89,7 @@ export const DeviceList = () => {
 		<DeviceState>
 			<ul>
 				{Object.entries(devices)
-					.sort(([, { ts: ts1 }], [, { ts: ts2 }]) => ts1.localeCompare(ts2))
+					.sort(([, { ts: ts1 }], [, { ts: ts2 }]) => ts2.localeCompare(ts1))
 					.map(([k, { ts, location, state }]) => {
 						const rankedLocations = Object.values(location ?? []).sort(
 							sortLocations,
