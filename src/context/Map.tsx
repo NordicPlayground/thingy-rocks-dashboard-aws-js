@@ -6,7 +6,8 @@ import { locationSourceColors } from '../colors'
 import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle'
 import { transformRequest } from '../map/transformRequest'
 import { useCredentials } from './credentials'
-import { GeoLocation, GeoLocationSource } from './Devices'
+import type { GeoLocation } from './Devices'
+import { LocationSourceLabels } from './LocationSourceLabels'
 
 export const MapContext = createContext<{
 	map?: DeviceMap
@@ -122,13 +123,6 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 		},
 		center: (center) => map.flyTo({ center: center, zoom: 12 }),
 	}
-}
-
-const LocationSourceLabels = {
-	[GeoLocationSource.GNSS]: 'GNSS',
-	[GeoLocationSource.MULTI_CELL]: 'multi-cell',
-	[GeoLocationSource.SINGLE_CELL]: 'single-cell',
-	[GeoLocationSource.WIFI]: 'WiFi',
 }
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {

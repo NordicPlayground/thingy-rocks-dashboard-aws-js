@@ -29,3 +29,7 @@
   left: 0;
   z-index: -1000;
 }
+
+abbr[title] {
+  text-decoration: none;
+}
