@@ -12,7 +12,7 @@ const Container = styled.div`
 	left: clamp(5px, 2vw, 15px);
 	background-color: #fff;
 	img {
-		padding: 20% 13% 0 17%;
+		margin: 20% 13% 0 17%;
 	}
 	top: -1px;
 `
