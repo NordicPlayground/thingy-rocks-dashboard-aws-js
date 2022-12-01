@@ -19,11 +19,25 @@ export const colors = {
 	'nordic-light-grey': '#d9e1e2',
 	'nordic-middle-grey': '#768692',
 	'nordic-dark-grey': '#333f48',
+
+	/* 12-bit rainbow palette https://iamkate.com/data/12-bit-rainbow/ */
+	'rainbow-1': '#881177',
+	'rainbow-2': '#aa3355',
+	'rainbow-3': '#cc6666',
+	'rainbow-4': '#ee9944',
+	'rainbow-5': '#eedd00',
+	'rainbow-6': '#99dd55',
+	'rainbow-7': '#44dd88',
+	'rainbow-8': '#22ccbb',
+	'rainbow-9': '#00bbcc',
+	'rainbow-10': '#0099cc',
+	'rainbow-11': '#3366bb',
+	'rainbow-12': '#663399',
 } as const
 
 export const locationSourceColors = {
-	[GeoLocationSource.GNSS]: '#6cf02a',
-	[GeoLocationSource.SINGLE_CELL]: colors['nordic-sun'],
-	[GeoLocationSource.MULTI_CELL]: colors['nordic-fall'],
-	[GeoLocationSource.WIFI]: colors['nordic-power'],
+	[GeoLocationSource.GNSS]: colors['rainbow-8'],
+	[GeoLocationSource.SINGLE_CELL]: colors['rainbow-4'],
+	[GeoLocationSource.MULTI_CELL]: colors['rainbow-5'],
+	[GeoLocationSource.WIFI]: colors['rainbow-2'],
 } as const

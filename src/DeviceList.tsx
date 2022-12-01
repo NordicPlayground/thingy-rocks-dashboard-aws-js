@@ -7,17 +7,36 @@ import { GeoLocation, GeoLocationSource, useDevices } from './context/Devices'
 import { LocationSourceLabels } from './context/LocationSourceLabels'
 import { useMap } from './context/Map'
 
+const outerGlow = (
+	color: string,
+	distance = 1,
+	blur = 0,
+	wrap = (s: string): string => s,
+	join = ', ',
+) => {
+	const glows = []
+	for (const [x, y] of [
+		[1, 0],
+		[1, 1],
+		[0, 1],
+		[-1, 1],
+		[-1, 0],
+		[-1, -1],
+		[0, -1],
+		[-1, -1],
+	] as [number, number][]) {
+		glows.push(wrap(`${x * distance}px ${y * distance}px ${blur}px ${color}`))
+	}
+	return `${glows.join(join)}`
+}
+
 const DeviceState = styled.section`
-	color: var(--color-nordic-blue);
+	color: var(--color-nordic-sky);
 	position: absolute;
 	right: 0;
 	top: 0;
 	user-select: none;
 	ul {
-		position: absolute;
-		top: 0;
-		right: 0;
-		z-index: 100;
 		font-size: 14px;
 		padding: 0.5rem 0.5rem 0 0;
 		@media (min-width: 600px) {
@@ -26,18 +45,16 @@ const DeviceState = styled.section`
 		}
 		list-style: none;
 		margin: 0;
-		padding: 0;
 		li button {
 			text-align: left;
 			border: 0;
 			background: transparent;
 			color: inherit;
-			text-shadow: 1px 1px 1px #000, -1px 1px 1px #000, 1px -1px 1px #000,
-				-1px -1px 1px #000;
+			text-shadow: ${outerGlow('#222', 2, 2)}, ${outerGlow('#222', 4, 4)};
 			display: flex;
 			.lucide {
 				margin-right: 0.5rem;
-				filter: drop-shadow(0 0 2px #000);
+				filter: ${outerGlow('#222', 1, 1, (s) => `drop-shadow(${s})`, ' ')};
 			}
 			dl {
 				display: grid;
@@ -61,23 +78,6 @@ const LocationSourceLabel = styled.span`
 	& + & {
 		margin-left: 0.25rem;
 	}
-`
-
-const Background = styled.div`
-	pointer-events: none;
-	position: absolute;
-	width: 35vw;
-	height: 35vw;
-	right: 0;
-	top: 0;
-	background: transparent;
-	background: linear-gradient(
-		220deg,
-		var(--color-nordic-dark-grey) 0%,
-		var(--color-nordic-dark-grey) 25%,
-		#333f4800 50%,
-		#333f4800 100%
-	);
 `
 
 const weighSource = (source: GeoLocationSource): number => {
@@ -106,7 +106,6 @@ export const DeviceList = () => {
 
 	return (
 		<DeviceState>
-			<Background />
 			<ul>
 				{Object.entries(devices)
 					.sort(([, { ts: ts1 }], [, { ts: ts2 }]) => ts2.localeCompare(ts1))

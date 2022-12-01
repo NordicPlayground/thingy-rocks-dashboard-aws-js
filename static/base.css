@@ -20,6 +20,20 @@
   --color-nordic-light-grey: #d9e1e2;
   --color-nordic-middle-grey: #768692;
   --color-nordic-dark-grey: #333f48;
+
+  /* 12-bit rainbow palette https://iamkate.com/data/12-bit-rainbow/ */
+  --color-rainbow-1: #881177;
+  --color-rainbow-2: #aa3355;
+  --color-rainbow-3: #cc6666;
+  --color-rainbow-4: #ee9944;
+  --color-rainbow-5: #eedd00;
+  --color-rainbow-6: #99dd55;
+  --color-rainbow-7: #44dd88;
+  --color-rainbow-8: #22ccbb;
+  --color-rainbow-9: #00bbcc;
+  --color-rainbow-10: #0099cc;
+  --color-rainbow-11: #3366bb;
+  --color-rainbow-12: #663399;
 }
 
 #map {
