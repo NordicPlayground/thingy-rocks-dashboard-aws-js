@@ -12,13 +12,18 @@ const DeviceState = styled.section`
 	position: absolute;
 	right: 0;
 	top: 0;
-	font-size: 14px;
-	padding: 0.5rem;
-	@media (min-width: 600px) {
-		padding: 1rem 1rem 8rem 8rem;
-		font-size: 16px;
-	}
+	user-select: none;
 	ul {
+		position: absolute;
+		top: 0;
+		right: 0;
+		z-index: 100;
+		font-size: 14px;
+		padding: 0.5rem 0.5rem 0 0;
+		@media (min-width: 600px) {
+			padding: 1rem 1rem 0 0;
+			font-size: 16px;
+		}
 		list-style: none;
 		margin: 0;
 		padding: 0;
@@ -27,9 +32,12 @@ const DeviceState = styled.section`
 			border: 0;
 			background: transparent;
 			color: inherit;
+			text-shadow: 1px 1px 1px #000, -1px 1px 1px #000, 1px -1px 1px #000,
+				-1px -1px 1px #000;
 			display: flex;
 			.lucide {
 				margin-right: 0.5rem;
+				filter: drop-shadow(0 0 2px #000);
 			}
 			dl {
 				display: grid;
@@ -40,17 +48,11 @@ const DeviceState = styled.section`
 				grid-row-gap: 0px;
 				dd {
 					margin-bottom: 0;
+					white-space: nowrap;
 				}
 			}
 		}
 	}
-	background: transparent;
-	background: linear-gradient(
-		220deg,
-		var(--color-nordic-dark-grey) 0%,
-		#333f4800 50%,
-		#333f4800 100%
-	);
 `
 
 const LocationSourceLabel = styled.span`
@@ -59,6 +61,23 @@ const LocationSourceLabel = styled.span`
 	& + & {
 		margin-left: 0.25rem;
 	}
+`
+
+const Background = styled.div`
+	pointer-events: none;
+	position: absolute;
+	width: 35vw;
+	height: 35vw;
+	right: 0;
+	top: 0;
+	background: transparent;
+	background: linear-gradient(
+		220deg,
+		var(--color-nordic-dark-grey) 0%,
+		var(--color-nordic-dark-grey) 25%,
+		#333f4800 50%,
+		#333f4800 100%
+	);
 `
 
 const weighSource = (source: GeoLocationSource): number => {
@@ -87,6 +106,7 @@ export const DeviceList = () => {
 
 	return (
 		<DeviceState>
+			<Background />
 			<ul>
 				{Object.entries(devices)
 					.sort(([, { ts: ts1 }], [, { ts: ts2 }]) => ts2.localeCompare(ts1))
@@ -155,8 +175,7 @@ export const DeviceList = () => {
 }
 
 const RelativeTime = ({ time }: { time: Date }) => {
-	const format = () =>
-		formatDistanceToNow(time, { includeSeconds: true, addSuffix: true })
+	const format = () => formatDistanceToNow(time, { addSuffix: true })
 	const [formatted, setFormatted] = useState<string>(format())
 
 	useEffect(() => {
