@@ -1,5 +1,6 @@
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import preact from '@preact/preset-vite'
+import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 import { defineConfig } from 'vite'
@@ -12,6 +13,21 @@ const { websocketEndpoint, mapName, cognitoIdentityPoolId } = fromEnv({
 	mapName: 'MAP_NAME',
 	cognitoIdentityPoolId: 'COGNITO_IDENTITY_POOL_ID',
 })(process.env)
+
+console.debug(chalk.yellow('websocketEndpoint'), chalk.blue(websocketEndpoint))
+console.debug(chalk.yellow('mapName'), chalk.blue(mapName))
+console.debug(
+	chalk.yellow('cognitoIdentityPoolId'),
+	chalk.blue(cognitoIdentityPoolId),
+)
+
+// Optional environment variables
+const sentryDSN = process.env.SENTRY_DSN
+if (sentryDSN === undefined) {
+	console.debug(chalk.yellow(`Sentry`), chalk.red('disabled'))
+} else {
+	console.debug(chalk.yellow(`Sentry DSN`), chalk.blue(sentryDSN))
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -47,5 +63,6 @@ export default defineConfig({
 		WEBSOCKET_ENDPOINT: JSON.stringify(websocketEndpoint),
 		MAP_NAME: JSON.stringify(mapName),
 		COGNITO_IDENTITY_POOL_ID: JSON.stringify(cognitoIdentityPoolId),
+		SENTRY_DSN: JSON.stringify(sentryDSN),
 	},
 })

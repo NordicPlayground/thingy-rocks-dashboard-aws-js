@@ -28,6 +28,8 @@
   "dependencies": {
     "@aws-amplify/core": "5.0.4",
     "@aws-sdk/credential-provider-cognito-identity": "3.218.0",
+    "@sentry/react": "7.23.0",
+    "@sentry/tracing": "7.23.0",
     "date-fns": "2.29.3",
     "id128": "1.6.6",
     "lodash-es": "4.17.21",
