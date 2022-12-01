@@ -9,7 +9,7 @@ const Container = styled.div`
 	min-height: 32px;
 	position: absolute;
 	z-index: 10000;
-	left: clamp(5px, 2vw, 15px);
+	left: 4vw;
 	background-color: #fff;
 	img {
 		margin: 20% 13% 0 17%;
