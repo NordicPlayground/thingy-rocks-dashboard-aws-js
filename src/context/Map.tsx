@@ -21,6 +21,7 @@ type DeviceMap = {
 	showDeviceLocation: (args: {
 		deviceId: string
 		location: GeoLocation
+		hidden?: boolean
 	}) => void
 	center: (center: GeoLocation) => void
 }
@@ -36,16 +37,23 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 		showDeviceLocation: ({
 			deviceId,
 			location: { source, lat, lng, accuracy },
-		}: {
-			deviceId: string
-			location: GeoLocation
+			hidden,
 		}) => {
 			const locationAreaBaseId = `${deviceId}-location-${source}-area`
 
 			const locationAreaSourceId = `${locationAreaBaseId}-source`
 			const centerSourceId = `${locationAreaBaseId}-center`
 			const areaSource = map.getSource(locationAreaSourceId)
+
+			const areaLayerId = `${locationAreaBaseId}-circle`
+			const areaLayerLabelId = `${locationAreaBaseId}-label`
+			const centerLabelId = `${locationAreaBaseId}-deviceId-label`
+
 			if (areaSource === undefined) {
+				if (hidden === true) {
+					// Don't add
+					return
+				}
 				// Create new sources and layers
 				// For properties, see https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
 				// Data for Hexagon
@@ -65,7 +73,6 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 					},
 				})
 				// Render Hexagon
-				const areaLayerId = `${locationAreaBaseId}-circle`
 				map.addLayer({
 					id: areaLayerId,
 					type: 'line',
@@ -78,7 +85,6 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 					},
 				})
 				// Render label on Hexagon
-				const areaLayerLabelId = `${locationAreaBaseId}-label`
 				map.addLayer({
 					id: areaLayerLabelId,
 					type: 'symbol',
@@ -98,7 +104,6 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 					},
 				})
 				// Render deviceID in center
-				const centerLabelId = `${locationAreaBaseId}-deviceId-label`
 				map.addLayer({
 					id: centerLabelId,
 					type: 'symbol',
@@ -113,6 +118,20 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 					},
 				})
 			} else {
+				if (hidden === true) {
+					// Remove
+					if (map.getLayer(areaLayerId) !== undefined)
+						map.removeLayer(areaLayerId)
+					if (map.getLayer(areaLayerLabelId) !== undefined)
+						map.removeLayer(areaLayerLabelId)
+					if (map.getLayer(centerLabelId) !== undefined)
+						map.removeLayer(centerLabelId)
+					map.removeSource(locationAreaSourceId)
+					if (map.getSource(centerSourceId) !== undefined)
+						map.removeSource(centerSourceId)
+
+					return
+				}
 				// Update existing sources
 				;(areaSource as GeoJSONSource).setData(
 					geoJSONPolygonFromCircle([lng, lat], accuracy, 6, Math.PI / 2)
@@ -152,7 +171,13 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		})
 
 		return () => {
-			mapRef.current?.remove()
+			try {
+				mapRef.current?.remove()
+			} catch (error) {
+				console.error(error)
+				console.error(`Failed to remove map!`)
+			}
+
 			setMap(undefined)
 		}
 	}, [credentials])

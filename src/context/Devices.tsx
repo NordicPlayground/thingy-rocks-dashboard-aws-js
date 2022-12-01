@@ -67,23 +67,24 @@ export type GeoLocation = {
 	accuracy: number
 	source: GeoLocationSource
 }
-
-type Devices = Record<
-	string,
-	{
-		ts: string
-		state?: Reported
-		location?: Record<GeoLocationSource, GeoLocation>
-	}
->
+export type Device = {
+	id: string
+	ts: string
+	state?: Reported
+	location?: Record<GeoLocationSource, GeoLocation>
+	hiddenLocations?: Record<GeoLocationSource, true>
+}
+export type Devices = Record<string, Device>
 
 export const DevicesContext = createContext<{
 	devices: Devices
 	updateState: (deviceId: string, reported: Reported) => void
 	updateLocation: (deviceId: string, location: GeoLocation) => void
+	toggleHiddenLocation: (deviceId: string, location: GeoLocationSource) => void
 }>({
 	updateState: () => undefined,
 	updateLocation: () => undefined,
+	toggleHiddenLocation: () => undefined,
 	devices: {},
 })
 
@@ -99,6 +100,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						...devices,
 						[deviceId]: {
 							...devices[deviceId],
+							id: deviceId,
 							ts: new Date().toISOString(),
 							state: merge(devices[deviceId]?.state ?? {}, reported),
 						},
@@ -109,10 +111,34 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						...devices,
 						[deviceId]: {
 							...devices[deviceId],
+							id: deviceId,
 							ts: new Date().toISOString(),
 							location: merge(devices[deviceId]?.location ?? {}, {
 								[location.source]: location,
 							}) as Record<GeoLocationSource, GeoLocation>,
+						},
+					}))
+				},
+				toggleHiddenLocation: (deviceId, source) => {
+					let { hiddenLocations } = devices[deviceId] ?? {}
+					const { ts } = devices[deviceId] ?? {}
+					if (hiddenLocations?.[source] === true) {
+						delete hiddenLocations[source]
+					} else {
+						if (hiddenLocations === undefined)
+							hiddenLocations = {} as Record<GeoLocationSource, true>
+						hiddenLocations[source] = true
+					}
+					updateDevices((devices) => ({
+						...devices,
+						[deviceId]: {
+							...devices[deviceId],
+							id: deviceId,
+							ts: ts ?? new Date().toISOString(),
+							hiddenLocations: hiddenLocations as Record<
+								GeoLocationSource,
+								true
+							>,
 						},
 					}))
 				},

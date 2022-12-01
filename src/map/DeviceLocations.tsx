@@ -8,10 +8,16 @@ export const DeviceLocations = () => {
 
 	useEffect(() => {
 		if (map === undefined) return
-		for (const [deviceId, { location }] of Object.entries(devices)) {
+		for (const [deviceId, { location, hiddenLocations }] of Object.entries(
+			devices,
+		)) {
 			if (location === undefined) continue
 			for (const l of Object.values(location)) {
-				map.showDeviceLocation({ deviceId, location: l })
+				map.showDeviceLocation({
+					deviceId,
+					location: l,
+					hidden: hiddenLocations?.[l.source] ?? false,
+				})
 			}
 		}
 	}, [devices, map])

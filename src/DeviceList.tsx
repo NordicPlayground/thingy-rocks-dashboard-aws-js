@@ -3,7 +3,12 @@ import { BatteryMedium, Locate, MapPin, MapPinOff, Radio } from 'lucide-preact'
 import { useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
 import { locationSourceColors } from './colors'
-import { GeoLocation, GeoLocationSource, useDevices } from './context/Devices'
+import {
+	Device,
+	GeoLocation,
+	GeoLocationSource,
+	useDevices,
+} from './context/Devices'
 import { LocationSourceLabels } from './context/LocationSourceLabels'
 import { useMap } from './context/Map'
 
@@ -45,7 +50,7 @@ const DeviceState = styled.section`
 		}
 		list-style: none;
 		margin: 0;
-		li button {
+		li {
 			text-align: left;
 			border: 0;
 			background: transparent;
@@ -68,16 +73,29 @@ const DeviceState = styled.section`
 					white-space: nowrap;
 				}
 			}
+			button {
+				border: 0;
+				background: transparent;
+				color: inherit;
+				text-shadow: inherit;
+				padding: 0;
+				text-decoration: inherit;
+			}
 		}
 	}
 `
 
-const LocationSourceLabel = styled.span`
+const LocationSourceSwitch = styled.span`
 	font-size: 90%;
 	font-weight: var(--monospace-font-weight-bold);
 	& + & {
 		margin-left: 0.25rem;
 	}
+`
+
+const LocationSourceLabelDisabled = styled(LocationSourceSwitch)`
+	color: var(--color-nordic-middle-grey);
+	text-decoration: line-through;
 `
 
 const weighSource = (source: GeoLocationSource): number => {
@@ -109,7 +127,8 @@ export const DeviceList = () => {
 			<ul>
 				{Object.entries(devices)
 					.sort(([, { ts: ts1 }], [, { ts: ts2 }]) => ts2.localeCompare(ts1))
-					.map(([k, { ts, location, state }]) => {
+					.map(([deviceId, device]) => {
+						const { ts, location, state } = device
 						const rankedLocations = Object.values(location ?? []).sort(
 							sortLocations,
 						)
@@ -117,54 +136,53 @@ export const DeviceList = () => {
 						const batteryVoltage = state?.bat?.v
 						return (
 							<li>
-								<button
-									type={'button'}
-									onClick={() => {
-										if (deviceLocation !== undefined) {
-											map?.center(deviceLocation)
-										}
-									}}
-								>
-									{deviceLocation !== undefined ? <MapPin /> : <MapPinOff />}
-									<span>
-										{k}
-										<br />
-										<dl>
-											<dt>
-												<Radio strokeWidth={1} />
-											</dt>
-											<dd>
-												<abbr title="Last update">
-													<RelativeTime time={new Date(ts)} />
-												</abbr>
-											</dd>
-											{batteryVoltage !== undefined && (
-												<>
-													<dt>
-														<BatteryMedium strokeWidth={1} />
-													</dt>
-													<dt>{batteryVoltage / 1000} V</dt>
-												</>
-											)}
-											{rankedLocations.length > 0 && (
-												<>
-													<dt>
-														<Locate strokeWidth={1} />
-													</dt>
-													<dd>
-														{rankedLocations.map(({ source }) => (
-															<LocationSourceLabel
-																style={{ color: locationSourceColors[source] }}
-															>
-																{LocationSourceLabels[source]}
-															</LocationSourceLabel>
-														))}
-													</dd>
-												</>
-											)}
-										</dl>
-									</span>
-								</button>
+								{deviceLocation !== undefined ? <MapPin /> : <MapPinOff />}
+								<span>
+									<button
+										type={'button'}
+										onClick={() => {
+											if (deviceLocation !== undefined) {
+												map?.center(deviceLocation)
+											}
+										}}
+									>
+										{deviceId}
+									</button>
+									<br />
+									<dl>
+										<dt>
+											<Radio strokeWidth={1} />
+										</dt>
+										<dd>
+											<abbr title="Last update">
+												<RelativeTime time={new Date(ts)} />
+											</abbr>
+										</dd>
+										{batteryVoltage !== undefined && (
+											<>
+												<dt>
+													<BatteryMedium strokeWidth={1} />
+												</dt>
+												<dt>{batteryVoltage / 1000} V</dt>
+											</>
+										)}
+										{rankedLocations.length > 0 && (
+											<>
+												<dt>
+													<Locate strokeWidth={1} />
+												</dt>
+												<dd>
+													{rankedLocations.map(({ source }) => (
+														<LocationSourceButton
+															device={device}
+															source={source}
+														/>
+													))}
+												</dd>
+											</>
+										)}
+									</dl>
+								</span>
 							</li>
 						)
 					})}
@@ -188,4 +206,39 @@ const RelativeTime = ({ time }: { time: Date }) => {
 	}, [time])
 
 	return <time dateTime={time.toISOString()}>{formatted}</time>
+}
+
+const LocationSourceButton = ({
+	device: { id, hiddenLocations },
+	source,
+}: {
+	device: Device
+	source: GeoLocationSource
+}) => {
+	const { toggleHiddenLocation } = useDevices()
+
+	const Button = () => (
+		<button
+			onClick={() => {
+				toggleHiddenLocation(id, source)
+			}}
+		>
+			{LocationSourceLabels[source]}
+		</button>
+	)
+
+	const isDisabled = hiddenLocations?.[source] ?? false
+
+	if (isDisabled)
+		return (
+			<LocationSourceLabelDisabled>
+				<Button />
+			</LocationSourceLabelDisabled>
+		)
+
+	return (
+		<LocationSourceSwitch style={{ color: locationSourceColors[source] }}>
+			<Button />
+		</LocationSourceSwitch>
+	)
 }
