@@ -11,6 +11,7 @@ import {
 } from './context/Devices'
 import { LocationSourceLabels } from './context/LocationSourceLabels'
 import { useMap } from './context/Map'
+import { DisconnectedWarning } from './DisconnectedWarning'
 
 const outerGlow = (
 	color: string,
@@ -41,13 +42,13 @@ const DeviceState = styled.section`
 	right: 0;
 	top: 0;
 	user-select: none;
+	font-size: 14px;
+	padding: 0.5rem 0.5rem 0 0;
+	@media (min-width: 600px) {
+		padding: 1rem 1rem 0 0;
+		font-size: 16px;
+	}
 	ul {
-		font-size: 14px;
-		padding: 0.5rem 0.5rem 0 0;
-		@media (min-width: 600px) {
-			padding: 1rem 1rem 0 0;
-			font-size: 16px;
-		}
 		list-style: none;
 		margin: 0;
 		li {
@@ -59,7 +60,13 @@ const DeviceState = styled.section`
 			display: flex;
 			.lucide {
 				margin-right: 0.5rem;
-				filter: ${outerGlow('#222', 1, 1, (s) => `drop-shadow(${s})`, ' ')};
+				filter: ${outerGlow(
+					'#22222266',
+					1,
+					2,
+					(s) => `drop-shadow(${s})`,
+					' ',
+				)};
 			}
 			dl {
 				display: grid;
@@ -124,6 +131,7 @@ export const DeviceList = () => {
 
 	return (
 		<DeviceState>
+			<DisconnectedWarning />
 			<ul>
 				{Object.entries(devices)
 					.sort(([, { ts: ts1 }], [, { ts: ts2 }]) => ts2.localeCompare(ts1))

@@ -1,5 +1,4 @@
 import { DeviceList } from './DeviceList'
-import { Footer } from './Footer'
 import { Logo } from './Logo'
 import { DeviceLocations } from './map/DeviceLocations'
 
@@ -8,7 +7,6 @@ export const Dashboard = () => {
 		<>
 			<Logo />
 			<DeviceList />
-			<Footer />
 			<DeviceLocations />
 		</>
 	)
