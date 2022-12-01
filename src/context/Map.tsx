@@ -25,6 +25,12 @@ type DeviceMap = {
 	center: (center: GeoLocation) => void
 }
 
+// See https://docs.aws.amazon.com/location/latest/developerguide/esri.html for available fonts
+const glyphFonts = {
+	regular: 'Ubuntu Regular',
+	bold: 'Ubuntu Medium',
+} as const
+
 const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 	return {
 		showDeviceLocation: ({
@@ -80,7 +86,7 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 					layout: {
 						'symbol-placement': 'line',
 						'text-field': `${deviceId} (${LocationSourceLabels[source]})`,
-						'text-font': ['Ubuntu Regular'],
+						'text-font': [glyphFonts.regular],
 						'text-offset': [0, -1],
 						'text-size': 14,
 					},
@@ -100,7 +106,7 @@ const deviceMap = (map: MapLibreGlMap): DeviceMap => {
 					layout: {
 						'symbol-placement': 'point',
 						'text-field': deviceId,
-						'text-font': ['Ubuntu Medium'],
+						'text-font': [glyphFonts.bold],
 					},
 					paint: {
 						'text-color': locationSourceColors[source],
