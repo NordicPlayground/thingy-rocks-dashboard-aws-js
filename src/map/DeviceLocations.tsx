@@ -4,7 +4,7 @@ import { useMap } from '../context/Map'
 
 export const DeviceLocations = () => {
 	const { devices } = useDevices()
-	const { map } = useMap()
+	const map = useMap()
 
 	useEffect(() => {
 		if (map === undefined) return

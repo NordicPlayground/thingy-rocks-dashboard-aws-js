@@ -135,7 +135,7 @@ const sortLocations = (
 
 export const DeviceList = () => {
 	const { devices } = useDevices()
-	const { map } = useMap()
+	const map = useMap()
 
 	return (
 		<DeviceState>
