@@ -23,6 +23,8 @@ type DeviceMap = {
 		hidden?: boolean
 	}) => void
 	center: (center: GeoLocation) => void
+	// Show a large view of the entire world
+	showWorld: () => void
 }
 
 // See https://docs.aws.amazon.com/location/latest/developerguide/esri.html for available fonts
