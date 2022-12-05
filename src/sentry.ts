@@ -11,7 +11,9 @@ if (enableSentry) {
 		dsn: SENTRY_DSN,
 		integrations: [new BrowserTracing()],
 		tracesSampleRate: 0.05,
-		release: VERSION,
+	})
+	Sentry.setContext('app', {
+		version: VERSION,
 	})
 } else {
 	console.debug(`Sentry disabled.`)
