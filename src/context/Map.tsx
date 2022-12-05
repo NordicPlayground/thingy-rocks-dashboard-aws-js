@@ -1,5 +1,5 @@
 import type { CognitoIdentityCredentials } from '@aws-sdk/credential-provider-cognito-identity'
-import type { GeoJSONSource } from 'maplibre-gl'
+import type { GeoJSONSource, LngLatLike } from 'maplibre-gl'
 import { Map as MapLibreGlMap } from 'maplibre-gl'
 import { ComponentChildren, createContext } from 'preact'
 import { useContext } from 'preact/hooks'
@@ -39,6 +39,7 @@ const glyphFonts = {
  */
 const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 	const isLoaded = new Promise((resolve) => map?.on('load', resolve))
+	const centerOnDeviceZoomLevel = 12
 	return {
 		showDeviceLocation: async ({
 			deviceId,
@@ -130,6 +131,30 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 						'text-color': locationSourceColors[source],
 					},
 				})
+
+				// Center the map on the coordinates of any clicked symbol from the layer.
+				map.on('click', centerLabelId, (e) => {
+					const center = (
+						e.features?.[0]?.geometry as { coordinates: LngLatLike } | undefined
+					)?.coordinates
+
+					if (center === undefined) return
+
+					map.flyTo({
+						center,
+						zoom: centerOnDeviceZoomLevel,
+					})
+				})
+
+				// Change the cursor to a pointer when the it enters a feature in the layer.
+				map.on('mouseenter', centerLabelId, () => {
+					map.getCanvas().style.cursor = 'pointer'
+				})
+
+				// Change it back to a pointer when it leaves.
+				map.on('mouseleave', centerLabelId, () => {
+					map.getCanvas().style.cursor = ''
+				})
 			} else {
 				if (hidden === true) {
 					// Remove
@@ -159,7 +184,8 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 				} as GeoJSON.Feature)
 			}
 		},
-		center: (center) => map?.flyTo({ center: center, zoom: 12 }),
+		center: (center) =>
+			map?.flyTo({ center: center, zoom: centerOnDeviceZoomLevel }),
 		showWorld: () =>
 			map?.flyTo({ center: [-33.96763064206279, 55.051422964953545], zoom: 2 }),
 	}
