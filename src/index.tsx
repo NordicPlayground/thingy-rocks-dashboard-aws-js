@@ -6,6 +6,7 @@ console.debug('mapName', MAP_NAME)
 console.debug(`identityPoolId`, COGNITO_IDENTITY_POOL_ID)
 console.debug('websocketEndpoint', WEBSOCKET_ENDPOINT)
 console.debug('sentryDSN', SENTRY_DSN)
+console.debug('version', VERSION)
 
 const root = document.getElementById('root')
 

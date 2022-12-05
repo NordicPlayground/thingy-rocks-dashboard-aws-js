@@ -16,6 +16,10 @@ interface ImportMetaEnv {
 	 * whether the app is running in production.
 	 */
 	readonly PROD: boolean
+	/**
+	 * Deployed version
+	 */
+	readonly VERSION: string
 }
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
