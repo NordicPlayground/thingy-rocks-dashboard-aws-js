@@ -54,6 +54,17 @@ export type Reported = Partial<{
 		ts: number // 1669741244042
 	}
 	btn: ButtonPress
+	gnss: {
+		v: {
+			lng: number // 10.4383147713927
+			lat: number // 63.42503380159108
+			acc: number // 19.08224868774414
+			alt: number // 117.34368896484375
+			spd: number // 5.4213972091674805
+			hdg: number // 170.65904235839844
+		}
+		ts: number // 1670245539000
+	}
 }>
 
 export enum GeoLocationSource {
@@ -98,14 +109,26 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			value={{
 				devices: devices,
 				updateState: (deviceId, reported) => {
+					const updated: Device = {
+						...devices[deviceId],
+						id: deviceId,
+						ts: new Date().toISOString(),
+						state: merge(devices[deviceId]?.state ?? {}, reported),
+					}
+					// Use GNSS location from shadow
+					if (reported.gnss !== undefined) {
+						updated.location = merge(updated.location ?? {}, {
+							[GeoLocationSource.GNSS]: {
+								lat: reported.gnss.v.lat,
+								lng: reported.gnss.v.lng,
+								accuracy: reported.gnss.v.acc,
+								source: GeoLocationSource.GNSS,
+							},
+						}) as Record<GeoLocationSource, GeoLocation>
+					}
 					updateDevices((devices) => ({
 						...devices,
-						[deviceId]: {
-							...devices[deviceId],
-							id: deviceId,
-							ts: new Date().toISOString(),
-							state: merge(devices[deviceId]?.state ?? {}, reported),
-						},
+						[deviceId]: updated,
 					}))
 				},
 				updateLocation: (deviceId, location) => {
