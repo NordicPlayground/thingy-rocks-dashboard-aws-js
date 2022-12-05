@@ -1,3 +1,4 @@
+import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
 import { formatDistanceToNow } from 'date-fns'
 import {
 	BatteryMedium,
@@ -6,6 +7,7 @@ import {
 	MapPin,
 	MapPinOff,
 	Radio,
+	SignalZero,
 } from 'lucide-preact'
 import { useCallback, useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
@@ -66,7 +68,8 @@ const DeviceState = styled.section`
 			color: inherit;
 			text-shadow: ${outerGlow('#222', 2, 2)}, ${outerGlow('#222', 4, 4)};
 			display: flex;
-			.lucide {
+			.lucide,
+			.rsrp {
 				margin-right: 0.5rem;
 				filter: ${outerGlow(
 					'#22222266',
@@ -75,6 +78,10 @@ const DeviceState = styled.section`
 					(s) => `drop-shadow(${s})`,
 					' ',
 				)};
+			}
+			.rsrp {
+				width: 20px;
+				height: 20px;
 			}
 			dl {
 				display: grid;
@@ -151,6 +158,7 @@ export const DeviceList = () => {
 						const deviceLocation = rankedLocations[0]
 						const batteryVoltage = state?.bat?.v
 						const buttonPress = state?.btn
+						const rsrpDbm = state?.roam?.v.rsrp
 						return (
 							<li>
 								{deviceLocation !== undefined ? <MapPin /> : <MapPinOff />}
@@ -175,6 +183,28 @@ export const DeviceList = () => {
 												<RelativeTime time={new Date(ts)} />
 											</abbr>
 										</dd>
+										{rsrpDbm !== undefined && (
+											<>
+												<dt>
+													{
+														<RSRP
+															dbm={rsrpDbm}
+															renderBar={({ quality }) => (
+																<SignalQualityTriangle
+																	quality={quality}
+																	color={'inherit'}
+																	class="rsrp"
+																/>
+															)}
+															renderInvalid={() => (
+																<SignalZero strokeWidth={1} />
+															)}
+														/>
+													}
+												</dt>
+												<dd>{rsrpDbm} dBm</dd>
+											</>
+										)}
 										{buttonPress !== undefined && (
 											<ButtonPress buttonPress={buttonPress} />
 										)}

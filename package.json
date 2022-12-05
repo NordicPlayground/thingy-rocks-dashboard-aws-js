@@ -28,6 +28,7 @@
   "dependencies": {
     "@aws-amplify/core": "5.0.4",
     "@aws-sdk/credential-provider-cognito-identity": "3.224.0",
+    "@nordicsemiconductor/rsrp-bar": "5.0.5",
     "@sentry/react": "7.23.0",
     "@sentry/tracing": "7.23.0",
     "chart.js": "4.0.1",
