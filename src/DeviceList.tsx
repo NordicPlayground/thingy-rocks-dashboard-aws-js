@@ -1,43 +1,15 @@
 import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
-import { formatDistanceToNow } from 'date-fns'
 import { Locate, MapPin, MapPinOff, Radio, SignalZero } from 'lucide-preact'
-import { useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
-import { locationSourceColors } from './colors'
-import {
-	Device,
-	GeoLocation,
-	GeoLocationSource,
-	useDevices,
-} from './context/Devices'
-import { LocationSourceLabels } from './context/LocationSourceLabels'
+import { useDevices } from './context/Devices'
 import { useMap } from './context/Map'
 import { DisconnectedWarning } from './DisconnectedWarning'
+import { LocationSourceButton } from './LocationSourceButton'
+import { outerGlow } from './outerGlow'
 import { PowerInfo } from './PowerInfo'
-
-const outerGlow = (
-	color: string,
-	distance = 1,
-	blur = 0,
-	wrap = (s: string): string => s,
-	join = ', ',
-) => {
-	const glows = []
-	for (const [x, y] of [
-		[1, 0],
-		[1, 1],
-		[0, 1],
-		[-1, 1],
-		[-1, 0],
-		[-1, -1],
-		[0, -1],
-		[-1, -1],
-	] as [number, number][]) {
-		glows.push(wrap(`${x * distance}px ${y * distance}px ${blur}px ${color}`))
-	}
-	return `${glows.join(join)}`
-}
+import { RelativeTime } from './RelativeTime'
+import { sortLocations } from './sortLocations'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-sky);
@@ -99,39 +71,6 @@ const DeviceState = styled.section`
 		}
 	}
 `
-
-const LocationSourceSwitch = styled.span`
-	font-size: 90%;
-	font-weight: var(--monospace-font-weight-bold);
-	& + & {
-		margin-left: 0.25rem;
-	}
-`
-
-const LocationSourceLabelDisabled = styled(LocationSourceSwitch)`
-	color: var(--color-nordic-middle-grey);
-	text-decoration: line-through;
-`
-
-const weighSource = (source: GeoLocationSource): number => {
-	switch (source) {
-		case GeoLocationSource.GNSS:
-			return 1
-		case GeoLocationSource.WIFI:
-			return 2
-		case GeoLocationSource.MULTI_CELL:
-			return 3
-		case GeoLocationSource.SINGLE_CELL:
-			return 4
-		default:
-			return Number.MAX_SAFE_INTEGER
-	}
-}
-
-const sortLocations = (
-	{ source: source1 }: GeoLocation,
-	{ source: source2 }: GeoLocation,
-): number => weighSource(source1) - weighSource(source2)
 
 export const DeviceList = () => {
 	const { devices } = useDevices()
@@ -224,57 +163,5 @@ export const DeviceList = () => {
 					})}
 			</ul>
 		</DeviceState>
-	)
-}
-
-const RelativeTime = ({ time }: { time: Date }) => {
-	const format = () => formatDistanceToNow(time, { addSuffix: true })
-	const [formatted, setFormatted] = useState<string>(format())
-
-	useEffect(() => {
-		const i = setInterval(() => {
-			setFormatted(format())
-		}, 1000)
-
-		return () => {
-			clearInterval(i)
-		}
-	}, [time])
-
-	return <time dateTime={time.toISOString()}>{formatted}</time>
-}
-
-const LocationSourceButton = ({
-	device: { id, hiddenLocations },
-	source,
-}: {
-	device: Device
-	source: GeoLocationSource
-}) => {
-	const { toggleHiddenLocation } = useDevices()
-
-	const Button = () => (
-		<button
-			onClick={() => {
-				toggleHiddenLocation(id, source)
-			}}
-		>
-			{LocationSourceLabels[source]}
-		</button>
-	)
-
-	const isDisabled = hiddenLocations?.[source] ?? false
-
-	if (isDisabled)
-		return (
-			<LocationSourceLabelDisabled>
-				<Button />
-			</LocationSourceLabelDisabled>
-		)
-
-	return (
-		<LocationSourceSwitch style={{ color: locationSourceColors[source] }}>
-			<Button />
-		</LocationSourceSwitch>
 	)
 }
