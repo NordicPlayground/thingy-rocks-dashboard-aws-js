@@ -92,6 +92,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			connection.send(JSON.stringify({ message: 'sendmessage', data: 'PING' }))
 		}, 1000 * 60 * 9) // every 9 minutes
 
+		// Initial greeting
 		connection.send(JSON.stringify({ message: 'sendmessage', data: 'HELLO' }))
 
 		return () => {
@@ -125,10 +126,24 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			source: GeoLocationSource.GNSS,
 		})
 	}
+
+	const fakeDevice = () => {
+		deviceMessages.updateState(testDeviceId.current, {
+			sol: {
+				v: {
+					gain: 4.391489028930664,
+					bat: 3.872000217437744,
+				},
+				ts: Date.now(),
+			},
+		})
+	}
+
 	useEffect(() => {
 		const i = setInterval(fakeLocation, 5000)
 
 		fakeLocation()
+		fakeDevice()
 
 		return () => {
 			clearInterval(i)

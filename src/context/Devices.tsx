@@ -7,6 +7,19 @@ export type ButtonPress = {
 	ts: number // 1669741244042
 }
 
+export type SolarInfo = {
+	v: {
+		gain: number // mA, 4.391489028930664
+		bat: number // V, 3.872000217437744
+	}
+	ts: number // 1670321526312
+}
+
+export type BatteryInfo = {
+	v: number // 4398
+	ts: number // 1669741244042
+}
+
 export type Reported = Partial<{
 	cfg: {
 		act: boolean
@@ -49,10 +62,7 @@ export type Reported = Partial<{
 		}
 		ts: 1669741243982
 	}
-	bat: {
-		v: number // 4398
-		ts: number // 1669741244042
-	}
+	bat: BatteryInfo
 	btn: ButtonPress
 	gnss: {
 		v: {
@@ -65,6 +75,7 @@ export type Reported = Partial<{
 		}
 		ts: number // 1670245539000
 	}
+	sol: SolarInfo
 }>
 
 export enum GeoLocationSource {

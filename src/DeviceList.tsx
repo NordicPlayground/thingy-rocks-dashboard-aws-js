@@ -1,7 +1,6 @@
 import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
 import { formatDistanceToNow } from 'date-fns'
 import {
-	BatteryMedium,
 	Focus,
 	Locate,
 	MapPin,
@@ -22,6 +21,7 @@ import {
 import { LocationSourceLabels } from './context/LocationSourceLabels'
 import { useMap } from './context/Map'
 import { DisconnectedWarning } from './DisconnectedWarning'
+import { PowerInfo } from './PowerInfo'
 
 const outerGlow = (
 	color: string,
@@ -156,7 +156,7 @@ export const DeviceList = () => {
 							sortLocations,
 						)
 						const deviceLocation = rankedLocations[0]
-						const batteryVoltage = state?.bat?.v
+
 						const buttonPress = state?.btn
 						const rsrpDbm = state?.roam?.v.rsrp
 						return (
@@ -208,14 +208,7 @@ export const DeviceList = () => {
 										{buttonPress !== undefined && (
 											<ButtonPress buttonPress={buttonPress} />
 										)}
-										{batteryVoltage !== undefined && (
-											<>
-												<dt>
-													<BatteryMedium strokeWidth={1} />
-												</dt>
-												<dt>{batteryVoltage / 1000} V</dt>
-											</>
-										)}
+										{state !== undefined && <PowerInfo state={state} />}
 										{rankedLocations.length > 0 && (
 											<>
 												<dt>
