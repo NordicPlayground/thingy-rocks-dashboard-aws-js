@@ -1,18 +1,11 @@
 import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
 import { formatDistanceToNow } from 'date-fns'
-import {
-	Focus,
-	Locate,
-	MapPin,
-	MapPinOff,
-	Radio,
-	SignalZero,
-} from 'lucide-preact'
-import { useCallback, useEffect, useState } from 'preact/hooks'
+import { Locate, MapPin, MapPinOff, Radio, SignalZero } from 'lucide-preact'
+import { useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
+import { ButtonPress } from './ButtonPress'
 import { locationSourceColors } from './colors'
 import {
-	ButtonPress as ButtonPressData,
 	Device,
 	GeoLocation,
 	GeoLocationSource,
@@ -283,50 +276,5 @@ const LocationSourceButton = ({
 		<LocationSourceSwitch style={{ color: locationSourceColors[source] }}>
 			<Button />
 		</LocationSourceSwitch>
-	)
-}
-
-/**
- * Display a button press for a given period
- */
-const ButtonPress = ({
-	buttonPress,
-	untilSeconds,
-}: {
-	buttonPress: ButtonPressData
-	untilSeconds?: number
-}) => {
-	const diff = useCallback(
-		() => Math.round((Date.now() - buttonPress.ts) / 1000),
-		[buttonPress],
-	)
-	const [diffSeconds, setDiffSeconds] = useState<number>(diff())
-
-	useEffect(() => {
-		const i = setInterval(() => {
-			const diffSeconds = diff()
-			setDiffSeconds(diffSeconds)
-			if (diffSeconds > (untilSeconds ?? 30)) clearInterval(i)
-		}, 1000)
-		return () => {
-			clearInterval(i)
-		}
-	}, [diff])
-
-	if (diffSeconds > (untilSeconds ?? 30)) return null
-
-	const HotDt = styled.dt`
-		color: var(--color-nordic-pink);
-	`
-	const HotDl = styled.dt`
-		color: var(--color-nordic-pink);
-	`
-	return (
-		<>
-			<HotDt>
-				<Focus strokeWidth={1} />
-			</HotDt>
-			<HotDl>{diffSeconds} seconds ago</HotDl>
-		</>
 	)
 }
