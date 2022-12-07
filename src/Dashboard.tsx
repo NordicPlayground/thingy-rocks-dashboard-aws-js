@@ -1,4 +1,5 @@
-import { DeviceChart } from './DeviceChart'
+import { CloseHistoryChartButton } from './CloseHistoryChartButton'
+import { DeviceHistory } from './DeviceHistory'
 import { DeviceList } from './DeviceList'
 import { Logo } from './Logo'
 import { DeviceLocations } from './map/DeviceLocations'
@@ -10,11 +11,12 @@ export const Dashboard = () => {
 		<>
 			<Logo />
 			<SideMenu>
+				<CloseHistoryChartButton />
 				<ZoomToWorldButton />
 			</SideMenu>
 			<DeviceList />
 			<DeviceLocations />
-			<DeviceChart />
+			<DeviceHistory />
 		</>
 	)
 }

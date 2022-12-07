@@ -1,7 +1,7 @@
 import { Ulid } from 'id128'
 import { ComponentChildren, createContext } from 'preact'
 import { useContext, useEffect, useRef, useState } from 'preact/hooks'
-import { GeoLocationSource, Reported, useDevices } from './Devices'
+import { GeoLocationSource, Reported, Summary, useDevices } from './Devices'
 
 export const WebsocketContext = createContext({
 	connected: false,
@@ -11,12 +11,12 @@ enum MessageContext {
 	DeviceShadow = 'https://thingy.rocks/device-shadow',
 	DeviceMessage = 'https://thingy.rocks/device-message',
 	DeviceLocation = 'https://thingy.rocks/device-location',
+	DeviceHistory = 'https://thingy.rocks/device-history',
 }
 
 type Message = {
 	'@context': MessageContext
 	deviceId: string
-	receivedTimestamp: string // '2022-11-30T10:59:53.7Z'
 } & (
 	| {
 			'@context': MessageContext.DeviceLocation
@@ -34,6 +34,10 @@ type Message = {
 	| {
 			'@context': MessageContext.DeviceMessage
 			message: Reported
+	  }
+	| {
+			'@context': MessageContext.DeviceHistory
+			history: Summary
 	  }
 )
 
@@ -58,24 +62,29 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			console.error(`[WS]`, err)
 		})
 		socket.addEventListener('message', (msg) => {
+			let message: Message
 			try {
-				const message = JSON.parse(msg.data) as Message
-				console.log(`[WS]`, message)
-				switch (message['@context']) {
-					case 'https://thingy.rocks/device-shadow':
-						deviceMessages.updateState(message.deviceId, message.reported)
-						break
-					case 'https://thingy.rocks/device-message':
-						deviceMessages.updateState(message.deviceId, message.message)
-						break
-					case 'https://thingy.rocks/device-location':
-						deviceMessages.updateLocation(message.deviceId, message.location)
-						break
-					default:
-						console.error(`[WS]`, 'Unknown message', message)
-				}
+				message = JSON.parse(msg.data) as Message
+				console.log(`[WS]`, message['@context'], message)
 			} catch (err) {
 				console.error(`[WS]`, `Failed to parse message as JSON`, msg.data)
+				return
+			}
+			switch (message['@context']) {
+				case 'https://thingy.rocks/device-shadow':
+					deviceMessages.updateState(message.deviceId, message.reported)
+					break
+				case 'https://thingy.rocks/device-message':
+					deviceMessages.updateState(message.deviceId, message.message)
+					break
+				case 'https://thingy.rocks/device-location':
+					deviceMessages.updateLocation(message.deviceId, message.location)
+					break
+				case 'https://thingy.rocks/device-history':
+					deviceMessages.updateHistory(message.deviceId, message.history)
+					break
+				default:
+					console.error(`[WS]`, 'Unknown message', message)
 			}
 		})
 

@@ -9,7 +9,13 @@ const Charging = styled.span`
 const NotCharging = styled.span`
 	color: var(--color-nordic-light-grey);
 `
-export const PowerInfo = ({ state }: { state: Reported }) => {
+export const PowerInfo = ({
+	state,
+	onClick,
+}: {
+	state: Reported
+	onClick?: () => unknown
+}) => {
 	const sol = state?.sol?.v
 
 	if (sol !== undefined) {
@@ -22,10 +28,12 @@ export const PowerInfo = ({ state }: { state: Reported }) => {
 						</Charging>
 					</dt>
 					<dd>
-						<Charging>
-							{sol.gain.toFixed(2)} mA <BatteryCharging strokeWidth={1} />
-							{sol.bat.toFixed(3)} V
-						</Charging>
+						<button type={'button'} onClick={() => onClick?.()}>
+							<Charging>
+								{sol.gain.toFixed(2)} mA <BatteryCharging strokeWidth={1} />
+								{sol.bat.toFixed(3)} V
+							</Charging>
+						</button>
 					</dd>
 				</>
 			)
@@ -37,10 +45,12 @@ export const PowerInfo = ({ state }: { state: Reported }) => {
 					</NotCharging>
 				</dt>
 				<dd>
-					<NotCharging>
-						0 mA <BatteryMedium strokeWidth={1} />
-						{sol.bat.toFixed(3)} V
-					</NotCharging>
+					<button type={'button'} onClick={() => onClick?.()}>
+						<NotCharging>
+							0 mA <BatteryMedium strokeWidth={1} />
+							{sol.bat.toFixed(3)} V
+						</NotCharging>
+					</button>
 				</dd>
 			</>
 		)
@@ -57,7 +67,9 @@ export const PowerInfo = ({ state }: { state: Reported }) => {
 					</NotCharging>
 				</dt>
 				<dd>
-					<NotCharging>{batteryVoltage / 1000} V</NotCharging>
+					<button type={'button'} onClick={() => onClick?.()}>
+						<NotCharging>{batteryVoltage / 1000} V</NotCharging>
+					</button>
 				</dd>
 			</>
 		)

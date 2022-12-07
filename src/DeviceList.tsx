@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
 import { useDevices } from './context/Devices'
 import { useMap } from './context/Map'
+import { useHistoryChart } from './context/showHistoryChart'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { LocationSourceButton } from './LocationSourceButton'
 import { outerGlow } from './outerGlow'
@@ -75,6 +76,7 @@ const DeviceState = styled.section`
 export const DeviceList = () => {
 	const { devices } = useDevices()
 	const map = useMap()
+	const { show: showHistoryChart } = useHistoryChart()
 
 	return (
 		<DeviceState>
@@ -140,7 +142,14 @@ export const DeviceList = () => {
 										{buttonPress !== undefined && (
 											<ButtonPress buttonPress={buttonPress} />
 										)}
-										{state !== undefined && <PowerInfo state={state} />}
+										{state !== undefined && (
+											<PowerInfo
+												state={state}
+												onClick={() => {
+													showHistoryChart(deviceId)
+												}}
+											/>
+										)}
 										{rankedLocations.length > 0 && (
 											<>
 												<dt>

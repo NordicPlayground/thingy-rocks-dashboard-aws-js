@@ -96,18 +96,34 @@ export type Device = {
 	ts: string
 	state?: Reported
 	location?: Record<GeoLocationSource, GeoLocation>
+	history?: Summary
 	hiddenLocations?: Record<GeoLocationSource, true>
 }
 export type Devices = Record<string, Device>
+
+type Reading = [
+	v: number,
+	// Delta to the base date in seconds
+	d: number,
+]
+export type Summary = {
+	base: Date // '2022-12-07T12:09:59.488Z'
+	bat?: Array<Reading>
+	temp?: Array<Reading>
+	solBat?: Array<Reading>
+	solGain?: Array<Reading>
+}
 
 export const DevicesContext = createContext<{
 	devices: Devices
 	updateState: (deviceId: string, reported: Reported) => void
 	updateLocation: (deviceId: string, location: GeoLocation) => void
+	updateHistory: (deviceId: string, history: Summary) => void
 	toggleHiddenLocation: (deviceId: string, location: GeoLocationSource) => void
 }>({
 	updateState: () => undefined,
 	updateLocation: () => undefined,
+	updateHistory: () => undefined,
 	toggleHiddenLocation: () => undefined,
 	devices: {},
 })
@@ -120,27 +136,29 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			value={{
 				devices: devices,
 				updateState: (deviceId, reported) => {
-					const updated: Device = {
-						...devices[deviceId],
-						id: deviceId,
-						ts: new Date().toISOString(),
-						state: merge(devices[deviceId]?.state ?? {}, reported),
-					}
-					// Use GNSS location from shadow
-					if (reported.gnss !== undefined) {
-						updated.location = merge(updated.location ?? {}, {
-							[GeoLocationSource.GNSS]: {
-								lat: reported.gnss.v.lat,
-								lng: reported.gnss.v.lng,
-								accuracy: reported.gnss.v.acc,
-								source: GeoLocationSource.GNSS,
-							},
-						}) as Record<GeoLocationSource, GeoLocation>
-					}
-					updateDevices((devices) => ({
-						...devices,
-						[deviceId]: updated,
-					}))
+					updateDevices((devices) => {
+						const updated: Device = {
+							...devices[deviceId],
+							id: deviceId,
+							ts: new Date().toISOString(),
+							state: merge(devices[deviceId]?.state ?? {}, reported),
+						}
+						// Use GNSS location from shadow
+						if (reported.gnss !== undefined) {
+							updated.location = merge(updated.location ?? {}, {
+								[GeoLocationSource.GNSS]: {
+									lat: reported.gnss.v.lat,
+									lng: reported.gnss.v.lng,
+									accuracy: reported.gnss.v.acc,
+									source: GeoLocationSource.GNSS,
+								},
+							}) as Record<GeoLocationSource, GeoLocation>
+						}
+						return {
+							...devices,
+							[deviceId]: updated,
+						}
+					})
 				},
 				updateLocation: (deviceId, location) => {
 					updateDevices((devices) => ({
@@ -152,6 +170,20 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 							location: merge(devices[deviceId]?.location ?? {}, {
 								[location.source]: location,
 							}) as Record<GeoLocationSource, GeoLocation>,
+						},
+					}))
+				},
+				updateHistory: (deviceId, history) => {
+					updateDevices((devices) => ({
+						...devices,
+						[deviceId]: {
+							...devices[deviceId],
+							id: deviceId,
+							ts: new Date().toISOString(),
+							history: {
+								...history,
+								base: new Date(history.base),
+							},
 						},
 					}))
 				},

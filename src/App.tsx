@@ -1,7 +1,7 @@
 import Router, { Route } from 'preact-router'
-import { ChartDemo } from './ChartDemo'
 import { Provider as DevicesProvider } from './context/Devices'
 import { Provider as MapProvider } from './context/Map'
+import { Provider as HistoryChartProvider } from './context/showHistoryChart'
 import { Provider as WebsocketProvider } from './context/WebsocketConnection'
 import { Dashboard } from './Dashboard'
 import { WithCredentials as CredentialsProvider } from './WithCredentials'
@@ -12,10 +12,11 @@ export const App = () => (
 			<DevicesProvider>
 				<WebsocketProvider>
 					<MapProvider credentials={credentials}>
-						<Router>
-							<Route path="/" component={Dashboard} />
-							<Route path="/chart" component={ChartDemo} />
-						</Router>
+						<HistoryChartProvider>
+							<Router>
+								<Route path="/" component={Dashboard} />
+							</Router>
+						</HistoryChartProvider>
 					</MapProvider>
 				</WebsocketProvider>
 			</DevicesProvider>
