@@ -1,6 +1,6 @@
 import { LineChart } from 'lucide-preact'
 import styled from 'styled-components'
-import { useHistoryChart } from './context/showHistoryChart'
+import { useHistoryChart } from '../context/showHistoryChart'
 
 const StackedIcons = styled.span`
 	color: var(--color-nordic-red);

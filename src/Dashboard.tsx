@@ -1,5 +1,5 @@
-import { CloseHistoryChartButton } from './CloseHistoryChartButton'
-import { DeviceHistory } from './DeviceHistory'
+import { CloseHistoryChartButton } from './chart/CloseHistoryChartButton'
+import { DeviceHistory } from './chart/DeviceHistory'
 import { DeviceList } from './DeviceList'
 import { Logo } from './Logo'
 import { DeviceLocations } from './map/DeviceLocations'

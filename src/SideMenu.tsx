@@ -5,7 +5,6 @@ export const SideMenu = styled.nav`
 	right: 1rem;
 	bottom: 2rem;
 	color: #fff;
-	opacity: 0.5;
 	button {
 		color: inherit;
 	}

@@ -1,9 +1,9 @@
 import { format, subSeconds } from 'date-fns'
-import type { ChartData, Dataset } from './chart/chartMath'
-import { colors } from './colors'
-import { useDevices } from './context/Devices'
-import { HistoryChart } from './context/HistoryChart'
-import { useHistoryChart } from './context/showHistoryChart'
+import { colors } from '../colors'
+import { useDevices } from '../context/Devices'
+import { HistoryChart } from '../context/HistoryChart'
+import { useHistoryChart } from '../context/showHistoryChart'
+import type { ChartData, Dataset } from './chartMath'
 
 /**
  * Displays the history chart
@@ -16,11 +16,9 @@ export const DeviceHistory = () => {
 
 	const history = devices[deviceId]?.history
 
-	if (history === undefined) return null
-
 	const datasets: Dataset[] = []
 
-	if (history.bat !== undefined) {
+	if (history?.bat !== undefined) {
 		datasets.push({
 			min: 2.5,
 			max: 5.5,
@@ -29,7 +27,7 @@ export const DeviceHistory = () => {
 			format: (v) => `${v} V`,
 		})
 	}
-	if (history.temp !== undefined) {
+	if (history?.temp !== undefined) {
 		datasets.push({
 			min: 0,
 			max: Math.ceil(
@@ -43,7 +41,7 @@ export const DeviceHistory = () => {
 			format: (v) => `${v} °C`,
 		})
 	}
-	if (history.solGain !== undefined) {
+	if (history?.solGain !== undefined) {
 		datasets.push({
 			min: 0,
 			max: 30,
