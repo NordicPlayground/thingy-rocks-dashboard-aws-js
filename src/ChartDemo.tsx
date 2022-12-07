@@ -1,37 +1,91 @@
+import { addMinutes, subMinutes } from 'date-fns'
 import { colors } from './colors'
 
 type Dataset = {
 	min: number
 	max: number
-	values: number[]
+	values: [value: number, ts: Date][]
 	color: string
 	format: (v: number) => string
 }
+type XAxis = {
+	minutes: number
+	color: string
+	labelEvery: number
+	format: (d: Date) => string
+}
 type ChartData = {
-	xAxis: { labels: string[]; color: string; labelEvery: number }
+	xAxis: XAxis
 	datasets: Dataset[]
 }
 
 const chartMath = ({
 	height,
 	padding,
+	startDate,
+	minutes,
+	labelEvery,
+	xSpacing,
 }: {
 	height: number
 	padding: number
+	startDate: Date
+	/**
+	 * Number of Minutes to display in the chart
+	 */
+	minutes: number
+	labelEvery: number
+	xSpacing: number
 }) => {
 	const yAxisHeight = height - padding * 3 // 1 padding at top, two at bottom
+	const xAxisWidth = (minutes / labelEvery - 1) * labelEvery * xSpacing
+	const toTheNextFullTenMinutes = addMinutes(
+		startDate,
+		10 - (startDate.getMinutes() % 10),
+	)
+	toTheNextFullTenMinutes.setSeconds(0)
+	const endDate = subMinutes(toTheNextFullTenMinutes, minutes)
+
+	const startTs = toTheNextFullTenMinutes.getTime()
+	const endTs = endDate.getTime()
 
 	return {
-		yPosition: (dataset: Dataset, value?: number): number => {
+		yPosition: (dataset: Dataset, value: number): number => {
 			const valueAsPercent = Math.max(
 				0,
 				Math.min(1, ((value ?? 0) - dataset.min) / (dataset.max - dataset.min)),
 			)
 			return padding + yAxisHeight - valueAsPercent * yAxisHeight
 		},
+		xPosition: (dataset: Dataset, ts: Date): number | null => {
+			const tsInt = ts.getTime()
+			if (tsInt < endTs) return null
+			if (tsInt > startTs) return null
+			const timeAsPercent = Math.max(
+				0,
+				Math.min(1, (tsInt - endTs) / (startTs - endTs)),
+			)
+			return 2 * padding + timeAsPercent * xAxisWidth
+		},
 		yAxisHeight,
+		xAxisWidth,
 		padding,
+		startDate: toTheNextFullTenMinutes,
+		endDate,
 	}
+}
+
+const generateLabels = (
+	{ startDate: start }: ReturnType<typeof chartMath>,
+	xAxis: XAxis,
+): string[] => {
+	const labels: string[] = []
+	let labelTime = subMinutes(start, xAxis.minutes)
+	for (let i = 0; i < xAxis.minutes / xAxis.labelEvery; i++) {
+		labelTime = addMinutes(labelTime, xAxis.labelEvery)
+		labels.push(xAxis.format(labelTime))
+	}
+	return labels
 }
 
 export const ChartDemo = ({
@@ -45,17 +99,35 @@ export const ChartDemo = ({
 }) => {
 	const data: ChartData = {
 		xAxis: {
-			labels: ['12:00', '12:10', '12:20', '12:30', '12:40', '12:50', '13:00'],
 			color: colors['nordic-light-grey'],
 			labelEvery: 10,
+			minutes: 60,
+			format: (d) => d.toISOString().slice(11, 16),
 		},
 		datasets: [
 			{
 				min: 2.5,
 				max: 5.5,
 				values: [
-					5.5, 3.872, 3.871, 3.87, 3.8, 3.7, 3.7, 3.7, 3.6, 3.6, 3.6, 3.6, 3.6,
-					3.5, 3.5, 3.5, 3.5, 3.5, 2.5,
+					[5.5, subMinutes(new Date(), 0)],
+					[3.872, subMinutes(new Date(), 1)],
+					[3.871, subMinutes(new Date(), 2)],
+					[3.87, subMinutes(new Date(), 3)],
+					[3.8, subMinutes(new Date(), 4)],
+					[3.7, subMinutes(new Date(), 5)],
+					[3.7, subMinutes(new Date(), 6)],
+					[3.7, subMinutes(new Date(), 7)],
+					[3.6, subMinutes(new Date(), 8)],
+					[3.6, subMinutes(new Date(), 9)],
+					[3.6, subMinutes(new Date(), 10)],
+					[3.6, subMinutes(new Date(), 11)],
+					[3.6, subMinutes(new Date(), 12)],
+					[3.5, subMinutes(new Date(), 13)],
+					[3.5, subMinutes(new Date(), 14)],
+					[3.5, subMinutes(new Date(), 15)],
+					[3.5, subMinutes(new Date(), 16)],
+					[3.5, subMinutes(new Date(), 17)],
+					[2.5, subMinutes(new Date(), 18)],
 				],
 				color: colors['nordic-blue'],
 				format: (v) => `${v} V`,
@@ -63,14 +135,22 @@ export const ChartDemo = ({
 		],
 	}
 
+	const m = chartMath({
+		height: height ?? 400,
+		padding: padding ?? 25,
+		startDate: new Date(),
+		minutes: data.xAxis.minutes,
+		labelEvery: data.xAxis.labelEvery,
+		xSpacing: xSpacing ?? 10,
+	})
+
+	const labels = generateLabels(m, data.xAxis)
+
 	const p = padding ?? 25
 	const p2 = p * 2
 	const h = height ?? 400
 	const s = xSpacing ?? 10
-	const chartWidth =
-		(data.xAxis.labels.length - 1) * s * data.xAxis.labelEvery + 4 * p
-
-	const m = chartMath({ height: height ?? 400, padding: padding ?? 25 })
+	const chartWidth = m.xAxisWidth + 4 * p
 
 	return (
 		<svg
@@ -82,7 +162,7 @@ export const ChartDemo = ({
 		>
 			{/* x axis labels and lines */}
 			<g>
-				{data.xAxis.labels.map((label, index) => (
+				{labels.map((label, index) => (
 					<>
 						<path
 							style={`stroke:${data.xAxis.color};stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;fill:none`}
@@ -105,14 +185,13 @@ export const ChartDemo = ({
 			{data.datasets.map((dataset) => {
 				const lineDefinition: string[] = []
 				for (let i = 0; i < dataset.values.length; i++) {
+					const [v, ts] = dataset.values[i] as [number, Date]
+					const x = m.xPosition(dataset, ts)
+					if (x === null) continue
 					if (i === 0) {
-						lineDefinition.push(
-							`M ${p2 + s * i},${m.yPosition(dataset, dataset.values[i])}`,
-						)
+						lineDefinition.push(`M ${x},${m.yPosition(dataset, v)}`)
 					} else {
-						lineDefinition.push(
-							`L ${p2 + s * i},${m.yPosition(dataset, dataset.values[i])}`,
-						)
+						lineDefinition.push(`L ${x},${m.yPosition(dataset, v)}`)
 					}
 				}
 				return (
@@ -127,22 +206,25 @@ export const ChartDemo = ({
 				const labels = []
 				for (let i = 0; i < dataset.values.length; i++) {
 					if (i % data.xAxis.labelEvery === 0) {
+						const [v, ts] = dataset.values[i] as [number, Date]
+						const x = m.xPosition(dataset, ts)
+						if (x === null) continue
 						labels.push(
 							<circle
 								style={`fill:none;stroke:${dataset.color};stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;paint-order:markers fill stroke`}
-								cy={m.yPosition(dataset, dataset.values[i])}
-								cx={p2 + s * i}
+								cy={m.yPosition(dataset, v)}
+								cx={x}
 								r="6"
 							/>,
 						)
 						labels.push(
 							<text
 								style={`fill:${dataset.color};font-weight:700;stroke:#000000;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers`}
-								y={m.yPosition(dataset, dataset.values[i]) - m.padding / 2}
-								x={p2 + s * i}
+								y={m.yPosition(dataset, v) - m.padding / 2}
+								x={x}
 								text-anchor="middle"
 							>
-								{dataset.format(dataset.values[i] ?? 0)}
+								{dataset.format(v)}
 							</text>,
 						)
 					}
