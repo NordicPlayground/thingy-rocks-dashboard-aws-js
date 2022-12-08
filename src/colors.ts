@@ -19,26 +19,12 @@ export const colors = {
 	'nordic-light-grey': '#d9e1e2',
 	'nordic-middle-grey': '#768692',
 	'nordic-dark-grey': '#333f48',
-
-	/* 12-bit rainbow palette https://iamkate.com/data/12-bit-rainbow/ */
-	'rainbow-1': '#881177',
-	'rainbow-2': '#aa3355',
-	'rainbow-3': '#cc6666',
-	'rainbow-4': '#ee9944',
-	'rainbow-5': '#eedd00',
-	'rainbow-6': '#99dd55',
-	'rainbow-7': '#44dd88',
-	'rainbow-8': '#22ccbb',
-	'rainbow-9': '#00bbcc',
-	'rainbow-10': '#0099cc',
-	'rainbow-11': '#3366bb',
-	'rainbow-12': '#663399',
 } as const
 
-// Source: https://coolors.co/palette/ff499e-d264b6-a480cf-779be7-49b6ff
+// Source: https://coolors.co/palette/22577a-38a3a5-57cc99-80ed99-c7f9cc
 export const locationSourceColors = {
-	[GeoLocationSource.GNSS]: '#FF499E',
-	[GeoLocationSource.WIFI]: '#D264B6',
-	[GeoLocationSource.MULTI_CELL]: '#A480CF',
-	[GeoLocationSource.SINGLE_CELL]: '#779BE7',
+	[GeoLocationSource.GNSS]: '#C7F9CC',
+	[GeoLocationSource.WIFI]: '#80ED99',
+	[GeoLocationSource.MULTI_CELL]: '#57CC99',
+	[GeoLocationSource.SINGLE_CELL]: '#38A3A5',
 } as const

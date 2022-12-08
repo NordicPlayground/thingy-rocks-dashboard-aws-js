@@ -1,4 +1,3 @@
-import { CloseHistoryChartButton } from './chart/CloseHistoryChartButton'
 import { DeviceHistory } from './chart/DeviceHistory'
 import { DeviceList } from './DeviceList'
 import { DeviceLocations } from './map/DeviceLocations'
@@ -9,7 +8,6 @@ export const Dashboard = () => {
 	return (
 		<>
 			<SideMenu>
-				<CloseHistoryChartButton />
 				<ZoomToWorldButton />
 			</SideMenu>
 			<DeviceList />

@@ -1,5 +1,5 @@
 import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
-import { Locate, MapPin, MapPinOff, Radio, SignalZero } from 'lucide-preact'
+import { MapPin, Radio, SignalZero } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
 import { useDevices } from './context/Devices'
@@ -7,49 +7,42 @@ import { useMap } from './context/Map'
 import { useHistoryChart } from './context/showHistoryChart'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { LocationSourceButton } from './LocationSourceButton'
-import { outerGlow } from './outerGlow'
 import { PowerInfo } from './PowerInfo'
 import { RelativeTime } from './RelativeTime'
 import { sortLocations } from './sortLocations'
+import { ThingyIcon } from './ThingyIcon'
 
 const DeviceState = styled.section`
-	color: var(--color-nordic-sky);
+	color: var(--color-nordic-light-grey);
 	position: absolute;
 	right: 0;
 	top: 0;
 	user-select: none;
-	font-size: 14px;
-	padding: 0.5rem 0.5rem 0 0;
-	@media (min-width: 600px) {
-		padding: 1rem 1rem 0 0;
-		font-size: 16px;
-	}
 	ul {
 		list-style: none;
 		margin: 0;
+		padding: 0;
 		li {
+			margin: 2px 2px 2px 0;
+			padding: 1rem;
 			text-align: left;
 			border: 0;
-			background: transparent;
+			background-color: var(--color-panel-bg);
 			color: inherit;
-			text-shadow: ${outerGlow('#222', 2, 2)}, ${outerGlow('#222', 4, 4)};
 			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
 			.lucide,
 			.rsrp {
-				margin-right: 0.5rem;
-				filter: ${outerGlow(
-					'#22222266',
-					1,
-					2,
-					(s) => `drop-shadow(${s})`,
-					' ',
-				)};
+				margin-right: calc(0.5rem + 4px);
+				margin-left: 4px;
 			}
 			.rsrp {
 				width: 20px;
 				height: 20px;
 			}
 			dl {
+				margin: 0;
 				display: grid;
 				grid-template-columns: auto auto;
 				grid-template-rows: 1fr;
@@ -65,9 +58,15 @@ const DeviceState = styled.section`
 				border: 0;
 				background: transparent;
 				color: inherit;
-				text-shadow: inherit;
 				padding: 0;
-				text-decoration: inherit;
+			}
+			> button {
+				svg {
+					width: 32px;
+					height: 32px;
+					margin-right: 0.5rem;
+					margin-bottom: 0.5rem;
+				}
 			}
 		}
 	}
@@ -76,7 +75,7 @@ const DeviceState = styled.section`
 export const DeviceList = () => {
 	const { devices } = useDevices()
 	const map = useMap()
-	const { show: showHistoryChart } = useHistoryChart()
+	const { toggle: toggleHistoryChart } = useHistoryChart()
 
 	return (
 		<DeviceState>
@@ -95,78 +94,73 @@ export const DeviceList = () => {
 						const rsrpDbm = state?.roam?.v.rsrp
 						return (
 							<li>
-								{deviceLocation !== undefined ? <MapPin /> : <MapPinOff />}
-								<span>
-									<button
-										type={'button'}
-										onClick={() => {
-											if (deviceLocation !== undefined) {
-												map?.center(deviceLocation)
-											}
-										}}
-									>
-										{deviceId}
-									</button>
-									<br />
-									<dl>
-										<dt>
-											<Radio strokeWidth={1} />
-										</dt>
-										<dd>
-											<abbr title="Last update">
-												<RelativeTime time={new Date(ts)} />
-											</abbr>
-										</dd>
-										{rsrpDbm !== undefined && (
-											<>
-												<dt>
-													{
-														<RSRP
-															dbm={rsrpDbm}
-															renderBar={({ quality }) => (
-																<SignalQualityTriangle
-																	quality={quality}
-																	color={'inherit'}
-																	class="rsrp"
-																/>
-															)}
-															renderInvalid={() => (
-																<SignalZero strokeWidth={1} />
-															)}
-														/>
-													}
-												</dt>
-												<dd>{rsrpDbm} dBm</dd>
-											</>
-										)}
-										{buttonPress !== undefined && (
-											<ButtonPress buttonPress={buttonPress} />
-										)}
-										{state !== undefined && (
-											<PowerInfo
-												state={state}
-												onClick={() => {
-													showHistoryChart(deviceId)
-												}}
-											/>
-										)}
-										{rankedLocations.length > 0 && (
-											<>
-												<dt>
-													<Locate strokeWidth={1} />
-												</dt>
-												<dd>
-													{rankedLocations.map(({ source }) => (
-														<LocationSourceButton
-															device={device}
-															source={source}
-														/>
-													))}
-												</dd>
-											</>
-										)}
-									</dl>
-								</span>
+								<button
+									type={'button'}
+									onClick={() => {
+										if (deviceLocation !== undefined) {
+											map?.center(deviceLocation)
+										}
+									}}
+								>
+									<ThingyIcon />
+									{deviceId}
+								</button>
+								<dl>
+									<dt>
+										<Radio strokeWidth={1} />
+									</dt>
+									<dd>
+										<abbr title="Last update">
+											<RelativeTime time={new Date(ts)} />
+										</abbr>
+									</dd>
+									{rsrpDbm !== undefined && (
+										<>
+											<dt>
+												{
+													<RSRP
+														dbm={rsrpDbm}
+														renderBar={({ quality }) => (
+															<SignalQualityTriangle
+																quality={quality}
+																color={'inherit'}
+																class="rsrp"
+															/>
+														)}
+														renderInvalid={() => <SignalZero strokeWidth={1} />}
+													/>
+												}
+											</dt>
+											<dd>{rsrpDbm} dBm</dd>
+										</>
+									)}
+									{buttonPress !== undefined && (
+										<ButtonPress buttonPress={buttonPress} />
+									)}
+									{state !== undefined && (
+										<PowerInfo
+											state={state}
+											onClick={() => {
+												toggleHistoryChart(deviceId)
+											}}
+										/>
+									)}
+									{rankedLocations.length > 0 && (
+										<>
+											<dt>
+												<MapPin strokeWidth={1} />
+											</dt>
+											<dd>
+												{rankedLocations.map(({ source }) => (
+													<LocationSourceButton
+														device={device}
+														source={source}
+													/>
+												))}
+											</dd>
+										</>
+									)}
+								</dl>
 							</li>
 						)
 					})}

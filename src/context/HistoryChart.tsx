@@ -1,12 +1,5 @@
-import styled from 'styled-components'
 import { ChartData, chartMath } from '../chart/chartMath'
 import { generateLabels } from '../chart/generateLabels'
-
-const SVG = styled.svg`
-	position: absolute;
-	bottom: 1rem;
-	left: 1rem;
-`
 
 export const HistoryChart = ({
 	data,
@@ -35,7 +28,7 @@ export const HistoryChart = ({
 	const labels = generateLabels(m, data.xAxis)
 
 	return (
-		<SVG
+		<svg
 			width={w}
 			height={h}
 			viewBox={`0 0 ${w} ${h}`}
@@ -113,6 +106,6 @@ export const HistoryChart = ({
 				}
 				return labels
 			})}
-		</SVG>
+		</svg>
 	)
 }

@@ -1,16 +1,56 @@
 import { format, subSeconds } from 'date-fns'
+import { X } from 'lucide-preact'
+import { useEffect, useRef, useState } from 'preact/hooks'
+import styled from 'styled-components'
 import { colors } from '../colors'
 import { useDevices } from '../context/Devices'
 import { HistoryChart } from '../context/HistoryChart'
 import { useHistoryChart } from '../context/showHistoryChart'
 import type { ChartData, Dataset } from './chartMath'
 
+const Button = styled.button`
+	color: var(--color-nordic-middle-grey);
+	background-color: transparent;
+	padding: 0;
+	border: 0;
+`
+
+const ChartContainer = styled.aside`
+	background-color: var(--color-panel-bg);
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 65vw;
+	height: 30vw;
+	svg {
+		width: 100%;
+		font-size: 16px;
+	}
+	${Button} {
+		position: absolute;
+		right: 0;
+		top: 0;
+		padding: 1rem;
+	}
+`
+
 /**
  * Displays the history chart
  */
 export const DeviceHistory = () => {
 	const { devices } = useDevices()
-	const { deviceId } = useHistoryChart()
+	const { deviceId, hide } = useHistoryChart()
+	const containerRef = useRef<HTMLDivElement>()
+	const [size, setSize] = useState<[width: number, height: number]>([600, 300])
+
+	useEffect(() => {
+		if (containerRef.current === undefined || containerRef.current === null)
+			return
+		setSize([
+			containerRef.current.clientWidth,
+			containerRef.current.clientHeight,
+		])
+	}, [containerRef.current])
 
 	if (deviceId === undefined) return null
 
@@ -61,5 +101,12 @@ export const DeviceHistory = () => {
 		datasets,
 	}
 
-	return <HistoryChart data={data} />
+	return (
+		<ChartContainer ref={containerRef}>
+			<HistoryChart data={data} width={size[0]} height={size[1]} />
+			<Button type={'button'} onClick={() => hide()}>
+				<X />
+			</Button>
+		</ChartContainer>
+	)
 }

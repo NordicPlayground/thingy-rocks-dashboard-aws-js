@@ -7,7 +7,7 @@ const Charging = styled.span`
 `
 
 const NotCharging = styled.span`
-	color: var(--color-nordic-light-grey);
+	color: var(--color-nordic-middle-grey);
 `
 export const PowerInfo = ({
 	state,

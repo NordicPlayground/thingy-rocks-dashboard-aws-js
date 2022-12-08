@@ -3,7 +3,7 @@ import { locationSourceColors } from './colors'
 import { Device, GeoLocationSource, useDevices } from './context/Devices'
 import { LocationSourceLabels } from './context/LocationSourceLabels'
 
-const LocationSourceSwitch = styled.span`
+const LocationSourceSwitch = styled.button`
 	font-size: 90%;
 	font-weight: var(--monospace-font-weight-bold);
 	& + & {
@@ -25,28 +25,27 @@ export const LocationSourceButton = ({
 }) => {
 	const { toggleHiddenLocation } = useDevices()
 
-	const Button = () => (
-		<button
+	const isDisabled = hiddenLocations?.[source] ?? false
+
+	if (isDisabled)
+		return (
+			<LocationSourceLabelDisabled
+				onClick={() => {
+					toggleHiddenLocation(id, source)
+				}}
+			>
+				{LocationSourceLabels[source]}
+			</LocationSourceLabelDisabled>
+		)
+
+	return (
+		<LocationSourceSwitch
+			style={{ color: locationSourceColors[source] }}
 			onClick={() => {
 				toggleHiddenLocation(id, source)
 			}}
 		>
 			{LocationSourceLabels[source]}
-		</button>
-	)
-
-	const isDisabled = hiddenLocations?.[source] ?? false
-
-	if (isDisabled)
-		return (
-			<LocationSourceLabelDisabled>
-				<Button />
-			</LocationSourceLabelDisabled>
-		)
-
-	return (
-		<LocationSourceSwitch style={{ color: locationSourceColors[source] }}>
-			<Button />
 		</LocationSourceSwitch>
 	)
 }

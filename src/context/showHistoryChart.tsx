@@ -5,9 +5,11 @@ export const HistoryChartContext = createContext<{
 	deviceId?: string | undefined
 	show: (deviceId: string) => void
 	hide: () => void
+	toggle: (deviceId: string) => void
 }>({
 	show: () => undefined,
 	hide: () => undefined,
+	toggle: () => undefined,
 })
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
@@ -22,6 +24,13 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				},
 				hide: () => {
 					setDeviceId(undefined)
+				},
+				toggle: (showDeviceId) => {
+					deviceId === undefined
+						? setDeviceId(showDeviceId)
+						: showDeviceId === deviceId
+						? setDeviceId(undefined)
+						: setDeviceId(showDeviceId)
 				},
 			}}
 		>
