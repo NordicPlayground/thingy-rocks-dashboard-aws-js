@@ -129,6 +129,13 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		})
 
 		deviceMessages.updateLocation(testDeviceId.current, {
+			lat: 63.419001 + Math.random() * Date.now() * 10e-16,
+			lng: 10.437035 + Math.random() * Date.now() * 10e-16,
+			accuracy: 250 + Math.random() * 1500,
+			source: GeoLocationSource.WIFI,
+		})
+
+		deviceMessages.updateLocation(testDeviceId.current, {
 			lat: 63.419001 + Math.random() * Date.now() * 10e-17,
 			lng: 10.437035 + Math.random() * Date.now() * 10e-17,
 			accuracy: 25 + Math.random() * 250,

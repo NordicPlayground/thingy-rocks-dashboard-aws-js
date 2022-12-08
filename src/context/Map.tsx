@@ -1,5 +1,9 @@
 import type { CognitoIdentityCredentials } from '@aws-sdk/credential-provider-cognito-identity'
-import type { GeoJSONSource, LngLatLike } from 'maplibre-gl'
+import type {
+	GeoJSONSource,
+	LngLatLike,
+	PropertyValueSpecification,
+} from 'maplibre-gl'
 import { Map as MapLibreGlMap } from 'maplibre-gl'
 import { ComponentChildren, createContext } from 'preact'
 import { useContext } from 'preact/hooks'
@@ -8,7 +12,7 @@ import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle'
 import { mapStyle } from '../map/style'
 import { transformRequest } from '../map/transformRequest'
 import { captureMessage } from '../sentry'
-import type { GeoLocation } from './Devices'
+import { GeoLocation, GeoLocationSource } from './Devices'
 import { LocationSourceLabels } from './LocationSourceLabels'
 
 export const MapContext = createContext<DeviceMap>(undefined as any)
@@ -33,6 +37,16 @@ const glyphFonts = {
 	regular: 'Ubuntu Regular',
 	bold: 'Ubuntu Medium',
 } as const
+
+export const locationSourceDashArray: Record<
+	GeoLocationSource,
+	PropertyValueSpecification<Array<number>>
+> = {
+	[GeoLocationSource.GNSS]: [1],
+	[GeoLocationSource.WIFI]: [1, 1],
+	[GeoLocationSource.MULTI_CELL]: [4, 2],
+	[GeoLocationSource.SINGLE_CELL]: [8, 4, 1, 4],
+}
 
 /**
  * The `map` parameter is potentially undefined,
@@ -97,6 +111,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 						'line-color': locationSourceColors[source],
 						'line-opacity': 1,
 						'line-width': 2,
+						'line-dasharray': locationSourceDashArray[source],
 					},
 				})
 				// Render label on Hexagon
