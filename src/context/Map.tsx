@@ -5,6 +5,7 @@ import { ComponentChildren, createContext } from 'preact'
 import { useContext } from 'preact/hooks'
 import { locationSourceColors } from '../colors'
 import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle'
+import { mapStyle } from '../map/style'
 import { transformRequest } from '../map/transformRequest'
 import { captureMessage } from '../sentry'
 import type { GeoLocation } from './Devices'
@@ -200,7 +201,10 @@ export const Provider = ({
 }) => {
 	const map = new MapLibreGlMap({
 		container: 'map',
-		style: MAP_NAME,
+		style: mapStyle({
+			region: REGION,
+			mapName: MAP_NAME,
+		}),
 		center: [10.437581513483195, 63.42148461054351],
 		zoom: 12,
 		transformRequest: transformRequest(credentials),

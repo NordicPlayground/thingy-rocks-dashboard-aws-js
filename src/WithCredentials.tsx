@@ -6,8 +6,6 @@ import {
 import type { ComponentChildren } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
 
-const region = COGNITO_IDENTITY_POOL_ID.split(':')[0] as string
-
 export const WithCredentials = ({
 	children,
 }: {
@@ -18,7 +16,7 @@ export const WithCredentials = ({
 	const refreshCredentials = async () =>
 		fromCognitoIdentityPool({
 			identityPoolId: COGNITO_IDENTITY_POOL_ID,
-			client: new CognitoIdentityClient({ region }),
+			client: new CognitoIdentityClient({ region: REGION }),
 		})()
 			.then((credentials) => setCredentials(credentials))
 			.catch(console.error)

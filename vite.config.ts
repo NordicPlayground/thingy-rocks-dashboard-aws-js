@@ -64,6 +64,7 @@ export default defineConfig({
 		WEBSOCKET_ENDPOINT: JSON.stringify(websocketEndpoint),
 		MAP_NAME: JSON.stringify(mapName),
 		COGNITO_IDENTITY_POOL_ID: JSON.stringify(cognitoIdentityPoolId),
+		REGION: JSON.stringify(cognitoIdentityPoolId.split(':')[0] as string),
 		SENTRY_DSN: JSON.stringify(sentryDSN),
 	},
 })
