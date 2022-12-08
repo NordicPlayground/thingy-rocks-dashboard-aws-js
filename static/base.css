@@ -51,4 +51,6 @@ abbr[title] {
 
 body {
   font-family: var(--monospace-font);
+  /* Color of the oceans of the map */
+  background-color: #1d2224;
 }
