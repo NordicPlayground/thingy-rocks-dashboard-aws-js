@@ -1,11 +1,13 @@
 import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
-import { MapPin, Radio, SignalZero } from 'lucide-preact'
+import { MapPin, Radio, SignalZero, Sun, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
-import { useDevices } from './context/Devices'
+import { locationSourceColors } from './colors'
+import { GeoLocationSource, useDevices } from './context/Devices'
 import { useMap } from './context/Map'
 import { useHistoryChart } from './context/showHistoryChart'
 import { DisconnectedWarning } from './DisconnectedWarning'
+import { DKIcon } from './DKIcon'
 import { LocationSourceButton } from './LocationSourceButton'
 import { PowerInfo } from './PowerInfo'
 import { RelativeTime } from './RelativeTime'
@@ -72,6 +74,10 @@ const DeviceState = styled.section`
 	}
 `
 
+const SolarColor = styled.span`
+	color: var(--color-nordic-sun);
+`
+
 export const DeviceList = () => {
 	const { devices } = useDevices()
 	const map = useMap()
@@ -92,6 +98,13 @@ export const DeviceList = () => {
 
 						const buttonPress = state?.btn
 						const rsrpDbm = state?.roam?.v.rsrp
+						const { brdV, appV } = state?.dev?.v ?? {}
+
+						const shortenedDeviceId = deviceId.replace(
+							/^[\d]+\d{4}$/,
+							(match) => `#${match.slice(-4)}`,
+						)
+
 						return (
 							<li>
 								<button
@@ -102,8 +115,33 @@ export const DeviceList = () => {
 										}
 									}}
 								>
-									<ThingyIcon />
-									{deviceId}
+									{brdV === 'nrf9160dk_nrf9160' ? (
+										<>
+											<DKIcon /> nRF9160DK
+										</>
+									) : (
+										<>
+											<ThingyIcon /> Thingy:91
+										</>
+									)}
+									{appV?.includes('wifi') === true && (
+										<span>
+											<Wifi
+												style={{
+													color: locationSourceColors[GeoLocationSource.WIFI],
+												}}
+											/>
+										</span>
+									)}
+									{appV?.includes('solar') === true && (
+										<SolarColor>
+											<Sun />
+										</SolarColor>
+									)}
+									{shortenedDeviceId !== deviceId && (
+										<abbr title={deviceId}>{shortenedDeviceId}</abbr>
+									)}
+									{shortenedDeviceId === deviceId && <>{deviceId}</>}
 								</button>
 								<dl>
 									<dt>
