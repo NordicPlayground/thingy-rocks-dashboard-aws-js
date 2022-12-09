@@ -45,7 +45,7 @@
     "@nordicsemiconductor/eslint-config-asset-tracker-cloud-typescript": "10.0.55",
     "@nordicsemiconductor/from-env": "1.0.3",
     "@preact/preset-vite": "2.4.0",
-    "@swc/core": "1.3.21",
+    "@swc/core": "1.3.22",
     "@types/lodash-es": "4.17.6",
     "@types/node": "18.11.12",
     "@types/styled-components": "5.1.26",
