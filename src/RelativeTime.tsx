@@ -1,8 +1,12 @@
-import { formatDistanceToNow } from 'date-fns'
 import { useEffect, useState } from 'preact/hooks'
 
 export const RelativeTime = ({ time }: { time: Date }) => {
-	const format = () => formatDistanceToNow(time, { addSuffix: true })
+	const format = () => {
+		const seconds = Math.floor((Date.now() - time.getTime()) / 1000)
+		if (seconds < 60) return `${seconds} s`
+		const minutes = Math.floor(seconds / 60)
+		return `${minutes} m`
+	}
 	const [formatted, setFormatted] = useState<string>(format())
 
 	useEffect(() => {

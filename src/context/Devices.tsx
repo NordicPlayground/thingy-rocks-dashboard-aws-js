@@ -93,7 +93,6 @@ export type GeoLocation = {
 }
 export type Device = {
 	id: string
-	ts: string
 	state?: Reported
 	location?: Record<GeoLocationSource, GeoLocation>
 	history?: Summary
@@ -120,11 +119,13 @@ export const DevicesContext = createContext<{
 	updateLocation: (deviceId: string, location: GeoLocation) => void
 	updateHistory: (deviceId: string, history: Summary) => void
 	toggleHiddenLocation: (deviceId: string, location: GeoLocationSource) => void
+	lastUpdateTs: (deviceId: string) => number | null
 }>({
 	updateState: () => undefined,
 	updateLocation: () => undefined,
 	updateHistory: () => undefined,
 	toggleHiddenLocation: () => undefined,
+	lastUpdateTs: () => null,
 	devices: {},
 })
 
@@ -140,7 +141,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						const updated: Device = {
 							...devices[deviceId],
 							id: deviceId,
-							ts: new Date().toISOString(),
 							state: merge(devices[deviceId]?.state ?? {}, reported),
 						}
 						// Use GNSS location from shadow
@@ -166,7 +166,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						[deviceId]: {
 							...devices[deviceId],
 							id: deviceId,
-							ts: new Date().toISOString(),
 							location: merge(devices[deviceId]?.location ?? {}, {
 								[location.source]: location,
 							}) as Record<GeoLocationSource, GeoLocation>,
@@ -179,7 +178,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						[deviceId]: {
 							...devices[deviceId],
 							id: deviceId,
-							ts: new Date().toISOString(),
 							history: {
 								...history,
 								base: new Date(history.base),
@@ -189,7 +187,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				},
 				toggleHiddenLocation: (deviceId, source) => {
 					let { hiddenLocations } = devices[deviceId] ?? {}
-					const { ts } = devices[deviceId] ?? {}
 					if (hiddenLocations?.[source] === true) {
 						delete hiddenLocations[source]
 					} else {
@@ -202,13 +199,28 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						[deviceId]: {
 							...devices[deviceId],
 							id: deviceId,
-							ts: ts ?? new Date().toISOString(),
 							hiddenLocations: hiddenLocations as Record<
 								GeoLocationSource,
 								true
 							>,
 						},
 					}))
+				},
+				lastUpdateTs: (deviceId) => {
+					const state = devices[deviceId]?.state
+					const lastUpdateTimeStamps: number[] = [
+						state?.bat?.ts,
+						state?.btn?.ts,
+						state?.dev?.ts,
+						state?.env?.ts,
+						state?.gnss?.ts,
+						state?.roam?.ts,
+						state?.sol?.ts,
+					].filter((s) => s !== undefined) as number[]
+
+					return lastUpdateTimeStamps.length > 0
+						? Math.max(...lastUpdateTimeStamps)
+						: null
 				},
 			}}
 		>

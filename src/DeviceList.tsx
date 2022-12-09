@@ -1,5 +1,5 @@
 import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
-import { MapPin, Radio, SignalZero, Sun, Wifi } from 'lucide-preact'
+import { MapPin, SignalZero, Sun, UploadCloud, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
 import { locationSourceColors } from './colors'
@@ -84,8 +84,24 @@ const ShieldIcon = styled.span`
 	margin-right: 0.25rem;
 `
 
+const LastUpdate = styled.abbr`
+	margin-left: 0.5rem;
+	opacity: 0.8;
+	font-size: 80%;
+	svg {
+		margin-right: 0.5rem;
+	}
+`
+
+const TitleButton = styled.button`
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	align-items: center;
+`
+
 export const DeviceList = () => {
-	const { devices } = useDevices()
+	const { devices, lastUpdateTs } = useDevices()
 	const map = useMap()
 	const { toggle: toggleHistoryChart } = useHistoryChart()
 
@@ -94,9 +110,18 @@ export const DeviceList = () => {
 			<DisconnectedWarning />
 			<ul>
 				{Object.entries(devices)
-					.sort(([, { ts: ts1 }], [, { ts: ts2 }]) => ts2.localeCompare(ts1))
+					.filter(([deviceId]) => {
+						const ts = lastUpdateTs(deviceId)
+						if (ts === null) return false
+						if (ts < Date.now() - 60 * 60 * 1000) return false
+						return true
+					})
+					.sort(
+						([id1], [id2]) =>
+							(lastUpdateTs(id2) ?? 0) - (lastUpdateTs(id1) ?? 0),
+					)
 					.map(([deviceId, device]) => {
-						const { ts, location, state } = device
+						const { location, state } = device
 						const rankedLocations = Object.values(location ?? []).sort(
 							sortLocations,
 						)
@@ -111,11 +136,13 @@ export const DeviceList = () => {
 							(match) => `…${match.slice(-4)}`,
 						)
 
+						const lastUpdateTime = lastUpdateTs(deviceId) as number
+
 						const BoardIcon = brdV === 'nrf9160dk_nrf9160' ? DKIcon : ThingyIcon
 
 						return (
 							<li>
-								<button
+								<TitleButton
 									type={'button'}
 									onClick={() => {
 										if (deviceLocation !== undefined) {
@@ -123,40 +150,40 @@ export const DeviceList = () => {
 										}
 									}}
 								>
-									<BoardName>
-										<BoardIcon />
-										{appV?.includes('wifi') === true && (
-											<ShieldIcon>
-												<Wifi
-													style={{
-														color: locationSourceColors[GeoLocationSource.WIFI],
-													}}
-												/>
-											</ShieldIcon>
+									<span>
+										<BoardName>
+											<BoardIcon />
+											{appV?.includes('wifi') === true && (
+												<ShieldIcon>
+													<Wifi
+														style={{
+															color:
+																locationSourceColors[GeoLocationSource.WIFI],
+														}}
+													/>
+												</ShieldIcon>
+											)}
+											{appV?.includes('solar') === true && (
+												<ShieldIcon>
+													<SolarColor>
+														<Sun />
+													</SolarColor>
+												</ShieldIcon>
+											)}
+										</BoardName>
+										{shortenedDeviceId !== deviceId && (
+											<abbr title={deviceId}>{shortenedDeviceId}</abbr>
 										)}
-										{appV?.includes('solar') === true && (
-											<ShieldIcon>
-												<SolarColor>
-													<Sun />
-												</SolarColor>
-											</ShieldIcon>
-										)}
-									</BoardName>
-
-									{shortenedDeviceId !== deviceId && (
-										<abbr title={deviceId}>{shortenedDeviceId}</abbr>
+										{shortenedDeviceId === deviceId && <>{deviceId}</>}
+									</span>
+									{lastUpdateTime !== undefined && (
+										<LastUpdate title="Last update">
+											<UploadCloud strokeWidth={1} />
+											<RelativeTime time={new Date(lastUpdateTime)} />
+										</LastUpdate>
 									)}
-									{shortenedDeviceId === deviceId && <>{deviceId}</>}
-								</button>
+								</TitleButton>
 								<dl>
-									<dt>
-										<Radio strokeWidth={1} />
-									</dt>
-									<dd>
-										<abbr title="Last update">
-											<RelativeTime time={new Date(ts)} />
-										</abbr>
-									</dd>
 									{rsrpDbm !== undefined && (
 										<>
 											<dt>
