@@ -34,15 +34,6 @@ const DeviceState = styled.section`
 			display: flex;
 			flex-direction: column;
 			align-items: flex-start;
-			.lucide,
-			.rsrp {
-				margin-right: calc(0.5rem + 4px);
-				margin-left: 4px;
-			}
-			.rsrp {
-				width: 20px;
-				height: 20px;
-			}
 			dl {
 				margin: 0;
 				display: grid;
@@ -55,6 +46,15 @@ const DeviceState = styled.section`
 					margin-bottom: 0;
 					white-space: nowrap;
 				}
+				.lucide,
+				.rsrp {
+					margin-right: calc(1rem + 4px);
+					margin-left: 4px;
+				}
+				.rsrp {
+					width: 20px;
+					height: 20px;
+				}
 			}
 			button {
 				border: 0;
@@ -62,20 +62,26 @@ const DeviceState = styled.section`
 				color: inherit;
 				padding: 0;
 			}
-			> button {
-				svg {
-					width: 32px;
-					height: 32px;
-					margin-right: 0.5rem;
-					margin-bottom: 0.5rem;
-				}
-			}
 		}
 	}
 `
 
 const SolarColor = styled.span`
 	color: var(--color-nordic-sun);
+`
+
+const BoardName = styled.span`
+	margin-right: 0.75rem;
+	svg {
+		margin-right: 0.25rem;
+		width: 32px;
+		height: 32px;
+		margin-bottom: 0.5rem;
+	}
+`
+
+const ShieldIcon = styled.span`
+	margin-right: 0.25rem;
 `
 
 export const DeviceList = () => {
@@ -102,8 +108,10 @@ export const DeviceList = () => {
 
 						const shortenedDeviceId = deviceId.replace(
 							/^[\d]+\d{4}$/,
-							(match) => `#${match.slice(-4)}`,
+							(match) => `…${match.slice(-4)}`,
 						)
+
+						const BoardIcon = brdV === 'nrf9160dk_nrf9160' ? DKIcon : ThingyIcon
 
 						return (
 							<li>
@@ -115,29 +123,26 @@ export const DeviceList = () => {
 										}
 									}}
 								>
-									{brdV === 'nrf9160dk_nrf9160' ? (
-										<>
-											<DKIcon /> nRF9160DK
-										</>
-									) : (
-										<>
-											<ThingyIcon /> Thingy:91
-										</>
-									)}
-									{appV?.includes('wifi') === true && (
-										<span>
-											<Wifi
-												style={{
-													color: locationSourceColors[GeoLocationSource.WIFI],
-												}}
-											/>
-										</span>
-									)}
-									{appV?.includes('solar') === true && (
-										<SolarColor>
-											<Sun />
-										</SolarColor>
-									)}
+									<BoardName>
+										<BoardIcon />
+										{appV?.includes('wifi') === true && (
+											<ShieldIcon>
+												<Wifi
+													style={{
+														color: locationSourceColors[GeoLocationSource.WIFI],
+													}}
+												/>
+											</ShieldIcon>
+										)}
+										{appV?.includes('solar') === true && (
+											<ShieldIcon>
+												<SolarColor>
+													<Sun />
+												</SolarColor>
+											</ShieldIcon>
+										)}
+									</BoardName>
+
 									{shortenedDeviceId !== deviceId && (
 										<abbr title={deviceId}>{shortenedDeviceId}</abbr>
 									)}
