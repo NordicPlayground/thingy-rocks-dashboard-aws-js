@@ -1,6 +1,5 @@
-import { Ulid } from 'id128'
 import { ComponentChildren, createContext } from 'preact'
-import { useContext, useEffect, useRef, useState } from 'preact/hooks'
+import { useContext, useEffect, useState } from 'preact/hooks'
 import { GeoLocationSource, Reported, Summary, useDevices } from './Devices'
 
 export const WebsocketContext = createContext({
@@ -108,63 +107,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			clearInterval(pingInterval)
 		}
 	}, [connection])
-
-	// Test device
-	const testDeviceId = useRef<string>(
-		`test-${Ulid.generate().toCanonical().slice(16)}`,
-	)
-	const fakeLocation = () => {
-		deviceMessages.updateLocation(testDeviceId.current, {
-			lat: 63.419001 + Math.random() * Date.now() * 10e-15,
-			lng: 10.437035 + Math.random() * Date.now() * 10e-15,
-			accuracy: 500 + Math.random() * 3000,
-			source: GeoLocationSource.SINGLE_CELL,
-		})
-
-		deviceMessages.updateLocation(testDeviceId.current, {
-			lat: 63.419001 + Math.random() * Date.now() * 10e-16,
-			lng: 10.437035 + Math.random() * Date.now() * 10e-16,
-			accuracy: 250 + Math.random() * 1500,
-			source: GeoLocationSource.MULTI_CELL,
-		})
-
-		deviceMessages.updateLocation(testDeviceId.current, {
-			lat: 63.419001 + Math.random() * Date.now() * 10e-16,
-			lng: 10.437035 + Math.random() * Date.now() * 10e-16,
-			accuracy: 250 + Math.random() * 1500,
-			source: GeoLocationSource.WIFI,
-		})
-
-		deviceMessages.updateLocation(testDeviceId.current, {
-			lat: 63.419001 + Math.random() * Date.now() * 10e-17,
-			lng: 10.437035 + Math.random() * Date.now() * 10e-17,
-			accuracy: 25 + Math.random() * 250,
-			source: GeoLocationSource.GNSS,
-		})
-	}
-
-	const fakeDevice = () => {
-		deviceMessages.updateState(testDeviceId.current, {
-			sol: {
-				v: {
-					gain: 4.391489028930664,
-					bat: 3.872000217437744,
-				},
-				ts: Date.now(),
-			},
-		})
-	}
-
-	useEffect(() => {
-		const i = setInterval(fakeLocation, 5000)
-
-		fakeLocation()
-		fakeDevice()
-
-		return () => {
-			clearInterval(i)
-		}
-	}, [testDeviceId])
 
 	return (
 		<WebsocketContext.Provider
