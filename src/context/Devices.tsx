@@ -20,6 +20,8 @@ export type BatteryInfo = {
 	ts: number // 1669741244042
 }
 
+export type NoData = 'gnss' | 'ncell'
+
 export type Reported = Partial<{
 	cfg: {
 		act: boolean
@@ -30,7 +32,7 @@ export type Reported = Partial<{
 		accath: number
 		accith: number
 		accito: number
-		nod: []
+		nod: NoData[]
 	}
 	dev: {
 		v: {

@@ -24,13 +24,13 @@ export const PowerInfo = ({
 				<>
 					<dt>
 						<Charging>
-							<Sun strokeWidth={1} />
+							<Sun strokeWidth={2} />
 						</Charging>
 					</dt>
 					<dd>
 						<button type={'button'} onClick={() => onClick?.()}>
 							<Charging>
-								{sol.gain.toFixed(2)} mA <BatteryCharging strokeWidth={1} />
+								{sol.gain.toFixed(2)} mA <BatteryCharging strokeWidth={2} />
 								{sol.bat.toFixed(3)} V
 							</Charging>
 						</button>
@@ -41,13 +41,13 @@ export const PowerInfo = ({
 			<>
 				<dt>
 					<NotCharging>
-						<SunDim strokeWidth={1} />
+						<SunDim strokeWidth={2} />
 					</NotCharging>
 				</dt>
 				<dd>
 					<button type={'button'} onClick={() => onClick?.()}>
 						<NotCharging>
-							0 mA <BatteryMedium strokeWidth={1} />
+							0 mA <BatteryMedium strokeWidth={2} />
 							{sol.bat.toFixed(3)} V
 						</NotCharging>
 					</button>
@@ -63,7 +63,7 @@ export const PowerInfo = ({
 			<>
 				<dt>
 					<NotCharging>
-						<BatteryMedium strokeWidth={1} />
+						<BatteryMedium strokeWidth={2} />
 					</NotCharging>
 				</dt>
 				<dd>

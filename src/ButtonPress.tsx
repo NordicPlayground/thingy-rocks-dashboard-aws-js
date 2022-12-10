@@ -41,7 +41,7 @@ export const ButtonPress = ({
 	return (
 		<>
 			<HotDt>
-				<Focus strokeWidth={1} />
+				<Focus strokeWidth={2} />
 			</HotDt>
 			<HotDl>{diffSeconds} seconds ago</HotDl>
 		</>

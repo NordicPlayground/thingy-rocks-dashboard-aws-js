@@ -1,5 +1,5 @@
 import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
-import { MapPin, SignalZero, Sun, UploadCloud, Wifi } from 'lucide-preact'
+import { SignalZero, Sun, UploadCloud, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
 import { locationSourceColors } from './colors'
@@ -8,7 +8,7 @@ import { useMap } from './context/Map'
 import { useHistoryChart } from './context/showHistoryChart'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { DKIcon } from './DKIcon'
-import { LocationSourceButton } from './LocationSourceButton'
+import { LocationInfo } from './LocationInfo'
 import { PowerInfo } from './PowerInfo'
 import { RelativeTime } from './RelativeTime'
 import { sortLocations } from './sortLocations'
@@ -46,14 +46,16 @@ const DeviceState = styled.section`
 					margin-bottom: 0;
 					white-space: nowrap;
 				}
-				.lucide,
-				.rsrp {
-					margin-right: calc(1rem + 4px);
-					margin-left: 4px;
-				}
-				.rsrp {
-					width: 20px;
-					height: 20px;
+				dt {
+					.lucide,
+					.rsrp {
+						margin-right: calc(1rem + 4px);
+						margin-left: 4px;
+					}
+					.rsrp {
+						width: 20px;
+						height: 20px;
+					}
 				}
 			}
 			button {
@@ -197,7 +199,7 @@ export const DeviceList = () => {
 																class="rsrp"
 															/>
 														)}
-														renderInvalid={() => <SignalZero strokeWidth={1} />}
+														renderInvalid={() => <SignalZero strokeWidth={2} />}
 													/>
 												}
 											</dt>
@@ -215,21 +217,7 @@ export const DeviceList = () => {
 											}}
 										/>
 									)}
-									{rankedLocations.length > 0 && (
-										<>
-											<dt>
-												<MapPin strokeWidth={1} />
-											</dt>
-											<dd>
-												{rankedLocations.map(({ source }) => (
-													<LocationSourceButton
-														device={device}
-														source={source}
-													/>
-												))}
-											</dd>
-										</>
-									)}
+									<LocationInfo device={device} />
 								</dl>
 							</li>
 						)
