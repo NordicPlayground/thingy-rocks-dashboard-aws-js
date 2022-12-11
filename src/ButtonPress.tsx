@@ -1,7 +1,10 @@
 import { Focus } from 'lucide-preact'
-import { useCallback, useEffect, useState } from 'preact/hooks'
+import { useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
 import type { ButtonPress as ButtonPressData } from './context/Devices'
+
+const diff = (press: ButtonPressData): number =>
+	Math.round((Date.now() - press.ts) / 1000)
 
 /**
  * Display a button press for a given period
@@ -13,22 +16,18 @@ export const ButtonPress = ({
 	buttonPress: ButtonPressData
 	untilSeconds?: number
 }) => {
-	const diff = useCallback(
-		() => Math.round((Date.now() - buttonPress.ts) / 1000),
-		[buttonPress],
-	)
-	const [diffSeconds, setDiffSeconds] = useState<number>(diff())
+	const [diffSeconds, setDiffSeconds] = useState<number>(diff(buttonPress))
 
 	useEffect(() => {
 		const i = setInterval(() => {
-			const diffSeconds = diff()
+			const diffSeconds = diff(buttonPress)
 			setDiffSeconds(diffSeconds)
 			if (diffSeconds > (untilSeconds ?? 30)) clearInterval(i)
 		}, 1000)
 		return () => {
 			clearInterval(i)
 		}
-	}, [diff])
+	}, [buttonPress])
 
 	if (diffSeconds > (untilSeconds ?? 30)) return null
 
