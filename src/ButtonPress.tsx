@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import type { ButtonPress as ButtonPressData } from './context/Devices'
 
 const diff = (press: ButtonPressData): number =>
-	Math.round((Date.now() - press.ts) / 1000)
+	Math.floor((Date.now() - press.ts) / 1000)
 
 /**
  * Display a button press for a given period
