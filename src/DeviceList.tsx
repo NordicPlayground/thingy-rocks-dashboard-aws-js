@@ -207,7 +207,10 @@ export const DeviceList = () => {
 										</>
 									)}
 									{buttonPress !== undefined && (
-										<ButtonPress buttonPress={buttonPress} />
+										<ButtonPress
+											key={`${deviceId}-press-${buttonPress.ts}`}
+											buttonPress={buttonPress}
+										/>
 									)}
 									{state !== undefined && (
 										<PowerInfo
