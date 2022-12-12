@@ -1,14 +1,31 @@
 import { BatteryCharging, BatteryMedium, Sun, SunDim } from 'lucide-preact'
 import styled from 'styled-components'
 import type { Reported } from './context/Devices'
+import { useSettings } from './context/Settings'
 
 const Charging = styled.span`
 	color: var(--color-nordic-sun);
+	.lucide {
+		margin-right: 0.5rem;
+	}
 `
 
 const NotCharging = styled.span`
 	color: var(--color-nordic-middle-grey);
+	.lucide {
+		margin-right: 0.5rem;
+	}
 `
+
+const PowerIcon = ({ state }: { state: Reported }) => {
+	const { settings } = useSettings()
+	const sol = state?.sol?.v
+	if (sol === undefined) return <BatteryMedium strokeWidth={2} />
+	const gain = Math.min(0, sol?.gain ?? 0)
+	if (settings.consumptionThreshold > gain) return <SunDim strokeWidth={2} />
+	return <Sun strokeWidth={2} />
+}
+
 export const PowerInfo = ({
 	state,
 	onClick,
@@ -16,40 +33,31 @@ export const PowerInfo = ({
 	state: Reported
 	onClick?: () => unknown
 }) => {
+	const { settings } = useSettings()
 	const sol = state?.sol?.v
+	const gain = Math.min(0, sol?.gain ?? 0)
+	const charging = gain > settings.consumptionThreshold
+	const ChargeState = charging ? Charging : NotCharging
 
 	if (sol !== undefined) {
-		if (sol.gain > 0)
-			return (
-				<>
-					<dt>
-						<Charging>
-							<Sun strokeWidth={2} />
-						</Charging>
-					</dt>
-					<dd>
-						<button type={'button'} onClick={() => onClick?.()}>
-							<Charging>
-								{sol.gain.toFixed(2)} mA <BatteryCharging strokeWidth={2} />
-								{sol.bat.toFixed(3)} V
-							</Charging>
-						</button>
-					</dd>
-				</>
-			)
 		return (
 			<>
 				<dt>
-					<NotCharging>
-						<SunDim strokeWidth={2} />
-					</NotCharging>
+					<ChargeState>
+						<PowerIcon state={state} />
+					</ChargeState>
 				</dt>
 				<dd>
 					<button type={'button'} onClick={() => onClick?.()}>
-						<NotCharging>
-							0 mA <BatteryMedium strokeWidth={2} />
+						<ChargeState>
+							{sol.gain.toFixed(2)} mA{' '}
+							{charging ? (
+								<BatteryCharging strokeWidth={1} />
+							) : (
+								<BatteryMedium strokeWidth={1} />
+							)}
 							{sol.bat.toFixed(3)} V
-						</NotCharging>
+						</ChargeState>
 					</button>
 				</dd>
 			</>
@@ -63,7 +71,7 @@ export const PowerInfo = ({
 			<>
 				<dt>
 					<NotCharging>
-						<BatteryMedium strokeWidth={2} />
+						<BatteryMedium strokeWidth={1} />
 					</NotCharging>
 				</dt>
 				<dd>
