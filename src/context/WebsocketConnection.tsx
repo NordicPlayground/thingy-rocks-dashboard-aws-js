@@ -1,5 +1,5 @@
 import { ComponentChildren, createContext } from 'preact'
-import { useContext, useEffect, useState } from 'preact/hooks'
+import { useContext, useEffect, useRef, useState } from 'preact/hooks'
 import { GeoLocationSource, Reported, Summary, useDevices } from './Devices'
 
 export const WebsocketContext = createContext({
@@ -41,26 +41,39 @@ type Message = {
 )
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
-	const [connection, setConnection] = useState<WebSocket>()
+	const connection = useRef<WebSocket>()
 	const deviceMessages = useDevices()
+	const [connected, setConnected] = useState<boolean>(false)
+	const [connectionAttempt, setConnectionAttempt] = useState<number>(1)
 
 	useEffect(() => {
-		const socket = new WebSocket(WEBSOCKET_ENDPOINT)
+		if (connection.current !== undefined) return
+		console.debug(`[WS]`, `connection attempt`, connectionAttempt)
+		connection.current = new WebSocket(WEBSOCKET_ENDPOINT)
 
-		socket.addEventListener('open', () => {
+		let connected = false
+
+		connection.current.addEventListener('open', () => {
 			console.debug(`[WS]`, 'connected')
-			setConnection(socket)
+			connected = true
+			setConnected(true)
 		})
 
-		socket.addEventListener('close', () => {
+		connection.current.addEventListener('close', () => {
+			// This happens automatically after 2 hours
+			// See https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html#apigateway-execution-service-websocket-limits-table
 			console.debug(`[WS]`, 'disconnected')
-			setConnection(undefined)
+			connection.current = undefined
+			setConnected(false)
+			setTimeout(() => {
+				setConnectionAttempt((connectionAttempt) => connectionAttempt + 1)
+			}, 5000)
 		})
 
-		socket.addEventListener('error', (err) => {
+		connection.current.addEventListener('error', (err) => {
 			console.error(`[WS]`, err)
 		})
-		socket.addEventListener('message', (msg) => {
+		connection.current.addEventListener('message', (msg) => {
 			let message: Message
 			try {
 				message = JSON.parse(msg.data) as Message
@@ -88,30 +101,37 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		})
 
 		return () => {
-			console.debug(`[WS]`, 'closing ...')
-			socket.close()
+			if (connected) {
+				console.debug(`[WS]`, 'closing ...')
+				connection.current?.close()
+			}
 		}
-	}, [])
+	}, [connectionAttempt])
 
 	useEffect(() => {
-		if (connection === undefined) return
+		if (!connected) return
+		if (connection.current === undefined) return
 
 		const pingInterval = setInterval(() => {
-			connection.send(JSON.stringify({ message: 'sendmessage', data: 'PING' }))
+			connection.current?.send(
+				JSON.stringify({ message: 'sendmessage', data: 'PING' }),
+			)
 		}, 1000 * 60 * 9) // every 9 minutes
 
 		// Initial greeting
-		connection.send(JSON.stringify({ message: 'sendmessage', data: 'HELLO' }))
+		connection.current.send(
+			JSON.stringify({ message: 'sendmessage', data: 'HELLO' }),
+		)
 
 		return () => {
 			clearInterval(pingInterval)
 		}
-	}, [connection])
+	}, [connected, connection])
 
 	return (
 		<WebsocketContext.Provider
 			value={{
-				connected: connection !== undefined,
+				connected,
 			}}
 		>
 			{children}
