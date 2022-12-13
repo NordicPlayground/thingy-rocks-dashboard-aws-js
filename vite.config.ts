@@ -2,12 +2,14 @@ import { fromEnv } from '@nordicsemiconductor/from-env'
 import preact from '@preact/preset-vite'
 import chalk from 'chalk'
 import fs from 'fs'
+import Handlebars from 'handlebars'
 import path from 'path'
 import { defineConfig } from 'vite'
 
-const { version, homepage } = JSON.parse(
+const { version: defaultVersion, homepage } = JSON.parse(
 	fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8'),
 )
+const version = process.env.VERSION ?? defaultVersion
 const { websocketEndpoint, mapName, cognitoIdentityPoolId } = fromEnv({
 	websocketEndpoint: 'WEBSOCKET_ENDPOINT',
 	mapName: 'MAP_NAME',
@@ -29,9 +31,22 @@ if (sentryDSN === undefined) {
 	console.debug(chalk.yellow(`Sentry DSN`), chalk.blue(sentryDSN))
 }
 
+const replaceInIndex = (data: Record<string, string>) => ({
+	name: 'replace-in-index',
+	transformIndexHtml: (source: string): string => {
+		const template = Handlebars.compile(source)
+		return template(data)
+	},
+})
+
 // https://vitejs.dev/config/
 export default defineConfig({
-	plugins: [preact()],
+	plugins: [
+		preact(),
+		replaceInIndex({
+			version,
+		}),
+	],
 	base: `${(process.env.BASE_URL ?? '').replace(/\/+$/, '')}/`,
 	preview: {
 		host: 'localhost',

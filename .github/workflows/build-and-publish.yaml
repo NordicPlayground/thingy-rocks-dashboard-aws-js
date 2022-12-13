@@ -5,9 +5,9 @@ on: push
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CNAME: world.thingy.rocks
-  WEBSOCKET_ENDPOINT: wss://le9lg9ga5m.execute-api.eu-central-1.amazonaws.com/2022-11-22
+  WEBSOCKET_ENDPOINT: wss://gqhubutcb1.execute-api.us-west-2.amazonaws.com/2022-11-22
   MAP_NAME: thing-rocks-backend-map
-  COGNITO_IDENTITY_POOL_ID: eu-central-1:4cd06b58-0a09-426f-81a4-330851271b4d
+  COGNITO_IDENTITY_POOL_ID: us-west-2:7318eb01-32ec-4bc1-b5e1-9d1a7719c4b5
   SENTRY_DSN: https://f0636caa395147fcb07f781d0c1e8e6c@o4504255385174016.ingest.sentry.io/4504255391596544
 
 jobs:
@@ -31,6 +31,8 @@ jobs:
         run: npm ci --no-audit
 
       - name: Build
+        env:
+          VERSION: ${{ github.sha }}
         run: npm run build
 
       - name: Publish to GitHub pages
