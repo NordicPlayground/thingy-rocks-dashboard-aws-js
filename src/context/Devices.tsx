@@ -182,7 +182,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 							state: merge(devices[deviceId]?.state ?? {}, reported),
 						}
 						// Use GNSS location from shadow
-						if (reported.gnss !== undefined) {
+						if (
+							reported.gnss !== undefined &&
+							reported.gnss.ts > Date.now() - 60 * 60 * 1000
+						) {
 							updated.location = merge(updated.location ?? {}, {
 								[GeoLocationSource.GNSS]: {
 									lat: reported.gnss.v.lat,
