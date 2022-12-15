@@ -1,5 +1,4 @@
-import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
-import { SignalZero, Sun, UploadCloud, Wifi } from 'lucide-preact'
+import { Sun, UploadCloud, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
 import { locationSourceColors } from './colors'
@@ -8,9 +7,11 @@ import { useMap } from './context/Map'
 import { useHistoryChart } from './context/showHistoryChart'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { DKIcon } from './DKIcon'
+import { EnvironmentInfo } from './EnvironmentInfo'
 import { LocationInfo } from './LocationInfo'
 import { PowerInfo } from './PowerInfo'
 import { RelativeTime } from './RelativeTime'
+import { SignalQuality } from './SignalQuality'
 import { sortLocations } from './sortLocations'
 import { ThingyIcon } from './ThingyIcon'
 
@@ -47,6 +48,8 @@ const DeviceState = styled.section`
 					white-space: nowrap;
 				}
 				dt {
+					display: flex;
+					align-items: center;
 					.lucide,
 					.rsrp {
 						margin-right: calc(1rem + 4px);
@@ -130,7 +133,6 @@ export const DeviceList = () => {
 						const deviceLocation = rankedLocations[0]
 
 						const buttonPress = state?.btn
-						const rsrpDbm = state?.roam?.v.rsrp
 						const { brdV, appV } = state?.dev?.v ?? {}
 
 						const shortenedDeviceId = deviceId.replace(
@@ -186,32 +188,14 @@ export const DeviceList = () => {
 									)}
 								</TitleButton>
 								<dl>
-									{rsrpDbm !== undefined && (
-										<>
-											<dt>
-												{
-													<RSRP
-														dbm={rsrpDbm}
-														renderBar={({ quality }) => (
-															<SignalQualityTriangle
-																quality={quality}
-																color={'inherit'}
-																class="rsrp"
-															/>
-														)}
-														renderInvalid={() => <SignalZero strokeWidth={2} />}
-													/>
-												}
-											</dt>
-											<dd>{rsrpDbm} dBm</dd>
-										</>
-									)}
+									<SignalQuality device={device} />
 									{buttonPress !== undefined && (
 										<ButtonPress
 											key={`${deviceId}-press-${buttonPress.ts}`}
 											buttonPress={buttonPress}
 										/>
 									)}
+									<EnvironmentInfo device={device} />
 									{state !== undefined && (
 										<PowerInfo
 											state={state}

@@ -22,6 +22,37 @@ export type BatteryInfo = {
 
 export type NoData = 'gnss' | 'ncell'
 
+/**
+ * @see https://infocenter.nordicsemi.com/topic/ref_at_commands/REF/at_commands/mob_termination_ctrl_status/coneval_set.html
+ */
+export enum EnergyEstimate {
+	/**
+	 * Bad conditions. Difficulties in setting up connections.
+	 * Maximum number of repetitions might be needed for data.
+	 */
+	Bad = 5,
+	/**
+	 * Poor conditions.
+	 * Setting up a connection might require retries and a higher number of
+	 * repetitions for data.
+	 */
+	Poor = 6,
+	/**
+	 * Normal conditions for cIoT device.
+	 * No repetitions for data or only a few repetitions in the worst case.
+	 */
+	Normal = 7,
+	/**
+	 * Good conditions. Possibly very good conditions for small amounts of data.
+	 */
+	Good = 8,
+	/**
+	 * Excellent conditions.
+	 * Efficient data transfer estimated also for larger amounts of data.
+	 */
+	Excellent = 9,
+}
+
 export type Reported = Partial<{
 	cfg: {
 		act: boolean
@@ -53,6 +84,7 @@ export type Reported = Partial<{
 			mccmnc: number // 24201
 			cell: number // 21679616
 			ip: string // '100.74.127.54'
+			eest?: EnergyEstimate // 8
 		}
 		ts: number // 1669741244010
 	}
@@ -61,6 +93,10 @@ export type Reported = Partial<{
 			temp: number // 27.75
 			hum: number // 13.257
 			atmp: number // 101.497
+			/*
+			 * @see https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf
+			 */
+			bsec_iaq?: number // 137
 		}
 		ts: 1669741243982
 	}
