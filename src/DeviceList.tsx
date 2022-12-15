@@ -106,7 +106,7 @@ const TitleButton = styled.button`
 `
 
 export const DeviceList = () => {
-	const { devices, lastUpdateTs } = useDevices()
+	const { devices, lastUpdateTs, alias } = useDevices()
 	const map = useMap()
 	const { toggle: toggleHistoryChart } = useHistoryChart()
 
@@ -135,10 +135,9 @@ export const DeviceList = () => {
 						const buttonPress = state?.btn
 						const { brdV, appV } = state?.dev?.v ?? {}
 
-						const shortenedDeviceId = deviceId.replace(
-							/^[\d]+\d{4}$/,
-							(match) => `…${match.slice(-4)}`,
-						)
+						const shortenedDeviceId =
+							alias(deviceId) ??
+							deviceId.replace(/^[\d]+\d{4}$/, (match) => `…${match.slice(-4)}`)
 
 						const lastUpdateTime = lastUpdateTs(deviceId) as number
 

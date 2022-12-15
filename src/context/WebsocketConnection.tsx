@@ -16,6 +16,7 @@ enum MessageContext {
 type Message = {
 	'@context': MessageContext
 	deviceId: string
+	deviceAlias?: string
 } & (
 	| {
 			'@context': MessageContext.DeviceLocation
@@ -97,6 +98,9 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					break
 				default:
 					console.error(`[WS]`, 'Unknown message', message)
+			}
+			if ('deviceAlias' in message) {
+				deviceMessages.updateAlias(message.deviceId, message.deviceAlias)
 			}
 		})
 

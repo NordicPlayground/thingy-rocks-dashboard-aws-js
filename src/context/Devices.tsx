@@ -156,16 +156,22 @@ export const DevicesContext = createContext<{
 	updateState: (deviceId: string, reported: Reported) => void
 	updateLocation: (deviceId: string, location: GeoLocation) => void
 	updateHistory: (deviceId: string, history: Summary) => void
+	updateAlias: (deviceId: string, alias: string) => void
 	toggleHiddenLocation: (deviceId: string, location: GeoLocationSource) => void
 	lastUpdateTs: (deviceId: string) => number | null
+	alias: (deviceId: string) => string | undefined
 }>({
 	updateState: () => undefined,
 	updateLocation: () => undefined,
 	updateHistory: () => undefined,
+	updateAlias: () => undefined,
+	alias: () => undefined,
 	toggleHiddenLocation: () => undefined,
 	lastUpdateTs: () => null,
 	devices: {},
 })
+
+const deviceAliases: Record<string, string> = {}
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [devices, updateDevices] = useState<Devices>({})
@@ -263,6 +269,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						? Math.max(...lastUpdateTimeStamps)
 						: null
 				},
+				updateAlias: (deviceId, alias) => {
+					deviceAliases[deviceId] = alias
+				},
+				alias: (deviceId) => deviceAliases[deviceId],
 			}}
 		>
 			{children}
