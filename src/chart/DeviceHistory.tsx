@@ -3,13 +3,14 @@ import { Battery, LucideProps, Sun, Thermometer, X } from 'lucide-preact'
 import { useRef } from 'preact/hooks'
 import styled from 'styled-components'
 import { colors } from '../colors'
-import { useDevices } from '../context/Devices'
-import { HistoryChart } from '../context/HistoryChart'
+import { Reading, useDevices } from '../context/Devices'
+import { useSettings } from '../context/Settings'
 import { useHistoryChart } from '../context/showHistoryChart'
 import type { Dataset } from './chartMath'
+import { HistoryChart } from './HistoryChart'
 
-const chartBaseWidth = 0.65 // percent of window width
-const chartBaseHeight = 0.4 // percent of window width
+const chartBaseWidth = 0.6 // percent of window width
+const chartBaseHeight = 0.5 // percent of window width
 
 const Button = styled.button`
 	color: var(--color-nordic-middle-grey);
@@ -41,12 +42,23 @@ type ChartInfo = {
 	Icon: (props: LucideProps) => JSX.Element
 }
 
+const findUpperLimit = (v: Array<Reading>): number =>
+	Math.ceil(
+		(v
+			.map(([v]) => v)
+			.sort((v1, v2) => v1 - v2)
+			.pop() as number) * 1.1,
+	)
+
 /**
  * Displays the history chart
  */
 export const DeviceHistory = () => {
 	const { devices } = useDevices()
 	const { deviceId } = useHistoryChart()
+	const {
+		settings: { gainReferenceEveryHour, gainReferenceEveryMinute },
+	} = useSettings()
 
 	if (deviceId === undefined) return null
 
@@ -63,7 +75,7 @@ export const DeviceHistory = () => {
 				max: 5.5,
 				values: history.bat.map(([v, d]) => [v, subSeconds(history.base, d)]),
 				color: colors['nordic-blue'],
-				format: (v) => `${v} V`,
+				format: (v) => `${v.toFixed(1)}V`,
 			},
 		})
 	}
@@ -72,16 +84,11 @@ export const DeviceHistory = () => {
 			Icon: Thermometer,
 			title: 'Temp.',
 			dataset: {
-				min: 0,
-				max: Math.ceil(
-					(history.temp
-						.map(([v]) => v)
-						.sort((v1, v2) => v1 - v2)
-						.pop() as number) * 1.1,
-				),
+				min: 10,
+				max: findUpperLimit(history.temp),
 				values: history.temp.map(([v, d]) => [v, subSeconds(history.base, d)]),
 				color: colors['nordic-red'],
-				format: (v) => `${v} °C`,
+				format: (v) => `${v.toFixed(1)}°C`,
 			},
 		})
 	}
@@ -91,13 +98,23 @@ export const DeviceHistory = () => {
 			title: 'Gain',
 			dataset: {
 				min: 0,
-				max: 30,
+				max: 5,
 				values: history.solGain.map(([v, d]) => [
 					v,
 					subSeconds(history.base, d),
 				]),
 				color: colors['nordic-sun'],
-				format: (v) => `${v} mA`,
+				format: (v) => `${v.toFixed(1)}mA`,
+				helperLines: [
+					{
+						label: '1m',
+						value: gainReferenceEveryMinute,
+					},
+					{
+						label: '60m',
+						value: gainReferenceEveryHour,
+					},
+				],
 			},
 		})
 	}

@@ -1,11 +1,14 @@
 import { addMinutes } from 'date-fns'
 
+export type Values = [value: number, ts: Date][]
+
 export type Dataset = {
 	min: number
 	max: number
-	values: [value: number, ts: Date][]
+	values: Values
 	color: string
 	format: (v: number) => string
+	helperLines?: HelperLine[]
 }
 export type XAxis = {
 	minutes: number
@@ -14,11 +17,14 @@ export type XAxis = {
 	format: (d: Date) => string
 	hideLabels: boolean
 }
+export type HelperLine = {
+	label: string
+	value: number
+}
 export type ChartData = {
 	xAxis: XAxis
 	datasets: Dataset[]
 }
-
 export const chartMath = ({
 	width,
 	height,
@@ -26,7 +32,6 @@ export const chartMath = ({
 	startDate,
 	minutes,
 	labelEvery,
-	hideXAxisLabels,
 }: {
 	width: number
 	height: number
@@ -37,10 +42,9 @@ export const chartMath = ({
 	 */
 	minutes: number
 	labelEvery: number
-	hideXAxisLabels: boolean
 }): {
-	yPosition: (dataset: Dataset, value: number) => number
-	xPosition: (dataset: Dataset, ts: Date) => number | null
+	yPosition: (dataset: Pick<Dataset, 'min' | 'max'>, value: number) => number
+	xPosition: (ts: Date) => number | null
 	yAxisHeight: number
 	xAxisWidth: number
 	padding: number
@@ -48,12 +52,13 @@ export const chartMath = ({
 	endDate: Date
 	xSpacing: number
 	paddingLeft: number
+	paddingY: number
 } => {
-	const numPaddingLeft = 3
+	const numPaddingLeft = 4
 	const numPaddingRight = 2
-	const yAxisHeight =
-		height - padding - (hideXAxisLabels ? padding : 2 * padding) // 1 padding at top, two at bottom (if labels are not hidden, otherwise one)
-	const xAxisWidth = width - padding * (numPaddingLeft + numPaddingRight) // 2 padding left and right
+	const paddingY = padding * 0.5
+	const yAxisHeight = height - paddingY * 2 // 1 padding at bottom if labels are not hidden
+	const xAxisWidth = width - padding * (numPaddingLeft + numPaddingRight)
 	const xSpacing = xAxisWidth / ((minutes / labelEvery + 1) * labelEvery)
 	const nextTenMinutes = addMinutes(
 		startDate,
@@ -71,14 +76,17 @@ export const chartMath = ({
 	const endTs = prevTenMinutes.getTime()
 
 	return {
-		yPosition: (dataset: Dataset, value: number): number => {
+		yPosition: (
+			{ min, max }: Pick<Dataset, 'min' | 'max'>,
+			value: number,
+		): number => {
 			const valueAsPercent = Math.max(
 				0,
-				Math.min(1, ((value ?? 0) - dataset.min) / (dataset.max - dataset.min)),
+				Math.min(1, ((value ?? 0) - min) / (max - min)),
 			)
-			return padding + yAxisHeight - valueAsPercent * yAxisHeight
+			return yAxisHeight + paddingY - valueAsPercent * yAxisHeight
 		},
-		xPosition: (dataset: Dataset, ts: Date): number | null => {
+		xPosition: (ts: Date): number | null => {
 			const tsInt = ts.getTime()
 			if (tsInt < endTs) return null
 			if (tsInt > startTs) return null
@@ -95,5 +103,6 @@ export const chartMath = ({
 		endDate: prevTenMinutes,
 		xSpacing,
 		paddingLeft: padding * numPaddingLeft,
+		paddingY,
 	}
 }

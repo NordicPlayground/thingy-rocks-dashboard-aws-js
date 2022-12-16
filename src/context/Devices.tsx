@@ -98,7 +98,7 @@ export type Reported = Partial<{
 			 */
 			bsec_iaq?: number // 137
 		}
-		ts: 1669741243982
+		ts: number //1669741243982
 	}
 	bat: BatteryInfo
 	btn: ButtonPress
@@ -138,7 +138,7 @@ export type Device = {
 }
 export type Devices = Record<string, Device>
 
-type Reading = [
+export type Reading = [
 	v: number,
 	// Delta to the base date in seconds
 	d: number,
