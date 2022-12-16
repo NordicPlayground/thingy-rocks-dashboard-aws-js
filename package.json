@@ -26,7 +26,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@aws-amplify/core": "5.0.6",
+    "@aws-amplify/core": "5.0.7",
     "@aws-sdk/credential-provider-cognito-identity": "3.231.0",
     "@nordicsemiconductor/rsrp-bar": "5.0.5",
     "@sentry/react": "7.26.0",
