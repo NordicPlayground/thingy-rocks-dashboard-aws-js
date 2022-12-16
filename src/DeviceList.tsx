@@ -109,6 +109,13 @@ const TitleButton = styled.button`
 	align-items: center;
 `
 
+const IssuerName = styled.dd`
+	font-size: 80%;
+	max-width: 20vw;
+	overflow: hidden;
+	text-overflow: ellipsis;
+`
+
 export const DeviceList = () => {
 	const { devices, lastUpdateTs, alias } = useDevices()
 	const map = useMap()
@@ -205,11 +212,9 @@ export const DeviceList = () => {
 											<dt>
 												<StyledSIMIcon />
 											</dt>
-											<dd>
-												<small>
-													{identifyIssuer(iccid)?.companyName ?? '?'}
-												</small>
-											</dd>
+											<IssuerName>
+												{identifyIssuer(iccid)?.companyName ?? '?'}
+											</IssuerName>
 										</>
 									)}
 									{buttonPress !== undefined && (
