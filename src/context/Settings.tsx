@@ -8,6 +8,8 @@ type Settings = {
 	consumptionThreshold: number
 	enableTestDevice: boolean
 	showSettings: boolean
+	showFavorites: boolean
+	favorites: string[]
 	/**
 	 * Configure the reference lines shown in the Gain chart
 	 */
@@ -21,6 +23,8 @@ const defaultSettings: Settings = {
 	showSettings: false,
 	gainReferenceEveryMinute: 3.4,
 	gainReferenceEveryHour: 2.3,
+	showFavorites: false,
+	favorites: [],
 }
 
 const loadDefaults = () => {

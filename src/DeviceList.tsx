@@ -4,6 +4,7 @@ import { ButtonPress } from './ButtonPress'
 import { locationSourceColors } from './colors'
 import { GeoLocationSource, useDevices } from './context/Devices'
 import { useMap } from './context/Map'
+import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { EnvironmentInfo } from './EnvironmentInfo'
@@ -109,6 +110,9 @@ export const DeviceList = () => {
 	const { devices, lastUpdateTs, alias } = useDevices()
 	const map = useMap()
 	const { toggle: toggleHistoryChart } = useHistoryChart()
+	const {
+		settings: { showFavorites, favorites },
+	} = useSettings()
 
 	return (
 		<DeviceState>
@@ -116,15 +120,20 @@ export const DeviceList = () => {
 			<ul>
 				{Object.entries(devices)
 					.filter(([deviceId]) => {
+						if (!showFavorites) return true
+						return favorites.includes(deviceId)
+					})
+					.filter(([deviceId]) => {
 						const ts = lastUpdateTs(deviceId)
 						if (ts === null) return false
 						if (ts < Date.now() - 60 * 60 * 1000) return false
 						return true
 					})
-					.sort(
-						([id1], [id2]) =>
-							(lastUpdateTs(id2) ?? 0) - (lastUpdateTs(id1) ?? 0),
-					)
+					.sort(([id1], [id2]) => {
+						if (!showFavorites)
+							return (lastUpdateTs(id2) ?? 0) - (lastUpdateTs(id1) ?? 0)
+						return favorites.indexOf(id1) - favorites.indexOf(id2)
+					})
 					.map(([deviceId, device]) => {
 						const { location, state } = device
 						const rankedLocations = Object.values(location ?? []).sort(

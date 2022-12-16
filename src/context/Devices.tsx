@@ -179,7 +179,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 	return (
 		<DevicesContext.Provider
 			value={{
-				devices: devices,
+				devices,
 				updateState: (deviceId, reported) => {
 					updateDevices((devices) => {
 						const updated: Device = {
