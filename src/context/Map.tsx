@@ -123,7 +123,9 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 					source: locationAreaSourceId,
 					layout: {
 						'symbol-placement': 'line',
-						'text-field': `${deviceAlias} (${LocationSourceLabels[source]}, ${accuracy} m)`,
+						'text-field': `${deviceAlias} (${
+							LocationSourceLabels[source]
+						}, ${Math.round(accuracy)} m)`,
 						'text-font': [glyphFonts.regular],
 						'text-offset': [0, -1],
 						'text-size': 14,
