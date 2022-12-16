@@ -1,3 +1,4 @@
+import { Github } from 'lucide-preact'
 import styled from 'styled-components'
 import { DeviceHistory } from './chart/DeviceHistory'
 import { DeviceList } from './DeviceList'
@@ -23,6 +24,9 @@ export const Dashboard = () => {
 			<DeviceHistory />
 			<Settings />
 			<SideMenu>
+				<a href={HOMEPAGE} class="btn btn-link text-white" target={'_blank'}>
+					<Github strokeWidth={2} size={32} />
+				</a>
 				<ZoomToWorldButton />
 				<SettingsButton />
 			</SideMenu>
