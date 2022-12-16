@@ -54,6 +54,13 @@ const EestLabel = styled.abbr`
 	font-size: 75%;
 `
 
+const StyledSignalQualityTriangle = styled(SignalQualityTriangle)`
+	margin-right: calc(1rem + 4px);
+	margin-left: 4px;
+	width: 20px;
+	height: 20px;
+`
+
 export const SignalQuality = ({ device }: { device: Device }) => {
 	const rsrpDbm = device.state?.roam?.v?.rsrp
 	const eest = device.state?.roam?.v?.eest
@@ -94,7 +101,7 @@ export const SignalQuality = ({ device }: { device: Device }) => {
 					<RSRP
 						dbm={rsrpDbm}
 						renderBar={({ quality }) => (
-							<SignalQualityTriangle
+							<StyledSignalQualityTriangle
 								quality={quality}
 								color={'inherit'}
 								class="rsrp"

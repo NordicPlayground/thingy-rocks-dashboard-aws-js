@@ -1,3 +1,4 @@
+import { identifyIssuer } from 'e118-iin-list'
 import { Sun, UploadCloud, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
@@ -9,6 +10,7 @@ import { useHistoryChart } from './context/showHistoryChart'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { EnvironmentInfo } from './EnvironmentInfo'
 import { DKIcon } from './icons/DKIcon'
+import { SIMIcon } from './icons/SIMIcon'
 import { ThingyIcon } from './icons/ThingyIcon'
 import { LocationInfo } from './LocationInfo'
 import { PowerInfo } from './PowerInfo'
@@ -51,14 +53,9 @@ const DeviceState = styled.section`
 				dt {
 					display: flex;
 					align-items: center;
-					.lucide,
-					.rsrp {
+					.lucide {
 						margin-right: calc(1rem + 4px);
 						margin-left: 4px;
-					}
-					.rsrp {
-						width: 20px;
-						height: 20px;
 					}
 				}
 			}
@@ -70,6 +67,12 @@ const DeviceState = styled.section`
 			}
 		}
 	}
+`
+
+const StyledSIMIcon = styled(SIMIcon)`
+	width: 20px;
+	height: 20px;
+	margin: 2px;
 `
 
 const SolarColor = styled.span`
@@ -142,7 +145,7 @@ export const DeviceList = () => {
 						const deviceLocation = rankedLocations[0]
 
 						const buttonPress = state?.btn
-						const { brdV, appV } = state?.dev?.v ?? {}
+						const { brdV, appV, iccid } = state?.dev?.v ?? {}
 
 						const shortenedDeviceId =
 							alias(deviceId) ??
@@ -197,6 +200,18 @@ export const DeviceList = () => {
 								</TitleButton>
 								<dl>
 									<SignalQuality device={device} />
+									{iccid !== undefined && (
+										<>
+											<dt>
+												<StyledSIMIcon />
+											</dt>
+											<dd>
+												<small>
+													{identifyIssuer(iccid)?.companyName ?? '?'}
+												</small>
+											</dd>
+										</>
+									)}
 									{buttonPress !== undefined && (
 										<ButtonPress
 											key={`${deviceId}-press-${buttonPress.ts}`}
