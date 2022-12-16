@@ -14,7 +14,7 @@ export const HistoryChart = ({
 }) => {
 	const h = height ?? 300
 	const w = width ?? 600
-	const p = padding ?? 25
+	const p = padding ?? 30
 
 	const m = chartMath({
 		width: w,
@@ -23,6 +23,7 @@ export const HistoryChart = ({
 		startDate: new Date(),
 		minutes: data.xAxis.minutes,
 		labelEvery: data.xAxis.labelEvery,
+		hideXAxisLabels: data.xAxis.hideLabels,
 	})
 
 	const labels = generateLabels(m, data.xAxis)
@@ -42,19 +43,68 @@ export const HistoryChart = ({
 						<path
 							style={`stroke:${data.xAxis.color};stroke-width:0.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;fill:none`}
 							d={`M ${
-								m.padding * 2 + m.xSpacing * data.xAxis.labelEvery * index
+								m.paddingLeft + m.xSpacing * data.xAxis.labelEvery * index
 							},${p} v ${m.yAxisHeight}`}
 						/>
-						<text
-							style={`fill:${data.xAxis.color}`}
-							x={m.padding * 2 + m.xSpacing * data.xAxis.labelEvery * index}
-							y={h - p}
-							text-anchor="middle"
-						>
-							{label}
-						</text>
+						{!data.xAxis.hideLabels && (
+							<text
+								style={`fill:${data.xAxis.color}`}
+								x={m.paddingLeft + m.xSpacing * data.xAxis.labelEvery * index}
+								y={h - p}
+								text-anchor="middle"
+							>
+								{label}
+							</text>
+						)}
 					</>
 				))}
+			</g>
+			{/* y axis labels */}
+			<g>
+				{data.datasets.map(({ min, max, format, color }, index) => {
+					const fontSize = 14
+					const xPos =
+						index === 0
+							? m.paddingLeft - fontSize
+							: m.paddingLeft +
+							  m.xSpacing * data.xAxis.labelEvery * (labels.length - 1) +
+							  fontSize
+					const anchor = index === 0 ? 'end' : 'start'
+					return (
+						<>
+							<path
+								style={`stroke:${data.xAxis.color};stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2;stroke-dasharray:none;paint-order:stroke fill markers`}
+								d={`M ${xPos + (fontSize * 1) / 3},${p} h ${
+									fontSize - (fontSize * 1) / 3
+								}`}
+							/>
+							<path
+								style={`stroke:${data.xAxis.color};stroke-width:0.5;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:2;stroke-dasharray:none;paint-order:stroke fill markers`}
+								d={`M ${xPos + (fontSize * 1) / 3},${p + m.yAxisHeight} h ${
+									fontSize - (fontSize * 1) / 3
+								}`}
+							/>
+							<text
+								style={`fill:${data.xAxis.color};opacity:0.5;font-weight:700`}
+								x={xPos}
+								y={p + fontSize / 3}
+								text-anchor={anchor}
+								font-size={fontSize}
+							>
+								{format(max)}
+							</text>
+							<text
+								style={`fill:${data.xAxis.color};opacity:0.5;font-weight:700`}
+								x={xPos}
+								y={p + m.yAxisHeight + fontSize / 3}
+								text-anchor={anchor}
+								font-size={fontSize}
+							>
+								{format(min)}
+							</text>
+						</>
+					)
+				})}
 			</g>
 			{/* datasets lines */}
 			{data.datasets.map((dataset) => {

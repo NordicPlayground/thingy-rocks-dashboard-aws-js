@@ -12,6 +12,7 @@ export type XAxis = {
 	color: string
 	labelEvery: number
 	format: (d: Date) => string
+	hideLabels: boolean
 }
 export type ChartData = {
 	xAxis: XAxis
@@ -25,6 +26,7 @@ export const chartMath = ({
 	startDate,
 	minutes,
 	labelEvery,
+	hideXAxisLabels,
 }: {
 	width: number
 	height: number
@@ -35,6 +37,7 @@ export const chartMath = ({
 	 */
 	minutes: number
 	labelEvery: number
+	hideXAxisLabels: boolean
 }): {
 	yPosition: (dataset: Dataset, value: number) => number
 	xPosition: (dataset: Dataset, ts: Date) => number | null
@@ -44,9 +47,13 @@ export const chartMath = ({
 	startDate: Date
 	endDate: Date
 	xSpacing: number
+	paddingLeft: number
 } => {
-	const yAxisHeight = height - padding * 3 // 1 padding at top, two at bottom
-	const xAxisWidth = width - padding * 4 // 2 padding left and right
+	const numPaddingLeft = 3
+	const numPaddingRight = 2
+	const yAxisHeight =
+		height - padding - (hideXAxisLabels ? padding : 2 * padding) // 1 padding at top, two at bottom (if labels are not hidden, otherwise one)
+	const xAxisWidth = width - padding * (numPaddingLeft + numPaddingRight) // 2 padding left and right
 	const xSpacing = xAxisWidth / ((minutes / labelEvery + 1) * labelEvery)
 	const nextTenMinutes = addMinutes(
 		startDate,
@@ -79,7 +86,7 @@ export const chartMath = ({
 				0,
 				Math.min(1, (tsInt - endTs) / (startTs - endTs)),
 			)
-			return 2 * padding + timeAsPercent * xAxisWidth
+			return numPaddingLeft * padding + timeAsPercent * xAxisWidth
 		},
 		yAxisHeight,
 		xAxisWidth,
@@ -87,5 +94,6 @@ export const chartMath = ({
 		startDate: nextTenMinutes,
 		endDate: prevTenMinutes,
 		xSpacing,
+		paddingLeft: padding * numPaddingLeft,
 	}
 }

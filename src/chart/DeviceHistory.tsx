@@ -1,12 +1,15 @@
 import { format, subSeconds } from 'date-fns'
-import { X } from 'lucide-preact'
-import { useEffect, useRef, useState } from 'preact/hooks'
+import { Battery, LucideProps, Sun, Thermometer, X } from 'lucide-preact'
+import { useRef } from 'preact/hooks'
 import styled from 'styled-components'
 import { colors } from '../colors'
 import { useDevices } from '../context/Devices'
 import { HistoryChart } from '../context/HistoryChart'
 import { useHistoryChart } from '../context/showHistoryChart'
-import type { ChartData, Dataset } from './chartMath'
+import type { Dataset } from './chartMath'
+
+const chartBaseWidth = 0.65 // percent of window width
+const chartBaseHeight = 0.4 // percent of window width
 
 const Button = styled.button`
 	color: var(--color-nordic-middle-grey);
@@ -20,8 +23,6 @@ const ChartContainer = styled.aside`
 	position: absolute;
 	bottom: 0;
 	left: 0;
-	width: 65vw;
-	height: 30vw;
 	svg {
 		width: 100%;
 		font-size: 16px;
@@ -34,76 +35,138 @@ const ChartContainer = styled.aside`
 	}
 `
 
+type ChartInfo = {
+	dataset: Dataset
+	title: string
+	Icon: (props: LucideProps) => JSX.Element
+}
+
 /**
  * Displays the history chart
  */
 export const DeviceHistory = () => {
 	const { devices } = useDevices()
-	const { deviceId, hide } = useHistoryChart()
-	const containerRef = useRef<HTMLDivElement>()
-	const [size, setSize] = useState<[width: number, height: number]>([600, 300])
-
-	useEffect(() => {
-		if (containerRef.current === undefined || containerRef.current === null)
-			return
-		setSize([
-			containerRef.current.clientWidth,
-			containerRef.current.clientHeight,
-		])
-	}, [containerRef.current])
+	const { deviceId } = useHistoryChart()
 
 	if (deviceId === undefined) return null
 
 	const history = devices[deviceId]?.history
 
-	const datasets: Dataset[] = []
+	const charts: ChartInfo[] = []
 
 	if (history?.bat !== undefined) {
-		datasets.push({
-			min: 2.5,
-			max: 5.5,
-			values: history.bat.map(([v, d]) => [v, subSeconds(history.base, d)]),
-			color: colors['nordic-blue'],
-			format: (v) => `${v} V`,
+		charts.push({
+			Icon: Battery,
+			title: 'Battery',
+			dataset: {
+				min: 2.5,
+				max: 5.5,
+				values: history.bat.map(([v, d]) => [v, subSeconds(history.base, d)]),
+				color: colors['nordic-blue'],
+				format: (v) => `${v} V`,
+			},
 		})
 	}
 	if (history?.temp !== undefined) {
-		datasets.push({
-			min: 0,
-			max: Math.ceil(
-				(history.temp
-					.map(([v]) => v)
-					.sort((v1, v2) => v1 - v2)
-					.pop() as number) * 1.1,
-			),
-			values: history.temp.map(([v, d]) => [v, subSeconds(history.base, d)]),
-			color: colors['nordic-red'],
-			format: (v) => `${v} °C`,
+		charts.push({
+			Icon: Thermometer,
+			title: 'Temp.',
+			dataset: {
+				min: 0,
+				max: Math.ceil(
+					(history.temp
+						.map(([v]) => v)
+						.sort((v1, v2) => v1 - v2)
+						.pop() as number) * 1.1,
+				),
+				values: history.temp.map(([v, d]) => [v, subSeconds(history.base, d)]),
+				color: colors['nordic-red'],
+				format: (v) => `${v} °C`,
+			},
 		})
 	}
 	if (history?.solGain !== undefined) {
-		datasets.push({
-			min: 0,
-			max: 30,
-			values: history.solGain.map(([v, d]) => [v, subSeconds(history.base, d)]),
-			color: colors['nordic-sun'],
-			format: (v) => `${v} mA`,
+		charts.push({
+			Icon: Sun,
+			title: 'Gain',
+			dataset: {
+				min: 0,
+				max: 30,
+				values: history.solGain.map(([v, d]) => [
+					v,
+					subSeconds(history.base, d),
+				]),
+				color: colors['nordic-sun'],
+				format: (v) => `${v} mA`,
+			},
 		})
 	}
 
-	const data: ChartData = {
-		xAxis: {
-			color: colors['nordic-light-grey'],
-			labelEvery: 10,
-			minutes: 60,
-			format: (d) => format(d, 'HH:mm'),
-		},
-		datasets,
-	}
+	return <Chart charts={charts} key={deviceId} />
+}
+
+const ChartWithIcon = styled.section`
+	position: relative;
+`
+
+const IconWithText = styled.div`
+	font-size: 14px;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 10%;
+	height: 100%;
+}
+`
+
+const Chart = ({ charts: charts }: { charts: ChartInfo[] }) => {
+	const containerRef = useRef<HTMLDivElement>()
+	const { hide } = useHistoryChart()
+	const [width, height] = [
+		window.innerWidth * chartBaseWidth,
+		window.innerHeight * chartBaseHeight,
+	]
 
 	return (
-		<ChartContainer ref={containerRef}>
-			<HistoryChart data={data} width={size[0]} height={size[1]} />
+		<ChartContainer
+			ref={containerRef}
+			style={{ height: `${height}px`, width: `${width}px` }}
+		>
+			{charts.map(({ dataset, Icon, title }, i) => (
+				<ChartWithIcon>
+					<IconWithText
+						style={{
+							color: dataset.color,
+						}}
+					>
+						<Icon
+							strokeWidth={1}
+							width={(height / charts.length) * 0.2}
+							height={(height / charts.length) * 0.2}
+						/>
+						{title}
+					</IconWithText>
+					<HistoryChart
+						data={{
+							xAxis: {
+								color: colors['nordic-light-grey'],
+								labelEvery: 10,
+								minutes: 60,
+								format: (d) => format(d, 'HH:mm'),
+								hideLabels: i !== charts.length - 1,
+							},
+							datasets: [dataset],
+						}}
+						width={width}
+						height={height / charts.length}
+					/>
+				</ChartWithIcon>
+			))}
 			<Button type={'button'} onClick={() => hide()}>
 				<X />
 			</Button>
