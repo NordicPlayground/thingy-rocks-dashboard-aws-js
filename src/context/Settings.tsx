@@ -36,6 +36,7 @@ const loadDefaults = () => {
 			return defaultSettings
 		}
 	}
+	return defaultSettings
 }
 
 export const SettingsContext = createContext<{

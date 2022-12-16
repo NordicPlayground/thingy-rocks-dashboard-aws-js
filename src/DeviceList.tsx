@@ -6,14 +6,14 @@ import { GeoLocationSource, useDevices } from './context/Devices'
 import { useMap } from './context/Map'
 import { useHistoryChart } from './context/showHistoryChart'
 import { DisconnectedWarning } from './DisconnectedWarning'
-import { DKIcon } from './DKIcon'
 import { EnvironmentInfo } from './EnvironmentInfo'
+import { DKIcon } from './icons/DKIcon'
+import { ThingyIcon } from './icons/ThingyIcon'
 import { LocationInfo } from './LocationInfo'
 import { PowerInfo } from './PowerInfo'
 import { RelativeTime } from './RelativeTime'
 import { SignalQuality } from './SignalQuality'
 import { sortLocations } from './sortLocations'
-import { ThingyIcon } from './ThingyIcon'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
