@@ -69,7 +69,7 @@ export const DeviceHistory = () => {
 	if (history?.bat !== undefined) {
 		charts.push({
 			Icon: Battery,
-			title: 'Battery',
+			title: 'Batt.',
 			dataset: {
 				min: 2.5,
 				max: 5.5,
