@@ -146,7 +146,7 @@ const Chart = ({ charts: charts }: { charts: ChartInfo[] }) => {
 	const { hide } = useHistoryChart()
 	const [width, height] = [
 		window.innerWidth * chartBaseWidth,
-		window.innerHeight * chartBaseHeight,
+		((window.innerHeight * chartBaseHeight) / 3) * charts.length,
 	]
 
 	return (
