@@ -24,6 +24,7 @@ export const useMap = () => useContext(MapContext)
 type DeviceMap = {
 	showDeviceLocation: (args: {
 		deviceId: string
+		deviceAlias: string
 		location: GeoLocation
 		hidden?: boolean
 	}) => void
@@ -58,6 +59,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 	return {
 		showDeviceLocation: async ({
 			deviceId,
+			deviceAlias,
 			location: { source, lat, lng, accuracy },
 			hidden,
 		}) => {
@@ -121,7 +123,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 					source: locationAreaSourceId,
 					layout: {
 						'symbol-placement': 'line',
-						'text-field': `${deviceId} (${LocationSourceLabels[source]}, ${accuracy} m)`,
+						'text-field': `${deviceAlias} (${LocationSourceLabels[source]}, ${accuracy} m)`,
 						'text-font': [glyphFonts.regular],
 						'text-offset': [0, -1],
 						'text-size': 14,
@@ -140,7 +142,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 					source: centerSourceId,
 					layout: {
 						'symbol-placement': 'point',
-						'text-field': deviceId,
+						'text-field': deviceAlias,
 						'text-font': [glyphFonts.bold],
 					},
 					paint: {
