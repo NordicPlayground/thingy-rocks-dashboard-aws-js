@@ -11,6 +11,10 @@
 thingy.rocks AWS IoT dashboard developed using [Preact](https://preactjs.com/)
 in [TypeScript](https://www.typescriptlang.org/).
 
+## Target
+
+The app is intended to be displayed on the half part of a 42 inch TV in Portrait mode. Target resolution: 1200 x 960.
+
 ## Setup
 
 Install the dependencies:
