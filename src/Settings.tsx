@@ -1,6 +1,19 @@
 import { ChevronUp, Settings2, Star, StarOff } from 'lucide-preact'
+import styled from 'styled-components'
 import { useDevices } from './context/Devices'
 import { useSettings } from './context/Settings'
+
+const SettingsPanel = styled.aside`
+	font-family: 'Inter', sans-serif;
+	margin: 0;
+	@media (min-width: 600px) {
+		width: 75vw;
+		margin: 2rem auto;
+	}
+	@media (min-width: 900px) {
+		width: 50vw;
+	}
+`
 
 export const Settings = () => {
 	const { devices, alias } = useDevices()
@@ -18,13 +31,13 @@ export const Settings = () => {
 	} = useSettings()
 	if (!showSettings) return null
 	return (
-		<aside class="mx-auto my-1 w-50">
+		<SettingsPanel>
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-title h5 mt-2">Settings</h1>
 				</div>
 				<div class="card-body">
-					<h2>Visible devices</h2>
+					<h2 class="h4">Visible devices</h2>
 					<div class="form-check">
 						<input
 							class="form-check-input"
@@ -94,50 +107,6 @@ export const Settings = () => {
 								})}
 						</ul>
 					)}
-					<h2 class="mt-5">Chart: Gain reference</h2>
-					<p>Configure the reference values shown in the Gain chart.</p>
-					<p>Power consumption when sending updates:</p>
-					<div class="mb-3 input-group">
-						<span class="input-group-text">every minute</span>
-						<input
-							type="number"
-							class="form-control"
-							id="gainReferenceEveryMinute"
-							placeholder="e.g. '2 mA'"
-							step={0.1}
-							min={0}
-							value={gainReferenceEveryMinute}
-							onChange={(e) => {
-								update({
-									gainReferenceEveryMinute: parseFloat(
-										(e.target as HTMLInputElement).value,
-									),
-								})
-							}}
-						/>
-						<span class="input-group-text">mA</span>
-					</div>
-					<div class="mb-3 input-group">
-						<span class="input-group-text">every hour</span>
-						<input
-							type="number"
-							class="form-control"
-							id="gainReferenceEveryHour"
-							placeholder="e.g. '1 mA'"
-							step={0.1}
-							min={0}
-							value={gainReferenceEveryHour}
-							onChange={(e) => {
-								update({
-									gainReferenceEveryHour: parseFloat(
-										(e.target as HTMLInputElement).value,
-									),
-								})
-							}}
-						/>
-						<span class="input-group-text">mA</span>
-					</div>
-					<h2 class="mt-5">Developer settings</h2>
 					<div class="form-check">
 						<input
 							class="form-check-input"
@@ -149,6 +118,51 @@ export const Settings = () => {
 						<label class="form-check-label" htmlFor="showTestDevice">
 							Show test device?
 						</label>
+					</div>
+					<h2 class="h4 mt-4">Chart: Gain reference</h2>
+					<p>Configure the reference values shown in the Gain chart.</p>
+					<p>Power consumption when sending updates:</p>
+					<div class="d-md-flex mb-3 ">
+						<div class="input-group">
+							<span class="input-group-text">every minute</span>
+							<input
+								type="number"
+								class="form-control"
+								id="gainReferenceEveryMinute"
+								placeholder="e.g. '2 mA'"
+								step={0.1}
+								min={0}
+								value={gainReferenceEveryMinute}
+								onChange={(e) => {
+									update({
+										gainReferenceEveryMinute: parseFloat(
+											(e.target as HTMLInputElement).value,
+										),
+									})
+								}}
+							/>
+							<span class="input-group-text">mA</span>
+						</div>
+						<div class="ms-md-3 input-group">
+							<span class="input-group-text">every hour</span>
+							<input
+								type="number"
+								class="form-control"
+								id="gainReferenceEveryHour"
+								placeholder="e.g. '1 mA'"
+								step={0.1}
+								min={0}
+								value={gainReferenceEveryHour}
+								onChange={(e) => {
+									update({
+										gainReferenceEveryHour: parseFloat(
+											(e.target as HTMLInputElement).value,
+										),
+									})
+								}}
+							/>
+							<span class="input-group-text">mA</span>
+						</div>
 					</div>
 				</div>
 				<div class="card-footer d-flex justify-content-between">
@@ -172,7 +186,7 @@ export const Settings = () => {
 					</button>
 				</div>
 			</div>
-		</aside>
+		</SettingsPanel>
 	)
 }
 
