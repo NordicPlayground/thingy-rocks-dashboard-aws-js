@@ -6,14 +6,17 @@ export const HistoryChart = ({
 	padding,
 	height,
 	width,
+	fontSize: f,
 }: {
 	data: ChartData
 	padding?: number
 	height?: number
 	width?: number
+	fontSize?: number
 }) => {
 	const h = height ?? 300
 	const w = width ?? 600
+	const fontSize = f ?? 14
 
 	const m = chartMath({
 		width: w,
@@ -49,7 +52,7 @@ export const HistoryChart = ({
 								x={m.paddingLeft + m.xSpacing * data.xAxis.labelEvery * index}
 								y={h - m.paddingY}
 								text-anchor="middle"
-								font-size={14}
+								font-size={fontSize}
 								fill={data.xAxis.color}
 								stroke="#000000"
 								stroke-width={4}
@@ -67,7 +70,6 @@ export const HistoryChart = ({
 			{/* y axis labels */}
 			<g>
 				{data.datasets.map(({ min, max, format }, index) => {
-					const fontSize = 14
 					const xPos =
 						index === 0
 							? m.paddingLeft - fontSize
@@ -127,7 +129,7 @@ export const HistoryChart = ({
 								/>
 								<text
 									fill={data.xAxis.color}
-									font-size={12}
+									font-size={fontSize * 0.8}
 									y={y + 3}
 									x={m.paddingLeft - 3}
 									text-anchor="end"
@@ -136,7 +138,7 @@ export const HistoryChart = ({
 								</text>
 								<text
 									fill={data.xAxis.color}
-									font-size={12}
+									font-size={fontSize * 0.8}
 									y={y + 3}
 									x={m.paddingLeft + 3 + m.xAxisWidth}
 									text-anchor="start"
@@ -189,7 +191,7 @@ export const HistoryChart = ({
 								y={m.yPosition(dataset, v) - m.padding / 2}
 								x={x}
 								text-anchor="middle"
-								font-size={14}
+								font-size={fontSize}
 							>
 								{dataset.format(v)}
 							</text>,

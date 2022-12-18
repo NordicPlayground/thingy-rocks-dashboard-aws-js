@@ -14,7 +14,7 @@ export const ZoomToWorldButton = () => {
 				map.showWorld()
 			}}
 		>
-			<Globe strokeWidth={2} size={32} />
+			<Globe strokeWidth={2} />
 		</button>
 	)
 }

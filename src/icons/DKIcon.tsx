@@ -1,4 +1,4 @@
-export const DKIcon = () => (
+export const DKIcon = ({ ...props }) => (
 	<svg
 		version="1.1"
 		x="0px"
@@ -6,6 +6,7 @@ export const DKIcon = () => (
 		viewBox="0 0 1024 1024"
 		style="enable-background:new 0 0 1024 1024;"
 		xmlns="http://www.w3.org/2000/svg"
+		{...props}
 	>
 		<path
 			fill="currentColor"

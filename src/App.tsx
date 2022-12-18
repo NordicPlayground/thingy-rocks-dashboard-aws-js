@@ -8,20 +8,22 @@ import { TestDevice } from './TestDevice'
 import { WithCredentials as CredentialsProvider } from './WithCredentials'
 
 export const App = () => (
-	<CredentialsProvider>
-		{(credentials) => (
-			<SettingsProvider>
-				<DevicesProvider>
-					<WebsocketProvider>
-						<MapProvider credentials={credentials}>
-							<HistoryChartProvider>
-								<Dashboard />
-								<TestDevice />
-							</HistoryChartProvider>
-						</MapProvider>
-					</WebsocketProvider>
-				</DevicesProvider>
-			</SettingsProvider>
-		)}
-	</CredentialsProvider>
+	<>
+		<CredentialsProvider>
+			{(credentials) => (
+				<SettingsProvider>
+					<DevicesProvider>
+						<WebsocketProvider>
+							<MapProvider credentials={credentials}>
+								<HistoryChartProvider>
+									<Dashboard />
+								</HistoryChartProvider>
+							</MapProvider>
+						</WebsocketProvider>
+						<TestDevice />
+					</DevicesProvider>
+				</SettingsProvider>
+			)}
+		</CredentialsProvider>
+	</>
 )

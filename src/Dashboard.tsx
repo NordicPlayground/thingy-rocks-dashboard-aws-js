@@ -14,6 +14,10 @@ const SideMenu = styled.nav`
 	button {
 		color: inherit;
 	}
+	.lucide {
+		width: 30px;
+		height: 30px;
+	}
 `
 
 export const Dashboard = () => {
@@ -25,7 +29,7 @@ export const Dashboard = () => {
 			<Settings />
 			<SideMenu>
 				<a href={HOMEPAGE} class="btn btn-link text-white" target={'_blank'}>
-					<Github strokeWidth={2} size={32} />
+					<Github strokeWidth={2} />
 				</a>
 				<ZoomToWorldButton />
 				<SettingsButton />

@@ -30,7 +30,7 @@ const DeviceState = styled.section`
 		padding: 0;
 		li {
 			margin: 2px 2px 2px 0;
-			padding: 1rem;
+			padding: 0.5rem;
 			text-align: left;
 			border: 0;
 			background-color: var(--color-panel-bg);
@@ -71,8 +71,8 @@ const DeviceState = styled.section`
 
 const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;
-	height: 20px;
-	margin: 2px;
+	height: 18px;
+	margin: 0 0 0 4px;
 `
 
 const SolarColor = styled.span`
@@ -85,7 +85,7 @@ const BoardName = styled.span`
 		margin-right: 0.25rem;
 		width: 32px;
 		height: 32px;
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.25rem;
 	}
 `
 
@@ -96,7 +96,6 @@ const ShieldIcon = styled.span`
 const LastUpdate = styled.abbr`
 	margin-left: 0.5rem;
 	opacity: 0.8;
-	font-size: 80%;
 	svg {
 		margin-right: 0.5rem;
 	}
@@ -110,8 +109,7 @@ const TitleButton = styled.button`
 `
 
 const IssuerName = styled.dd`
-	font-size: 80%;
-	max-width: 20vw;
+	max-width: 15vw;
 	overflow: hidden;
 	text-overflow: ellipsis;
 `
@@ -174,7 +172,7 @@ export const DeviceList = () => {
 								>
 									<span>
 										<BoardName>
-											<BoardIcon />
+											<BoardIcon data-help="Board icon" />
 											{appV?.includes('wifi') === true && (
 												<ShieldIcon>
 													<Wifi

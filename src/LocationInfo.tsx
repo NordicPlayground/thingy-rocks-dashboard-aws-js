@@ -7,7 +7,6 @@ import { LocationSourceLabels } from './context/LocationSourceLabels'
 import { sortLocations } from './sortLocations'
 
 const LocationSourceSwitch = styled.button`
-	font-size: 90%;
 	font-weight: var(--monospace-font-weight-bold);
 	margin-right: 0.5rem;
 `
@@ -22,7 +21,6 @@ const NoLocation = styled.span`
 `
 
 const LocationSourceSamplingDisabled = styled.span`
-	font-size: 90%;
 	font-weight: var(--monospace-font-weight-bold);
 	color: var(--color-nordic-middle-grey);
 	text-decoration: line-through;

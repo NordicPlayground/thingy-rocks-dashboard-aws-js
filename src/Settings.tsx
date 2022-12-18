@@ -18,7 +18,7 @@ export const Settings = () => {
 	} = useSettings()
 	if (!showSettings) return null
 	return (
-		<aside class="fixed-top mx-auto my-5 w-50">
+		<aside class="mx-auto my-1 w-50">
 			<div class="card">
 				<div class="card-header">
 					<h1 class="card-title h5 mt-2">Settings</h1>
@@ -192,7 +192,7 @@ export const SettingsButton = () => {
 				update({ showSettings: !showSettings })
 			}}
 		>
-			<Settings2 strokeWidth={2} size={32} />
+			<Settings2 strokeWidth={2} />
 		</button>
 	)
 }

@@ -1,10 +1,11 @@
-export const ThingyIcon = () => (
+export const ThingyIcon = ({ ...props }) => (
 	<svg
 		version="1.1"
 		x="0px"
 		y="0px"
 		viewBox="0 0 69.69 69.83"
 		xmlns="http://www.w3.org/2000/svg"
+		{...props}
 	>
 		<path
 			fill="#F48120"

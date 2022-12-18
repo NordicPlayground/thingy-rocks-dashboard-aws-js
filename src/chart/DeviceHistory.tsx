@@ -26,7 +26,6 @@ const ChartContainer = styled.aside`
 	left: 0;
 	svg {
 		width: 100%;
-		font-size: 16px;
 	}
 	${Button} {
 		position: absolute;
@@ -127,7 +126,6 @@ const ChartWithIcon = styled.section`
 `
 
 const IconWithText = styled.div`
-	font-size: 14px;
 	display: flex;
     flex-direction: column;
     align-items: center;

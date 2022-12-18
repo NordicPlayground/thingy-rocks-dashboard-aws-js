@@ -51,7 +51,7 @@ const EestLabel = styled.abbr`
 	&:after {
 		content: ')';
 	}
-	font-size: 75%;
+	font-size: 80%;
 `
 
 const StyledSignalQualityTriangle = styled(SignalQualityTriangle)`

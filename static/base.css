@@ -40,7 +40,12 @@ abbr[title] {
 
 body {
   font-family: var(--monospace-font);
-  font-size: 20px;
+  font-size: 16px;
   /* Color of the oceans of the map */
   background-color: rgba(12, 36, 56, 1);
+}
+
+.lucide {
+  width: 22px;
+  height: 22px;
 }
