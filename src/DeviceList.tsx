@@ -38,33 +38,36 @@ const DeviceState = styled.section`
 			display: flex;
 			flex-direction: column;
 			align-items: flex-start;
-			dl {
-				margin: 0;
-				display: grid;
-				grid-template-columns: auto auto;
-				grid-template-rows: 1fr;
-				grid-auto-rows: auto;
-				grid-column-gap: 0px;
-				grid-row-gap: 0px;
-				dd {
-					margin-bottom: 0;
-					white-space: nowrap;
-				}
-				dt {
-					display: flex;
-					align-items: center;
-					.lucide {
-						margin-right: calc(1rem + 4px);
-						margin-left: 4px;
-					}
-				}
-			}
 			button {
 				border: 0;
 				background: transparent;
 				color: inherit;
 				padding: 0;
 			}
+		}
+	}
+`
+
+const Properties = styled.dl`
+	margin: 0;
+	display: grid;
+	grid-template-columns: auto auto;
+	grid-template-rows: 1fr;
+	grid-auto-rows: auto;
+	grid-column-gap: 0px;
+	grid-row-gap: 0px;
+	font-size: 85%;
+	dd {
+		margin-bottom: 0;
+		white-space: nowrap;
+	}
+	dt {
+		display: flex;
+		align-items: center;
+		margin-right: 0.5rem;
+		.lucide {
+			margin-right: 4px;
+			margin-left: 4px;
 		}
 	}
 `
@@ -79,16 +82,6 @@ const SolarColor = styled.span`
 	color: var(--color-nordic-sun);
 `
 
-const BoardName = styled.span`
-	margin-right: 0.75rem;
-	svg {
-		margin-right: 0.25rem;
-		width: 32px;
-		height: 32px;
-		margin-bottom: 0.25rem;
-	}
-`
-
 const ShieldIcon = styled.span`
 	margin-right: 0.25rem;
 `
@@ -96,16 +89,25 @@ const ShieldIcon = styled.span`
 const LastUpdate = styled.abbr`
 	margin-left: 0.5rem;
 	opacity: 0.8;
+	font-size: 85%;
 	svg {
 		margin-right: 0.5rem;
 	}
 `
 
-const TitleButton = styled.button`
+const Title = styled.button`
 	display: flex;
 	width: 100%;
-	justify-content: space-between;
 	align-items: center;
+	.icon {
+		width: 32px;
+		height: 32px;
+		margin-right: 0.5rem;
+	}
+	.info {
+		flex-grow: 1;
+		text-align: left;
+	}
 `
 
 const IssuerName = styled.dd`
@@ -162,7 +164,7 @@ export const DeviceList = () => {
 
 						return (
 							<li>
-								<TitleButton
+								<Title
 									type={'button'}
 									onClick={() => {
 										if (deviceLocation !== undefined) {
@@ -170,27 +172,24 @@ export const DeviceList = () => {
 										}
 									}}
 								>
-									<span>
-										<BoardName>
-											<BoardIcon data-help="Board icon" />
-											{appV?.includes('wifi') === true && (
-												<ShieldIcon>
-													<Wifi
-														style={{
-															color:
-																locationSourceColors[GeoLocationSource.WIFI],
-														}}
-													/>
-												</ShieldIcon>
-											)}
-											{appV?.includes('solar') === true && (
-												<ShieldIcon>
-													<SolarColor>
-														<Sun />
-													</SolarColor>
-												</ShieldIcon>
-											)}
-										</BoardName>
+									<BoardIcon class="icon" />
+									<span class="info">
+										{appV?.includes('wifi') === true && (
+											<ShieldIcon>
+												<Wifi
+													style={{
+														color: locationSourceColors[GeoLocationSource.WIFI],
+													}}
+												/>
+											</ShieldIcon>
+										)}
+										{appV?.includes('solar') === true && (
+											<ShieldIcon>
+												<SolarColor>
+													<Sun />
+												</SolarColor>
+											</ShieldIcon>
+										)}
 										{shortenedDeviceId !== deviceId && (
 											<abbr title={deviceId}>{shortenedDeviceId}</abbr>
 										)}
@@ -202,8 +201,8 @@ export const DeviceList = () => {
 											<RelativeTime time={new Date(lastUpdateTime)} />
 										</LastUpdate>
 									)}
-								</TitleButton>
-								<dl>
+								</Title>
+								<Properties>
 									<SignalQuality device={device} />
 									{iccid !== undefined && (
 										<>
@@ -231,7 +230,7 @@ export const DeviceList = () => {
 										/>
 									)}
 									<LocationInfo device={device} />
-								</dl>
+								</Properties>
 							</li>
 						)
 					})}
