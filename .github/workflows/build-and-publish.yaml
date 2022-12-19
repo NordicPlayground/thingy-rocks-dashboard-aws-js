@@ -51,3 +51,7 @@ jobs:
           git commit -m "update website"
           git remote add origin https://github.com/${GITHUB_REPOSITORY}.git
           git push -f origin HEAD:gh-pages
+
+      - name: Semantic release
+        continue-on-error: true
+        run: npx semantic-release
