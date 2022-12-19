@@ -81,5 +81,6 @@ export default defineConfig({
 		COGNITO_IDENTITY_POOL_ID: JSON.stringify(cognitoIdentityPoolId),
 		REGION: JSON.stringify(cognitoIdentityPoolId.split(':')[0] as string),
 		SENTRY_DSN: JSON.stringify(sentryDSN),
+		BUILD_TIME: JSON.stringify(new Date().toISOString()),
 	},
 })
