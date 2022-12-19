@@ -49,6 +49,14 @@ const findUpperLimit = (v: Array<Reading>): number =>
 			.pop() as number) * 1.1,
 	)
 
+const findLowerLimit = (v: Array<Reading>): number =>
+	Math.floor(
+		(v
+			.map(([v]) => v)
+			.sort((v1, v2) => v2 - v1)
+			.pop() as number) * 1.1,
+	)
+
 /**
  * Displays the history chart
  */
@@ -83,7 +91,7 @@ export const DeviceHistory = () => {
 			Icon: Thermometer,
 			title: 'Temp.',
 			dataset: {
-				min: 10,
+				min: findLowerLimit(history.temp),
 				max: findUpperLimit(history.temp),
 				values: history.temp.map(([v, d]) => [v, subSeconds(history.base, d)]),
 				color: colors['nordic-red'],
