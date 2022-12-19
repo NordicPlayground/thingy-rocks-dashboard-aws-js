@@ -13,7 +13,8 @@ in [TypeScript](https://www.typescriptlang.org/).
 
 ## Target
 
-The app is intended to be displayed on the half part of a 42 inch TV in Portrait mode. Target resolution: 1200 x 960.
+The app is intended to be displayed on the half part of a 42 inch 1080p TV in
+portrait mode. Target resolution: 1080 x 768.
 
 ## Setup
 
