@@ -1,4 +1,3 @@
-import { Github } from 'lucide-preact'
 import styled from 'styled-components'
 import { DeviceHistory } from './chart/DeviceHistory'
 import { DeviceList } from './DeviceList'
@@ -9,14 +8,14 @@ import { Settings, SettingsButton } from './Settings'
 const SideMenu = styled.nav`
 	position: absolute;
 	right: 1rem;
-	bottom: 2rem;
+	bottom: 1rem;
 	color: #fff;
 	button {
 		color: inherit;
 	}
 	.lucide {
-		width: 30px;
-		height: 30px;
+		width: 22px;
+		height: 22px;
 	}
 `
 
@@ -28,9 +27,6 @@ export const Dashboard = () => {
 			<DeviceHistory />
 			<Settings />
 			<SideMenu>
-				<a href={HOMEPAGE} class="btn btn-link text-white" target={'_blank'}>
-					<Github strokeWidth={2} />
-				</a>
 				<ZoomToWorldButton />
 				<SettingsButton />
 			</SideMenu>

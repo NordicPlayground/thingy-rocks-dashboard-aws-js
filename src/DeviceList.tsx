@@ -24,6 +24,9 @@ const DeviceState = styled.section`
 	right: 0;
 	top: 0;
 	user-select: none;
+	overflow: hidden;
+	max-height: 100vh;
+	overflow-y: scroll;
 	ul {
 		list-style: none;
 		margin: 0;
@@ -111,7 +114,7 @@ const Title = styled.button`
 `
 
 const IssuerName = styled.dd`
-	max-width: 15vw;
+	max-width: 20vw;
 	overflow: hidden;
 	text-overflow: ellipsis;
 `
