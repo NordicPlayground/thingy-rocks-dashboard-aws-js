@@ -149,6 +149,17 @@ export type Summary = {
 	temp?: Array<Reading>
 	solBat?: Array<Reading>
 	solGain?: Array<Reading>
+	/**
+	 * Contains one or more significant readings to display as guides.
+	 *
+	 * Used for example to visualize that the battery level did not change for Thingys with Solar shield.
+	 */
+	guides?: [
+		type: 'bat' | 'temp' | 'solGain',
+		v: number,
+		// Delta to the base date in seconds
+		d: number,
+	][]
 }
 
 export const DevicesContext = createContext<{

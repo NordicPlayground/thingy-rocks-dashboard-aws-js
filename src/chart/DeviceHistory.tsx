@@ -83,6 +83,17 @@ export const DeviceHistory = () => {
 				values: history.bat.map(([v, d]) => [v, subSeconds(history.base, d)]),
 				color: colors['nordic-blue'],
 				format: (v) => `${v.toFixed(1)}V`,
+				helperLines: (history?.guides ?? [])
+					.filter(([type]) => type === 'bat')
+					.map(([, v, d]) => ({
+						label: `${Math.floor(
+							(Date.now() - subSeconds(history.base, d).getTime()) /
+								1000 /
+								60 /
+								60,
+						)}h ago`,
+						value: v,
+					})),
 			},
 		})
 	}

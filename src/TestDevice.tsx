@@ -278,4 +278,10 @@ const fakeHistory = (): Summary => ({
 		[3.425, 3532],
 		[3.435, 3592],
 	],
+	/**
+	 * Contains one or more significant readings to display as guides.
+	 *
+	 * Used for example to visualize that the battery level did not change for Thingys with Solar shield.
+	 */
+	guides: [['bat', 3.9, 60 * 60 * 8]],
 })
