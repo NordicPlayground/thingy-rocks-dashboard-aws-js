@@ -12,7 +12,13 @@ import {
 import styled from 'styled-components'
 import type { Device } from './context/Devices'
 
-export const EnvironmentInfo = ({ device }: { device: Device }) => {
+export const EnvironmentInfo = ({
+	device,
+	onClick,
+}: {
+	device: Device
+	onClick?: () => unknown
+}) => {
 	const env = device.state?.env?.v
 	const iaq = env?.bsec_iaq
 	if (env === undefined) return null
@@ -22,8 +28,10 @@ export const EnvironmentInfo = ({ device }: { device: Device }) => {
 				<Thermometer strokeWidth={2} />
 			</dt>
 			<dd>
-				{env.temp.toFixed(1)} °C
-				{iaq !== undefined && <IAQ iaq={iaq} />}
+				<button type={'button'} onClick={() => onClick?.()}>
+					{env.temp.toFixed(1)} °C
+					{iaq !== undefined && <IAQ iaq={iaq} />}
+				</button>
 			</dd>
 		</>
 	)

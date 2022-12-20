@@ -223,7 +223,12 @@ export const DeviceList = () => {
 											buttonPress={buttonPress}
 										/>
 									)}
-									<EnvironmentInfo device={device} />
+									<EnvironmentInfo
+										device={device}
+										onClick={() => {
+											toggleHistoryChart(deviceId)
+										}}
+									/>
 									{state !== undefined && (
 										<PowerInfo
 											state={state}
