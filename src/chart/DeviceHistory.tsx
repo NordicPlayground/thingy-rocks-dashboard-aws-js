@@ -46,7 +46,7 @@ const findUpperLimit = (v: Array<Reading>): number =>
 		(v
 			.map(([v]) => v)
 			.sort((v1, v2) => v1 - v2)
-			.pop() as number) * 1.1,
+			.pop() as number) * 1.05,
 	)
 
 const findLowerLimit = (v: Array<Reading>): number =>
@@ -54,7 +54,7 @@ const findLowerLimit = (v: Array<Reading>): number =>
 		(v
 			.map(([v]) => v)
 			.sort((v1, v2) => v2 - v1)
-			.pop() as number) * 1.1,
+			.pop() as number) * 0.95,
 	)
 
 /**
