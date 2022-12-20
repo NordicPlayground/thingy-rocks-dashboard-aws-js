@@ -25,6 +25,7 @@ export const Settings = () => {
 			gainReferenceEveryHour,
 			showFavorites,
 			favorites,
+			consumptionThreshold,
 		},
 		update,
 		reset,
@@ -51,63 +52,70 @@ export const Settings = () => {
 						</label>
 					</div>
 					{showFavorites && (
-						<ul class="list-group">
-							{Object.keys(devices)
-								.sort((id1, id2) => {
-									const i1 = favorites.indexOf(id1)
-									const i2 = favorites.indexOf(id2)
-									if (i1 === -1) return Number.MAX_SAFE_INTEGER
-									if (i2 === -1) return -Number.MAX_SAFE_INTEGER
-									return i1 - i2
-								})
-								.map((id, i) => {
-									const favorited = favorites.includes(id)
-									return (
-										<li class="list-group-item d-flex justify-content-between align-items-center ">
-											<button
-												type="button"
-												class="btn btn-link"
-												onClick={() => {
-													if (favorited) {
-														update({
-															favorites: favorites
-																.filter((i) => i !== id)
-																.filter(Boolean),
-														})
-													} else {
-														update({ favorites: [...favorites, id] })
-													}
-												}}
-											>
-												{favorited ? <Star /> : <StarOff />}
-											</button>
-											<span class="flex-grow-1">{alias(id) ?? id}</span>
-											{i > 0 && favorited && (
+						<>
+							<p>
+								Click the star to show/hide a device.
+								<br />
+								Click the arrows to move devices up.
+							</p>
+							<ul class="list-group">
+								{Object.keys(devices)
+									.sort((id1, id2) => {
+										const i1 = favorites.indexOf(id1)
+										const i2 = favorites.indexOf(id2)
+										if (i1 === -1) return Number.MAX_SAFE_INTEGER
+										if (i2 === -1) return -Number.MAX_SAFE_INTEGER
+										return i1 - i2
+									})
+									.map((id, i) => {
+										const favorited = favorites.includes(id)
+										return (
+											<li class="list-group-item d-flex justify-content-between align-items-center ">
 												<button
 													type="button"
 													class="btn btn-link"
 													onClick={() => {
-														const index = favorites.indexOf(id)
-														const prev = favorites[index - 1] as string
-														update({
-															favorites: [
-																...favorites.slice(0, index - 1),
-																id,
-																prev,
-																...favorites.slice(index + 1),
-															].filter(Boolean),
-														})
+														if (favorited) {
+															update({
+																favorites: favorites
+																	.filter((i) => i !== id)
+																	.filter(Boolean),
+															})
+														} else {
+															update({ favorites: [...favorites, id] })
+														}
 													}}
 												>
-													<ChevronUp />
+													{favorited ? <Star /> : <StarOff />}
 												</button>
-											)}
-										</li>
-									)
-								})}
-						</ul>
+												<span class="flex-grow-1">{alias(id) ?? id}</span>
+												{i > 0 && favorited && (
+													<button
+														type="button"
+														class="btn btn-link"
+														onClick={() => {
+															const index = favorites.indexOf(id)
+															const prev = favorites[index - 1] as string
+															update({
+																favorites: [
+																	...favorites.slice(0, index - 1),
+																	id,
+																	prev,
+																	...favorites.slice(index + 1),
+																].filter(Boolean),
+															})
+														}}
+													>
+														<ChevronUp />
+													</button>
+												)}
+											</li>
+										)
+									})}
+							</ul>
+						</>
 					)}
-					<div class="form-check">
+					<div class="form-check mt-2">
 						<input
 							class="form-check-input"
 							type="checkbox"
@@ -118,6 +126,30 @@ export const Settings = () => {
 						<label class="form-check-label" htmlFor="showTestDevice">
 							Show test device?
 						</label>
+					</div>
+					<h2 class="h4 mt-4">Gain threshold</h2>
+					<label htmlFor={'consumptionThreshold'}>
+						Above this value, charge is considered sufficiently high enough so
+						device does not use battery.
+					</label>
+					<div class="input-group">
+						<input
+							type="number"
+							class="form-control"
+							id="consumptionThreshold"
+							placeholder="e.g. '3.6 mA'"
+							step={0.1}
+							min={0}
+							value={consumptionThreshold}
+							onChange={(e) => {
+								update({
+									consumptionThreshold: parseFloat(
+										(e.target as HTMLInputElement).value,
+									),
+								})
+							}}
+						/>
+						<span class="input-group-text">mA</span>
 					</div>
 					<h2 class="h4 mt-4">Chart: Gain reference</h2>
 					<p>Configure the reference values shown in the Gain chart.</p>

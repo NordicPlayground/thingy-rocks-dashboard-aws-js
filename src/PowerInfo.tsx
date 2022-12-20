@@ -21,7 +21,7 @@ const PowerIcon = ({ state }: { state: Reported }) => {
 	const { settings } = useSettings()
 	const sol = state?.sol?.v
 	if (sol === undefined) return <BatteryMedium strokeWidth={2} />
-	const gain = Math.min(0, sol?.gain ?? 0)
+	const gain = Math.max(0, sol?.gain ?? 0)
 	if (settings.consumptionThreshold > gain) return <SunDim strokeWidth={2} />
 	return <Sun strokeWidth={2} />
 }
@@ -35,7 +35,7 @@ export const PowerInfo = ({
 }) => {
 	const { settings } = useSettings()
 	const sol = state?.sol?.v
-	const gain = Math.min(0, sol?.gain ?? 0)
+	const gain = Math.max(0, sol?.gain ?? 0)
 	const charging = gain > settings.consumptionThreshold
 	const ChargeState = charging ? Charging : NotCharging
 

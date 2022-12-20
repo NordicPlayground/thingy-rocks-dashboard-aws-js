@@ -82,7 +82,7 @@ const fakeState = () => ({
 	},
 	bat: { v: 3879, ts: Date.now() },
 	sol: {
-		v: { gain: 0.00851063895970583, bat: 3.8560001850128174 },
+		v: { gain: 4.03, bat: 3.85 },
 		ts: Date.now(),
 	},
 })
