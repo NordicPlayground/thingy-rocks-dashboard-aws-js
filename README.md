@@ -16,6 +16,8 @@ in [TypeScript](https://www.typescriptlang.org/).
 The app is intended to be displayed on the half part of a 42 inch 1080p TV in
 portrait mode. Target resolution: 1080 x 768.
 
+[Feature overview](https://miro.com/app/board/uXjVP4ck03g=/?share_link_id=90630083064)
+
 ## Setup
 
 Install the dependencies:
