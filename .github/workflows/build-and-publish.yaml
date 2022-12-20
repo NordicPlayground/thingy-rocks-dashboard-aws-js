@@ -1,9 +1,16 @@
 name: Build and Release
 
-on: push
+on:
+  push:
+    branches: ["saga"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   CNAME: world.thingy.rocks
   WEBSOCKET_ENDPOINT: wss://gqhubutcb1.execute-api.us-west-2.amazonaws.com/2022-11-22
   MAP_NAME: thingy-rocks-backend-map
@@ -33,24 +40,18 @@ jobs:
       - name: Build
         env:
           VERSION: ${{ github.sha }}
-        run: npm run build
-
-      - name: Publish to GitHub pages
-        if: github.ref == 'refs/heads/saga'
-        working-directory: build
         run: |
-          echo "machine github.com login accesskey password ${{ secrets.GITHUB_TOKEN }}" > ~/.netrc
-          git config --global user.email "actions@example.com"
-          git config --global user.name "github-actions[bot]"
-          git config --global init.defaultBranch gh-pages
-          touch .nojekyll
-          cp -r ../static ./
-          echo ${{ env.CNAME }} > CNAME
-          git init
-          git add -A
-          git commit -m "update website"
-          git remote add origin https://github.com/${GITHUB_REPOSITORY}.git
-          git push -f origin HEAD:gh-pages
+          npm run build
+          cp -r ./static ./build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "./build"
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
 
       - name: Semantic release
         continue-on-error: true
