@@ -45,12 +45,10 @@ jobs:
           cp -r ./static ./build
 
       - name: Deploy to CloudFlare pages
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          workingDirectory: "build"
-          command: pages publish --project-name=example
+        run: |
+          mkdir -p ~/.wrangler/config/
+          echo 'api_token="${{ secrets.CF_API_TOKEN }}"' > ~/.wrangler/config/default.toml
+          CLOUDFLARE_ACCOUNT_ID=${{ secrets.CF_ACCOUNT_ID }} npx wrangler pages publish build
 
       - name: Semantic release
         env:
