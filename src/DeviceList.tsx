@@ -26,7 +26,7 @@ const DeviceState = styled.section`
 	user-select: none;
 	overflow: hidden;
 	max-height: 100vh;
-	overflow-y: scroll;
+	overflow-y: auto;
 	ul {
 		list-style: none;
 		margin: 0;
