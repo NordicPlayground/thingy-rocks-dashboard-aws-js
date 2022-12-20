@@ -44,14 +44,13 @@ jobs:
           npm run build
           cp -r ./static ./build
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Deploy to CloudFlare pages
+        uses: cloudflare/wrangler-action@2.0.0
         with:
-          path: "./build"
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: "build"
+          command: pages publish --project-name=example
 
       - name: Semantic release
         env:
