@@ -23,7 +23,8 @@
   "scripts": {
     "start": "vite",
     "build": "node --max_old_space_size=8192 ./node_modules/vite/bin/vite.js build --emptyOutDir",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "postinstall": "cp -r node_modules/svg-country-flags/svg/ static/flags"
   },
   "dependencies": {
     "@aws-amplify/core": "5.0.7",
@@ -38,7 +39,8 @@
     "maplibre-gl": "2.4.0",
     "preact": "10.11.3",
     "preact-router": "4.1.0",
-    "styled-components": "5.3.6"
+    "styled-components": "5.3.6",
+    "svg-country-flags": "1.2.10"
   },
   "devDependencies": {
     "@nordicsemiconductor/asset-tracker-cloud-code-style": "11.0.160",

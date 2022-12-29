@@ -37,12 +37,16 @@ jobs:
       - name: Install dependencies
         run: npm ci --no-audit
 
+      - name: Run tests
+        run: npx tsx src/**/*.spec.ts
+
       - name: Build
         env:
           VERSION: ${{ github.sha }}
         run: |
           npm run build
           cp -r ./static ./build
+          cp -r node_modules/svg-country-flags/svg/ ./build/static/flags
 
       - name: Deploy to CloudFlare pages
         env:
