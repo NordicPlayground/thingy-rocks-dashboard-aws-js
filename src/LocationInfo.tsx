@@ -4,7 +4,6 @@ import { locationSourceColors } from './colors'
 import type { Device } from './context/Devices'
 import { GeoLocationSource, useDevices } from './context/Devices'
 import { LocationSourceLabels } from './context/LocationSourceLabels'
-import { mccmnc2country } from './mccmnc2country'
 import { sortLocations } from './sortLocations'
 
 const LocationSourceSwitch = styled.button`
@@ -29,11 +28,6 @@ const LocationSourceSamplingDisabled = styled.span`
 	.lucide {
 		margin-right: 0.25rem;
 	}
-`
-
-const Flag = styled.img`
-	width: 20px;
-	margin-right: 0.5rem;
 `
 
 const LocationSourceButton = ({
@@ -73,8 +67,6 @@ const LocationSourceButton = ({
 export const LocationInfo = ({ device }: { device: Device }) => {
 	const { location, state } = device
 	const nod = state?.cfg?.nod ?? []
-	const mccmnc = state?.roam?.v?.mccmnc
-	const country = mccmnc !== undefined ? mccmnc2country(mccmnc) : undefined
 	const rankedLocations = Object.values(location ?? []).sort(sortLocations)
 	const hasLocation = rankedLocations.length > 0
 	if (hasLocation || nod.length > 0)
@@ -90,13 +82,6 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 					)}
 				</dt>
 				<dd>
-					{country !== undefined && (
-						<Flag
-							alt={country.name}
-							title={country.name}
-							src={`/static/flags/${country.code.toLowerCase()}.svg`}
-						/>
-					)}
 					{rankedLocations.map(({ source }) => (
 						<LocationSourceButton device={device} source={source} />
 					))}

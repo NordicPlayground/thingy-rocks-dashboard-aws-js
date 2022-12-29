@@ -7,6 +7,7 @@ import { GeoLocationSource, useDevices } from './context/Devices'
 import { useMap } from './context/Map'
 import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
+import { CountryFlag } from './CountryFlag'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { EnvironmentInfo } from './EnvironmentInfo'
 import { DKIcon } from './icons/DKIcon'
@@ -198,6 +199,7 @@ export const DeviceList = () => {
 										)}
 										{shortenedDeviceId === deviceId && <>{deviceId}</>}
 									</span>
+									<CountryFlag device={device} />
 									{lastUpdateTime !== undefined && (
 										<LastUpdate title="Last update">
 											<UploadCloud strokeWidth={1} />
