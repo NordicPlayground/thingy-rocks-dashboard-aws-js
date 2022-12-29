@@ -3,4 +3,4 @@
 
 npx lint-staged
 npx tsc
-npx tsx src/*.spec.ts
+npm test
