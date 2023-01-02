@@ -79,6 +79,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 			const areaLayerId = `${locationAreaBaseId}-circle`
 			const areaLayerLabelId = `${locationAreaBaseId}-label`
 			const centerLabelId = `${locationAreaBaseId}-deviceId-label`
+			const centerLabelSource = `${locationAreaBaseId}-source-label`
 
 			if (areaSource === undefined) {
 				if (hidden === true) {
@@ -146,6 +147,22 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 						'symbol-placement': 'point',
 						'text-field': deviceAlias,
 						'text-font': [glyphFonts.bold],
+						'text-offset': [0, -1],
+					},
+					paint: {
+						'text-color': locationSourceColors[source],
+					},
+				})
+				map.addLayer({
+					id: centerLabelSource,
+					type: 'symbol',
+					source: centerSourceId,
+					layout: {
+						'symbol-placement': 'point',
+						'text-field': LocationSourceLabels[source],
+						'text-font': [glyphFonts.regular],
+						'text-offset': [0, 1],
+						'text-size': 14,
 					},
 					paint: {
 						'text-color': locationSourceColors[source],
@@ -184,6 +201,8 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 						map.removeLayer(areaLayerLabelId)
 					if (map.getLayer(centerLabelId) !== undefined)
 						map.removeLayer(centerLabelId)
+					if (map.getLayer(centerLabelSource) !== undefined)
+						map.removeLayer(centerLabelSource)
 					map.removeSource(locationAreaSourceId)
 					if (map.getSource(centerSourceId) !== undefined)
 						map.removeSource(centerSourceId)
