@@ -73,6 +73,32 @@ export const DeviceHistory = () => {
 
 	const charts: ChartInfo[] = []
 
+	if (history?.solGain !== undefined) {
+		charts.push({
+			Icon: Sun,
+			title: 'Solar',
+			dataset: {
+				min: 0,
+				max: 5,
+				values: history.solGain.map(([v, d]) => [
+					v,
+					subSeconds(history.base, d),
+				]),
+				color: colors['nordic-sun'],
+				format: (v) => `${v.toFixed(1)}mA`,
+				helperLines: [
+					{
+						label: '1m',
+						value: gainReferenceEveryMinute,
+					},
+					{
+						label: '60m',
+						value: gainReferenceEveryHour,
+					},
+				],
+			},
+		})
+	}
 	if (history?.bat !== undefined) {
 		charts.push({
 			Icon: Battery,
@@ -107,32 +133,6 @@ export const DeviceHistory = () => {
 				values: history.temp.map(([v, d]) => [v, subSeconds(history.base, d)]),
 				color: colors['nordic-red'],
 				format: (v) => `${v.toFixed(1)}°C`,
-			},
-		})
-	}
-	if (history?.solGain !== undefined) {
-		charts.push({
-			Icon: Sun,
-			title: 'Gain',
-			dataset: {
-				min: 0,
-				max: 5,
-				values: history.solGain.map(([v, d]) => [
-					v,
-					subSeconds(history.base, d),
-				]),
-				color: colors['nordic-sun'],
-				format: (v) => `${v.toFixed(1)}mA`,
-				helperLines: [
-					{
-						label: '1m',
-						value: gainReferenceEveryMinute,
-					},
-					{
-						label: '60m',
-						value: gainReferenceEveryHour,
-					},
-				],
 			},
 		})
 	}
