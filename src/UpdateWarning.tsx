@@ -10,6 +10,9 @@ const WarningDD = styled.dd`
 	color: var(--color-nordic-fall);
 	abbr {
 		display: block;
+		a {
+			color: inherit;
+		}
 	}
 `
 
@@ -37,14 +40,24 @@ export const UpdateWarning = ({ reported }: { reported: Reported }) => {
 					<abbr
 						title={`Firmware update available, device is running ${dev.appV}, release version is ${FIRMWARE_RELEASE}`}
 					>
-						FW update available ({FIRMWARE_RELEASE})
+						<a
+							href="https://github.com/NordicPlayground/thingy-world-firmware-aws/releases"
+							target="_blank"
+						>
+							FW update available ({FIRMWARE_RELEASE})
+						</a>
 					</abbr>
 				)}
 				{needsMfwUpdate && (
 					<abbr
 						title={`Modem firmware update available, device is running ${dev.modV}, release version is ${MODEM_FIRMWARE_RELEASE}`}
 					>
-						MFW update available ({MODEM_FIRMWARE_RELEASE})
+						<a
+							href="https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF9160-DK/Download#infotabs"
+							target="_blank"
+						>
+							MFW update available ({MODEM_FIRMWARE_RELEASE})
+						</a>
 					</abbr>
 				)}
 			</WarningDD>
