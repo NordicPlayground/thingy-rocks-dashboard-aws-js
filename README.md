@@ -24,6 +24,7 @@ Install the dependencies:
 
 ```bash
 npm ci
+ln -s ../node_modules/svg-country-flags/svg static/flags
 ```
 
 ## Configure
