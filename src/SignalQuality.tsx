@@ -10,6 +10,8 @@ import {
 } from 'lucide-preact'
 import styled from 'styled-components'
 import { Device, EnergyEstimate } from './context/Devices'
+import { LTEm } from './icons/LTE-m'
+import { NBIot } from './icons/NBIot'
 
 const EnergyEstimateIcons: Record<
 	EnergyEstimate,
@@ -62,8 +64,7 @@ const StyledSignalQualityTriangle = styled(SignalQualityTriangle)`
 `
 
 export const SignalQuality = ({ device }: { device: Device }) => {
-	const rsrpDbm = device.state?.roam?.v?.rsrp
-	const eest = device.state?.roam?.v?.eest
+	const { rsrp: rsrpDbm, eest } = device.state?.roam?.v ?? {}
 
 	if (rsrpDbm === undefined && eest === undefined) return null
 
@@ -79,6 +80,7 @@ export const SignalQuality = ({ device }: { device: Device }) => {
 					</abbr>
 				</dt>
 				<dd>
+					<NetworkInfo device={device} />
 					{rsrpDbm ?? '?'} dBm
 					{eest !== undefined && (
 						<EestLabel
@@ -111,7 +113,27 @@ export const SignalQuality = ({ device }: { device: Device }) => {
 					/>
 				)}
 			</dt>
-			<dd>{rsrpDbm ?? '?'} dBm</dd>
+			<dd>
+				<NetworkInfo device={device} />
+				{rsrpDbm ?? '?'} dBm
+			</dd>
 		</>
+	)
+}
+
+const Abbr = styled.abbr`
+	svg {
+		height: 24px;
+		width: 50px;
+		margin-right: 0.5rem;
+	}
+`
+
+const NetworkInfo = ({ device }: { device: Device }) => {
+	const { nw, band } = device.state?.roam?.v ?? {}
+	return (
+		<Abbr title={`Band ${band}`} class="me-2">
+			{nw?.includes('LTE-M') ?? false ? <LTEm /> : <NBIot />}
+		</Abbr>
 	)
 }
