@@ -30,6 +30,8 @@ if (sentryDSN === undefined) {
 } else {
 	console.debug(chalk.yellow(`Sentry DSN`), chalk.blue(sentryDSN))
 }
+const firmwareRelease = process.env.FIRMWARE_RELEASE ?? '1.7.1'
+const modemFirmwareRelease = process.env.MODEM_FIRMWARE_RELEASE ?? '1.3.3'
 
 const replaceInIndex = (data: Record<string, string>) => ({
 	name: 'replace-in-index',
@@ -82,5 +84,7 @@ export default defineConfig({
 		REGION: JSON.stringify(cognitoIdentityPoolId.split(':')[0] as string),
 		SENTRY_DSN: JSON.stringify(sentryDSN),
 		BUILD_TIME: JSON.stringify(new Date().toISOString()),
+		FIRMWARE_RELEASE: JSON.stringify(firmwareRelease),
+		MODEM_FIRMWARE_RELEASE: JSON.stringify(modemFirmwareRelease),
 	},
 })

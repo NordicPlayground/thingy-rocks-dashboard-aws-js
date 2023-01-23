@@ -15,6 +15,7 @@ type Settings = {
 	 */
 	gainReferenceEveryMinute: number
 	gainReferenceEveryHour: number
+	showUpdateWarning: boolean
 }
 
 const defaultSettings: Settings = {
@@ -25,6 +26,7 @@ const defaultSettings: Settings = {
 	gainReferenceEveryHour: 2.3,
 	showFavorites: false,
 	favorites: [],
+	showUpdateWarning: true,
 }
 
 const loadDefaults = () => {

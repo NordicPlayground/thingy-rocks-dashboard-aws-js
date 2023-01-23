@@ -26,6 +26,7 @@ export const Settings = () => {
 			showFavorites,
 			favorites,
 			consumptionThreshold,
+			showUpdateWarning,
 		},
 		update,
 		reset,
@@ -127,12 +128,25 @@ export const Settings = () => {
 							Show test device?
 						</label>
 					</div>
-					<h2 class="h4 mt-4">Gain threshold</h2>
+					<h2 class="h4 mt-4">Devices</h2>
+					<div class="form-check mt-2">
+						<input
+							class="form-check-input"
+							type="checkbox"
+							id="showUpdateWarning"
+							checked={showUpdateWarning}
+							onClick={() => update({ showUpdateWarning: !showUpdateWarning })}
+						/>
+						<label class="form-check-label" htmlFor="showUpdateWarning">
+							Show firmware update warning?
+						</label>
+					</div>
+					<h2 class="h4 mt-4">Solar</h2>
 					<label htmlFor={'consumptionThreshold'}>
 						Above this value, charge is considered sufficiently high enough so
-						device does not use battery.
+						device does not use battery:
 					</label>
-					<div class="input-group">
+					<div class="input-group mb-3">
 						<input
 							type="number"
 							class="form-control"
@@ -151,10 +165,11 @@ export const Settings = () => {
 						/>
 						<span class="input-group-text">mA</span>
 					</div>
-					<h2 class="h4 mt-4">Chart: Gain reference</h2>
-					<p>Configure the reference values shown in the Gain chart.</p>
-					<p>Power consumption when sending updates:</p>
-					<div class="d-md-flex mb-3 ">
+					<p class={'mb-0'}>
+						Configure the reference values shown in the Gain chart. Power
+						consumption when sending updates:
+					</p>
+					<div class="d-md-flex mb-3">
 						<div class="input-group">
 							<span class="input-group-text">every minute</span>
 							<input

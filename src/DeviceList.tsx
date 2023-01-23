@@ -18,6 +18,7 @@ import { PowerInfo } from './PowerInfo'
 import { RelativeTime } from './RelativeTime'
 import { SignalQuality } from './SignalQuality'
 import { sortLocations } from './sortLocations'
+import { UpdateWarning } from './UpdateWarning'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -125,7 +126,7 @@ export const DeviceList = () => {
 	const map = useMap()
 	const { toggle: toggleHistoryChart } = useHistoryChart()
 	const {
-		settings: { showFavorites, favorites },
+		settings: { showFavorites, favorites, showUpdateWarning },
 	} = useSettings()
 
 	return (
@@ -240,6 +241,9 @@ export const DeviceList = () => {
 										/>
 									)}
 									<LocationInfo device={device} />
+									{showUpdateWarning && device.state !== undefined && (
+										<UpdateWarning reported={device.state} />
+									)}
 								</Properties>
 							</li>
 						)

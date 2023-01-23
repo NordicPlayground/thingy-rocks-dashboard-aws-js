@@ -33,6 +33,7 @@
     "@nordicsemiconductor/rsrp-bar": "5.0.5",
     "@sentry/react": "7.31.1",
     "@sentry/tracing": "7.31.1",
+    "compare-versions": "6.0.0-rc.1",
     "date-fns": "2.29.3",
     "e118-iin-list": "2.4.0",
     "lodash-es": "4.17.21",

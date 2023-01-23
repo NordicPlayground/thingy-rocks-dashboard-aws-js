@@ -8,6 +8,18 @@ declare const MAP_NAME: string
 declare const REGION: string
 declare const BUILD_TIME: string
 declare const SENTRY_DSN: string | undefined
+/**
+ * Version of the Thingy World firmware that is considered to be the latest release
+ *
+ * @example '1.7.1'
+ */
+declare const FIRMWARE_RELEASE: string
+/**
+ * Version of the Modem firmware that is considered to be the latest release
+ *
+ * @example '1.3.3'
+ */
+declare const MODEM_FIRMWARE_RELEASE: string
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 interface ImportMeta {
