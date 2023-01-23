@@ -124,7 +124,8 @@ const IssuerName = styled.dd`
 export const DeviceList = () => {
 	const { devices, lastUpdateTs, alias } = useDevices()
 	const map = useMap()
-	const { toggle: toggleHistoryChart } = useHistoryChart()
+	const { toggle: toggleHistoryChart, show: showHistoryChart } =
+		useHistoryChart()
 	const {
 		settings: { showFavorites, favorites, showUpdateWarning },
 	} = useSettings()
@@ -175,6 +176,7 @@ export const DeviceList = () => {
 										if (deviceLocation !== undefined) {
 											map?.center(deviceLocation)
 										}
+										showHistoryChart(deviceId)
 									}}
 								>
 									<BoardIcon class="icon" />
