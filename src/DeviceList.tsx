@@ -1,5 +1,5 @@
 import { identifyIssuer } from 'e118-iin-list'
-import { Lightbulb, Sun, UploadCloud, Wifi } from 'lucide-preact'
+import { Sun, UploadCloud, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
 import { locationSourceColors } from './colors'
@@ -13,6 +13,7 @@ import { EnvironmentInfo } from './EnvironmentInfo'
 import { DKIcon } from './icons/DKIcon'
 import { SIMIcon } from './icons/SIMIcon'
 import { ThingyIcon } from './icons/ThingyIcon'
+import { LightbulbDevice } from './LightbulbDevice'
 import { LocationInfo } from './LocationInfo'
 import { PowerInfo } from './PowerInfo'
 import { RelativeTime } from './RelativeTime'
@@ -91,7 +92,7 @@ const ShieldIcon = styled.span`
 	margin-right: 0.25rem;
 `
 
-const LastUpdate = styled.abbr`
+export const LastUpdate = styled.abbr`
 	margin-left: 0.5rem;
 	opacity: 0.8;
 	font-size: 85%;
@@ -100,7 +101,7 @@ const LastUpdate = styled.abbr`
 	}
 `
 
-const Title = styled.button`
+export const Title = styled.button`
 	display: flex;
 	width: 100%;
 	align-items: center;
@@ -263,50 +264,26 @@ export const DeviceList = () => {
 						</li>
 					)
 				})}
-				{lights.map(([deviceId, device]) => {
-					const lastUpdateTime = lastUpdateTs(deviceId) as number
-					const shortenedDeviceId =
-						alias(deviceId) ??
-						deviceId.replace(/^[\d]+\d{4}$/, (match) => `…${match.slice(-4)}`)
-					const color = device.state?.led?.v ?? [0, 0, 0]
-					return (
-						<li>
-							<Title
-								type={'button'}
-								onClick={() => {
-									if (device.state?.geo !== undefined) {
-										map?.center(
-											{
-												...device.state.geo,
-												accuracy: 0,
-												source: GeoLocationSource.FIXED,
-											},
-											16,
-										)
-									}
-									hideHistoryChart()
-								}}
-							>
-								<Lightbulb
-									class={'mx-1'}
-									color={`rgb(${color[0]},${color[1]},${color[2]})`}
-								/>
-								<span class="info">
-									{shortenedDeviceId !== deviceId && (
-										<abbr title={deviceId}>{shortenedDeviceId}</abbr>
-									)}
-									{shortenedDeviceId === deviceId && <>{deviceId}</>}
-								</span>
-								{lastUpdateTime !== undefined && (
-									<LastUpdate title="Last update">
-										<UploadCloud strokeWidth={1} />
-										<RelativeTime time={new Date(lastUpdateTime)} />
-									</LastUpdate>
-								)}
-							</Title>
-						</li>
-					)
-				})}
+				{lights.map(([deviceId, device]) => (
+					<li>
+						<LightbulbDevice
+							device={device}
+							onClick={() => {
+								if (device.state?.geo !== undefined) {
+									map?.center(
+										{
+											...device.state.geo,
+											accuracy: 0,
+											source: GeoLocationSource.FIXED,
+										},
+										16,
+									)
+								}
+								hideHistoryChart()
+							}}
+						/>
+					</li>
+				))}
 			</ul>
 		</DeviceState>
 	)
