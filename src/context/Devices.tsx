@@ -114,6 +114,16 @@ export type Reported = Partial<{
 		ts: number // 1670245539000
 	}
 	sol: SolarInfo
+	// LED lights
+	led: {
+		v: [number, number, number] // [0, 169, 206]
+		ts: number // 1670245539000
+	}
+	// Device has a fixed geo location
+	geo: {
+		lng: number // 10.4383147713927
+		lat: number // 63.42503380159108
+	}
 }>
 
 export enum GeoLocationSource {
@@ -121,6 +131,7 @@ export enum GeoLocationSource {
 	MULTI_CELL = 'multi-cell',
 	WIFI = 'wifi',
 	GNSS = 'gnss',
+	FIXED = 'fixed',
 }
 
 export type GeoLocation = {
@@ -212,6 +223,17 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 								},
 							}) as Record<GeoLocationSource, GeoLocation>
 						}
+						// Use fixed location from shadow
+						if (reported.geo !== undefined) {
+							updated.location = merge(updated.location ?? {}, {
+								[GeoLocationSource.FIXED]: {
+									lat: reported.geo.lat,
+									lng: reported.geo.lng,
+									accuracy: 1,
+									source: GeoLocationSource.FIXED,
+								},
+							}) as Record<GeoLocationSource, GeoLocation>
+						}
 						return {
 							...devices,
 							[deviceId]: updated,
@@ -272,6 +294,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						state?.dev?.ts,
 						state?.env?.ts,
 						state?.gnss?.ts,
+						state?.led?.ts,
 						state?.roam?.ts,
 						state?.sol?.ts,
 					].filter((s) => s !== undefined) as number[]

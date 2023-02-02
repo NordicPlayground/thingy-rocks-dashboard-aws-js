@@ -27,4 +27,5 @@ export const locationSourceColors = {
 	[GeoLocationSource.WIFI]: '#80ED99',
 	[GeoLocationSource.MULTI_CELL]: '#57CC99',
 	[GeoLocationSource.SINGLE_CELL]: '#38A3A5',
+	[GeoLocationSource.FIXED]: '#22577A',
 } as const

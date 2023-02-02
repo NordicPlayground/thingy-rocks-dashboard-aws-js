@@ -1,41 +1,12 @@
-import { Ulid } from 'id128'
-import { useEffect, useRef } from 'preact/hooks'
-import { Summary, useDevices } from './context/Devices'
-import { useSettings } from './context/Settings'
+import { FakeDevice } from './FakeDevice'
 
-export const TestDevice = () => {
-	const { updateHistory, updateState } = useDevices()
-	const deviceId = useRef<string>(
-		`test-${Ulid.generate().toCanonical().slice(-8)}`,
-	)
-	const {
-		settings: { enableTestDevice },
-	} = useSettings()
+export const FakeTracker = () => (
+	<FakeDevice fakeState={fakeTrackerState} fakeHistory={fakeTrackerHistory} />
+)
 
-	const fakeData = () => {
-		updateState(deviceId.current, fakeState())
-		updateHistory(deviceId.current, fakeHistory())
-	}
+import type { Reported, Summary } from '../context/Devices'
 
-	useEffect(() => {
-		if (!enableTestDevice) return
-
-		console.log(`[Test Device]`, 'enabled', deviceId.current)
-
-		fakeData()
-		const i = setInterval(() => {
-			fakeData()
-		}, 60 * 1000)
-
-		return () => {
-			console.log(`[Test Device]`, 'disabled', deviceId.current)
-			clearInterval(i)
-		}
-	}, [enableTestDevice])
-	return null
-}
-
-const fakeState = () => ({
+const fakeTrackerState = (): Reported => ({
 	cfg: {
 		act: true,
 		loct: 300,
@@ -86,8 +57,7 @@ const fakeState = () => ({
 		ts: Date.now(),
 	},
 })
-
-const fakeHistory = (): Summary => ({
+const fakeTrackerHistory = (): Summary => ({
 	base: new Date(),
 	bat: [
 		[2.5, 1],

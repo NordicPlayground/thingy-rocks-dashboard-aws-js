@@ -28,7 +28,7 @@ type DeviceMap = {
 		location: GeoLocation
 		hidden?: boolean
 	}) => void
-	center: (center: GeoLocation) => void
+	center: (center: GeoLocation, zoom?: number) => void
 	// Show a large view of the entire world
 	showWorld: () => void
 }
@@ -47,6 +47,7 @@ export const locationSourceDashArray: Record<
 	[GeoLocationSource.WIFI]: [1, 1],
 	[GeoLocationSource.MULTI_CELL]: [4, 2],
 	[GeoLocationSource.SINGLE_CELL]: [8, 4, 1, 4],
+	[GeoLocationSource.FIXED]: [1],
 }
 
 /**
@@ -223,8 +224,8 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 				} as GeoJSON.Feature)
 			}
 		},
-		center: (center) =>
-			map?.flyTo({ center: center, zoom: centerOnDeviceZoomLevel }),
+		center: (center, zoom) =>
+			map?.flyTo({ center: center, zoom: zoom ?? centerOnDeviceZoomLevel }),
 		showWorld: () =>
 			map?.flyTo({ center: [-33.96763064206279, 55.051422964953545], zoom: 2 }),
 	}

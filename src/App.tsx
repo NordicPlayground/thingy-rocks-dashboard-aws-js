@@ -4,7 +4,8 @@ import { Provider as SettingsProvider } from './context/Settings'
 import { Provider as HistoryChartProvider } from './context/showHistoryChart'
 import { Provider as WebsocketProvider } from './context/WebsocketConnection'
 import { Dashboard } from './Dashboard'
-import { TestDevice } from './TestDevice'
+import { FakeLight } from './test-device/FakeLight'
+import { FakeTracker } from './test-device/FakeTracker'
 import { WithCredentials as CredentialsProvider } from './WithCredentials'
 
 export const App = () => (
@@ -20,7 +21,8 @@ export const App = () => (
 								</HistoryChartProvider>
 							</MapProvider>
 						</WebsocketProvider>
-						<TestDevice />
+						<FakeTracker />
+						<FakeLight />
 					</DevicesProvider>
 				</SettingsProvider>
 			)}
