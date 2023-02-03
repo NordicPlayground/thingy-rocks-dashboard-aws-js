@@ -104,7 +104,7 @@ export const DeviceHistory = () => {
 			Icon: Battery,
 			title: 'Batt.',
 			dataset: {
-				min: 2.5,
+				min: 3.0,
 				max: 5.5,
 				values: history.bat.map(([v, d]) => [v, subSeconds(history.base, d)]),
 				color: colors['nordic-blue'],
