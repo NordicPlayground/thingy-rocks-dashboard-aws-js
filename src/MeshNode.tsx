@@ -1,38 +1,14 @@
 import { Network, Server, UploadCloud } from 'lucide-preact'
-import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
 import { Device, MeshNodeInfo, Reported, useDevices } from './context/Devices'
-import { LastUpdate, Title } from './DeviceList'
+import { LastUpdate, Properties, Title } from './DeviceList'
 import { FiveGMesh } from './icons/5GMesh'
+import { ManageDevice } from './ManageDevice'
 import { RelativeTime } from './RelativeTime'
 
 export type MeshNodeDevice = Device & {
 	state: Reported & { meshNode: MeshNodeInfo }
 }
-
-const Properties = styled.dl`
-	margin: 0;
-	display: grid;
-	grid-template-columns: auto auto;
-	grid-template-rows: 1fr;
-	grid-auto-rows: auto;
-	grid-column-gap: 0px;
-	grid-row-gap: 0px;
-	font-size: 85%;
-	dd {
-		margin-bottom: 0;
-		white-space: nowrap;
-	}
-	dt {
-		display: flex;
-		align-items: center;
-		margin-right: 0.5rem;
-		.lucide {
-			margin-right: 4px;
-			margin-left: 4px;
-		}
-	}
-`
 
 export const MeshNode = ({
 	device,
@@ -77,6 +53,7 @@ export const MeshNode = ({
 					{hops} {hops > 1 ? 'hops' : 'hop'},{' '}
 					<abbr title="travel time">{travelTimeMs} ms</abbr>
 				</dd>
+				<ManageDevice device={device} />
 			</Properties>
 		</>
 	)

@@ -32,6 +32,7 @@ const DeviceState = styled.section`
 			display: flex;
 			flex-direction: column;
 			align-items: flex-start;
+			position: relative;
 			button {
 				border: 0;
 				background: transparent;
@@ -152,7 +153,7 @@ export const DeviceList = () => {
 					if (isTracker(device))
 						return (
 							<li>
-								<Tracker device={device} deviceId={deviceId} />
+								<Tracker device={device} />
 							</li>
 						)
 					if (isLightBulb(device))

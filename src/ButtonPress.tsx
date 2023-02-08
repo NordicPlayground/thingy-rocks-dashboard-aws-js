@@ -9,7 +9,7 @@ const diff = (ts: ButtonPressData['ts']): number =>
 const HotDt = styled.dt`
 	color: var(--color-nordic-pink);
 `
-const HotDl = styled.dt`
+const HotDd = styled.dd`
 	color: var(--color-nordic-pink);
 `
 
@@ -43,7 +43,7 @@ export const ButtonPress = ({
 			<HotDt>
 				<Focus strokeWidth={2} />
 			</HotDt>
-			<HotDl>{diffSeconds} seconds ago</HotDl>
+			<HotDd>{diffSeconds} seconds ago</HotDd>
 		</>
 	)
 }

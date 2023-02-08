@@ -8,8 +8,12 @@ import {
 	useDevices,
 } from './Devices'
 
-export const WebsocketContext = createContext({
+export const WebsocketContext = createContext<{
+	connected: boolean
+	send: (message: any) => void
+}>({
 	connected: false,
+	send: () => undefined,
 })
 
 enum MessageContext {
@@ -177,6 +181,15 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		<WebsocketContext.Provider
 			value={{
 				connected,
+				send: (message) => {
+					console.log({ message })
+					connection?.current?.send(
+						JSON.stringify({
+							message: 'sendmessage',
+							data: message,
+						}),
+					)
+				},
 			}}
 		>
 			{children}

@@ -26,13 +26,7 @@ import { SignalQuality } from './SignalQuality'
 import { sortLocations } from './sortLocations'
 import { UpdateWarning } from './UpdateWarning'
 
-export const Tracker = ({
-	deviceId,
-	device,
-}: {
-	deviceId: string
-	device: Device
-}) => {
+export const Tracker = ({ device }: { device: Device }) => {
 	const { lastUpdateTs, alias } = useDevices()
 	const map = useMap()
 	const { toggle: toggleHistoryChart, show: showHistoryChart } =
@@ -49,10 +43,10 @@ export const Tracker = ({
 	const { brdV, appV, iccid } = state?.dev?.v ?? {}
 
 	const shortenedDeviceId =
-		alias(deviceId) ??
-		deviceId.replace(/^[\d]+\d{4}$/, (match) => `…${match.slice(-4)}`)
+		alias(device.id) ??
+		device.id.replace(/^[\d]+\d{4}$/, (match) => `…${match.slice(-4)}`)
 
-	const lastUpdateTime = lastUpdateTs(deviceId) as number
+	const lastUpdateTime = lastUpdateTs(device.id) as number
 
 	const BoardIcon = brdV === 'nrf9160dk_nrf9160' ? DKIcon : ThingyIcon
 
@@ -64,7 +58,7 @@ export const Tracker = ({
 					if (deviceLocation !== undefined) {
 						map?.center(deviceLocation)
 					}
-					showHistoryChart(deviceId)
+					showHistoryChart(device.id)
 				}}
 			>
 				<BoardIcon class="icon" />
@@ -85,10 +79,10 @@ export const Tracker = ({
 							</SolarColor>
 						</ShieldIcon>
 					)}
-					{shortenedDeviceId !== deviceId && (
-						<abbr title={deviceId}>{shortenedDeviceId}</abbr>
+					{shortenedDeviceId !== device.id && (
+						<abbr title={device.id}>{shortenedDeviceId}</abbr>
 					)}
-					{shortenedDeviceId === deviceId && <>{deviceId}</>}
+					{shortenedDeviceId === device.id && <>{device.id}</>}
 				</span>
 				<CountryFlag device={device} />
 				{lastUpdateTime !== undefined && (
@@ -110,21 +104,21 @@ export const Tracker = ({
 				)}
 				{buttonPress !== undefined && (
 					<ButtonPress
-						key={`${deviceId}-press-${buttonPress.ts}`}
+						key={`${device.id}-press-${buttonPress.ts}`}
 						buttonPress={buttonPress}
 					/>
 				)}
 				<EnvironmentInfo
 					device={device}
 					onClick={() => {
-						toggleHistoryChart(deviceId)
+						toggleHistoryChart(device.id)
 					}}
 				/>
 				{state !== undefined && (
 					<PowerInfo
 						state={state}
 						onClick={() => {
-							toggleHistoryChart(deviceId)
+							toggleHistoryChart(device.id)
 						}}
 					/>
 				)}
