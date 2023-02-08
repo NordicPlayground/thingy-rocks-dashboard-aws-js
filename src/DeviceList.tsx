@@ -1,25 +1,13 @@
-import { identifyIssuer } from 'e118-iin-list'
-import { Sun, UploadCloud, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
-import { ButtonPress } from './ButtonPress'
-import { locationSourceColors } from './colors'
-import { GeoLocationSource, useDevices } from './context/Devices'
+import { Device, GeoLocationSource, useDevices } from './context/Devices'
 import { useMap } from './context/Map'
 import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
-import { CountryFlag } from './CountryFlag'
 import { DisconnectedWarning } from './DisconnectedWarning'
-import { EnvironmentInfo } from './EnvironmentInfo'
-import { DKIcon } from './icons/DKIcon'
 import { SIMIcon } from './icons/SIMIcon'
-import { ThingyIcon } from './icons/ThingyIcon'
 import { LightbulbDevice } from './LightbulbDevice'
-import { LocationInfo } from './LocationInfo'
-import { PowerInfo } from './PowerInfo'
-import { RelativeTime } from './RelativeTime'
-import { SignalQuality } from './SignalQuality'
-import { sortLocations } from './sortLocations'
-import { UpdateWarning } from './UpdateWarning'
+import { MeshNode, MeshNodeDevice } from './MeshNode'
+import { Tracker } from './Tracker'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -54,7 +42,7 @@ const DeviceState = styled.section`
 	}
 `
 
-const Properties = styled.dl`
+export const Properties = styled.dl`
 	margin: 0;
 	display: grid;
 	grid-template-columns: auto auto;
@@ -78,17 +66,17 @@ const Properties = styled.dl`
 	}
 `
 
-const StyledSIMIcon = styled(SIMIcon)`
+export const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;
 	height: 18px;
 	margin: 0 0 0 4px;
 `
 
-const SolarColor = styled.span`
+export const SolarColor = styled.span`
 	color: var(--color-nordic-sun);
 `
 
-const ShieldIcon = styled.span`
+export const ShieldIcon = styled.span`
 	margin-right: 0.25rem;
 `
 
@@ -116,22 +104,27 @@ export const Title = styled.button`
 	}
 `
 
-const IssuerName = styled.dd`
+export const IssuerName = styled.dd`
 	max-width: 20vw;
 	overflow: hidden;
 	text-overflow: ellipsis;
 `
 
+const isTracker = (device: Device): boolean => {
+	const { appV, brdV } = device.state?.dev?.v ?? {}
+	return appV !== undefined && brdV !== undefined
+}
+
+const isLightBulb = (device: Device): boolean => device.state?.led !== undefined
+const isMeshNode = (device: Device): boolean =>
+	device.state?.meshNode !== undefined
+
 export const DeviceList = () => {
-	const { devices, lastUpdateTs, alias } = useDevices()
+	const { devices, lastUpdateTs } = useDevices()
 	const map = useMap()
+	const { hide: hideHistoryChart } = useHistoryChart()
 	const {
-		toggle: toggleHistoryChart,
-		show: showHistoryChart,
-		hide: hideHistoryChart,
-	} = useHistoryChart()
-	const {
-		settings: { showFavorites, favorites, showUpdateWarning },
+		settings: { showFavorites, favorites },
 	} = useSettings()
 
 	const devicesToShow = Object.entries(devices)
@@ -151,139 +144,61 @@ export const DeviceList = () => {
 			return favorites.indexOf(id1) - favorites.indexOf(id2)
 		})
 
-	const trackers = devicesToShow.filter(([, device]) => {
-		const { appV, brdV } = device.state?.dev?.v ?? {}
-		return appV !== undefined && brdV !== undefined
-	})
-
-	const lights = devicesToShow.filter(
-		([, device]) => device.state?.led !== undefined,
-	)
-
 	return (
 		<DeviceState>
 			<DisconnectedWarning />
 			<ul>
-				{trackers.map(([deviceId, device]) => {
-					const { location, state } = device
-					const rankedLocations = Object.values(location ?? []).sort(
-						sortLocations,
-					)
-					const deviceLocation = rankedLocations[0]
-
-					const buttonPress = state?.btn
-					const { brdV, appV, iccid } = state?.dev?.v ?? {}
-
-					const shortenedDeviceId =
-						alias(deviceId) ??
-						deviceId.replace(/^[\d]+\d{4}$/, (match) => `…${match.slice(-4)}`)
-
-					const lastUpdateTime = lastUpdateTs(deviceId) as number
-
-					const BoardIcon = brdV === 'nrf9160dk_nrf9160' ? DKIcon : ThingyIcon
-
-					return (
-						<li>
-							<Title
-								type={'button'}
-								onClick={() => {
-									if (deviceLocation !== undefined) {
-										map?.center(deviceLocation)
-									}
-									showHistoryChart(deviceId)
-								}}
-							>
-								<BoardIcon class="icon" />
-								<span class="info">
-									{appV?.includes('wifi') === true && (
-										<ShieldIcon>
-											<Wifi
-												style={{
-													color: locationSourceColors[GeoLocationSource.WIFI],
-												}}
-											/>
-										</ShieldIcon>
-									)}
-									{appV?.includes('solar') === true && (
-										<ShieldIcon>
-											<SolarColor>
-												<Sun />
-											</SolarColor>
-										</ShieldIcon>
-									)}
-									{shortenedDeviceId !== deviceId && (
-										<abbr title={deviceId}>{shortenedDeviceId}</abbr>
-									)}
-									{shortenedDeviceId === deviceId && <>{deviceId}</>}
-								</span>
-								<CountryFlag device={device} />
-								{lastUpdateTime !== undefined && (
-									<LastUpdate title="Last update">
-										<UploadCloud strokeWidth={1} />
-										<RelativeTime time={new Date(lastUpdateTime)} />
-									</LastUpdate>
-								)}
-							</Title>
-							<Properties>
-								<SignalQuality device={device} />
-								{iccid !== undefined && (
-									<>
-										<dt>
-											<StyledSIMIcon />
-										</dt>
-										<IssuerName>
-											{identifyIssuer(iccid)?.companyName ?? '?'}
-										</IssuerName>
-									</>
-								)}
-								{buttonPress !== undefined && (
-									<ButtonPress
-										key={`${deviceId}-press-${buttonPress.ts}`}
-										buttonPress={buttonPress}
-									/>
-								)}
-								<EnvironmentInfo
+				{devicesToShow.map(([deviceId, device]) => {
+					if (isTracker(device))
+						return (
+							<li>
+								<Tracker device={device} deviceId={deviceId} />
+							</li>
+						)
+					if (isLightBulb(device))
+						return (
+							<li>
+								<LightbulbDevice
 									device={device}
 									onClick={() => {
-										toggleHistoryChart(deviceId)
+										if (device.state?.geo !== undefined) {
+											map?.center(
+												{
+													...device.state.geo,
+													accuracy: 0,
+													source: GeoLocationSource.FIXED,
+												},
+												16,
+											)
+										}
+										hideHistoryChart()
 									}}
 								/>
-								{state !== undefined && (
-									<PowerInfo
-										state={state}
-										onClick={() => {
-											toggleHistoryChart(deviceId)
-										}}
-									/>
-								)}
-								<LocationInfo device={device} />
-								{showUpdateWarning && device.state !== undefined && (
-									<UpdateWarning reported={device.state} />
-								)}
-							</Properties>
-						</li>
-					)
+							</li>
+						)
+					if (isMeshNode(device))
+						return (
+							<li>
+								<MeshNode
+									device={device as MeshNodeDevice}
+									onClick={() => {
+										if (device.state?.geo !== undefined) {
+											map?.center(
+												{
+													...device.state.geo,
+													accuracy: 0,
+													source: GeoLocationSource.FIXED,
+												},
+												16,
+											)
+										}
+										hideHistoryChart()
+									}}
+								/>
+							</li>
+						)
+					return null
 				})}
-				{lights.map(([deviceId, device]) => (
-					<li>
-						<LightbulbDevice
-							device={device}
-							onClick={() => {
-								if (device.state?.geo !== undefined) {
-									map?.center(
-										{
-											...device.state.geo,
-											accuracy: 0,
-											source: GeoLocationSource.FIXED,
-										},
-										16,
-									)
-								}
-								hideHistoryChart()
-							}}
-						/>
-					</li>
-				))}
 			</ul>
 		</DeviceState>
 	)
