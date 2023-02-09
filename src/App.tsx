@@ -5,6 +5,7 @@ import { Provider as HistoryChartProvider } from './context/showHistoryChart'
 import { Provider as WebsocketProvider } from './context/WebsocketConnection'
 import { Dashboard } from './Dashboard'
 import { FakeLight } from './test-device/FakeLight'
+import { FakeMeshNode } from './test-device/FakeMeshNode'
 import { FakeTracker } from './test-device/FakeTracker'
 import { WithCredentials as CredentialsProvider } from './WithCredentials'
 
@@ -23,6 +24,7 @@ export const App = () => (
 						</WebsocketProvider>
 						<FakeTracker />
 						<FakeLight />
+						<FakeMeshNode />
 					</DevicesProvider>
 				</SettingsProvider>
 			)}

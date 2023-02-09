@@ -1,7 +1,7 @@
-import { Check, Lightbulb, Lock, UploadCloud, X } from 'lucide-preact'
-import { useState } from 'preact/hooks'
+import { Lightbulb, UploadCloud } from 'lucide-preact'
 import { Device, useDevices } from './context/Devices'
-import { LastUpdate, Title } from './DeviceList'
+import { LastUpdate, Properties, Title } from './DeviceList'
+import { ManageDevice } from './ManageDevice'
 import { RelativeTime } from './RelativeTime'
 
 export const LightbulbDevice = ({
@@ -37,48 +37,9 @@ export const LightbulbDevice = ({
 					</LastUpdate>
 				)}
 			</Title>
-			<DeviceCodeForm />
+			<Properties>
+				<ManageDevice device={device} />
+			</Properties>
 		</>
-	)
-}
-
-const DeviceCodeForm = () => {
-	const [deviceCode, setDeviceCode] = useState<string>('')
-	const [showForm, setShowForm] = useState<boolean>(false)
-
-	if (!showForm)
-		return (
-			<button type="button" onClick={() => setShowForm(true)}>
-				<Lock class={'mx-1 my-2'} /> Unlock
-			</button>
-		)
-	return (
-		<form>
-			<label htmlFor={'deviceCode'}>Enter device code</label>
-			<div class="input-group mb-3">
-				<input
-					type="text"
-					class="form-control form-control-sm"
-					id="deviceCode"
-					placeholder="e.g. 'd3c4fb4d'"
-					value={deviceCode}
-					onChange={(e) => {
-						setDeviceCode((e.target as HTMLInputElement).value)
-					}}
-				/>
-				<div class="input-group-append">
-					<button type="button" class={'btn'} onClick={() => setShowForm(true)}>
-						<Check class={'mx-1 my-2'} />
-					</button>
-					<button
-						type="button"
-						class={'btn'}
-						onClick={() => setShowForm(false)}
-					>
-						<X class={'mx-1 my-2'} />
-					</button>
-				</div>
-			</div>
-		</form>
 	)
 }

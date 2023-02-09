@@ -307,6 +307,9 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						state?.led?.ts,
 						state?.roam?.ts,
 						state?.sol?.ts,
+						state?.meshNode?.rxTime !== undefined
+							? new Date(state.meshNode.rxTime).getTime()
+							: undefined,
 					].filter((s) => s !== undefined) as number[]
 
 					return lastUpdateTimeStamps.length > 0
