@@ -53,7 +53,7 @@ export const MeshNode = ({
 					{hops} {hops > 1 ? 'hops' : 'hop'},{' '}
 					<abbr title="travel time">{travelTimeMs} ms</abbr>
 				</dd>
-				<ManageDevice device={device} />
+				<ManageDevice device={device} led="on/off" />
 			</Properties>
 		</>
 	)

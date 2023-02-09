@@ -1,5 +1,6 @@
 import { ComponentChildren, createContext } from 'preact'
 import { useContext, useEffect, useRef, useState } from 'preact/hooks'
+import type { RGB } from '../rgbToHex'
 import {
 	GeoLocationSource,
 	MeshNodeInfo,
@@ -22,6 +23,7 @@ enum MessageContext {
 	DeviceLocation = 'https://thingy.rocks/device-location',
 	DeviceHistory = 'https://thingy.rocks/device-history',
 	MeshNodeEvent = 'https://thingy.rocks/wirepas-5g-mesh-node-event',
+	Lightbulb = 'https://thingy.rocks/lightbulb',
 }
 
 type MeshNodeEventMessage = {
@@ -32,6 +34,14 @@ type MeshNodeEventMessage = {
 			| { counter: number }
 			| { button: number }
 			| { led: Record<number, number> }
+	}
+}
+
+type LightbulbMessage = {
+	'@context': MessageContext.Lightbulb
+	lightbulb: {
+		type: 'rgb'
+		color?: RGB
 	}
 }
 
@@ -62,6 +72,7 @@ type Message = {
 			history: Summary
 	  }
 	| MeshNodeEventMessage
+	| LightbulbMessage
 )
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
@@ -141,6 +152,14 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				case 'https://thingy.rocks/wirepas-5g-mesh-node-event':
 					updateMeshNode(message)
 					break
+				case 'https://thingy.rocks/lightbulb':
+					deviceMessages.updateState(message.deviceId, {
+						led: {
+							v: message.lightbulb,
+							ts: Date.now(),
+						},
+					})
+					break
 				default:
 					console.error(`[WS]`, 'Unknown message', message)
 			}
@@ -182,7 +201,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			value={{
 				connected,
 				send: (message) => {
-					console.log({ message })
+					console.log(`[WS]`, message)
 					connection?.current?.send(
 						JSON.stringify({
 							message: 'sendmessage',

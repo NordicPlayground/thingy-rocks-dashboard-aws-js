@@ -12,7 +12,7 @@ const fakeMeshNodeState = (): Reported => ({
 	meshNode: {
 		node: 1078800338,
 		gateway: 'demo5Gmesh_gw01',
-		rxTime: '2023-02-09T10:45:00.504Z',
+		rxTime: new Date().toISOString(), // '2023-02-09T10:45:00.504Z'
 		travelTimeMs: 15,
 		hops: 1,
 	},

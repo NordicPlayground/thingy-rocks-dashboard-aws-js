@@ -16,7 +16,7 @@ export const LightbulbDevice = ({
 	const shortenedDeviceId =
 		alias(device.id) ??
 		device.id.replace(/^[\d]+\d{4}$/, (match) => `…${match.slice(-4)}`)
-	const color = device.state?.led?.v ?? [0, 0, 0]
+	const color = device.state?.led?.v?.color ?? [0, 0, 0]
 	return (
 		<>
 			<Title type={'button'} onClick={onClick}>
@@ -38,7 +38,7 @@ export const LightbulbDevice = ({
 				)}
 			</Title>
 			<Properties>
-				<ManageDevice device={device} />
+				<ManageDevice device={device} led="rgb" />
 			</Properties>
 		</>
 	)

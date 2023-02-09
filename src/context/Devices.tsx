@@ -116,7 +116,10 @@ export type Reported = Partial<{
 	sol: SolarInfo
 	// LED lights
 	led: {
-		v: [number, number, number] // [0, 169, 206]
+		v: {
+			type: 'rgb'
+			color?: [number, number, number] // [0, 169, 206]
+		}
 		ts: number // 1670245539000
 	}
 	// Device has a fixed geo location
