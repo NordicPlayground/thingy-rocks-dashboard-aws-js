@@ -13,9 +13,11 @@ export type MeshNodeDevice = Device & {
 export const MeshNode = ({
 	device,
 	onClick,
+	onManaging,
 }: {
 	device: MeshNodeDevice
 	onClick: () => void
+	onManaging?: (isManaging: boolean) => void
 }) => {
 	const { lastUpdateTs } = useDevices()
 	const lastUpdateTime = lastUpdateTs(device.id) as number
@@ -53,7 +55,11 @@ export const MeshNode = ({
 					{hops} {hops > 1 ? 'hops' : 'hop'},{' '}
 					<abbr title="travel time">{travelTimeMs} ms</abbr>
 				</dd>
-				<ManageDevice device={device} led="on/off" />
+				<ManageDevice
+					device={device}
+					led="on/off"
+					onLockChange={(unlocked) => onManaging?.(unlocked)}
+				/>
 			</Properties>
 		</>
 	)

@@ -201,7 +201,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			value={{
 				connected,
 				send: (message) => {
-					console.log(`[WS]`, message)
+					console.log(`[WS]`, { message })
 					connection?.current?.send(
 						JSON.stringify({
 							message: 'sendmessage',

@@ -1,3 +1,4 @@
+import { useState } from 'preact/hooks'
 import styled from 'styled-components'
 import { Device, GeoLocationSource, useDevices } from './context/Devices'
 import { useMap } from './context/Map'
@@ -127,6 +128,7 @@ export const DeviceList = () => {
 	const {
 		settings: { showFavorites, favorites },
 	} = useSettings()
+	const [managing, setManaging] = useState<string[]>([])
 
 	const devicesToShow = Object.entries(devices)
 		.filter(([deviceId]) => {
@@ -140,9 +142,17 @@ export const DeviceList = () => {
 			return true
 		})
 		.sort(([id1], [id2]) => {
+			if (managing.includes(id1)) return 0
+			if (managing.includes(id2)) return 0
 			if (!showFavorites)
 				return (lastUpdateTs(id2) ?? 0) - (lastUpdateTs(id1) ?? 0)
 			return favorites.indexOf(id1) - favorites.indexOf(id2)
+		})
+		// always show managing devices first
+		.sort(([id1], [id2]) => {
+			if (managing.includes(id1)) return -1
+			if (managing.includes(id2)) return 1
+			return 0
 		})
 
 	return (
@@ -160,6 +170,13 @@ export const DeviceList = () => {
 						return (
 							<li>
 								<LightbulbDevice
+									onManaging={(isManaging) => {
+										if (isManaging) {
+											setManaging((m) => [...new Set([...m, device.id])])
+										} else {
+											setManaging((m) => m.filter((id) => id !== device.id))
+										}
+									}}
 									device={device}
 									onClick={() => {
 										if (device.state?.geo !== undefined) {
@@ -182,6 +199,13 @@ export const DeviceList = () => {
 							<li>
 								<MeshNode
 									device={device as MeshNodeDevice}
+									onManaging={(isManaging) => {
+										if (isManaging) {
+											setManaging((m) => [...new Set([...m, device.id])])
+										} else {
+											setManaging((m) => m.filter((id) => id !== device.id))
+										}
+									}}
 									onClick={() => {
 										if (device.state?.geo !== undefined) {
 											map?.center(

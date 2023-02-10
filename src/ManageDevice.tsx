@@ -10,7 +10,7 @@ import {
 	Unlock,
 	X,
 } from 'lucide-preact'
-import { useState } from 'preact/hooks'
+import { useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
 import type { Device } from './context/Devices'
 import { useWebsocket } from './context/WebsocketConnection'
@@ -35,9 +35,11 @@ const isOn = (color: RGB) => (color.reduce((total, c) => c + total, 0) ?? 0) > 0
 export const ManageDevice = ({
 	device,
 	led,
+	onLockChange,
 }: {
 	device: Device
 	led?: 'rgb' | 'on/off'
+	onLockChange?: (unlocked: boolean) => void
 }) => {
 	const storageKey = `code:${device.id}`
 	const [showCodeInput, setShowCodeInput] = useState<boolean>(false)
@@ -51,6 +53,11 @@ export const ManageDevice = ({
 	const [desiredLEDColor, setDesiredLEDColor] = useState<
 		[number, number, number]
 	>(device.state?.led?.v?.color ?? [0, 0, 0])
+	const desiredOn = isOn(desiredLEDColor)
+
+	useEffect(() => {
+		onLockChange?.(unlocked)
+	}, [unlocked])
 
 	return (
 		<>
@@ -136,8 +143,8 @@ export const ManageDevice = ({
 								})
 							}}
 						>
-							{!ledIsOn && <ToggleLeft />}
-							{ledIsOn && <ToggleRight />}
+							{!desiredOn && <ToggleLeft />}
+							{desiredOn && <ToggleRight />}
 						</button>
 					</dd>
 				</>

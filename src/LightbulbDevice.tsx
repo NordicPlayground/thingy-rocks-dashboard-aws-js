@@ -7,9 +7,11 @@ import { RelativeTime } from './RelativeTime'
 export const LightbulbDevice = ({
 	device,
 	onClick,
+	onManaging,
 }: {
 	device: Device
 	onClick: () => void
+	onManaging?: (isManaging: boolean) => void
 }) => {
 	const { lastUpdateTs, alias } = useDevices()
 	const lastUpdateTime = lastUpdateTs(device.id) as number
@@ -38,7 +40,11 @@ export const LightbulbDevice = ({
 				)}
 			</Title>
 			<Properties>
-				<ManageDevice device={device} led="rgb" />
+				<ManageDevice
+					device={device}
+					led="rgb"
+					onLockChange={(unlocked) => onManaging?.(unlocked)}
+				/>
 			</Properties>
 		</>
 	)
