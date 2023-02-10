@@ -16,6 +16,7 @@ import {
 	StyledSIMIcon,
 	Title,
 } from './DeviceList'
+import { DeviceName } from './DeviceName'
 import { EnvironmentInfo } from './EnvironmentInfo'
 import { DKIcon } from './icons/DKIcon'
 import { ThingyIcon } from './icons/ThingyIcon'
@@ -27,7 +28,7 @@ import { sortLocations } from './sortLocations'
 import { UpdateWarning } from './UpdateWarning'
 
 export const Tracker = ({ device }: { device: Device }) => {
-	const { lastUpdateTs, alias } = useDevices()
+	const { lastUpdateTs } = useDevices()
 	const map = useMap()
 	const { toggle: toggleHistoryChart, show: showHistoryChart } =
 		useHistoryChart()
@@ -41,10 +42,6 @@ export const Tracker = ({ device }: { device: Device }) => {
 
 	const buttonPress = state?.btn
 	const { brdV, appV, iccid } = state?.dev?.v ?? {}
-
-	const shortenedDeviceId =
-		alias(device.id) ??
-		device.id.replace(/^[\d]+\d{4}$/, (match) => `…${match.slice(-4)}`)
 
 	const lastUpdateTime = lastUpdateTs(device.id) as number
 
@@ -79,10 +76,7 @@ export const Tracker = ({ device }: { device: Device }) => {
 							</SolarColor>
 						</ShieldIcon>
 					)}
-					{shortenedDeviceId !== device.id && (
-						<abbr title={device.id}>{shortenedDeviceId}</abbr>
-					)}
-					{shortenedDeviceId === device.id && <>{device.id}</>}
+					<DeviceName device={device} />
 				</span>
 				<CountryFlag device={device} />
 				{lastUpdateTime !== undefined && (

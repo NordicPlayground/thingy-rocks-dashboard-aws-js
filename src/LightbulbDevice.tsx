@@ -3,6 +3,7 @@ import { Device, useDevices } from './context/Devices'
 import { useSettings } from './context/Settings'
 import { useWebsocket } from './context/WebsocketConnection'
 import { LastUpdate, Properties, Title } from './DeviceList'
+import { DeviceName } from './DeviceName'
 import { RelativeTime } from './RelativeTime'
 import { RGBControl } from './RGBControl'
 
@@ -13,13 +14,10 @@ export const LightbulbDevice = ({
 	device: Device
 	onClick: () => void
 }) => {
-	const { lastUpdateTs, alias } = useDevices()
+	const { lastUpdateTs } = useDevices()
 	const { settings } = useSettings()
 	const { send } = useWebsocket()
 	const lastUpdateTime = lastUpdateTs(device.id) as number
-	const shortenedDeviceId =
-		alias(device.id) ??
-		device.id.replace(/^[\d]+\d{4}$/, (match) => `…${match.slice(-4)}`)
 	const color = device.state?.led?.v?.color ?? [0, 0, 0]
 	const code = settings.managementCodes[device.id]
 	const unlocked = code !== undefined
@@ -32,10 +30,7 @@ export const LightbulbDevice = ({
 					color={`rgb(${color[0]},${color[1]},${color[2]})`}
 				/>
 				<span class="info">
-					{shortenedDeviceId !== device.id && (
-						<abbr title={device.id}>{shortenedDeviceId}</abbr>
-					)}
-					{shortenedDeviceId === device.id && <>{device.id}</>}
+					<DeviceName device={device} />
 				</span>
 
 				{lastUpdateTime !== undefined && (

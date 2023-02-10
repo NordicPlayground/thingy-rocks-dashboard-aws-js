@@ -97,6 +97,18 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				ts: new Date(message.meshNodeEvent.meta.rxTime).getTime(),
 			}
 		}
+		if ('led' in message.meshNodeEvent.message) {
+			state.led = {
+				v: {
+					type: 'on/off',
+					color:
+						message.meshNodeEvent.message.led[0] === 1
+							? [255, 255, 255]
+							: [0, 0, 0],
+				},
+				ts: new Date(message.meshNodeEvent.meta.rxTime).getTime(),
+			}
+		}
 		deviceMessages.updateState(nodeId, state)
 	}
 

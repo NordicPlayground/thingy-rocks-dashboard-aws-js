@@ -117,7 +117,7 @@ export type Reported = Partial<{
 	// LED lights
 	led: {
 		v: {
-			type: 'rgb'
+			type: 'rgb' | 'on/off'
 			color?: [number, number, number] // [0, 169, 206]
 		}
 		ts: number // 1670245539000
@@ -191,7 +191,7 @@ export const isTracker = (device: Device): boolean => {
 	return appV !== undefined && brdV !== undefined
 }
 export const isLightBulb = (device: Device): boolean =>
-	device.state?.led !== undefined
+	device.state?.led !== undefined && device.state.meshNode === undefined
 export const isMeshNode = (device: Device): boolean =>
 	device.state?.meshNode !== undefined
 

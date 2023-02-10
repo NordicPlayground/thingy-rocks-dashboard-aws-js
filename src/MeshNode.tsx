@@ -4,6 +4,7 @@ import { Device, MeshNodeInfo, Reported, useDevices } from './context/Devices'
 import { useSettings } from './context/Settings'
 import { useWebsocket } from './context/WebsocketConnection'
 import { LastUpdate, Properties, Title } from './DeviceList'
+import { DeviceName } from './DeviceName'
 import { FiveGMesh } from './icons/5GMesh'
 import { NRPlus } from './icons/NRPlus'
 import { OnOffControl } from './OnOffControl'
@@ -37,7 +38,9 @@ export const MeshNode = ({
 		<>
 			<Title type={'button'} onClick={onClick}>
 				<FiveGMesh class="icon" alt="Wirepas 5G Mesh" />
-				<span class="info">{node}</span>
+				<span class="info">
+					<DeviceName device={device} fallback={node.toString()} />
+				</span>
 				{lastUpdateTime !== undefined && (
 					<LastUpdate title="Last update">
 						<UploadCloud strokeWidth={1} />
