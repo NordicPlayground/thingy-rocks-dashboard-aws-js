@@ -71,6 +71,10 @@ export const Properties = styled.dl`
 			margin-left: 4px;
 		}
 	}
+	.icon {
+		width: 25px;
+		height: 25px;
+	}
 `
 
 export const StyledSIMIcon = styled(SIMIcon)`

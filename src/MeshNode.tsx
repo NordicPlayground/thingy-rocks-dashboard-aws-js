@@ -1,10 +1,11 @@
-import { Network, Server, UploadCloud } from 'lucide-preact'
+import { Network, UploadCloud } from 'lucide-preact'
 import { ButtonPress } from './ButtonPress'
 import { Device, MeshNodeInfo, Reported, useDevices } from './context/Devices'
 import { useSettings } from './context/Settings'
 import { useWebsocket } from './context/WebsocketConnection'
 import { LastUpdate, Properties, Title } from './DeviceList'
 import { FiveGMesh } from './icons/5GMesh'
+import { NRPlus } from './icons/NRPlus'
 import { OnOffControl } from './OnOffControl'
 import { RelativeTime } from './RelativeTime'
 import type { RGB } from './rgbToHex'
@@ -52,18 +53,18 @@ export const MeshNode = ({
 					/>
 				)}
 				<dt>
-					<abbr title={'Gateway'}>
-						<Server strokeWidth={1} />
-					</abbr>
-				</dt>
-				<dd>{gateway}</dd>
-				<dt>
-					<Network strokeWidth={1} />
+					<NRPlus class="icon" alt="DECT NR+" />
 				</dt>
 				<dd>
 					{hops} {hops > 1 ? 'hops' : 'hop'},{' '}
 					<abbr title="travel time">{travelTimeMs} ms</abbr>
 				</dd>
+				<dt>
+					<abbr title={'Gateway'}>
+						<Network strokeWidth={1} />
+					</abbr>
+				</dt>
+				<dd>{gateway}</dd>
 				{unlocked && (
 					<OnOffControl
 						on={ledIsOn}
