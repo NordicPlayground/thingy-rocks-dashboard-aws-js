@@ -16,6 +16,7 @@ type Settings = {
 	gainReferenceEveryMinute: number
 	gainReferenceEveryHour: number
 	showUpdateWarning: boolean
+	managementCodes: Record<string, string>
 }
 
 const defaultSettings: Settings = {
@@ -27,6 +28,7 @@ const defaultSettings: Settings = {
 	showFavorites: false,
 	favorites: [],
 	showUpdateWarning: true,
+	managementCodes: {},
 }
 
 const loadDefaults = () => {

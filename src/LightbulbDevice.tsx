@@ -1,24 +1,29 @@
 import { Lightbulb, UploadCloud } from 'lucide-preact'
 import { Device, useDevices } from './context/Devices'
+import { useSettings } from './context/Settings'
+import { useWebsocket } from './context/WebsocketConnection'
 import { LastUpdate, Properties, Title } from './DeviceList'
-import { ManageDevice } from './ManageDevice'
 import { RelativeTime } from './RelativeTime'
+import { RGBControl } from './RGBControl'
 
 export const LightbulbDevice = ({
 	device,
 	onClick,
-	onManaging,
 }: {
 	device: Device
 	onClick: () => void
-	onManaging?: (isManaging: boolean) => void
 }) => {
 	const { lastUpdateTs, alias } = useDevices()
+	const { settings } = useSettings()
+	const { send } = useWebsocket()
 	const lastUpdateTime = lastUpdateTs(device.id) as number
 	const shortenedDeviceId =
 		alias(device.id) ??
 		device.id.replace(/^[\d]+\d{4}$/, (match) => `…${match.slice(-4)}`)
 	const color = device.state?.led?.v?.color ?? [0, 0, 0]
+	const code = settings.managementCodes[device.id]
+	const unlocked = code !== undefined
+
 	return (
 		<>
 			<Title type={'button'} onClick={onClick}>
@@ -32,6 +37,7 @@ export const LightbulbDevice = ({
 					)}
 					{shortenedDeviceId === device.id && <>{device.id}</>}
 				</span>
+
 				{lastUpdateTime !== undefined && (
 					<LastUpdate title="Last update">
 						<UploadCloud strokeWidth={1} />
@@ -40,11 +46,24 @@ export const LightbulbDevice = ({
 				)}
 			</Title>
 			<Properties>
-				<ManageDevice
-					device={device}
-					led="rgb"
-					onLockChange={(unlocked) => onManaging?.(unlocked)}
-				/>
+				{unlocked && (
+					<RGBControl
+						color={color}
+						onChange={(newColor) => {
+							send({
+								desired: {
+									led: {
+										v: {
+											color: newColor,
+										},
+									},
+								},
+								deviceId: device.id,
+								code,
+							})
+						}}
+					/>
+				)}
 			</Properties>
 		</>
 	)

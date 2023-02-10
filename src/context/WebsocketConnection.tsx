@@ -90,7 +90,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				lng: 2.128132954068601,
 			},
 		}
-		const nodeId = `${message.meshNodeEvent.meta.node}@${message.meshNodeEvent.meta.gateway}`
+		const nodeId = `${message.meshNodeEvent.meta.node}:${message.meshNodeEvent.meta.gateway}`
 		if ('button' in message.meshNodeEvent.message) {
 			state.btn = {
 				v: message.meshNodeEvent.message.button,

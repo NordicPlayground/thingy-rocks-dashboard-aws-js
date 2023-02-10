@@ -1,6 +1,11 @@
-import { useState } from 'preact/hooks'
 import styled from 'styled-components'
-import { Device, GeoLocationSource, useDevices } from './context/Devices'
+import {
+	GeoLocationSource,
+	isLightBulb,
+	isMeshNode,
+	isTracker,
+	useDevices,
+} from './context/Devices'
 import { useMap } from './context/Map'
 import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
@@ -112,15 +117,6 @@ export const IssuerName = styled.dd`
 	text-overflow: ellipsis;
 `
 
-const isTracker = (device: Device): boolean => {
-	const { appV, brdV } = device.state?.dev?.v ?? {}
-	return appV !== undefined && brdV !== undefined
-}
-
-const isLightBulb = (device: Device): boolean => device.state?.led !== undefined
-const isMeshNode = (device: Device): boolean =>
-	device.state?.meshNode !== undefined
-
 export const DeviceList = () => {
 	const { devices, lastUpdateTs } = useDevices()
 	const map = useMap()
@@ -128,7 +124,6 @@ export const DeviceList = () => {
 	const {
 		settings: { showFavorites, favorites },
 	} = useSettings()
-	const [managing, setManaging] = useState<string[]>([])
 
 	const devicesToShow = Object.entries(devices)
 		.filter(([deviceId]) => {
@@ -142,41 +137,27 @@ export const DeviceList = () => {
 			return true
 		})
 		.sort(([id1], [id2]) => {
-			if (managing.includes(id1)) return 0
-			if (managing.includes(id2)) return 0
 			if (!showFavorites)
 				return (lastUpdateTs(id2) ?? 0) - (lastUpdateTs(id1) ?? 0)
 			return favorites.indexOf(id1) - favorites.indexOf(id2)
-		})
-		// always show managing devices first
-		.sort(([id1], [id2]) => {
-			if (managing.includes(id1)) return -1
-			if (managing.includes(id2)) return 1
-			return 0
 		})
 
 	return (
 		<DeviceState>
 			<DisconnectedWarning />
 			<ul>
-				{devicesToShow.map(([deviceId, device]) => {
+				{devicesToShow.map(([, device]) => {
 					if (isTracker(device))
 						return (
 							<li>
-								<Tracker device={device} />
+								<Tracker key={`device:${device.id}`} device={device} />
 							</li>
 						)
 					if (isLightBulb(device))
 						return (
 							<li>
 								<LightbulbDevice
-									onManaging={(isManaging) => {
-										if (isManaging) {
-											setManaging((m) => [...new Set([...m, device.id])])
-										} else {
-											setManaging((m) => m.filter((id) => id !== device.id))
-										}
-									}}
+									key={`device:${device.id}`}
 									device={device}
 									onClick={() => {
 										if (device.state?.geo !== undefined) {
@@ -198,14 +179,8 @@ export const DeviceList = () => {
 						return (
 							<li>
 								<MeshNode
+									key={`device:${device.id}`}
 									device={device as MeshNodeDevice}
-									onManaging={(isManaging) => {
-										if (isManaging) {
-											setManaging((m) => [...new Set([...m, device.id])])
-										} else {
-											setManaging((m) => m.filter((id) => id !== device.id))
-										}
-									}}
 									onClick={() => {
 										if (device.state?.geo !== undefined) {
 											map?.center(

@@ -1,6 +1,7 @@
 import { ChevronUp, Settings2, Star, StarOff } from 'lucide-preact'
 import styled from 'styled-components'
-import { useDevices } from './context/Devices'
+import { CodeInput } from './CodeInput'
+import { isLightBulb, isMeshNode, useDevices } from './context/Devices'
 import { useSettings } from './context/Settings'
 
 const SettingsPanel = styled.aside`
@@ -32,6 +33,7 @@ export const Settings = () => {
 		reset,
 	} = useSettings()
 	if (!showSettings) return null
+
 	return (
 		<SettingsPanel>
 			<div class="card">
@@ -89,7 +91,6 @@ export const Settings = () => {
 												>
 													{favorited ? <Star /> : <StarOff />}
 												</button>
-												<span class="flex-grow-1">{alias(id) ?? id}</span>
 												{i > 0 && favorited && (
 													<button
 														type="button"
@@ -110,6 +111,7 @@ export const Settings = () => {
 														<ChevronUp />
 													</button>
 												)}
+												<span class="flex-grow-1">{alias(id) ?? id}</span>
 											</li>
 										)
 									})}
@@ -141,6 +143,13 @@ export const Settings = () => {
 							Show firmware update warning?
 						</label>
 					</div>
+					<h3 class="h5 mt-3">Management</h3>
+					<p>Below you can provide the device's code to manage it.</p>
+					{Object.entries(devices)
+						.filter(([, device]) => isLightBulb(device) || isMeshNode(device))
+						.map(([deviceId, device]) => (
+							<CodeInput device={device} key={deviceId} />
+						))}
 					<h2 class="h4 mt-4">Solar</h2>
 					<label htmlFor={'consumptionThreshold'}>
 						Above this value, charge is considered sufficiently high enough so

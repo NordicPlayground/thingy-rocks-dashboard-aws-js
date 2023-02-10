@@ -186,6 +186,15 @@ export type Summary = {
 	][]
 }
 
+export const isTracker = (device: Device): boolean => {
+	const { appV, brdV } = device.state?.dev?.v ?? {}
+	return appV !== undefined && brdV !== undefined
+}
+export const isLightBulb = (device: Device): boolean =>
+	device.state?.led !== undefined
+export const isMeshNode = (device: Device): boolean =>
+	device.state?.meshNode !== undefined
+
 export const DevicesContext = createContext<{
 	devices: Devices
 	updateState: (deviceId: string, reported: Reported) => void

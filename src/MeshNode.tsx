@@ -1,28 +1,37 @@
 import { Network, Server, UploadCloud } from 'lucide-preact'
 import { ButtonPress } from './ButtonPress'
 import { Device, MeshNodeInfo, Reported, useDevices } from './context/Devices'
+import { useSettings } from './context/Settings'
+import { useWebsocket } from './context/WebsocketConnection'
 import { LastUpdate, Properties, Title } from './DeviceList'
 import { FiveGMesh } from './icons/5GMesh'
-import { ManageDevice } from './ManageDevice'
+import { OnOffControl } from './OnOffControl'
 import { RelativeTime } from './RelativeTime'
+import type { RGB } from './rgbToHex'
 
 export type MeshNodeDevice = Device & {
 	state: Reported & { meshNode: MeshNodeInfo }
 }
 
+const isOn = (color: RGB) => (color.reduce((total, c) => c + total, 0) ?? 0) > 0
+
 export const MeshNode = ({
 	device,
 	onClick,
-	onManaging,
 }: {
 	device: MeshNodeDevice
 	onClick: () => void
-	onManaging?: (isManaging: boolean) => void
 }) => {
+	const { send } = useWebsocket()
 	const { lastUpdateTs } = useDevices()
+	const { settings } = useSettings()
 	const lastUpdateTime = lastUpdateTs(device.id) as number
 	const { node, hops, travelTimeMs, gateway } = device.state.meshNode
 	const buttonPress = device.state?.btn
+	const code = settings.managementCodes[device.id]
+	const unlocked = code !== undefined
+	const ledIsOn = isOn(device.state?.led?.v?.color ?? [0, 0, 0])
+
 	return (
 		<>
 			<Title type={'button'} onClick={onClick}>
@@ -55,11 +64,24 @@ export const MeshNode = ({
 					{hops} {hops > 1 ? 'hops' : 'hop'},{' '}
 					<abbr title="travel time">{travelTimeMs} ms</abbr>
 				</dd>
-				<ManageDevice
-					device={device}
-					led="on/off"
-					onLockChange={(unlocked) => onManaging?.(unlocked)}
-				/>
+				{unlocked && (
+					<OnOffControl
+						on={ledIsOn}
+						onChange={(on) => {
+							send({
+								desired: {
+									led: {
+										v: {
+											color: on ? [255, 255, 255] : [0, 0, 0],
+										},
+									},
+								},
+								deviceId: device.id,
+								code: code,
+							})
+						}}
+					/>
+				)}
 			</Properties>
 		</>
 	)
