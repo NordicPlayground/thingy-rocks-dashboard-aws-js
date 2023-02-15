@@ -22,9 +22,22 @@ export const UpdateWarning = ({ reported }: { reported: Reported }) => {
 	if (dev === undefined) return null
 
 	const mfw = dev.modV.replace(/^mfw_nrf[0-9]+_/, '')
-	const needsMfwUpdate = compareVersions(MODEM_FIRMWARE_RELEASE, mfw) === 1
 	const fw = dev.appV.replace(/-.+/, '')
-	const needsFwUpdate = compareVersions(FIRMWARE_RELEASE, fw) === 1
+
+	let needsMfwUpdate = false
+	let needsFwUpdate = false
+
+	try {
+		needsMfwUpdate = compareVersions(MODEM_FIRMWARE_RELEASE, mfw) === 1
+	} catch {
+		// pass
+	}
+
+	try {
+		needsFwUpdate = compareVersions(FIRMWARE_RELEASE, fw) === 1
+	} catch {
+		// pass
+	}
 
 	const needsUpdate = needsFwUpdate || needsMfwUpdate
 
