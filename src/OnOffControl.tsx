@@ -11,24 +11,20 @@ export const OnOffControl = ({
 	const [desired, setDesired] = useState<boolean>(on)
 	return (
 		<>
-			<dt>
-				{on && <Lightbulb strokeWidth={1} />}
-				{!on && <LightbulbOff strokeWidth={1} />}
-			</dt>
-			<dd>
-				<button
-					class="btn btn-link"
-					type="button"
-					onClick={() => {
-						const newDesired = !desired
-						setDesired(newDesired)
-						onChange(newDesired)
-					}}
-				>
-					{!desired && <ToggleLeft />}
-					{desired && <ToggleRight />}
-				</button>
-			</dd>
+			{on && <Lightbulb strokeWidth={1} />}
+			{!on && <LightbulbOff strokeWidth={1} />}
+			<button
+				class="btn btn-link ms-2"
+				type="button"
+				onClick={() => {
+					const newDesired = !desired
+					setDesired(newDesired)
+					onChange(newDesired)
+				}}
+			>
+				{!desired && <ToggleLeft />}
+				{desired && <ToggleRight />}
+			</button>
 		</>
 	)
 }

@@ -1,96 +1,73 @@
-import { Network, UploadCloud } from 'lucide-preact'
-import { ButtonPress } from './ButtonPress'
-import { Device, MeshNodeInfo, Reported, useDevices } from './context/Devices'
+import { Focus } from 'lucide-preact'
+import styled from 'styled-components'
+import { ButtonPressDiff } from './ButtonPress'
+import type { MeshNode as MeshNodeDevice } from './context/Devices'
 import { useSettings } from './context/Settings'
 import { useWebsocket } from './context/WebsocketConnection'
-import { LastUpdate, Properties, Title } from './DeviceList'
 import { DeviceName } from './DeviceName'
-import { FiveGMesh } from './icons/5GMesh'
-import { NRPlus } from './icons/NRPlus'
 import { OnOffControl } from './OnOffControl'
-import { RelativeTime } from './RelativeTime'
 import type { RGB } from './rgbToHex'
-
-export type MeshNodeDevice = Device & {
-	state: Reported & { meshNode: MeshNodeInfo }
-}
 
 const isOn = (color: RGB) => (color.reduce((total, c) => c + total, 0) ?? 0) > 0
 
-export const MeshNode = ({
-	device,
-	onClick,
-}: {
-	device: MeshNodeDevice
-	onClick: () => void
-}) => {
+const Ul = styled.ul`
+	list-style: none;
+	padding: 0;
+	margin: 0 0 0 0;
+`
+
+export const MeshNode = ({ device }: { device: MeshNodeDevice }) => {
 	const { send } = useWebsocket()
-	const { lastUpdateTs } = useDevices()
 	const { settings } = useSettings()
-	const lastUpdateTime = lastUpdateTs(device.id) as number
-	const { node, hops, travelTimeMs, gateway } = device.state.meshNode
+	const { node, hops, travelTimeMs } = device.state.meshNode
 	const buttonPress = device.state?.btn
 	const code = settings.managementCodes[device.id]
 	const unlocked = code !== undefined
 	const ledIsOn = isOn(device.state?.led?.v?.color ?? [0, 0, 0])
 
 	return (
-		<>
-			<Title type={'button'} onClick={onClick}>
-				<FiveGMesh class="icon" alt="Wirepas 5G Mesh" />
-				<span class="info">
-					<DeviceName device={device} fallback={node.toString()} />
-				</span>
-				{lastUpdateTime !== undefined && (
-					<LastUpdate title="Last update">
-						<UploadCloud strokeWidth={1} />
-						<RelativeTime time={new Date(lastUpdateTime)} />
-					</LastUpdate>
+		<Ul>
+			<li>
+				<DeviceName device={device} fallback={node.toString()} />
+			</li>
+			<li>
+				{hops !== undefined && (
+					<>
+						{hops} {hops > 1 ? 'hops' : 'hop'},{' '}
+					</>
 				)}
-			</Title>
-			<Properties>
-				{buttonPress !== undefined && (
-					<ButtonPress
-						key={`${node}-press-${buttonPress.ts}`}
-						buttonPress={buttonPress}
-					/>
-				)}
-				<dt>
-					<NRPlus class="icon" alt="DECT NR+" />
-				</dt>
-				<dd>
-					{hops !== undefined && (
-						<>
-							{hops} {hops > 1 ? 'hops' : 'hop'},{' '}
-						</>
+				<abbr title="travel time">{travelTimeMs} ms</abbr>
+			</li>
+			{buttonPress !== undefined && (
+				<ButtonPressDiff
+					key={`${node}-press-${buttonPress.ts}`}
+					buttonPress={buttonPress}
+				>
+					{(diffSeconds) => (
+						<li style={{ color: 'var(--color-nordic-pink)' }}>
+							<Focus strokeWidth={2} /> {diffSeconds} seconds ago
+						</li>
 					)}
-					<abbr title="travel time">{travelTimeMs} ms</abbr>
-				</dd>
-				<dt>
-					<abbr title={'Gateway'}>
-						<Network strokeWidth={1} />
-					</abbr>
-				</dt>
-				<dd>{gateway}</dd>
-				{unlocked && (
-					<OnOffControl
-						on={ledIsOn}
-						onChange={(on) => {
-							send({
-								desired: {
-									led: {
-										v: {
-											color: on ? [255, 255, 255] : [0, 0, 0],
-										},
+				</ButtonPressDiff>
+			)}
+			{unlocked && (
+				<OnOffControl
+					on={ledIsOn}
+					onChange={(on) => {
+						send({
+							desired: {
+								led: {
+									v: {
+										color: on ? [255, 255, 255] : [0, 0, 0],
 									},
 								},
-								deviceId: device.id,
-								code: code,
-							})
-						}}
-					/>
-				)}
-			</Properties>
-		</>
+							},
+							deviceId: device.id,
+							code: code,
+						})
+					}}
+				/>
+			)}
+		</Ul>
 	)
 }

@@ -2,8 +2,9 @@ import styled from 'styled-components'
 import {
 	GeoLocationSource,
 	isLightBulb,
-	isMeshNode,
+	isMeshGateway,
 	isTracker,
+	MeshGateway as MeshGatewayDevice,
 	useDevices,
 } from './context/Devices'
 import { useMap } from './context/Map'
@@ -12,7 +13,7 @@ import { useHistoryChart } from './context/showHistoryChart'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { SIMIcon } from './icons/SIMIcon'
 import { LightbulbDevice } from './LightbulbDevice'
-import { MeshNode, MeshNodeDevice } from './MeshNode'
+import { MeshGateway } from './MeshGateway'
 import { Tracker } from './Tracker'
 
 const DeviceState = styled.section`
@@ -24,11 +25,11 @@ const DeviceState = styled.section`
 	overflow: hidden;
 	max-height: 100vh;
 	overflow-y: auto;
-	ul {
+	> ul {
 		list-style: none;
 		margin: 0;
 		padding: 0;
-		li {
+		> li {
 			margin: 2px 2px 2px 0;
 			padding: 0.5rem;
 			text-align: left;
@@ -179,12 +180,12 @@ export const DeviceList = () => {
 								/>
 							</li>
 						)
-					if (isMeshNode(device))
+					if (isMeshGateway(device))
 						return (
 							<li>
-								<MeshNode
-									key={`device:${device.id}`}
-									device={device as MeshNodeDevice}
+								<MeshGateway
+									key={device.id}
+									device={device as MeshGatewayDevice}
 									onClick={() => {
 										if (device.state?.geo !== undefined) {
 											map?.center(

@@ -1,4 +1,5 @@
 import { Focus } from 'lucide-preact'
+import type { VNode } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
 import styled from 'styled-components'
 import type { ButtonPress as ButtonPressData } from './context/Devices'
@@ -16,12 +17,32 @@ const HotDd = styled.dd`
 /**
  * Display a button press for a given period
  */
-export const ButtonPress = ({
+export const ButtonPress = (props: {
+	buttonPress: ButtonPressData
+	untilSeconds?: number
+}) => {
+	return (
+		<ButtonPressDiff {...props}>
+			{(diffSeconds) => (
+				<>
+					<HotDt>
+						<Focus strokeWidth={2} />
+					</HotDt>
+					<HotDd>{diffSeconds} seconds ago</HotDd>
+				</>
+			)}
+		</ButtonPressDiff>
+	)
+}
+
+export const ButtonPressDiff = ({
 	buttonPress: { ts },
 	untilSeconds,
+	children,
 }: {
 	buttonPress: ButtonPressData
 	untilSeconds?: number
+	children: (diffSeconds: number) => VNode<any>
 }) => {
 	const [diffSeconds, setDiffSeconds] = useState<number>(diff(ts))
 
@@ -37,13 +58,5 @@ export const ButtonPress = ({
 	}, [ts])
 
 	if (diffSeconds > (untilSeconds ?? 30)) return null
-
-	return (
-		<>
-			<HotDt>
-				<Focus strokeWidth={2} />
-			</HotDt>
-			<HotDd>{diffSeconds} seconds ago</HotDd>
-		</>
-	)
+	return children(diffSeconds)
 }

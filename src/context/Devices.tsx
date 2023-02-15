@@ -159,7 +159,18 @@ export type Device = {
 	location?: Record<GeoLocationSource, GeoLocation>
 	history?: Summary
 	hiddenLocations?: Record<GeoLocationSource, true>
+	meshNodes?: MeshNode[]
 }
+export type MeshNode = Device & {
+	state: {
+		meshNode: MeshNodeInfo
+	}
+}
+
+export type MeshGateway = Device & {
+	meshNodes: MeshNode[]
+}
+
 export type Devices = Record<string, Device>
 
 export type Reading = [
@@ -194,6 +205,8 @@ export const isLightBulb = (device: Device): boolean =>
 	device.state?.led !== undefined && device.state.meshNode === undefined
 export const isMeshNode = (device: Device): boolean =>
 	device.state?.meshNode !== undefined
+export const isMeshGateway = (device: Device): boolean =>
+	device.meshNodes !== undefined
 
 export const DevicesContext = createContext<{
 	devices: Devices
@@ -218,8 +231,34 @@ export const DevicesContext = createContext<{
 const deviceAliases: Record<string, string> = {}
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
-	const [devices, updateDevices] = useState<Devices>({})
+	const [knownDevices, updateDevices] = useState<Devices>({})
 
+	// Create virtual devices for 5G Mesh Gateways
+	const meshNodes: MeshNode[] = Object.values(knownDevices).filter(
+		(d) => d.state?.meshNode !== undefined,
+	) as MeshNode[]
+	const meshGateways = meshNodes.reduce((gateways, meshNode) => {
+		const gatewayId = meshNode.state.meshNode.gateway
+		if (gateways[gatewayId] === undefined) {
+			gateways[gatewayId] = {
+				id: gatewayId,
+				meshNodes: [meshNode],
+			}
+		} else {
+			gateways[gatewayId]?.meshNodes.push(meshNode)
+		}
+		return gateways
+	}, {} as Record<string, MeshGateway>)
+
+	// Filter out 5G Mesh nodes, they will be group under a Mesh Gateway device
+	const devicesWithoutMeshNodes: Devices = Object.entries(knownDevices)
+		.filter(([, d]) => d.state?.meshNode === undefined)
+		.reduce((devices, [id, device]) => ({ ...devices, [id]: device }), {})
+
+	const devices = {
+		...devicesWithoutMeshNodes,
+		...meshGateways,
+	}
 	return (
 		<DevicesContext.Provider
 			value={{
@@ -308,26 +347,8 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						},
 					}))
 				},
-				lastUpdateTs: (deviceId) => {
-					const state = devices[deviceId]?.state
-					const lastUpdateTimeStamps: number[] = [
-						state?.bat?.ts,
-						state?.btn?.ts,
-						state?.dev?.ts,
-						state?.env?.ts,
-						state?.gnss?.ts,
-						state?.led?.ts,
-						state?.roam?.ts,
-						state?.sol?.ts,
-						state?.meshNode?.rxTime !== undefined
-							? new Date(state.meshNode.rxTime).getTime()
-							: undefined,
-					].filter((s) => s !== undefined) as number[]
-
-					return lastUpdateTimeStamps.length > 0
-						? Math.max(...lastUpdateTimeStamps)
-						: null
-				},
+				lastUpdateTs: (deviceId) =>
+					getLastUpdateTime({ ...knownDevices, ...meshGateways }[deviceId]),
 				updateAlias: (deviceId, alias) => {
 					deviceAliases[deviceId] = alias
 				},
@@ -342,3 +363,29 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 export const Consumer = DevicesContext.Consumer
 
 export const useDevices = () => useContext(DevicesContext)
+
+const getLastUpdateTime = (device?: Device): null | number => {
+	const state = device?.state
+	const lastUpdateTimeStamps: number[] = [
+		state?.bat?.ts,
+		state?.btn?.ts,
+		state?.dev?.ts,
+		state?.env?.ts,
+		state?.gnss?.ts,
+		state?.led?.ts,
+		state?.roam?.ts,
+		state?.sol?.ts,
+		state?.meshNode?.rxTime !== undefined
+			? new Date(state.meshNode.rxTime).getTime()
+			: undefined,
+		...(device?.meshNodes ?? []).map((node) =>
+			node.state?.meshNode?.rxTime === undefined
+				? undefined
+				: new Date(node.state?.meshNode?.rxTime).getTime(),
+		),
+	].filter((s) => s !== undefined) as number[]
+
+	return lastUpdateTimeStamps.length > 0
+		? Math.max(...lastUpdateTimeStamps)
+		: null
+}

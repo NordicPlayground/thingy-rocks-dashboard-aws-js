@@ -1,7 +1,7 @@
 import { ChevronUp, Settings2, Star, StarOff } from 'lucide-preact'
 import styled from 'styled-components'
 import { CodeInput } from './CodeInput'
-import { isLightBulb, isMeshNode, useDevices } from './context/Devices'
+import { isLightBulb, isMeshGateway, useDevices } from './context/Devices'
 import { useSettings } from './context/Settings'
 
 const SettingsPanel = styled.aside`
@@ -145,11 +145,20 @@ export const Settings = () => {
 					</div>
 					<h3 class="h5 mt-3">Management</h3>
 					<p>Below you can provide the device's code to manage it.</p>
-					{Object.entries(devices)
-						.filter(([, device]) => isLightBulb(device) || isMeshNode(device))
-						.map(([deviceId, device]) => (
-							<CodeInput device={device} key={deviceId} />
+					{/* Code input for Lightbulbs */}
+					{Object.values(devices)
+						.filter(isLightBulb)
+						.map((device) => (
+							<CodeInput device={device} key={device.id} />
 						))}
+					{/* Code input for Mesh nodes */}
+					{Object.values(devices)
+						.filter(isMeshGateway)
+						.map(({ meshNodes }) =>
+							meshNodes?.map((device) => (
+								<CodeInput device={device} key={device.id} />
+							)),
+						)}
 					<h2 class="h4 mt-4">Solar</h2>
 					<label htmlFor={'consumptionThreshold'}>
 						Above this value, charge is considered sufficiently high enough so
