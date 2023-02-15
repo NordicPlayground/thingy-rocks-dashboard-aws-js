@@ -136,7 +136,7 @@ export type MeshNodeInfo = {
 	gateway: string // 'demo5Gmesh_gw01'
 	rxTime: string // '2023-02-08T13:27:46.304Z'
 	travelTimeMs: number // 39
-	hops: number // 1
+	hops?: number // 1
 }
 
 export enum GeoLocationSource {

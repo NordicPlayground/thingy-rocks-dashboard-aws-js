@@ -59,7 +59,11 @@ export const MeshNode = ({
 					<NRPlus class="icon" alt="DECT NR+" />
 				</dt>
 				<dd>
-					{hops} {hops > 1 ? 'hops' : 'hop'},{' '}
+					{hops !== undefined && (
+						<>
+							{hops} {hops > 1 ? 'hops' : 'hop'},{' '}
+						</>
+					)}
 					<abbr title="travel time">{travelTimeMs} ms</abbr>
 				</dd>
 				<dt>
