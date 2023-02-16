@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@aws-amplify/core": "5.0.14",
-    "@aws-sdk/credential-provider-cognito-identity": "3.271.0",
+    "@aws-sdk/credential-provider-cognito-identity": "3.272.0",
     "@nordicsemiconductor/rsrp-bar": "5.0.5",
     "@sentry/react": "7.37.2",
     "@sentry/tracing": "7.37.2",
@@ -37,7 +37,7 @@
     "date-fns": "2.29.3",
     "e118-iin-list": "2.4.0",
     "lodash-es": "4.17.21",
-    "lucide-preact": "0.114.0",
+    "lucide-preact": "0.115.0",
     "maplibre-gl": "2.4.0",
     "preact": "10.12.1",
     "preact-router": "4.1.0",
