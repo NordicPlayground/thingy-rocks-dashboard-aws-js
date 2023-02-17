@@ -5,17 +5,37 @@ export type PlacedMeshNode = ConnectedMeshNode & {
 	parent?: ConnectedMeshNode['node'] | undefined
 } & Point
 
+export const isGateway = (node: PlacedMeshNode): boolean => node.node === 0
+export const isNode = (node: PlacedMeshNode): boolean => !isGateway(node)
+
 export const layoutMesh = (
 	connectedNodes: ConnectedMeshNode[],
+	distance = 75,
 	startAngle = 0,
-	segment = Math.PI * 2,
-	placedNodes: PlacedMeshNode[] = [],
+	placedNodes: PlacedMeshNode[] = [
+		{
+			connections: [],
+			heading: 0,
+			hops: 0,
+			node: 0,
+			travelTimeMs: 0,
+			x: 0,
+			y: 0,
+		},
+	],
 	parent?: PlacedMeshNode,
+	depth = 1,
 ): PlacedMeshNode[] => {
-	const rot = segment / connectedNodes.length
+	const numNodes = connectedNodes.length
+	const isRoot = placedNodes.length === 1
+	const segment = (Math.PI * 2) / depth
+	const rot = segment / numNodes
 	for (let i = 0; i < connectedNodes.length; i++) {
 		const node = <ConnectedMeshNode>connectedNodes[i]
-		const heading = rot * i + startAngle
+		let heading = startAngle + rot * i
+		if (!isRoot) heading -= rot / 2
+		// No rotation if just one node
+		if (numNodes === 1) heading = startAngle
 		const placedNode: PlacedMeshNode = {
 			...node,
 			heading,
@@ -23,18 +43,21 @@ export const layoutMesh = (
 				x: parent?.x ?? 0,
 				y: parent?.y ?? 0,
 				heading,
-				distance: node.travelTimeMs,
+				distance,
 			}),
 			parent: parent?.node,
 		}
 		placedNodes.push(placedNode)
-		layoutMesh(
-			node.connections,
-			heading + rot * (Math.random() - 0.5),
-			rot,
-			placedNodes,
-			placedNode,
-		)
+		if (node.connections.length > 0) {
+			layoutMesh(
+				node.connections,
+				distance,
+				heading,
+				placedNodes,
+				placedNode,
+				++depth,
+			)
+		}
 	}
 	return placedNodes
 }
@@ -46,6 +69,6 @@ export const move = ({
 	heading,
 	distance,
 }: Point & { heading: number; distance: number }): Point => ({
-	x: x + Math.sin(heading) * distance,
-	y: y - Math.cos(heading) * distance,
+	x: Math.round(x + Math.sin(heading) * distance),
+	y: Math.round(y - Math.cos(heading) * distance),
 })

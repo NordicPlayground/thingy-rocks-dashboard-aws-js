@@ -3,6 +3,7 @@ import { DeviceHistory } from './chart/DeviceHistory'
 import { DeviceList } from './DeviceList'
 import { DeviceLocations } from './map/DeviceLocations'
 import { ZoomToWorldButton } from './map/ZoomToWorldButton'
+import { MeshTopologyLayer } from './mesh/MeshTopologyLayer'
 import { Settings, SettingsButton } from './Settings'
 
 const SideMenu = styled.nav`
@@ -24,6 +25,7 @@ export const Dashboard = () => {
 		<>
 			<DeviceList />
 			<DeviceLocations />
+			<MeshTopologyLayer />
 			<DeviceHistory />
 			<Settings />
 			<SideMenu>

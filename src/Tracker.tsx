@@ -6,6 +6,7 @@ import { Device, GeoLocationSource, useDevices } from './context/Devices'
 import { useMap } from './context/Map'
 import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
+import { useMeshTopology } from './context/showMeshTopology'
 import { CountryFlag } from './CountryFlag'
 import {
 	IssuerName,
@@ -30,8 +31,8 @@ import { UpdateWarning } from './UpdateWarning'
 export const Tracker = ({ device }: { device: Device }) => {
 	const { lastUpdateTs } = useDevices()
 	const map = useMap()
-	const { toggle: toggleHistoryChart, show: showHistoryChart } =
-		useHistoryChart()
+	const { toggle: toggleHistoryChart } = useHistoryChart()
+	const { hide: hideMeshTopology } = useMeshTopology()
 	const {
 		settings: { showUpdateWarning },
 	} = useSettings()
@@ -55,7 +56,8 @@ export const Tracker = ({ device }: { device: Device }) => {
 					if (deviceLocation !== undefined) {
 						map?.center(deviceLocation)
 					}
-					showHistoryChart(device.id)
+					toggleHistoryChart(device.id)
+					hideMeshTopology()
 				}}
 			>
 				<BoardIcon class="icon" />
@@ -106,6 +108,7 @@ export const Tracker = ({ device }: { device: Device }) => {
 					device={device}
 					onClick={() => {
 						toggleHistoryChart(device.id)
+						hideMeshTopology()
 					}}
 				/>
 				{state !== undefined && (
@@ -113,6 +116,7 @@ export const Tracker = ({ device }: { device: Device }) => {
 						state={state}
 						onClick={() => {
 							toggleHistoryChart(device.id)
+							hideMeshTopology()
 						}}
 					/>
 				)}

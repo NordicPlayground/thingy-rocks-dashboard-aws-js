@@ -10,6 +10,7 @@ import {
 import { useMap } from './context/Map'
 import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
+import { useMeshTopology } from './context/showMeshTopology'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { SIMIcon } from './icons/SIMIcon'
 import { LightbulbDevice } from './LightbulbDevice'
@@ -126,6 +127,7 @@ export const DeviceList = () => {
 	const { devices, lastUpdateTs } = useDevices()
 	const map = useMap()
 	const { hide: hideHistoryChart } = useHistoryChart()
+	const { toggle: toggleMeshTopology } = useMeshTopology()
 	const {
 		settings: { showFavorites, favorites },
 	} = useSettings()
@@ -197,6 +199,7 @@ export const DeviceList = () => {
 												16,
 											)
 										}
+										toggleMeshTopology(device.id)
 										hideHistoryChart()
 									}}
 								/>

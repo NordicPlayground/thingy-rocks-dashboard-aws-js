@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from 'date-fns'
 import { render } from 'preact'
-import { MeshVisualizer } from './MeshVisualizer'
+import { MeshVisualizer } from './mesh/MeshVisualizer'
 
 console.debug('version', VERSION)
 console.debug(

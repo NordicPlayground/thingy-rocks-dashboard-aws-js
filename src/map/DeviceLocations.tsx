@@ -1,5 +1,5 @@
 import { useEffect } from 'preact/hooks'
-import { useDevices } from '../context/Devices'
+import { GeoLocationSource, useDevices } from '../context/Devices'
 import { useMap } from '../context/Map'
 
 export const DeviceLocations = () => {
@@ -22,6 +22,17 @@ export const DeviceLocations = () => {
 				})
 			}
 		}
+
+		map.showDeviceLocation({
+			deviceId: 'demo5Gmesh_gw01',
+			deviceAlias: 'Wirepas5GMeshGateway',
+			location: {
+				accuracy: 5,
+				lat: 41.35454978519988,
+				lng: 2.1280827507972053,
+				source: GeoLocationSource.FIXED,
+			},
+		})
 	}, [devices, map])
 
 	return null

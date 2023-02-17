@@ -2,6 +2,7 @@ import { Provider as DevicesProvider } from './context/Devices'
 import { Provider as MapProvider } from './context/Map'
 import { Provider as SettingsProvider } from './context/Settings'
 import { Provider as HistoryChartProvider } from './context/showHistoryChart'
+import { Provider as MeshTopologyProvider } from './context/showMeshTopology'
 import { Provider as WebsocketProvider } from './context/WebsocketConnection'
 import { Dashboard } from './Dashboard'
 import { FakeLight } from './test-device/FakeLight'
@@ -18,7 +19,9 @@ export const App = () => (
 						<WebsocketProvider>
 							<MapProvider credentials={credentials}>
 								<HistoryChartProvider>
-									<Dashboard />
+									<MeshTopologyProvider>
+										<Dashboard />
+									</MeshTopologyProvider>
 								</HistoryChartProvider>
 							</MapProvider>
 						</WebsocketProvider>

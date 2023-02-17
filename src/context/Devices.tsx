@@ -228,7 +228,9 @@ export const DevicesContext = createContext<{
 	devices: {},
 })
 
-const deviceAliases: Record<string, string> = {}
+const deviceAliases: Record<string, string> = {
+	demo5Gmesh_gw01: 'Wirepas5GMeshGateway',
+}
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [knownDevices, updateDevices] = useState<Devices>({})
@@ -243,6 +245,13 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			gateways[gatewayId] = {
 				id: gatewayId,
 				meshNodes: [meshNode],
+				state: {
+					geo: {
+						// MWC Barcelona
+						lat: 41.35454978519988,
+						lng: 2.1280827507972053,
+					},
+				},
 			}
 		} else {
 			gateways[gatewayId]?.meshNodes.push(meshNode)
