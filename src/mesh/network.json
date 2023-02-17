@@ -1,0 +1,82 @@
+[
+  {
+    "node": 6975800500,
+    "travelTimeMs": 74,
+    "hops": 1
+  },
+  {
+    "node": 4048965118,
+    "travelTimeMs": 95,
+    "hops": 1
+  },
+  {
+    "node": 2829817032,
+    "travelTimeMs": 80,
+    "hops": 2
+  },
+  {
+    "node": 5472051413,
+    "travelTimeMs": 27,
+    "hops": 1
+  },
+  {
+    "node": 4785281453,
+    "travelTimeMs": 77,
+    "hops": 2
+  },
+  {
+    "node": 9318949199,
+    "travelTimeMs": 28,
+    "hops": 1
+  },
+  {
+    "node": 1820146670,
+    "travelTimeMs": 52,
+    "hops": 3
+  },
+  {
+    "node": 4007609668,
+    "travelTimeMs": 78,
+    "hops": 2
+  },
+  {
+    "node": 6520358329,
+    "travelTimeMs": 71,
+    "hops": 3
+  },
+  {
+    "node": 2332026697,
+    "travelTimeMs": 37,
+    "hops": 2
+  },
+  {
+    "node": 5512195090,
+    "travelTimeMs": 52,
+    "hops": 1
+  },
+  {
+    "node": 7608983301,
+    "travelTimeMs": 3,
+    "hops": 3
+  },
+  {
+    "node": 8987064997,
+    "travelTimeMs": 33,
+    "hops": 1
+  },
+  {
+    "node": 7595079339,
+    "travelTimeMs": 76,
+    "hops": 1
+  },
+  {
+    "node": 5734953533,
+    "travelTimeMs": 81,
+    "hops": 3
+  },
+  {
+    "node": 8318068215,
+    "travelTimeMs": 40,
+    "hops": 3
+  }
+]
