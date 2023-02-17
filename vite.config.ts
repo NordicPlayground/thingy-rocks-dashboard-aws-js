@@ -70,6 +70,12 @@ export default defineConfig({
 	build: {
 		outDir: './build',
 		sourcemap: true,
+		rollupOptions: {
+			input: {
+				main: path.join(process.cwd(), 'index.html'),
+				mesh: path.join(process.cwd(), 'mesh.html'),
+			},
+		},
 	},
 	esbuild: {
 		logOverride: { 'this-is-undefined-in-esm': 'silent' },
