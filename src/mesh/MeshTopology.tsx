@@ -60,10 +60,10 @@ export const MeshTopology = ({
 								<path
 									d={`M ${lineStart.x},${lineStart.y} L ${lineEnd.x},${lineEnd.y}`}
 									stroke={'#f04b30'}
-									strokeWidth={1}
+									stroke-width={1}
 									fill={'none'}
-									strokeDasharray={'5 3'}
-									strokeOpacity={0.75}
+									stroke-dasharray={'5 3'}
+									stroke-opacity={0.75}
 								/>
 								<g
 									transform={[
