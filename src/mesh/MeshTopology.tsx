@@ -1,8 +1,14 @@
+import type { ComponentProps } from 'preact'
 import { buildTree, MeshNetwork } from './buildTree'
 import { isGateway, isNode, layoutMesh, move } from './layoutMesh'
 import { normalizePositions } from './normalizePositions'
 
-export const MeshTopology = ({ network }: { network: MeshNetwork }) => {
+export const MeshTopology = ({
+	network,
+	...props
+}: {
+	network: MeshNetwork
+} & ComponentProps<any>) => {
 	const distance = 100
 	const {
 		center,
@@ -19,6 +25,7 @@ export const MeshTopology = ({ network }: { network: MeshNetwork }) => {
 			viewBox={`0 0 ${w} ${h}`}
 			version="1.1"
 			xmlns="http://www.w3.org/2000/svg"
+			{...props}
 		>
 			<g>
 				{elements

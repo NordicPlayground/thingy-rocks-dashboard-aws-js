@@ -35,11 +35,13 @@ const attachRemainingToNode = (
 	const connections = node.connections.map((child) =>
 		attachRemainingToNode(child, network, connected),
 	)
+
 	if ((node.hops ?? 1) > 0) {
 		// Find unconnected nodes on the next level
 		for (const remaining of network
 			.filter(({ hops }) => (hops ?? 1) === (node.hops ?? 1) + 1)
 			.filter(({ node }) => !connected.includes(node))) {
+			connected.push(remaining.node)
 			connections.push(toConnectedNode(network, connected)(remaining))
 		}
 	}
