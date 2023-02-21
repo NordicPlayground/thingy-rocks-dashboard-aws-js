@@ -4,7 +4,6 @@ import {
 	isLightBulb,
 	isMeshGateway,
 	isTracker,
-	MeshGateway as MeshGatewayDevice,
 	useDevices,
 } from './context/Devices'
 import { useMap } from './context/Map'
@@ -187,7 +186,7 @@ export const DeviceList = () => {
 							<li>
 								<MeshGateway
 									key={device.id}
-									device={device as MeshGatewayDevice}
+									device={device}
 									onClick={() => {
 										if (device.state?.geo !== undefined) {
 											map?.center(

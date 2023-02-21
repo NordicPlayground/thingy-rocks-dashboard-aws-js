@@ -1,5 +1,6 @@
 import { Network, UploadCloud } from 'lucide-preact'
 import { MeshGateway as MeshGatewayDevice, useDevices } from './context/Devices'
+import { useSettings } from './context/Settings'
 import { LastUpdate, Properties, Title } from './DeviceList'
 import { DeviceName } from './DeviceName'
 import { FiveGMesh } from './icons/5GMesh'
@@ -16,6 +17,9 @@ export const MeshGateway = ({
 }) => {
 	const { lastUpdateTs } = useDevices()
 	const lastUpdateTime = lastUpdateTs(device.id) as number
+	const {
+		settings: { showFavorites, favorites },
+	} = useSettings()
 
 	return (
 		<>
@@ -36,18 +40,23 @@ export const MeshGateway = ({
 					<NRPlus class="icon" alt="DECT NR+" />
 				</dt>
 				<dd>5G Mesh Gateway</dd>
-				{device.meshNodes.map((node) => (
-					<>
-						<dt class="d-flex align-items-start mt-2">
-							<abbr title={'Mesh Node'}>
-								<Network strokeWidth={1} />
-							</abbr>
-						</dt>
-						<dd class="mt-2">
-							<MeshNode device={node} />
-						</dd>
-					</>
-				))}
+				{device.meshNodes
+					.filter((node) => {
+						if (!showFavorites) return true
+						return favorites.includes(node.id)
+					})
+					.map((node) => (
+						<>
+							<dt class="d-flex align-items-start mt-2">
+								<abbr title={'Mesh Node'}>
+									<Network strokeWidth={1} />
+								</abbr>
+							</dt>
+							<dd class="mt-2">
+								<MeshNode device={node} />
+							</dd>
+						</>
+					))}
 			</Properties>
 		</>
 	)

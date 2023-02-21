@@ -204,9 +204,9 @@ export const isTracker = (device: Device): boolean => {
 }
 export const isLightBulb = (device: Device): boolean =>
 	device.state?.led !== undefined && device.state.meshNode === undefined
-export const isMeshNode = (device: Device): boolean =>
+export const isMeshNode = (device: Device): device is MeshNode =>
 	device.state?.meshNode !== undefined
-export const isMeshGateway = (device: Device): boolean =>
+export const isMeshGateway = (device: Device): device is MeshGateway =>
 	device.meshNodes !== undefined
 
 export const DevicesContext = createContext<{
@@ -237,9 +237,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [knownDevices, updateDevices] = useState<Devices>({})
 
 	// Create virtual devices for 5G Mesh Gateways
-	const meshNodes: MeshNode[] = Object.values(knownDevices).filter(
-		(d) => d.state?.meshNode !== undefined,
-	) as MeshNode[]
+	const meshNodes: MeshNode[] = Object.values(knownDevices).filter(isMeshNode)
 	const meshGateways = meshNodes.reduce((gateways, meshNode) => {
 		const gatewayId = meshNode.state.meshNode.gateway
 		if (gateways[gatewayId] === undefined) {

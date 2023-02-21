@@ -16,8 +16,19 @@ const SettingsPanel = styled.aside`
 	}
 `
 
+const NodeList = styled.ul`
+	list-style: none;
+	margin: 0 0 0 1rem;
+	padding: 0;
+	li {
+		&:before {
+			content: '└';
+		}
+	}
+`
+
 export const Settings = () => {
-	const { devices, alias } = useDevices()
+	const { devices } = useDevices()
 	const {
 		settings: {
 			showSettings,
@@ -25,7 +36,6 @@ export const Settings = () => {
 			gainReferenceEveryMinute,
 			gainReferenceEveryHour,
 			showFavorites,
-			favorites,
 			consumptionThreshold,
 			showUpdateWarning,
 		},
@@ -61,61 +71,7 @@ export const Settings = () => {
 								<br />
 								Click the arrows to move devices up.
 							</p>
-							<ul class="list-group">
-								{Object.keys(devices)
-									.sort((id1, id2) => {
-										const i1 = favorites.indexOf(id1)
-										const i2 = favorites.indexOf(id2)
-										if (i1 === -1) return Number.MAX_SAFE_INTEGER
-										if (i2 === -1) return -Number.MAX_SAFE_INTEGER
-										return i1 - i2
-									})
-									.map((id, i) => {
-										const favorited = favorites.includes(id)
-										return (
-											<li class="list-group-item d-flex justify-content-between align-items-center ">
-												<button
-													type="button"
-													class="btn btn-link"
-													onClick={() => {
-														if (favorited) {
-															update({
-																favorites: favorites
-																	.filter((i) => i !== id)
-																	.filter(Boolean),
-															})
-														} else {
-															update({ favorites: [...favorites, id] })
-														}
-													}}
-												>
-													{favorited ? <Star /> : <StarOff />}
-												</button>
-												{i > 0 && favorited && (
-													<button
-														type="button"
-														class="btn btn-link"
-														onClick={() => {
-															const index = favorites.indexOf(id)
-															const prev = favorites[index - 1] as string
-															update({
-																favorites: [
-																	...favorites.slice(0, index - 1),
-																	id,
-																	prev,
-																	...favorites.slice(index + 1),
-																].filter(Boolean),
-															})
-														}}
-													>
-														<ChevronUp />
-													</button>
-												)}
-												<span class="flex-grow-1">{alias(id) ?? id}</span>
-											</li>
-										)
-									})}
-							</ul>
+							<FavoriteSelector />
 						</>
 					)}
 					<div class="form-check mt-2">
@@ -273,5 +229,92 @@ export const SettingsButton = () => {
 		>
 			<Settings2 strokeWidth={2} />
 		</button>
+	)
+}
+
+const FavButton = ({ id }: { id: string }) => {
+	const {
+		settings: { favorites },
+		update,
+	} = useSettings()
+	const favorited = favorites.includes(id)
+	return (
+		<button
+			type="button"
+			class="btn btn-link"
+			onClick={() => {
+				if (favorited) {
+					update({
+						favorites: favorites.filter((i) => i !== id).filter(Boolean),
+					})
+				} else {
+					update({ favorites: [...favorites, id] })
+				}
+			}}
+		>
+			{favorited ? <Star /> : <StarOff />}
+		</button>
+	)
+}
+
+const FavoriteSelector = () => {
+	const { devices, alias } = useDevices()
+	const {
+		settings: { favorites },
+		update,
+	} = useSettings()
+
+	return (
+		<ul class="list-group">
+			{Object.entries(devices)
+				.sort(([id1], [id2]) => {
+					const i1 = favorites.indexOf(id1)
+					const i2 = favorites.indexOf(id2)
+					if (i1 === -1) return Number.MAX_SAFE_INTEGER
+					if (i2 === -1) return -Number.MAX_SAFE_INTEGER
+					return i1 - i2
+				})
+				.map(([id, device], i) => {
+					const favorited = favorites.includes(id)
+					return (
+						<li class="list-group-item">
+							<FavButton id={id} />
+							{i > 0 && favorited && (
+								<button
+									type="button"
+									class="btn btn-link"
+									onClick={() => {
+										const index = favorites.indexOf(id)
+										const prev = favorites[index - 1] as string
+										update({
+											favorites: [
+												...favorites.slice(0, index - 1),
+												id,
+												prev,
+												...favorites.slice(index + 1),
+											].filter(Boolean),
+										})
+									}}
+								>
+									<ChevronUp />
+								</button>
+							)}
+							<span>{alias(id) ?? id}</span>
+							{isMeshGateway(device) && (
+								<NodeList>
+									{device.meshNodes.map((node) => (
+										<li>
+											<span>
+												<FavButton id={node.id} />
+												{alias(node.id) ?? node.id}
+											</span>
+										</li>
+									))}
+								</NodeList>
+							)}
+						</li>
+					)
+				})}
+		</ul>
 	)
 }
