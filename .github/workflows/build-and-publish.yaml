@@ -46,6 +46,8 @@ jobs:
           npm run build
           cp -r ./static ./build
           cp -r node_modules/svg-country-flags/svg/ ./build/static/flags
+          mkdir ./build/.well-known
+          echo ${{ github.sha }} > ./build/.well-known/release
 
       - name: Deploy to CloudFlare pages
         env:

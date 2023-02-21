@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { AppUpdateNotifier } from './AppUpdateNotifier'
 import { DeviceHistory } from './chart/DeviceHistory'
 import { DeviceList } from './DeviceList'
 import { DeviceLocations } from './map/DeviceLocations'
@@ -32,6 +33,7 @@ export const Dashboard = () => {
 				<ZoomToWorldButton />
 				<SettingsButton />
 			</SideMenu>
+			<AppUpdateNotifier />
 		</>
 	)
 }
