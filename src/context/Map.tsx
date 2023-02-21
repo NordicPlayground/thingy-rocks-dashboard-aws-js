@@ -140,7 +140,6 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 					},
 				})
 				// Render deviceID in center
-				console.log({ deviceAlias })
 				map.addLayer({
 					id: centerLabelId,
 					type: 'symbol',

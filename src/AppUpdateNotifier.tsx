@@ -20,11 +20,6 @@ export const AppUpdateNotifier = () => {
 			.then((releasedVersion) => {
 				if (releasedVersion === null) return
 				if (compare(releasedVersion, VERSION) > 0) {
-					console.log(
-						ignored,
-						releasedVersion.raw,
-						ignored.includes(releasedVersion.raw),
-					)
 					if (ignored.includes(releasedVersion.raw)) {
 						console.debug(
 							`[App]`,
