@@ -23,6 +23,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v3
         with:
@@ -39,15 +41,26 @@ jobs:
 
       - run: npm test
 
+      - name: Get current release
+        run:
+          echo "currentRelease=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Determine next release version
+        uses: nordicsemiconductor/cloud-get-next-version-action@saga
+        id: version
+        with:
+          branch: saga
+          defaultVersion: "${{ env.currentRelease }}-${{ github.sha }}"
+
       - name: Build
         env:
-          VERSION: ${{ github.sha }}
+          VERSION: ${{ steps.version.outputs.nextRelease }}
         run: |
           npm run build
           cp -r ./static ./build
           cp -r node_modules/svg-country-flags/svg/ ./build/static/flags
           mkdir ./build/.well-known
-          echo ${{ github.sha }} > ./build/.well-known/release
+          echo ${{ steps.version.outputs.nextRelease }} > ./build/.well-known/release
 
       - name: Deploy to CloudFlare pages
         env:
