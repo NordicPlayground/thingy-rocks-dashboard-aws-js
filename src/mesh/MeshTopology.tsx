@@ -9,7 +9,7 @@ export const MeshTopology = ({
 }: {
 	network: MeshNetwork
 } & ComponentProps<any>) => {
-	const distance = 100
+	const distance = 120
 	const {
 		center,
 		elements,
@@ -59,7 +59,7 @@ export const MeshTopology = ({
 							<>
 								<path
 									d={`M ${lineStart.x},${lineStart.y} L ${lineEnd.x},${lineEnd.y}`}
-									stroke={'#f04b30'}
+									stroke={'#949599'}
 									stroke-width={1}
 									fill={'none'}
 									stroke-dasharray={'5 3'}
@@ -86,13 +86,20 @@ export const MeshTopology = ({
 									#{node.toString().slice(-3)}
 								</text>
 								<text
-									x={labelPos.x + 5}
-									y={labelPos.y + 4}
-									text-anchor="left"
-									font-size={10}
-									fill={'#f04b30'}
+									x={labelPos.x}
+									y={labelPos.y}
+									text-anchor="middle"
+									font-size={12}
+									fill={'#d1203a'}
+									stroke="#000000"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-miterlimit="2"
+									stroke-opacity="1"
+									paint-order="stroke fill markers"
 								>
-									{travelTimeMs} ms
+									{travelTimeMs}ms
 								</text>
 							</>
 						)
