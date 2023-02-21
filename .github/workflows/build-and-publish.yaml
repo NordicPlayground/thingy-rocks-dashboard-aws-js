@@ -18,13 +18,38 @@ env:
   SENTRY_DSN: https://f0636caa395147fcb07f781d0c1e8e6c@o4504255385174016.ingest.sentry.io/4504255391596544
 
 jobs:
-  main:
+  next-release:
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.nextRelease }}
 
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Get current release
+        run:
+          echo "currentRelease=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: Determine next release version
+        uses: nordicsemiconductor/cloud-get-next-version-action@saga
+        id: version
+        with:
+          branch: saga
+          defaultVersion: "${{ env.currentRelease }}-${{ github.sha }}"
+
+  main:
+    runs-on: ubuntu-latest
+
+    needs: [next-release]
+
+    steps:
+      - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
         with:
@@ -41,26 +66,15 @@ jobs:
 
       - run: npm test
 
-      - name: Get current release
-        run:
-          echo "currentRelease=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
-
-      - name: Determine next release version
-        uses: nordicsemiconductor/cloud-get-next-version-action@saga
-        id: version
-        with:
-          branch: saga
-          defaultVersion: "${{ env.currentRelease }}-${{ github.sha }}"
-
       - name: Build
         env:
-          VERSION: ${{ steps.version.outputs.nextRelease }}
+          VERSION: ${{ needs.next-release.outputs.version }}
         run: |
           npm run build
           cp -r ./static ./build
           cp -r node_modules/svg-country-flags/svg/ ./build/static/flags
           mkdir ./build/.well-known
-          echo ${{ steps.version.outputs.nextRelease }} > ./build/.well-known/release
+          echo ${{ needs.next-release.outputs.version }} > ./build/.well-known/release
 
       - name: Deploy to CloudFlare pages
         env:
