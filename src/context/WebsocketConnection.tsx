@@ -143,7 +143,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			let message: Message
 			try {
 				message = JSON.parse(msg.data) as Message
-				console.log(`[WS]`, message['@context'], message)
+				console.debug(`[WS]`, message['@context'], message)
 			} catch (err) {
 				console.error(`[WS]`, `Failed to parse message as JSON`, msg.data)
 				return
@@ -213,7 +213,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			value={{
 				connected,
 				send: (message) => {
-					console.log(`[WS]`, { message })
+					console.debug(`[WS]`, { message })
 					connection?.current?.send(
 						JSON.stringify({
 							message: 'sendmessage',
