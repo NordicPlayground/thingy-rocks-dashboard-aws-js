@@ -10,12 +10,12 @@ const getStored = (): string[] => {
 }
 
 export const AppUpdateNotifier = () => {
-	const [warning, setWarning] = useState<string | undefined>()
+	const [newerVersion, setNewerVersion] = useState<string | undefined>()
 	const [ignored, setIgnored] = useState<string[]>(getStored())
 
 	const checkVersion = useCallback(() => {
 		fetch('./.well-known/release')
-			.then(async (res) => res.text())
+			.then(async (res) => (await res.text()).trim())
 			.then(parse)
 			.then((releasedVersion) => {
 				if (releasedVersion === null) return
@@ -28,12 +28,15 @@ export const AppUpdateNotifier = () => {
 						)
 						return
 					}
-					console.warn(
+					console.warn(`[App]`, `a newer version is available`, releasedVersion)
+					setNewerVersion(releasedVersion.raw)
+				} else {
+					console.debug(
 						`[App]`,
-						`a newer version is available`,
+						`release version`,
 						releasedVersion.raw,
+						`is older`,
 					)
-					setWarning(releasedVersion.raw)
 				}
 			})
 			.catch((err) => {
@@ -48,27 +51,27 @@ export const AppUpdateNotifier = () => {
 			clearInterval(i)
 		}
 	}, [checkVersion])
-	if (warning === undefined) return null
+	if (newerVersion === undefined) return null
 	return (
 		<div class="container my-4">
 			<div
-				class="col col-lg-6 offset-lg-3 alert alert-warning d-flex justify-content-between align-items-center"
+				class="col col-lg-8 offset-lg-2 col-xl-6 offset-xl-3 alert alert-warning d-flex justify-content-between align-items-center"
 				role="alert"
 			>
-				<span>A newer version ({warning}) is available.</span>
-				<span>
+				<span>A newer version ({newerVersion}) is available.</span>
+				<span class="flex-shrink-0">
 					<button
 						type="button"
 						class="btn btn-outline-danger"
 						onClick={() => {
-							if (warning === undefined) return
+							if (newerVersion === undefined) return
 							localStorage.setItem(
 								'app:ignored_versions',
-								JSON.stringify([...new Set([...ignored, warning])]),
+								JSON.stringify([...new Set([...ignored, newerVersion])]),
 							)
-							setIgnored((i) => [...new Set([...i, warning])])
-							setWarning(undefined)
-							console.log(`[App]`, `ignored newer version`, warning)
+							setIgnored((i) => [...new Set([...i, newerVersion])])
+							setNewerVersion(undefined)
+							console.log(`[App]`, `ignored newer version`, newerVersion)
 						}}
 					>
 						ignore
