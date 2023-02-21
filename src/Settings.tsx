@@ -28,7 +28,7 @@ const NodeList = styled.ul`
 `
 
 export const Settings = () => {
-	const { devices } = useDevices()
+	const { devices, alias } = useDevices()
 	const {
 		settings: {
 			showSettings,
@@ -105,14 +105,22 @@ export const Settings = () => {
 					{Object.values(devices)
 						.filter(isLightBulb)
 						.map((device) => (
-							<CodeInput device={device} key={device.id} />
+							<CodeInput
+								device={device}
+								key={device.id}
+								alias={alias(device.id)}
+							/>
 						))}
 					{/* Code input for Mesh nodes */}
 					{Object.values(devices)
 						.filter(isMeshGateway)
 						.map(({ meshNodes }) =>
 							meshNodes?.map((device) => (
-								<CodeInput device={device} key={device.id} />
+								<CodeInput
+									device={device}
+									key={device.id}
+									alias={alias(device.id)}
+								/>
 							)),
 						)}
 					<h2 class="h4 mt-4">Solar</h2>

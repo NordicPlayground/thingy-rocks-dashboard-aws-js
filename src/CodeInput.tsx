@@ -3,7 +3,13 @@ import { useState } from 'preact/hooks'
 import type { Device } from './context/Devices'
 import { useSettings } from './context/Settings'
 
-export const CodeInput = ({ device }: { device: Device }) => {
+export const CodeInput = ({
+	device,
+	alias,
+}: {
+	device: Device
+	alias?: string | undefined
+}) => {
 	const {
 		update,
 		settings: { managementCodes },
@@ -13,7 +19,7 @@ export const CodeInput = ({ device }: { device: Device }) => {
 	return (
 		<form class="d-flex mb-2 mt-2" autocomplete={'off'}>
 			<div class="input-group">
-				<span class="input-group-text">{device.id}</span>
+				<span class="input-group-text">{alias ?? device.id}</span>
 				<input
 					type="password"
 					autocomplete={'off'}
