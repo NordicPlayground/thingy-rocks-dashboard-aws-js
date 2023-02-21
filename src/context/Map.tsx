@@ -61,7 +61,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 		showDeviceLocation: async ({
 			deviceId,
 			deviceAlias,
-			location: { source, lat, lng, accuracy },
+			location: { source, lat, lng, accuracy, label },
 			hidden,
 		}) => {
 			if (map === undefined) {
@@ -140,6 +140,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 					},
 				})
 				// Render deviceID in center
+				console.log({ deviceAlias })
 				map.addLayer({
 					id: centerLabelId,
 					type: 'symbol',
@@ -148,7 +149,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 						'symbol-placement': 'point',
 						'text-field': deviceAlias,
 						'text-font': [glyphFonts.bold],
-						'text-offset': [0, -1],
+						'text-offset': [0, 0],
 					},
 					paint: {
 						'text-color': locationSourceColors[source],
@@ -160,9 +161,9 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 					source: centerSourceId,
 					layout: {
 						'symbol-placement': 'point',
-						'text-field': LocationSourceLabels[source],
+						'text-field': label ?? LocationSourceLabels[source],
 						'text-font': [glyphFonts.regular],
-						'text-offset': [0, 1],
+						'text-offset': [0, 2],
 						'text-size': 14,
 					},
 					paint: {

@@ -25,12 +25,13 @@ export const DeviceLocations = () => {
 
 		map.showDeviceLocation({
 			deviceId: 'demo5Gmesh_gw01',
-			deviceAlias: 'Wirepas5GMeshGateway',
+			deviceAlias: 'GW01',
 			location: {
 				accuracy: 5,
-				lat: 41.35454978519988,
-				lng: 2.1280827507972053,
+				lat: 41.35742374575955,
+				lng: 2.1331527498627096,
 				source: GeoLocationSource.FIXED,
+				label: 'Hall 7, Booth #7G41',
 			},
 		})
 	}, [devices, map])

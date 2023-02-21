@@ -152,6 +152,7 @@ export type GeoLocation = {
 	lng: number
 	accuracy: number
 	source: GeoLocationSource
+	label?: string
 }
 export type Device = {
 	id: string
@@ -229,7 +230,7 @@ export const DevicesContext = createContext<{
 })
 
 const deviceAliases: Record<string, string> = {
-	demo5Gmesh_gw01: 'Wirepas5GMeshGateway',
+	demo5Gmesh_gw01: 'GW01',
 }
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
@@ -248,8 +249,8 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				state: {
 					geo: {
 						// MWC Barcelona
-						lat: 41.35454978519988,
-						lng: 2.1280827507972053,
+						lat: 41.35742374575955,
+						lng: 2.1331527498627096,
 					},
 				},
 			}
