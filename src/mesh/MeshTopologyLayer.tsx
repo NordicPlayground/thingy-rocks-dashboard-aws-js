@@ -2,6 +2,7 @@ import { X } from 'lucide-preact'
 import styled from 'styled-components'
 import { isMeshGateway, useDevices } from '../context/Devices'
 import { useMeshTopology } from '../context/showMeshTopology'
+import { FiveGMesh } from '../icons/5GMesh'
 import { NRPlus } from '../icons/NRPlus'
 import { MeshTopology } from './MeshTopology'
 
@@ -25,12 +26,18 @@ const Container = styled.div`
 		top: 0;
 		padding: 1rem;
 	}
-	.nrplus {
-		width: 50px;
-		height: 50px;
+	p {
+		.logo {
+			width: 50px;
+			height: 50px;
+			margin-bottom: 0.2rem;
+		}
+		span {
+			opacity: 0.5;
+		}
 	}
 	aside {
-		margin: 0 0 0 1rem;
+		margin: 0 1rem 0 1rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
@@ -64,8 +71,20 @@ export const MeshTopologyLayer = () => {
 			<Container>
 				<section>
 					<aside>
-						<NRPlus class="nrplus" />
-						<p>DECT NR+</p>
+						<p>
+							<FiveGMesh class="logo" />
+							<br />
+							<span>
+								Wirepas
+								<br />
+								5G Mesh
+							</span>
+						</p>
+						<p>
+							<NRPlus class="logo" />
+							<br />
+							<span>DECT NR+</span>
+						</p>
 					</aside>
 					<MeshTopology network={network.map((node) => node.state.meshNode)} />
 				</section>
