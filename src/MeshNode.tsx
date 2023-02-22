@@ -1,4 +1,4 @@
-import { Focus } from 'lucide-preact'
+import { Focus, Lightbulb, LightbulbOff } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPressDiff } from './ButtonPress'
 import type { MeshNode as MeshNodeDevice } from './context/Devices'
@@ -31,6 +31,12 @@ export const MeshNode = ({ device }: { device: MeshNodeDevice }) => {
 				<DeviceName device={device} fallback={node.toString()} />
 			</li>
 			<li>
+				{!unlocked && (
+					<span class="me-2">
+						{ledIsOn && <Lightbulb strokeWidth={1} color="#00ff00" />}
+						{!ledIsOn && <LightbulbOff strokeWidth={1} />}
+					</span>
+				)}
 				{hops !== undefined && (
 					<>
 						{hops} {hops > 1 ? 'hops' : 'hop'},{' '}

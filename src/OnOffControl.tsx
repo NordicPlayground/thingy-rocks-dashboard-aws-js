@@ -11,7 +11,7 @@ export const OnOffControl = ({
 	const [desired, setDesired] = useState<boolean>(on)
 	return (
 		<>
-			{on && <Lightbulb strokeWidth={1} />}
+			{on && <Lightbulb color="#00ff00" strokeWidth={1} />}
 			{!on && <LightbulbOff strokeWidth={1} />}
 			<button
 				class="btn btn-link ms-2"
