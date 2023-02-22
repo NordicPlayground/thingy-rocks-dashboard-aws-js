@@ -38,6 +38,7 @@ export const Settings = () => {
 			showFavorites,
 			consumptionThreshold,
 			showUpdateWarning,
+			favorites,
 		},
 		update,
 		reset,
@@ -104,6 +105,10 @@ export const Settings = () => {
 					{/* Code input for Lightbulbs */}
 					{Object.values(devices)
 						.filter(isLightBulb)
+						?.filter(({ id }) => {
+							if (!showFavorites) return true
+							return favorites.includes(id)
+						})
 						.map((device) => (
 							<CodeInput
 								device={device}
@@ -115,13 +120,18 @@ export const Settings = () => {
 					{Object.values(devices)
 						.filter(isMeshGateway)
 						.map(({ meshNodes }) =>
-							meshNodes?.map((device) => (
-								<CodeInput
-									device={device}
-									key={device.id}
-									alias={alias(device.id)}
-								/>
-							)),
+							meshNodes
+								?.filter(({ id }) => {
+									if (!showFavorites) return true
+									return favorites.includes(id)
+								})
+								.map((device) => (
+									<CodeInput
+										device={device}
+										key={device.id}
+										alias={alias(device.id)}
+									/>
+								)),
 						)}
 					<h2 class="h4 mt-4">Solar</h2>
 					<label htmlFor={'consumptionThreshold'}>
