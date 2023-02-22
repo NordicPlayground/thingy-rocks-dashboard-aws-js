@@ -231,6 +231,9 @@ export const DevicesContext = createContext<{
 
 const deviceAliases: Record<string, string> = {
 	demo5Gmesh_gw01: 'GW01',
+	'1598067804:demo5Gmesh_gw01': 'Node #1',
+	'726110996:demo5Gmesh_gw01': 'Node #2',
+	'1098523189:demo5Gmesh_gw01': 'Node #3',
 }
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {

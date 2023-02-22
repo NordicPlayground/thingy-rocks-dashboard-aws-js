@@ -1,5 +1,10 @@
-import { Network, UploadCloud } from 'lucide-preact'
-import { MeshGateway as MeshGatewayDevice, useDevices } from './context/Devices'
+import { ChevronDown, ChevronUp, Network, UploadCloud } from 'lucide-preact'
+import { useState } from 'preact/hooks'
+import {
+	MeshGateway as MeshGatewayDevice,
+	MeshNode as MeshNodeType,
+	useDevices,
+} from './context/Devices'
 import { useSettings } from './context/Settings'
 import { LastUpdate, Properties, Title } from './DeviceList'
 import { DeviceName } from './DeviceName'
@@ -15,11 +20,29 @@ export const MeshGateway = ({
 	device: MeshGatewayDevice
 	onClick: () => void
 }) => {
-	const { lastUpdateTs } = useDevices()
+	const { lastUpdateTs, alias } = useDevices()
 	const lastUpdateTime = lastUpdateTs(device.id) as number
 	const {
 		settings: { showFavorites, favorites },
 	} = useSettings()
+	const [showMore, setShowMore] = useState<boolean>(false)
+
+	// Show only favorited nodes
+	const nodesToShow = device.meshNodes
+		.filter((node) => {
+			if (!showFavorites) return true
+			return favorites.includes(node.id)
+		})
+		// And sort the ones which have an alias first
+		.sort((a) => (alias(a.id) === undefined ? 1 : -1))
+
+	// Show all aliased nodes, or up to 3 above the fold
+	const nodesWithAlias = nodesToShow.filter(
+		(node) => alias(node.id) !== undefined,
+	)
+	const cutoff = Math.max(nodesWithAlias.length, 3)
+	const visible = nodesToShow.slice(0, cutoff)
+	const more = nodesToShow.slice(cutoff)
 
 	return (
 		<>
@@ -40,24 +63,50 @@ export const MeshGateway = ({
 					<NRPlus class="icon" alt="DECT NR+" />
 				</dt>
 				<dd>5G Mesh Gateway</dd>
-				{device.meshNodes
-					.filter((node) => {
-						if (!showFavorites) return true
-						return favorites.includes(node.id)
-					})
-					.map((node) => (
-						<>
-							<dt class="d-flex align-items-start mt-2">
-								<abbr title={'Mesh Node'}>
-									<Network strokeWidth={1} />
-								</abbr>
-							</dt>
-							<dd class="mt-2">
-								<MeshNode device={node} />
-							</dd>
-						</>
-					))}
+				{visible.map((node) => (
+					<ShowNode node={node} />
+				))}
+				{more.length > 0 && showMore && (
+					<>
+						<dt class="mt-2 opacity-75">
+							<ChevronUp strokeWidth={1} />
+						</dt>
+						<dd class="mt-2 opacity-75">
+							<button type="button" onClick={() => setShowMore((s) => !s)}>
+								<em>hide {more.length} more</em>
+							</button>
+						</dd>
+						{more.map((node) => (
+							<ShowNode node={node} />
+						))}
+					</>
+				)}
+				{more.length > 0 && !showMore && (
+					<>
+						<dt class="mt-2 opacity-75">
+							<ChevronDown strokeWidth={1} />
+						</dt>
+						<dd class="mt-2 opacity-75">
+							<button type="button" onClick={() => setShowMore((s) => !s)}>
+								<em>show {more.length} more</em>
+							</button>
+						</dd>
+					</>
+				)}
 			</Properties>
 		</>
 	)
 }
+
+const ShowNode = ({ node }: { node: MeshNodeType }) => (
+	<>
+		<dt class="d-flex align-items-start mt-2">
+			<abbr title={'Mesh Node'}>
+				<Network strokeWidth={1} />
+			</abbr>
+		</dt>
+		<dd class="mt-2">
+			<MeshNode device={node} />
+		</dd>
+	</>
+)
