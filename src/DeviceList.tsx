@@ -11,6 +11,7 @@ import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
 import { useMeshTopology } from './context/showMeshTopology'
 import { DisconnectedWarning } from './DisconnectedWarning'
+import { HistoryOnly } from './HistoryOnly'
 import { SIMIcon } from './icons/SIMIcon'
 import { LightbulbDevice } from './LightbulbDevice'
 import { MeshGateway } from './MeshGateway'
@@ -125,7 +126,7 @@ export const IssuerName = styled.dd`
 export const DeviceList = () => {
 	const { devices, lastUpdateTs } = useDevices()
 	const map = useMap()
-	const { hide: hideHistoryChart } = useHistoryChart()
+	const { hide: hideHistoryChart, show: showHistoryChart } = useHistoryChart()
 	const { toggle: toggleMeshTopology } = useMeshTopology()
 	const {
 		settings: { showFavorites, favorites },
@@ -136,9 +137,9 @@ export const DeviceList = () => {
 			if (!showFavorites) return true
 			return favorites.includes(deviceId)
 		})
-		.filter(([deviceId]) => {
+		.filter(([deviceId, device]) => {
 			const ts = lastUpdateTs(deviceId)
-			if (ts === null) return false
+			if (ts === null) return device.history !== undefined // show devices that have history available (history will have a cut-off of 60 minutes)
 			if (ts < Date.now() - 60 * 60 * 1000) return false
 			return true
 		})
@@ -200,6 +201,17 @@ export const DeviceList = () => {
 										}
 										toggleMeshTopology(device.id)
 										hideHistoryChart()
+									}}
+								/>
+							</li>
+						)
+					if (device.history !== undefined)
+						return (
+							<li>
+								<HistoryOnly
+									device={device}
+									onClick={() => {
+										showHistoryChart(device.id)
 									}}
 								/>
 							</li>
