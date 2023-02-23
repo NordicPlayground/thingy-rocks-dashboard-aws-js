@@ -169,7 +169,7 @@ describe('layoutMesh()', () => {
 		})
 		const node4322 = layout.find(byId(4322))
 		expect(node4322).toMatchObject({
-			heading: degToRad(45),
+			heading: degToRad(60),
 		})
 	})
 

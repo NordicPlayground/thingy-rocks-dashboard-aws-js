@@ -213,6 +213,32 @@ const samples: [title: string, network: MeshNetwork][] = [
 	['Test sample', network],
 ]
 
+const angleTests: [title: string, network: MeshNetwork][] = [
+	...Array.from(
+		{ length: 10 },
+		(_, k): [title: string, network: MeshNetwork] => [
+			`Angle test: ${k}`,
+			[
+				{
+					node: 422,
+					travelTimeMs: Math.round(Math.random() * 100),
+					hops: 1,
+				},
+				...Array.from({ length: k }, () => ({
+					node: 4002 + k * 10,
+					travelTimeMs: Math.round(Math.random() * 100),
+					hops: 2,
+				})),
+				...Array.from({ length: k }, () => ({
+					node: 40002 + k * 10,
+					travelTimeMs: Math.round(Math.random() * 100),
+					hops: 3,
+				})),
+			],
+		],
+	),
+]
+
 export const MeshVisualizer = () => {
 	const [randomNodes, setNodes] = useState<MeshNetwork>(randomNetwork())
 
@@ -234,6 +260,14 @@ export const MeshVisualizer = () => {
 						}}
 					/>
 				</section>
+			</div>
+			<div class="row mt-4">
+				{angleTests.map(([title, network]) => (
+					<section class="col">
+						<p>{title}</p>
+						<MeshTopology network={network} />
+					</section>
+				))}
 			</div>
 		</main>
 	)

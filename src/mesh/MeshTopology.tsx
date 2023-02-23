@@ -65,6 +65,7 @@ export const MeshTopology = ({
 									stroke-dasharray={'5 3'}
 									stroke-opacity={0.75}
 								/>
+
 								<g
 									transform={[
 										`translate(${x - 14} ${y - 14})`,
