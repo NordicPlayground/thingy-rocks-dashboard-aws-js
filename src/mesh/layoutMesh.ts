@@ -28,7 +28,7 @@ export const layoutMesh = (
 	const rot = Circle / connectedNodes.length
 	let currentHeading = 0
 	for (const node of connectedNodes) {
-		placeNode(node, placedNodes, distance, Circle / 3, currentHeading)
+		placeNode(node, placedNodes, distance, Circle / 6, currentHeading)
 		currentHeading += rot
 	}
 	return placedNodes
