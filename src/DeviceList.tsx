@@ -127,7 +127,8 @@ export const DeviceList = () => {
 	const { devices, lastUpdateTs } = useDevices()
 	const map = useMap()
 	const { hide: hideHistoryChart, show: showHistoryChart } = useHistoryChart()
-	const { toggle: toggleMeshTopology } = useMeshTopology()
+	const { toggle: toggleMeshTopology, hide: hideMeshTopology } =
+		useMeshTopology()
 	const {
 		settings: { showFavorites, favorites },
 	} = useSettings()
@@ -212,6 +213,7 @@ export const DeviceList = () => {
 									device={device}
 									onClick={() => {
 										showHistoryChart(device.id)
+										hideMeshTopology()
 									}}
 								/>
 							</li>
