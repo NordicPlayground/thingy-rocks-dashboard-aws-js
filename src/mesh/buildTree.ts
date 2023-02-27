@@ -24,8 +24,34 @@ const attachRemaining = (
 	tree: ConnectedMeshNode[],
 	network: MeshNetwork,
 	connected: number[],
-): ConnectedMeshNode[] =>
-	tree.map((node) => attachRemainingToNode(node, network, connected))
+): ConnectedMeshNode[] => {
+	const t = tree.map((node) => attachRemainingToNode(node, network, connected))
+	const unattached = network
+		.filter(({ hops }) => (hops ?? 1) > 1)
+		.filter(({ node: id }) => connected.includes(id) === false)
+	for (const node of unattached.sort(
+		({ hops: h1 }, { hops: h2 }) => (h1 ?? 1) - (h2 ?? 1),
+	)) {
+		attach(t, node, connected)
+	}
+	return t
+}
+
+const attach = (
+	tree: ConnectedMeshNode[],
+	toAttach: MeshNetworkNode,
+	connected: number[],
+): void => {
+	for (const node of tree) {
+		if ((node.hops ?? 1) === (toAttach.hops ?? 1) - 1) {
+			if (connected.includes(toAttach.node)) return
+			connected.push(toAttach.node)
+			node.connections.push(toConnectedNode(tree, connected)(toAttach))
+			return
+		}
+		attach(node.connections, toAttach, connected)
+	}
+}
 
 const attachRemainingToNode = (
 	node: ConnectedMeshNode,

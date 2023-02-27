@@ -1,5 +1,6 @@
 import { buildTree, ConnectedMeshNode } from './buildTree'
 import network from './network.json'
+import network2 from './network2.json'
 
 describe('buildTree()', () => {
 	it('should build a mesh tree', () => {
@@ -120,5 +121,32 @@ describe('buildTree()', () => {
 				1,
 			)
 		})
+
+		it('should connect all nodes (deep sample)', () => {
+			// This sample has nodes with 4 and 5 hops that have no direct route based on the device ids of parents. They have to be connected randomly.
+			const tree = buildTree(network2)
+			const hop3Nodes: ConnectedMeshNode[] = []
+			const hop4Nodes: ConnectedMeshNode[] = []
+			const hop5Nodes: ConnectedMeshNode[] = []
+			walkTree(tree, (node) => {
+				if (node.hops === 3) hop3Nodes.push(node)
+				if (node.hops === 4) hop4Nodes.push(node)
+				if (node.hops === 5) hop5Nodes.push(node)
+			})
+			expect(hop3Nodes).toHaveLength(1)
+			expect(hop4Nodes).toHaveLength(2)
+			expect(hop5Nodes).toHaveLength(1)
+		})
 	})
 })
+
+const walkTree = (
+	tree: ConnectedMeshNode[],
+	onNode: (node: ConnectedMeshNode, parent?: ConnectedMeshNode) => unknown,
+	parent?: ConnectedMeshNode,
+) => {
+	for (const node of tree) {
+		onNode(node, parent)
+		walkTree(node.connections, onNode, node)
+	}
+}

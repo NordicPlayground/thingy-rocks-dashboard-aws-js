@@ -9,7 +9,7 @@ export const MeshTopology = ({
 }: {
 	network: MeshNetwork
 } & ComponentProps<any>) => {
-	const distance = 120
+	const distance = 100
 	const {
 		center,
 		elements,

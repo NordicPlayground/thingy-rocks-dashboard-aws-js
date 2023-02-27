@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks'
 import type { MeshNetwork } from './buildTree'
 import { MeshTopology } from './MeshTopology'
 import network from './network.json'
+import network2 from './network2.json'
 
 const randomNodeId = () =>
 	parseInt(
@@ -211,6 +212,7 @@ const samples: [title: string, network: MeshNetwork][] = [
 		],
 	],
 	['Test sample', network],
+	['Test sample (many hops)', network2],
 ]
 
 const angleTests: [title: string, network: MeshNetwork][] = [
