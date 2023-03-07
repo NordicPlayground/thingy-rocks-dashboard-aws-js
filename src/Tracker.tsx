@@ -111,7 +111,13 @@ export const Tracker = ({ device }: { device: Device }) => {
 				{iccid !== undefined && (
 					<>
 						<dt>
-							{hasSoftSIM(device) ? <StyledSoftSIMIcon /> : <StyledSIMIcon />}
+							{hasSoftSIM(device) ? (
+								<abbr title="SoftSIM">
+									<StyledSoftSIMIcon />
+								</abbr>
+							) : (
+								<StyledSIMIcon />
+							)}
 						</dt>
 						<IssuerName>{identifyIssuer(iccid)?.companyName ?? '?'}</IssuerName>
 					</>
