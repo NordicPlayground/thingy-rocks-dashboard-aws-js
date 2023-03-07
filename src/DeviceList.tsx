@@ -12,7 +12,6 @@ import { useHistoryChart } from './context/showHistoryChart'
 import { useMeshTopology } from './context/showMeshTopology'
 import { DisconnectedWarning } from './DisconnectedWarning'
 import { HistoryOnly } from './HistoryOnly'
-import { SIMIcon } from './icons/SIMIcon'
 import { LightbulbDevice } from './LightbulbDevice'
 import { MeshGateway } from './MeshGateway'
 import { Tracker } from './Tracker'
@@ -77,12 +76,6 @@ export const Properties = styled.dl`
 		width: 25px;
 		height: 25px;
 	}
-`
-
-export const StyledSIMIcon = styled(SIMIcon)`
-	width: 20px;
-	height: 18px;
-	margin: 0 0 0 4px;
 `
 
 export const SolarColor = styled.span`

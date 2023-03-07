@@ -1,8 +1,14 @@
 import { identifyIssuer } from 'e118-iin-list'
 import { Sun, UploadCloud, Wifi } from 'lucide-preact'
+import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
 import { locationSourceColors } from './colors'
-import { Device, GeoLocationSource, useDevices } from './context/Devices'
+import {
+	Device,
+	GeoLocationSource,
+	hasSoftSIM,
+	useDevices,
+} from './context/Devices'
 import { useMap } from './context/Map'
 import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
@@ -14,12 +20,13 @@ import {
 	Properties,
 	ShieldIcon,
 	SolarColor,
-	StyledSIMIcon,
 	Title,
 } from './DeviceList'
 import { DeviceName } from './DeviceName'
 import { EnvironmentInfo } from './EnvironmentInfo'
 import { DKIcon } from './icons/DKIcon'
+import { SIMIcon } from './icons/SIMIcon'
+import { SoftSIMIcon } from './icons/SoftSIMIcon'
 import { ThingyIcon } from './icons/ThingyIcon'
 import { LocationInfo } from './LocationInfo'
 import { PowerInfo } from './PowerInfo'
@@ -27,6 +34,17 @@ import { RelativeTime } from './RelativeTime'
 import { SignalQuality } from './SignalQuality'
 import { sortLocations } from './sortLocations'
 import { UpdateWarning } from './UpdateWarning'
+
+const StyledSIMIcon = styled(SIMIcon)`
+	width: 20px;
+	height: 18px;
+	margin: 0 0 0 4px;
+`
+const StyledSoftSIMIcon = styled(SoftSIMIcon)`
+	width: 20px;
+	height: 18px;
+	margin: 0 0 0 4px;
+`
 
 export const Tracker = ({ device }: { device: Device }) => {
 	const { lastUpdateTs } = useDevices()
@@ -93,7 +111,7 @@ export const Tracker = ({ device }: { device: Device }) => {
 				{iccid !== undefined && (
 					<>
 						<dt>
-							<StyledSIMIcon />
+							{hasSoftSIM(device) ? <StyledSoftSIMIcon /> : <StyledSIMIcon />}
 						</dt>
 						<IssuerName>{identifyIssuer(iccid)?.companyName ?? '?'}</IssuerName>
 					</>

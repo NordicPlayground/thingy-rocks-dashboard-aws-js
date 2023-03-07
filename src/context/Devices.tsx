@@ -209,6 +209,9 @@ export const isMeshNode = (device: Device): device is MeshNode =>
 export const isMeshGateway = (device: Device): device is MeshGateway =>
 	device.meshNodes !== undefined
 
+export const hasSoftSIM = (device: Device): boolean =>
+	device.state?.dev?.v?.appV?.includes('softsim') ?? false
+
 export const DevicesContext = createContext<{
 	devices: Devices
 	updateState: (deviceId: string, reported: Reported) => void
