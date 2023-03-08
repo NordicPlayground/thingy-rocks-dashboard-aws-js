@@ -143,7 +143,7 @@ export const Settings = () => {
 							type="number"
 							class="form-control"
 							id="consumptionThreshold"
-							placeholder="e.g. '3.6 mA'"
+							placeholder="e.g. '3.4 mA'"
 							step={0.1}
 							min={0}
 							value={consumptionThreshold}

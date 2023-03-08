@@ -20,7 +20,7 @@ type Settings = {
 }
 
 const defaultSettings: Settings = {
-	consumptionThreshold: 3.6,
+	consumptionThreshold: 3.4,
 	enableTestDevice: false,
 	showSettings: false,
 	gainReferenceEveryMinute: 3.4,
