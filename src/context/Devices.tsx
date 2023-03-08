@@ -1,6 +1,7 @@
 import { merge } from 'lodash'
 import { ComponentChildren, createContext } from 'preact'
 import { useContext, useState } from 'preact/hooks'
+import { Wirepas5GMeshGatewayLocation } from '../map/fixed-locations'
 
 export type ButtonPress = {
 	v: number // 4398
@@ -251,11 +252,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				id: gatewayId,
 				meshNodes: [meshNode],
 				state: {
-					geo: {
-						// MWC Barcelona
-						lat: 41.35742374575955,
-						lng: 2.1331527498627096,
-					},
+					geo: Wirepas5GMeshGatewayLocation,
 				},
 			}
 		} else {
