@@ -53,6 +53,8 @@ export const locationSourceDashArray: Record<
 	[GeoLocationSource.FIXED]: [1],
 }
 
+let zooming = false
+
 /**
  * The `map` parameter is potentially undefined,
  * because it sometimes happens that the map instance is no longer available
@@ -60,10 +62,25 @@ export const locationSourceDashArray: Record<
 const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 	const isLoaded = new Promise((resolve) => map?.on('load', resolve))
 	const centerOnDeviceZoomLevel = 12
+
+	map?.on('zoomstart', () => {
+		console.debug('[map]', 'zoom start')
+		zooming = true
+	})
+	map?.on('zoomend', () => {
+		console.debug('[map]', 'zoom end')
+		zooming = false
+	})
+
 	return {
 		showDeviceLocation: async ({ deviceId, deviceAlias, location, hidden }) => {
 			if (map === undefined) {
 				captureMessage(`Map is not available.`)
+				return
+			}
+
+			// Suspend updates during zooming
+			if (zooming) {
 				return
 			}
 
@@ -253,6 +270,10 @@ export const Provider = ({
 		center: [10.437581513483195, 63.42148461054351],
 		zoom: 12,
 		transformRequest: transformRequest(credentials),
+		refreshExpiredTiles: false,
+		trackResize: false,
+		keyboard: false,
+		renderWorldCopies: false,
 	})
 
 	return (
