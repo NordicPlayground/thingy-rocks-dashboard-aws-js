@@ -1,4 +1,5 @@
 import type { CognitoIdentityCredentials } from '@aws-sdk/credential-provider-cognito-identity'
+import { isEqual } from 'lodash-es'
 import type {
 	GeoJSONSource,
 	LngLatLike,
@@ -20,6 +21,8 @@ export const MapContext = createContext<DeviceMap>(undefined as any)
 export const Consumer = MapContext.Consumer
 
 export const useMap = () => useContext(MapContext)
+
+const deviceLocations: Record<string, GeoLocation> = {}
 
 type DeviceMap = {
 	showDeviceLocation: (args: {
@@ -58,16 +61,18 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 	const isLoaded = new Promise((resolve) => map?.on('load', resolve))
 	const centerOnDeviceZoomLevel = 12
 	return {
-		showDeviceLocation: async ({
-			deviceId,
-			deviceAlias,
-			location: { source, lat, lng, accuracy, label },
-			hidden,
-		}) => {
+		showDeviceLocation: async ({ deviceId, deviceAlias, location, hidden }) => {
 			if (map === undefined) {
 				captureMessage(`Map is not available.`)
 				return
 			}
+
+			// Check if update is needed
+			if (isEqual(location, deviceLocations[deviceId])) {
+				return
+			}
+			deviceLocations[deviceId] = location
+			const { source, lat, lng, accuracy, label } = location
 
 			await isLoaded
 
@@ -90,6 +95,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 				// Create new sources and layers
 				// For properties, see https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
 				// Data for Hexagon
+				console.debug(`[map]`, 'add source', locationAreaBaseId, location)
 				map.addSource(
 					locationAreaSourceId,
 					geoJSONPolygonFromCircle([lng, lat], accuracy, 6, Math.PI / 2),
