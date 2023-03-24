@@ -99,7 +99,12 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 							<li>
 								<LocationSourceButton device={device} location={location} />
 								<small>
-									(<GeoLocationAge location={location} />,{' '}
+									(
+									{location.ts !== undefined && (
+										<>
+											<GeoLocationAge age={location.ts} />,{' '}
+										</>
+									)}
 									<span>{Math.round(location.accuracy)} m</span>)
 								</small>
 							</li>
