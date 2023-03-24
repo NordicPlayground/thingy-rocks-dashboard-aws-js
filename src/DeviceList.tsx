@@ -1,4 +1,9 @@
 import styled from 'styled-components'
+import { DisconnectedWarning } from './DisconnectedWarning'
+import { HistoryOnly } from './HistoryOnly'
+import { LightbulbDevice } from './LightbulbDevice'
+import { MeshGateway } from './MeshGateway'
+import { Tracker } from './Tracker'
 import {
 	GeoLocationSource,
 	isLightBulb,
@@ -10,11 +15,6 @@ import { useMap } from './context/Map'
 import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
 import { useMeshTopology } from './context/showMeshTopology'
-import { DisconnectedWarning } from './DisconnectedWarning'
-import { HistoryOnly } from './HistoryOnly'
-import { LightbulbDevice } from './LightbulbDevice'
-import { MeshGateway } from './MeshGateway'
-import { Tracker } from './Tracker'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -166,7 +166,7 @@ export const DeviceList = () => {
 												{
 													...device.state.geo,
 													accuracy: 0,
-													source: GeoLocationSource.FIXED,
+													source: GeoLocationSource.fixed,
 												},
 												16,
 											)
@@ -188,7 +188,7 @@ export const DeviceList = () => {
 												{
 													...device.state.geo,
 													accuracy: 0,
-													source: GeoLocationSource.FIXED,
+													source: GeoLocationSource.fixed,
 												},
 												16,
 											)

@@ -4,12 +4,10 @@ const weighSource = (source: GeoLocationSource): number => {
 	switch (source) {
 		case GeoLocationSource.GNSS:
 			return 1
-		case GeoLocationSource.WIFI:
+		case GeoLocationSource.network:
 			return 2
-		case GeoLocationSource.MULTI_CELL:
+		case GeoLocationSource.singleCell:
 			return 3
-		case GeoLocationSource.SINGLE_CELL:
-			return 4
 		default:
 			return Number.MAX_SAFE_INTEGER
 	}

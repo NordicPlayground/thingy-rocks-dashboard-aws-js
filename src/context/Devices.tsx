@@ -141,11 +141,10 @@ export type MeshNodeInfo = {
 }
 
 export enum GeoLocationSource {
-	SINGLE_CELL = 'single-cell',
-	MULTI_CELL = 'multi-cell',
-	WIFI = 'wifi',
 	GNSS = 'gnss',
-	FIXED = 'fixed',
+	singleCell = 'single-cell',
+	fixed = 'fixed',
+	network = 'network',
 }
 
 export type GeoLocation = {
@@ -298,11 +297,11 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						// Use fixed location from shadow
 						if (reported.geo !== undefined) {
 							updated.location = merge(updated.location ?? {}, {
-								[GeoLocationSource.FIXED]: {
+								[GeoLocationSource.fixed]: {
 									lat: reported.geo.lat,
 									lng: reported.geo.lng,
 									accuracy: 1,
-									source: GeoLocationSource.FIXED,
+									source: GeoLocationSource.fixed,
 								},
 							}) as Record<GeoLocationSource, GeoLocation>
 						}

@@ -47,10 +47,9 @@ export const locationSourceDashArray: Record<
 	PropertyValueSpecification<Array<number>>
 > = {
 	[GeoLocationSource.GNSS]: [1],
-	[GeoLocationSource.WIFI]: [1, 1],
-	[GeoLocationSource.MULTI_CELL]: [4, 2],
-	[GeoLocationSource.SINGLE_CELL]: [8, 4, 1, 4],
-	[GeoLocationSource.FIXED]: [1],
+	[GeoLocationSource.network]: [1, 1],
+	[GeoLocationSource.fixed]: [1],
+	[GeoLocationSource.singleCell]: [8, 4, 1, 4],
 }
 
 let zooming = false

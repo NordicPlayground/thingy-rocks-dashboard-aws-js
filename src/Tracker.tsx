@@ -18,13 +18,8 @@ import { PowerInfo } from './PowerInfo'
 import { RelativeTime } from './RelativeTime'
 import { SignalQuality } from './SignalQuality'
 import { UpdateWarning } from './UpdateWarning'
-import { locationSourceColors } from './colors'
-import {
-	GeoLocationSource,
-	hasSoftSIM,
-	useDevices,
-	type Device,
-} from './context/Devices'
+import { wifiColor } from './colors'
+import { hasSoftSIM, useDevices, type Device } from './context/Devices'
 import { useMap } from './context/Map'
 import { useSettings } from './context/Settings'
 import { useHistoryChart } from './context/showHistoryChart'
@@ -84,7 +79,7 @@ export const Tracker = ({ device }: { device: Device }) => {
 						<ShieldIcon>
 							<Wifi
 								style={{
-									color: locationSourceColors[GeoLocationSource.WIFI],
+									color: wifiColor,
 								}}
 							/>
 						</ShieldIcon>

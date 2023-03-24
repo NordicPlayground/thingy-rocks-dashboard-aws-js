@@ -56,7 +56,7 @@ type Message = {
 				lat: number // 63.419001
 				lng: number // 10.437035
 				accuracy: number // 500
-				source: GeoLocationSource // 'single-cell'
+				source: GeoLocationSource // 'network'
 			}
 	  }
 	| {

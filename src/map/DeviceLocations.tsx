@@ -30,7 +30,7 @@ export const DeviceLocations = () => {
 			location: {
 				...Wirepas5GMeshGatewayLocation,
 				accuracy: 5,
-				source: GeoLocationSource.FIXED,
+				source: GeoLocationSource.fixed,
 			},
 		})
 	}, [devices, map])
