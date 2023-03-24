@@ -1,7 +1,7 @@
 import { CognitoIdentityClient } from '@aws-sdk/client-cognito-identity'
 import {
-	CognitoIdentityCredentials,
 	fromCognitoIdentityPool,
+	type CognitoIdentityCredentials,
 } from '@aws-sdk/credential-provider-cognito-identity'
 import type { ComponentChildren } from 'preact'
 import { useEffect, useState } from 'preact/hooks'

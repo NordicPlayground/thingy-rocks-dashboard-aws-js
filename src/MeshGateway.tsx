@@ -1,17 +1,17 @@
 import { ChevronDown, ChevronUp, Network, UploadCloud } from 'lucide-preact'
 import { useState } from 'preact/hooks'
-import {
-	MeshGateway as MeshGatewayDevice,
-	MeshNode as MeshNodeType,
-	useDevices,
-} from './context/Devices'
-import { useSettings } from './context/Settings'
 import { LastUpdate, Properties, Title } from './DeviceList'
 import { DeviceName } from './DeviceName'
-import { FiveGMesh } from './icons/5GMesh'
-import { NRPlus } from './icons/NRPlus'
 import { MeshNode } from './MeshNode'
 import { RelativeTime } from './RelativeTime'
+import {
+	useDevices,
+	type MeshGateway as MeshGatewayDevice,
+	type MeshNode as MeshNodeType,
+} from './context/Devices'
+import { useSettings } from './context/Settings'
+import { FiveGMesh } from './icons/5GMesh'
+import { NRPlus } from './icons/NRPlus'
 
 export const MeshGateway = ({
 	device,

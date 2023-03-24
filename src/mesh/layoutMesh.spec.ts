@@ -1,5 +1,5 @@
 import { buildTree } from './buildTree'
-import { layoutMesh, PlacedMeshNode } from './layoutMesh'
+import { layoutMesh, type PlacedMeshNode } from './layoutMesh'
 import network from './network.json'
 
 const byId = (id: number) => (node: PlacedMeshNode) => node.node === id

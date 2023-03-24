@@ -6,14 +6,14 @@ import type {
 	PropertyValueSpecification,
 } from 'maplibre-gl'
 import { Map as MapLibreGlMap } from 'maplibre-gl'
-import { ComponentChildren, createContext } from 'preact'
+import { createContext, type ComponentChildren } from 'preact'
 import { useContext } from 'preact/hooks'
 import { locationSourceColors } from '../colors'
 import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle'
 import { mapStyle } from '../map/style'
 import { transformRequest } from '../map/transformRequest'
 import { captureMessage } from '../sentry'
-import { GeoLocation, GeoLocationSource } from './Devices'
+import { GeoLocationSource, type GeoLocation } from './Devices'
 import { LocationSourceLabels } from './LocationSourceLabels'
 
 export const MapContext = createContext<DeviceMap>(undefined as any)

@@ -1,12 +1,12 @@
-import { ComponentChildren, createContext } from 'preact'
+import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useRef, useState } from 'preact/hooks'
 import type { RGB } from '../rgbToHex'
 import {
 	GeoLocationSource,
-	MeshNodeInfo,
-	Reported,
-	Summary,
 	useDevices,
+	type MeshNodeInfo,
+	type Reported,
+	type Summary,
 } from './Devices'
 
 export const WebsocketContext = createContext<{

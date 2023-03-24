@@ -1,11 +1,11 @@
 import { Lightbulb, UploadCloud } from 'lucide-preact'
-import { Device, useDevices } from './context/Devices'
-import { useSettings } from './context/Settings'
-import { useWebsocket } from './context/WebsocketConnection'
 import { LastUpdate, Properties, Title } from './DeviceList'
 import { DeviceName } from './DeviceName'
-import { RelativeTime } from './RelativeTime'
 import { RGBControl } from './RGBControl'
+import { RelativeTime } from './RelativeTime'
+import { useDevices, type Device } from './context/Devices'
+import { useSettings } from './context/Settings'
+import { useWebsocket } from './context/WebsocketConnection'
 
 export const LightbulbDevice = ({
 	device,

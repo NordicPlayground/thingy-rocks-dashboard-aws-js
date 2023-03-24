@@ -1,5 +1,5 @@
 import type { ComponentProps } from 'preact'
-import { buildTree, MeshNetwork } from './buildTree'
+import { buildTree, type MeshNetwork } from './buildTree'
 import { isGateway, isNode, layoutMesh, move } from './layoutMesh'
 import { normalizePositions } from './normalizePositions'
 

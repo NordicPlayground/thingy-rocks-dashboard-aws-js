@@ -2,17 +2,6 @@ import { identifyIssuer } from 'e118-iin-list'
 import { Sun, UploadCloud, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress'
-import { locationSourceColors } from './colors'
-import {
-	Device,
-	GeoLocationSource,
-	hasSoftSIM,
-	useDevices,
-} from './context/Devices'
-import { useMap } from './context/Map'
-import { useSettings } from './context/Settings'
-import { useHistoryChart } from './context/showHistoryChart'
-import { useMeshTopology } from './context/showMeshTopology'
 import { CountryFlag } from './CountryFlag'
 import {
 	IssuerName,
@@ -24,16 +13,27 @@ import {
 } from './DeviceList'
 import { DeviceName } from './DeviceName'
 import { EnvironmentInfo } from './EnvironmentInfo'
-import { DKIcon } from './icons/DKIcon'
-import { SIMIcon } from './icons/SIMIcon'
-import { SoftSIMIcon } from './icons/SoftSIMIcon'
-import { ThingyIcon } from './icons/ThingyIcon'
 import { LocationInfo } from './LocationInfo'
 import { PowerInfo } from './PowerInfo'
 import { RelativeTime } from './RelativeTime'
 import { SignalQuality } from './SignalQuality'
-import { sortLocations } from './sortLocations'
 import { UpdateWarning } from './UpdateWarning'
+import { locationSourceColors } from './colors'
+import {
+	GeoLocationSource,
+	hasSoftSIM,
+	useDevices,
+	type Device,
+} from './context/Devices'
+import { useMap } from './context/Map'
+import { useSettings } from './context/Settings'
+import { useHistoryChart } from './context/showHistoryChart'
+import { useMeshTopology } from './context/showMeshTopology'
+import { DKIcon } from './icons/DKIcon'
+import { SIMIcon } from './icons/SIMIcon'
+import { SoftSIMIcon } from './icons/SoftSIMIcon'
+import { ThingyIcon } from './icons/ThingyIcon'
+import { sortLocations } from './sortLocations'
 
 const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;

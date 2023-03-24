@@ -2,7 +2,7 @@ import { Check, Lightbulb, Palette } from 'lucide-preact'
 import { useState } from 'preact/hooks'
 import styled from 'styled-components'
 import { hexToRGB } from './hexToRGB'
-import { RGB, rgbToHex } from './rgbToHex'
+import { rgbToHex, type RGB } from './rgbToHex'
 
 const ColorInput = styled.input`
 	border: 0;

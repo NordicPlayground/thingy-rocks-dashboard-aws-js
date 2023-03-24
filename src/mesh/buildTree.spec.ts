@@ -1,4 +1,4 @@
-import { buildTree, ConnectedMeshNode } from './buildTree'
+import { buildTree, type ConnectedMeshNode } from './buildTree'
 import network from './network.json'
 import network2 from './network2.json'
 

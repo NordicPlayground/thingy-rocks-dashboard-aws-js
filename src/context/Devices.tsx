@@ -1,5 +1,5 @@
 import { merge } from 'lodash'
-import { ComponentChildren, createContext } from 'preact'
+import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useState } from 'preact/hooks'
 import { Wirepas5GMeshGatewayLocation } from '../map/fixed-locations'
 

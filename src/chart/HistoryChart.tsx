@@ -1,4 +1,4 @@
-import { ChartData, chartMath } from './chartMath'
+import { chartMath, type ChartData } from './chartMath'
 import { generateLabels } from './generateLabels'
 
 export const HistoryChart = ({

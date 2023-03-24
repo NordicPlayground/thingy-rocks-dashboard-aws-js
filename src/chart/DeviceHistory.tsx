@@ -1,13 +1,13 @@
 import { format, subSeconds } from 'date-fns'
-import { Battery, LucideProps, Sun, Thermometer, X } from 'lucide-preact'
+import { Battery, Sun, Thermometer, X, type LucideProps } from 'lucide-preact'
 import { useRef } from 'preact/hooks'
 import styled from 'styled-components'
 import { colors } from '../colors'
-import { Reading, useDevices } from '../context/Devices'
+import { useDevices, type Reading } from '../context/Devices'
 import { useSettings } from '../context/Settings'
 import { useHistoryChart } from '../context/showHistoryChart'
-import type { Dataset } from './chartMath'
 import { HistoryChart } from './HistoryChart'
+import type { Dataset } from './chartMath'
 
 const chartBaseWidth = 0.6 // percent of window width
 const chartBaseHeight = 0.5 // percent of window width

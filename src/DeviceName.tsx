@@ -1,4 +1,4 @@
-import { Device, useDevices } from './context/Devices'
+import { useDevices, type Device } from './context/Devices'
 
 export const DeviceName = ({
 	device,

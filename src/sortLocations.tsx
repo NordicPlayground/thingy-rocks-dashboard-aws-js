@@ -1,4 +1,4 @@
-import { GeoLocation, GeoLocationSource } from './context/Devices'
+import { GeoLocationSource, type GeoLocation } from './context/Devices'
 
 const weighSource = (source: GeoLocationSource): number => {
 	switch (source) {

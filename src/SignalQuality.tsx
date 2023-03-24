@@ -1,15 +1,15 @@
 import { RSRP, SignalQualityTriangle } from '@nordicsemiconductor/rsrp-bar'
 import {
-	LucideProps,
 	Signal,
 	SignalHigh,
 	SignalLow,
 	SignalMedium,
 	SignalZero,
 	Slash,
+	type LucideProps,
 } from 'lucide-preact'
 import styled from 'styled-components'
-import { Device, EnergyEstimate } from './context/Devices'
+import { EnergyEstimate, type Device } from './context/Devices'
 import { LTEm } from './icons/LTE-m'
 import { NBIot } from './icons/NBIot'
 
