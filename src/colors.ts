@@ -24,9 +24,8 @@ export const colors = {
 // Source: https://coolors.co/palette/22577a-38a3a5-57cc99-80ed99-c7f9cc
 export const locationSourceColors = {
 	[GeoLocationSource.GNSS]: '#C7F9CC',
-	[GeoLocationSource.network]: '#57CC99',
+	[GeoLocationSource.network]: '#38A3A5',
 	[GeoLocationSource.fixed]: '#22577A',
-	[GeoLocationSource.singleCell]: '#38A3A5',
 } as const
 
 export const wifiColor = '#80ED99'

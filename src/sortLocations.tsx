@@ -6,8 +6,6 @@ const weighSource = (source: GeoLocationSource): number => {
 			return 1
 		case GeoLocationSource.network:
 			return 2
-		case GeoLocationSource.singleCell:
-			return 3
 		default:
 			return Number.MAX_SAFE_INTEGER
 	}

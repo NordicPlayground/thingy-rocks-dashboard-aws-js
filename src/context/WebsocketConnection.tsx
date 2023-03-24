@@ -4,6 +4,7 @@ import type { RGB } from '../rgbToHex'
 import {
 	GeoLocationSource,
 	useDevices,
+	type GeoLocation,
 	type MeshNodeInfo,
 	type Reported,
 	type Summary,
@@ -52,12 +53,7 @@ type Message = {
 } & (
 	| {
 			'@context': MessageContext.DeviceLocation
-			location: {
-				lat: number // 63.419001
-				lng: number // 10.437035
-				accuracy: number // 500
-				source: GeoLocationSource // 'network'
-			}
+			location: GeoLocation
 	  }
 	| {
 			'@context': MessageContext.DeviceShadow
@@ -156,7 +152,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					deviceMessages.updateState(message.deviceId, message.message)
 					break
 				case 'https://thingy.rocks/device-location':
-					deviceMessages.updateLocation(message.deviceId, message.location)
+					deviceMessages.updateLocation(
+						message.deviceId,
+						transformLocation(message.location),
+					)
 					break
 				case 'https://thingy.rocks/device-history':
 					deviceMessages.updateHistory(message.deviceId, message.history)
@@ -231,3 +230,13 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 export const Consumer = WebsocketContext.Consumer
 
 export const useWebsocket = () => useContext(WebsocketContext)
+
+const transformLocation = (location: {
+	lat: number // 63.419001
+	lng: number // 10.437035
+	accuracy: number // 500
+	source: string // 'network'
+}): GeoLocation => ({
+	...location,
+	source: GeoLocationSource.network, // 'network'
+})

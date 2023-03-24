@@ -1,8 +1,9 @@
 import { CloudOff, MapPin, MapPinOff } from 'lucide-preact'
 import styled from 'styled-components'
+import { GeoLocationAge } from './GeoLocationAge'
 import { locationSourceColors } from './colors'
-import type { Device } from './context/Devices'
-import { GeoLocationSource, useDevices } from './context/Devices'
+import type { Device, GeoLocation } from './context/Devices'
+import { useDevices } from './context/Devices'
 import { LocationSourceLabels } from './context/LocationSourceLabels'
 import { sortLocations } from './sortLocations'
 
@@ -30,14 +31,25 @@ const LocationSourceSamplingDisabled = styled.span`
 	}
 `
 
+const LocationDetails = styled.ul`
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	li {
+		margin: 0;
+		padding: 0;
+	}
+`
+
 const LocationSourceButton = ({
 	device: { id, hiddenLocations },
-	source,
+	location,
 }: {
 	device: Device
-	source: GeoLocationSource
+	location: GeoLocation
 }) => {
 	const { toggleHiddenLocation } = useDevices()
+	const { source } = location
 
 	const isDisabled = hiddenLocations?.[source] ?? false
 
@@ -82,9 +94,17 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 					)}
 				</dt>
 				<dd>
-					{rankedLocations.map(({ source }) => (
-						<LocationSourceButton device={device} source={source} />
-					))}
+					<LocationDetails>
+						{rankedLocations.map((location) => (
+							<li>
+								<LocationSourceButton device={device} location={location} />
+								<small>
+									(<GeoLocationAge location={location} />,{' '}
+									<span>{Math.round(location.accuracy)} m</span>)
+								</small>
+							</li>
+						))}
+					</LocationDetails>
 					{nod.length > 0 &&
 						nod.map((s) => (
 							<LocationSourceSamplingDisabled>

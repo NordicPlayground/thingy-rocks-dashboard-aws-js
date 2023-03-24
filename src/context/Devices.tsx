@@ -142,7 +142,6 @@ export type MeshNodeInfo = {
 
 export enum GeoLocationSource {
 	GNSS = 'gnss',
-	singleCell = 'single-cell',
 	fixed = 'fixed',
 	network = 'network',
 }
@@ -153,6 +152,7 @@ export type GeoLocation = {
 	accuracy: number
 	source: GeoLocationSource
 	label?: string
+	ts?: Date
 }
 export type Device = {
 	id: string
@@ -291,6 +291,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 									lng: reported.gnss.v.lng,
 									accuracy: reported.gnss.v.acc,
 									source: GeoLocationSource.GNSS,
+									ts: new Date(reported.gnss.ts),
 								},
 							}) as Record<GeoLocationSource, GeoLocation>
 						}

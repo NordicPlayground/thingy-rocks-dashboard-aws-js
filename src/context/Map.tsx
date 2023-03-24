@@ -49,7 +49,6 @@ export const locationSourceDashArray: Record<
 	[GeoLocationSource.GNSS]: [1],
 	[GeoLocationSource.network]: [1, 1],
 	[GeoLocationSource.fixed]: [1],
-	[GeoLocationSource.singleCell]: [8, 4, 1, 4],
 }
 
 let zooming = false
