@@ -1,7 +1,6 @@
 import { merge } from 'lodash'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useState } from 'preact/hooks'
-import { Wirepas5GMeshGatewayLocation } from '../map/fixed-locations'
 
 export type ButtonPress = {
 	v: number // 4398
@@ -232,7 +231,9 @@ export const DevicesContext = createContext<{
 	devices: {},
 })
 
-const deviceAliases: Record<string, string> = {}
+const deviceAliases: Record<string, string> = {
+	'nordic-demo5Gmesh_gw_anz_01': 'Tech Tour NR+ Demo',
+}
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [knownDevices, updateDevices] = useState<Devices>({})
@@ -245,9 +246,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			gateways[gatewayId] = {
 				id: gatewayId,
 				meshNodes: [meshNode],
-				state: {
-					geo: Wirepas5GMeshGatewayLocation,
-				},
 			}
 		} else {
 			gateways[gatewayId]?.meshNodes.push(meshNode)
