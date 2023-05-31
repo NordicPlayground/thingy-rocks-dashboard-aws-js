@@ -8,7 +8,7 @@ import {
 	type MeshNodeInfo,
 	type Reported,
 	type Summary,
-} from './Devices'
+} from './Devices.js'
 
 export const WebsocketContext = createContext<{
 	connected: boolean
@@ -145,25 +145,26 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				return
 			}
 			switch (message['@context']) {
-				case 'https://thingy.rocks/device-shadow':
+				case MessageContext.DeviceShadow:
 					deviceMessages.updateState(message.deviceId, message.reported)
 					break
-				case 'https://thingy.rocks/device-message':
+				case MessageContext.DeviceMessage:
 					deviceMessages.updateState(message.deviceId, message.message)
 					break
-				case 'https://thingy.rocks/device-location':
+				case MessageContext.DeviceLocation:
 					deviceMessages.updateLocation(
 						message.deviceId,
 						transformLocation(message.location),
+						message.location.source,
 					)
 					break
-				case 'https://thingy.rocks/device-history':
+				case MessageContext.DeviceHistory:
 					deviceMessages.updateHistory(message.deviceId, message.history)
 					break
-				case 'https://thingy.rocks/wirepas-5g-mesh-node-event':
+				case MessageContext.MeshNodeEvent:
 					updateMeshNode(message)
 					break
-				case 'https://thingy.rocks/lightbulb':
+				case MessageContext.Lightbulb:
 					deviceMessages.updateState(message.deviceId, {
 						led: {
 							v: message.lightbulb,

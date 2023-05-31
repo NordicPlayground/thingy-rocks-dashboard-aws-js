@@ -214,7 +214,11 @@ export const hasSoftSIM = (device: Device): boolean =>
 export const DevicesContext = createContext<{
 	devices: Devices
 	updateState: (deviceId: string, reported: Reported) => void
-	updateLocation: (deviceId: string, location: GeoLocation) => void
+	updateLocation: (
+		deviceId: string,
+		location: GeoLocation,
+		originalSource: string,
+	) => void
 	updateHistory: (deviceId: string, history: Summary) => void
 	updateAlias: (deviceId: string, alias: string) => void
 	toggleHiddenLocation: (deviceId: string, location: GeoLocationSource) => void
@@ -278,7 +282,8 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 							reported.gnss !== undefined &&
 							reported.gnss.ts > Date.now() - 60 * 60 * 1000
 						) {
-							updated.location = merge(updated.location ?? {}, {
+							updated.location = {
+								...(updated.location ?? {}),
 								[GeoLocationSource.GNSS]: {
 									lat: reported.gnss.v.lat,
 									lng: reported.gnss.v.lng,
@@ -286,18 +291,19 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 									source: GeoLocationSource.GNSS,
 									ts: new Date(reported.gnss.ts),
 								},
-							}) as Record<GeoLocationSource, GeoLocation>
+							} as Record<GeoLocationSource, GeoLocation>
 						}
 						// Use fixed location from shadow
 						if (reported.geo !== undefined) {
-							updated.location = merge(updated.location ?? {}, {
+							updated.location = {
+								...(updated.location ?? {}),
 								[GeoLocationSource.fixed]: {
 									lat: reported.geo.lat,
 									lng: reported.geo.lng,
 									accuracy: 1,
 									source: GeoLocationSource.fixed,
 								},
-							}) as Record<GeoLocationSource, GeoLocation>
+							} as Record<GeoLocationSource, GeoLocation>
 						}
 						return {
 							...devices,
@@ -305,17 +311,33 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						}
 					})
 				},
-				updateLocation: (deviceId, location) => {
-					updateDevices((devices) => ({
-						...devices,
-						[deviceId]: {
-							...devices[deviceId],
-							id: deviceId,
-							location: merge(devices[deviceId]?.location ?? {}, {
-								[location.source]: location,
-							}) as Record<GeoLocationSource, GeoLocation>,
-						},
-					}))
+				updateLocation: (deviceId, location, originalSource) => {
+					updateDevices((devices) => {
+						if (
+							originalSource === 'single-cell' &&
+							(devices[deviceId]?.state?.dev?.v?.appV?.includes('wifi') ??
+								false)
+						) {
+							// Ignore single-cell locations for Wi-Fi devices
+							console.debug(
+								`Ignored single-cell location for Wi-Fi DK`,
+								deviceId,
+								location,
+							)
+							return devices
+						}
+						return {
+							...devices,
+							[deviceId]: {
+								...devices[deviceId],
+								id: deviceId,
+								location: {
+									...(devices[deviceId]?.location ?? {}),
+									[location.source]: location,
+								} as Record<GeoLocationSource, GeoLocation>,
+							},
+						}
+					})
 				},
 				updateHistory: (deviceId, history) => {
 					updateDevices((devices) => ({
