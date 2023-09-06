@@ -1,8 +1,8 @@
 import { identifyIssuer } from 'e118-iin-list'
 import { Sun, UploadCloud, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
-import { ButtonPress } from './ButtonPress'
-import { CountryFlag } from './CountryFlag'
+import { ButtonPress } from './ButtonPress.js'
+import { CountryFlag } from './CountryFlag.js'
 import {
 	IssuerName,
 	LastUpdate,
@@ -10,25 +10,24 @@ import {
 	ShieldIcon,
 	SolarColor,
 	Title,
-} from './DeviceList'
-import { DeviceName } from './DeviceName'
-import { EnvironmentInfo } from './EnvironmentInfo'
-import { LocationInfo } from './LocationInfo'
-import { PowerInfo } from './PowerInfo'
-import { RelativeTime } from './RelativeTime'
-import { SignalQuality } from './SignalQuality'
-import { UpdateWarning } from './UpdateWarning'
-import { wifiColor } from './colors'
-import { hasSoftSIM, useDevices, type Device } from './context/Devices'
-import { useMap } from './context/Map'
-import { useSettings } from './context/Settings'
-import { useHistoryChart } from './context/showHistoryChart'
-import { useMeshTopology } from './context/showMeshTopology'
-import { DKIcon } from './icons/DKIcon'
-import { SIMIcon } from './icons/SIMIcon'
-import { SoftSIMIcon } from './icons/SoftSIMIcon'
-import { ThingyIcon } from './icons/ThingyIcon'
-import { sortLocations } from './sortLocations'
+} from './DeviceList.js'
+import { DeviceName } from './DeviceName.js'
+import { EnvironmentInfo } from './EnvironmentInfo.js'
+import { LocationInfo } from './LocationInfo.js'
+import { PowerInfo } from './PowerInfo.js'
+import { RelativeTime } from './RelativeTime.js'
+import { SignalQuality } from './SignalQuality.js'
+import { UpdateWarning } from './UpdateWarning.js'
+import { wifiColor } from './colors.js'
+import { hasSoftSIM, useDevices, type Device } from './context/Devices.js'
+import { useMap } from './context/Map.js'
+import { useSettings } from './context/Settings.js'
+import { useHistoryChart } from './context/showHistoryChart.js'
+import { DKIcon } from './icons/DKIcon.js'
+import { SIMIcon } from './icons/SIMIcon.js'
+import { SoftSIMIcon } from './icons/SoftSIMIcon.js'
+import { ThingyIcon } from './icons/ThingyIcon.js'
+import { sortLocations } from './sortLocations.js'
 
 const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;
@@ -45,7 +44,6 @@ export const Tracker = ({ device }: { device: Device }) => {
 	const { lastUpdateTs } = useDevices()
 	const map = useMap()
 	const { toggle: toggleHistoryChart } = useHistoryChart()
-	const { hide: hideMeshTopology } = useMeshTopology()
 	const {
 		settings: { showUpdateWarning },
 	} = useSettings()
@@ -70,7 +68,6 @@ export const Tracker = ({ device }: { device: Device }) => {
 						map?.center(deviceLocation)
 					}
 					toggleHistoryChart(device.id)
-					hideMeshTopology()
 				}}
 			>
 				<BoardIcon class="icon" />
@@ -127,7 +124,6 @@ export const Tracker = ({ device }: { device: Device }) => {
 					device={device}
 					onClick={() => {
 						toggleHistoryChart(device.id)
-						hideMeshTopology()
 					}}
 				/>
 				{state !== undefined && (
@@ -135,7 +131,6 @@ export const Tracker = ({ device }: { device: Device }) => {
 						state={state}
 						onClick={() => {
 							toggleHistoryChart(device.id)
-							hideMeshTopology()
 						}}
 					/>
 				)}

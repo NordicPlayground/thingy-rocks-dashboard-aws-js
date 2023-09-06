@@ -127,17 +127,7 @@ export type Reported = Partial<{
 		lng: number // 10.4383147713927
 		lat: number // 63.42503380159108
 	}
-	// 5G Mesh Node details
-	meshNode: MeshNodeInfo
 }>
-
-export type MeshNodeInfo = {
-	node: number // 1078800338
-	gateway: string // 'demo5Gmesh_gw01'
-	rxTime: string // '2023-02-08T13:27:46.304Z'
-	travelTimeMs: number // 39
-	hops?: number // 1
-}
 
 export enum GeoLocationSource {
 	GNSS = 'gnss',
@@ -159,16 +149,6 @@ export type Device = {
 	location?: Record<GeoLocationSource, GeoLocation>
 	history?: Summary
 	hiddenLocations?: Record<GeoLocationSource, true>
-	meshNodes?: MeshNode[]
-}
-export type MeshNode = Device & {
-	state: {
-		meshNode: MeshNodeInfo
-	}
-}
-
-export type MeshGateway = Device & {
-	meshNodes: MeshNode[]
 }
 
 export type Devices = Record<string, Device>
@@ -202,11 +182,7 @@ export const isTracker = (device: Device): boolean => {
 	return appV !== undefined && brdV !== undefined
 }
 export const isLightBulb = (device: Device): boolean =>
-	device.state?.led !== undefined && device.state.meshNode === undefined
-export const isMeshNode = (device: Device): device is MeshNode =>
-	device.state?.meshNode !== undefined
-export const isMeshGateway = (device: Device): device is MeshGateway =>
-	device.meshNodes !== undefined
+	device.state?.led !== undefined
 
 export const hasSoftSIM = (device: Device): boolean =>
 	device.state?.dev?.v?.appV?.includes('softsim') ?? false
@@ -235,41 +211,15 @@ export const DevicesContext = createContext<{
 	devices: {},
 })
 
-const deviceAliases: Record<string, string> = {
-	'nordic-demo5Gmesh_gw_anz_01': 'Tech Tour NR+ Demo',
-}
+const deviceAliases: Record<string, string> = {}
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [knownDevices, updateDevices] = useState<Devices>({})
 
-	// Create virtual devices for 5G Mesh Gateways
-	const meshNodes: MeshNode[] = Object.values(knownDevices).filter(isMeshNode)
-	const meshGateways = meshNodes.reduce((gateways, meshNode) => {
-		const gatewayId = meshNode.state.meshNode.gateway
-		if (gateways[gatewayId] === undefined) {
-			gateways[gatewayId] = {
-				id: gatewayId,
-				meshNodes: [meshNode],
-			}
-		} else {
-			gateways[gatewayId]?.meshNodes.push(meshNode)
-		}
-		return gateways
-	}, {} as Record<string, MeshGateway>)
-
-	// Filter out 5G Mesh nodes, they will be group under a Mesh Gateway device
-	const devicesWithoutMeshNodes: Devices = Object.entries(knownDevices)
-		.filter(([, d]) => d.state?.meshNode === undefined)
-		.reduce((devices, [id, device]) => ({ ...devices, [id]: device }), {})
-
-	const devices = {
-		...devicesWithoutMeshNodes,
-		...meshGateways,
-	}
 	return (
 		<DevicesContext.Provider
 			value={{
-				devices,
+				devices: knownDevices,
 				updateState: (deviceId, reported) => {
 					updateDevices((devices) => {
 						const updated: Device = {
@@ -353,7 +303,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					}))
 				},
 				toggleHiddenLocation: (deviceId, source) => {
-					let { hiddenLocations } = devices[deviceId] ?? {}
+					let { hiddenLocations } = knownDevices[deviceId] ?? {}
 					if (hiddenLocations?.[source] === true) {
 						delete hiddenLocations[source]
 					} else {
@@ -373,8 +323,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						},
 					}))
 				},
-				lastUpdateTs: (deviceId) =>
-					getLastUpdateTime({ ...knownDevices, ...meshGateways }[deviceId]),
+				lastUpdateTs: (deviceId) => getLastUpdateTime(knownDevices[deviceId]),
 				updateAlias: (deviceId, alias) => {
 					deviceAliases[deviceId] = alias
 				},
@@ -401,14 +350,6 @@ const getLastUpdateTime = (device?: Device): null | number => {
 		state?.led?.ts,
 		state?.roam?.ts,
 		state?.sol?.ts,
-		state?.meshNode?.rxTime !== undefined
-			? new Date(state.meshNode.rxTime).getTime()
-			: undefined,
-		...(device?.meshNodes ?? []).map((node) =>
-			node.state?.meshNode?.rxTime === undefined
-				? undefined
-				: new Date(node.state?.meshNode?.rxTime).getTime(),
-		),
 	].filter((s) => s !== undefined) as number[]
 
 	return lastUpdateTimeStamps.length > 0

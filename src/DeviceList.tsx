@@ -1,20 +1,17 @@
 import styled from 'styled-components'
-import { DisconnectedWarning } from './DisconnectedWarning'
-import { HistoryOnly } from './HistoryOnly'
-import { LightbulbDevice } from './LightbulbDevice'
-import { MeshGateway } from './MeshGateway'
-import { Tracker } from './Tracker'
+import { DisconnectedWarning } from './DisconnectedWarning.js'
+import { HistoryOnly } from './HistoryOnly.js'
+import { LightbulbDevice } from './LightbulbDevice.js'
+import { Tracker } from './Tracker.js'
 import {
 	GeoLocationSource,
 	isLightBulb,
-	isMeshGateway,
 	isTracker,
 	useDevices,
-} from './context/Devices'
-import { useMap } from './context/Map'
-import { useSettings } from './context/Settings'
-import { useHistoryChart } from './context/showHistoryChart'
-import { useMeshTopology } from './context/showMeshTopology'
+} from './context/Devices.js'
+import { useMap } from './context/Map.js'
+import { useSettings } from './context/Settings.js'
+import { useHistoryChart } from './context/showHistoryChart.js'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -120,8 +117,6 @@ export const DeviceList = () => {
 	const { devices, lastUpdateTs } = useDevices()
 	const map = useMap()
 	const { hide: hideHistoryChart, show: showHistoryChart } = useHistoryChart()
-	const { toggle: toggleMeshTopology, hide: hideMeshTopology } =
-		useMeshTopology()
 	const {
 		settings: { showFavorites, favorites },
 	} = useSettings()
@@ -176,29 +171,6 @@ export const DeviceList = () => {
 								/>
 							</li>
 						)
-					if (isMeshGateway(device))
-						return (
-							<li>
-								<MeshGateway
-									key={device.id}
-									device={device}
-									onClick={() => {
-										if (device.state?.geo !== undefined) {
-											map?.center(
-												{
-													...device.state.geo,
-													accuracy: 0,
-													source: GeoLocationSource.fixed,
-												},
-												16,
-											)
-										}
-										toggleMeshTopology(device.id)
-										hideHistoryChart()
-									}}
-								/>
-							</li>
-						)
 					if (device.history !== undefined)
 						return (
 							<li>
@@ -206,7 +178,6 @@ export const DeviceList = () => {
 									device={device}
 									onClick={() => {
 										showHistoryChart(device.id)
-										hideMeshTopology()
 									}}
 								/>
 							</li>

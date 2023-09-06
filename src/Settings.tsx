@@ -1,8 +1,8 @@
 import { ChevronUp, Settings2, Star, StarOff } from 'lucide-preact'
 import styled from 'styled-components'
-import { CodeInput } from './CodeInput'
-import { isLightBulb, isMeshGateway, useDevices } from './context/Devices'
-import { useSettings } from './context/Settings'
+import { CodeInput } from './CodeInput.js'
+import { isLightBulb, useDevices } from './context/Devices.js'
+import { useSettings } from './context/Settings.js'
 
 const SettingsPanel = styled.aside`
 	font-family: 'Inter', sans-serif;
@@ -13,17 +13,6 @@ const SettingsPanel = styled.aside`
 	}
 	@media (min-width: 900px) {
 		width: 50vw;
-	}
-`
-
-const NodeList = styled.ul`
-	list-style: none;
-	margin: 0 0 0 1rem;
-	padding: 0;
-	li {
-		&:before {
-			content: '└';
-		}
 	}
 `
 
@@ -116,23 +105,6 @@ export const Settings = () => {
 								alias={alias(device.id)}
 							/>
 						))}
-					{/* Code input for Mesh nodes */}
-					{Object.values(devices)
-						.filter(isMeshGateway)
-						.map(({ meshNodes }) =>
-							meshNodes
-								?.filter(({ id }) => {
-									if (!showFavorites) return true
-									return favorites.includes(id)
-								})
-								.map((device) => (
-									<CodeInput
-										device={device}
-										key={device.id}
-										alias={alias(device.id)}
-									/>
-								)),
-						)}
 					<h2 class="h4 mt-4">Solar</h2>
 					<label htmlFor={'consumptionThreshold'}>
 						Above this value, charge is considered sufficiently high enough so
@@ -318,18 +290,6 @@ const FavoriteSelector = () => {
 								</button>
 							)}
 							<span>{alias(id) ?? id}</span>
-							{isMeshGateway(device) && (
-								<NodeList>
-									{device.meshNodes.map((node) => (
-										<li>
-											<span>
-												<FavButton id={node.id} />
-												{alias(node.id) ?? node.id}
-											</span>
-										</li>
-									))}
-								</NodeList>
-							)}
 						</li>
 					)
 				})}

@@ -5,7 +5,6 @@ import {
 	GeoLocationSource,
 	useDevices,
 	type GeoLocation,
-	type MeshNodeInfo,
 	type Reported,
 	type Summary,
 } from './Devices.js'
@@ -23,19 +22,7 @@ enum MessageContext {
 	DeviceMessage = 'https://thingy.rocks/device-message',
 	DeviceLocation = 'https://thingy.rocks/device-location',
 	DeviceHistory = 'https://thingy.rocks/device-history',
-	MeshNodeEvent = 'https://thingy.rocks/wirepas-5g-mesh-node-event',
 	Lightbulb = 'https://thingy.rocks/lightbulb',
-}
-
-type MeshNodeEventMessage = {
-	'@context': MessageContext.MeshNodeEvent
-	meshNodeEvent: {
-		meta: MeshNodeInfo
-		message:
-			| { counter: number }
-			| { button: number }
-			| { led: Record<number, number> }
-	}
 }
 
 type LightbulbMessage = {
@@ -67,7 +54,6 @@ type Message = {
 			'@context': MessageContext.DeviceHistory
 			history: Summary
 	  }
-	| MeshNodeEventMessage
 	| LightbulbMessage
 )
 
@@ -76,37 +62,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const deviceMessages = useDevices()
 	const [connected, setConnected] = useState<boolean>(false)
 	const [connectionAttempt, setConnectionAttempt] = useState<number>(1)
-
-	const updateMeshNode = (message: MeshNodeEventMessage) => {
-		const state: Reported = {
-			meshNode: message.meshNodeEvent.meta,
-			geo: {
-				// Hardcoded location for MWC
-				lat: 41.3545596807965,
-				lng: 2.128132954068601,
-			},
-		}
-		const nodeId = `${message.meshNodeEvent.meta.node}:${message.meshNodeEvent.meta.gateway}`
-		if ('button' in message.meshNodeEvent.message) {
-			state.btn = {
-				v: message.meshNodeEvent.message.button,
-				ts: new Date(message.meshNodeEvent.meta.rxTime).getTime(),
-			}
-		}
-		if ('led' in message.meshNodeEvent.message) {
-			state.led = {
-				v: {
-					type: 'on/off',
-					color:
-						message.meshNodeEvent.message.led[0] === 1
-							? [255, 255, 255]
-							: [0, 0, 0],
-				},
-				ts: new Date(message.meshNodeEvent.meta.rxTime).getTime(),
-			}
-		}
-		deviceMessages.updateState(nodeId, state)
-	}
 
 	useEffect(() => {
 		if (connection.current !== undefined) return
@@ -160,9 +115,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					break
 				case MessageContext.DeviceHistory:
 					deviceMessages.updateHistory(message.deviceId, message.history)
-					break
-				case MessageContext.MeshNodeEvent:
-					updateMeshNode(message)
 					break
 				case MessageContext.Lightbulb:
 					deviceMessages.updateState(message.deviceId, {

@@ -73,7 +73,6 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				main: path.join(process.cwd(), 'index.html'),
-				mesh: path.join(process.cwd(), 'mesh.html'),
 			},
 		},
 	},
