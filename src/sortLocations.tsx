@@ -1,11 +1,15 @@
-import { GeoLocationSource, type GeoLocation } from './context/Devices'
+import { GeoLocationSource, type GeoLocation } from './context/Devices.js'
 
 const weighSource = (source: GeoLocationSource): number => {
 	switch (source) {
 		case GeoLocationSource.GNSS:
 			return 1
-		case GeoLocationSource.network:
+		case GeoLocationSource.WIFI:
 			return 2
+		case GeoLocationSource.MCELL:
+			return 3
+		case GeoLocationSource.SCELL:
+			return 4
 		default:
 			return Number.MAX_SAFE_INTEGER
 	}

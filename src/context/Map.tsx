@@ -8,13 +8,13 @@ import type {
 import { Map as MapLibreGlMap } from 'maplibre-gl'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext } from 'preact/hooks'
-import { locationSourceColors } from '../colors'
-import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle'
-import { mapStyle } from '../map/style'
-import { transformRequest } from '../map/transformRequest'
-import { captureMessage } from '../sentry'
-import { GeoLocationSource, type GeoLocation } from './Devices'
-import { LocationSourceLabels } from './LocationSourceLabels'
+import { locationSourceColors } from '../colors.js'
+import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle.js'
+import { mapStyle } from '../map/style.js'
+import { transformRequest } from '../map/transformRequest.js'
+import { captureMessage } from '../sentry.js'
+import { GeoLocationSource, type GeoLocation } from './Devices.js'
+import { LocationSourceLabels } from './LocationSourceLabels.js'
 
 export const MapContext = createContext<DeviceMap>(undefined as any)
 
@@ -47,7 +47,9 @@ export const locationSourceDashArray: Record<
 	PropertyValueSpecification<Array<number>>
 > = {
 	[GeoLocationSource.GNSS]: [1],
-	[GeoLocationSource.network]: [1, 1],
+	[GeoLocationSource.WIFI]: [1, 1],
+	[GeoLocationSource.MCELL]: [4, 2],
+	[GeoLocationSource.SCELL]: [8, 4, 1, 4],
 	[GeoLocationSource.fixed]: [1],
 }
 
@@ -246,7 +248,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 			}
 		},
 		center: (center, zoom) =>
-			map?.flyTo({ center: center, zoom: zoom ?? centerOnDeviceZoomLevel }),
+			map?.flyTo({ center, zoom: zoom ?? centerOnDeviceZoomLevel }),
 		showWorld: () =>
 			map?.flyTo({ center: [-33.96763064206279, 55.051422964953545], zoom: 2 }),
 	}

@@ -132,7 +132,9 @@ export type Reported = Partial<{
 export enum GeoLocationSource {
 	GNSS = 'gnss',
 	fixed = 'fixed',
-	network = 'network',
+	MCELL = 'MCELL',
+	SCELL = 'SCELL',
+	WIFI = 'WIFI',
 }
 
 export type GeoLocation = {

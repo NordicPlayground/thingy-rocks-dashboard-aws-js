@@ -1,4 +1,4 @@
-import { GeoLocationSource } from './context/Devices'
+import { GeoLocationSource } from './context/Devices.js'
 
 export const colors = {
 	/* Nordic Style Guide: Primary colors */
@@ -24,7 +24,9 @@ export const colors = {
 // Source: https://coolors.co/palette/22577a-38a3a5-57cc99-80ed99-c7f9cc
 export const locationSourceColors = {
 	[GeoLocationSource.GNSS]: '#C7F9CC',
-	[GeoLocationSource.network]: '#38A3A5',
+	[GeoLocationSource.WIFI]: '#80ed99',
+	[GeoLocationSource.MCELL]: '#57cc99',
+	[GeoLocationSource.SCELL]: '#38a3a5',
 	[GeoLocationSource.fixed]: '#22577A',
 } as const
 

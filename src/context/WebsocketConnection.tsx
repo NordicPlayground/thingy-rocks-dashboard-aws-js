@@ -2,7 +2,6 @@ import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useRef, useState } from 'preact/hooks'
 import type { RGB } from '../rgbToHex'
 import {
-	GeoLocationSource,
 	useDevices,
 	type GeoLocation,
 	type Reported,
@@ -109,7 +108,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				case MessageContext.DeviceLocation:
 					deviceMessages.updateLocation(
 						message.deviceId,
-						transformLocation(message.location),
+						message.location,
 						message.location.source,
 					)
 					break
@@ -183,13 +182,3 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 export const Consumer = WebsocketContext.Consumer
 
 export const useWebsocket = () => useContext(WebsocketContext)
-
-const transformLocation = (location: {
-	lat: number // 63.419001
-	lng: number // 10.437035
-	accuracy: number // 500
-	source: string // 'network'
-}): GeoLocation => ({
-	...location,
-	source: GeoLocationSource.network, // 'network'
-})
