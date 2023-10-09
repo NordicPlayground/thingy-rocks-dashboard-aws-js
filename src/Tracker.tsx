@@ -28,6 +28,7 @@ import { SIMIcon } from './icons/SIMIcon.js'
 import { SoftSIMIcon } from './icons/SoftSIMIcon.js'
 import { ThingyIcon } from './icons/ThingyIcon.js'
 import { sortLocations } from './sortLocations.js'
+import { FuelGauge } from './FuelGauge.js'
 
 const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;
@@ -129,6 +130,14 @@ export const Tracker = ({ device }: { device: Device }) => {
 				{state !== undefined && (
 					<PowerInfo
 						state={state}
+						onClick={() => {
+							toggleHistoryChart(device.id)
+						}}
+					/>
+				)}
+				{state?.fg !== undefined && (
+					<FuelGauge
+						fg={state.fg}
 						onClick={() => {
 							toggleHistoryChart(device.id)
 						}}

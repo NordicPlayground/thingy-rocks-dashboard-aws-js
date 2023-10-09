@@ -1,4 +1,4 @@
-import { FakeDevice } from './FakeDevice'
+import { FakeDevice } from './FakeDevice.js'
 
 export const FakeTracker = () => (
 	<FakeDevice fakeState={fakeTrackerState} fakeHistory={fakeTrackerHistory} />
@@ -26,6 +26,7 @@ const fakeTrackerState = (): Reported => ({
 			modV: 'mfw_nrf9160_1.3.2',
 			brdV: 'thingy91_nrf9160',
 			appV: '1.7.0-thingy91+debug+solar+memfault',
+			bat: 'LP502540',
 		},
 		ts: Date.now(),
 	},
@@ -54,6 +55,16 @@ const fakeTrackerState = (): Reported => ({
 	bat: { v: 3879, ts: Date.now() },
 	sol: {
 		v: { gain: 4.03, bat: 3.85 },
+		ts: Date.now(),
+	},
+	fg: {
+		v: {
+			V: 2754,
+			I: -250,
+			T: 231,
+			SoC: 93,
+			TTF: 4652,
+		},
 		ts: Date.now(),
 	},
 })

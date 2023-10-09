@@ -72,6 +72,7 @@ export type Reported = Partial<{
 			modV: string // 'mfw_nrf9160_1.3.2'
 			brdV: string // 'thingy91_nrf9160'
 			appV: string // '1.1.0-thingy91_nrf9160_ns'
+			bat?: string
 		}
 		ts: number // 1669731049109
 	}
@@ -126,6 +127,18 @@ export type Reported = Partial<{
 	geo: {
 		lng: number // 10.4383147713927
 		lat: number // 63.42503380159108
+	}
+	// Fuel gauge, see https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/pull/836
+	fg: {
+		v: {
+			V: number // e.g. 2754
+			I: number // e.g. -250
+			T: number // e.g. 231
+			SoC: number // e.g. 93
+			TTF?: number // e.g. 4652
+			TTE?: number // e.g. 4652
+		}
+		ts: number // 1563968747123
 	}
 }>
 
