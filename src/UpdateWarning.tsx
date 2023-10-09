@@ -27,8 +27,14 @@ export const UpdateWarning = ({ reported }: { reported: Reported }) => {
 	let needsMfwUpdate = false
 	let needsFwUpdate = false
 
+	const is91x = dev.brdV.includes('9161') || dev.brdV.includes('9131')
+
 	try {
-		needsMfwUpdate = compareVersions(MODEM_FIRMWARE_RELEASE, mfw) === 1
+		needsMfwUpdate =
+			compareVersions(
+				is91x ? MODEM_FIRMWARE_RELEASE_91x : MODEM_FIRMWARE_RELEASE_9160,
+				mfw,
+			) === 1
 	} catch {
 		// pass
 	}
@@ -61,15 +67,27 @@ export const UpdateWarning = ({ reported }: { reported: Reported }) => {
 						</a>
 					</abbr>
 				)}
-				{needsMfwUpdate && (
+				{needsMfwUpdate && !is91x && (
 					<abbr
-						title={`Modem firmware update available, device is running ${dev.modV}, release version is ${MODEM_FIRMWARE_RELEASE}`}
+						title={`Modem firmware update available, device is running ${dev.modV}, release version is ${MODEM_FIRMWARE_RELEASE_9160}`}
 					>
 						<a
-							href="https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF9160-DK/Download#infotabs"
+							href="https://www.nordicsemi.com/Products/nRF9160/Download?lang=en#infotabs"
 							target="_blank"
 						>
-							MFW update available ({MODEM_FIRMWARE_RELEASE})
+							MFW update available ({MODEM_FIRMWARE_RELEASE_9160})
+						</a>
+					</abbr>
+				)}
+				{needsMfwUpdate && !is91x && (
+					<abbr
+						title={`Modem firmware update available, device is running ${dev.modV}, release version is ${MODEM_FIRMWARE_RELEASE_91x}`}
+					>
+						<a
+							href="https://www.nordicsemi.com/Products/nRF9161/Download?lang=en#infotabs"
+							target="_blank"
+						>
+							MFW update available ({MODEM_FIRMWARE_RELEASE_91x})
 						</a>
 					</abbr>
 				)}

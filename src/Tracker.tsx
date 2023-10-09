@@ -27,6 +27,7 @@ import { DKIcon } from './icons/DKIcon.js'
 import { SIMIcon } from './icons/SIMIcon.js'
 import { SoftSIMIcon } from './icons/SoftSIMIcon.js'
 import { ThingyIcon } from './icons/ThingyIcon.js'
+import { ThingyXIcon } from './icons/ThingyXIcon.js'
 import { sortLocations } from './sortLocations.js'
 import { FuelGauge } from './FuelGauge.js'
 
@@ -58,7 +59,12 @@ export const Tracker = ({ device }: { device: Device }) => {
 
 	const lastUpdateTime = lastUpdateTs(device.id) as number
 
-	const BoardIcon = brdV === 'nrf9160dk_nrf9160' ? DKIcon : ThingyIcon
+	const BoardIcon =
+		brdV?.includes('nrf9160dk') ?? false
+			? DKIcon
+			: brdV?.includes('thingy91x') ?? false
+			? ThingyXIcon
+			: ThingyIcon
 
 	return (
 		<>

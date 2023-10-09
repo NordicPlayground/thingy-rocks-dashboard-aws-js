@@ -31,7 +31,10 @@ if (sentryDSN === undefined) {
 	console.debug(chalk.yellow(`Sentry DSN`), chalk.blue(sentryDSN))
 }
 const firmwareRelease = process.env.FIRMWARE_RELEASE ?? '1.10.0'
-const modemFirmwareRelease = process.env.MODEM_FIRMWARE_RELEASE ?? '1.3.5'
+const modemFirmwareRelease9160 =
+	process.env.MODEM_FIRMWARE_RELEASE_9160 ?? '1.3.5'
+const modemFirmwareRelease91x =
+	process.env.MODEM_FIRMWARE_RELEASE_91x ?? '2.0.0'
 
 const replaceInIndex = (data: Record<string, string>) => ({
 	name: 'replace-in-index',
@@ -90,6 +93,7 @@ export default defineConfig({
 		SENTRY_DSN: JSON.stringify(sentryDSN),
 		BUILD_TIME: JSON.stringify(new Date().toISOString()),
 		FIRMWARE_RELEASE: JSON.stringify(firmwareRelease),
-		MODEM_FIRMWARE_RELEASE: JSON.stringify(modemFirmwareRelease),
+		MODEM_FIRMWARE_RELEASE_9160: JSON.stringify(modemFirmwareRelease9160),
+		MODEM_FIRMWARE_RELEASE_91x: JSON.stringify(modemFirmwareRelease91x),
 	},
 })

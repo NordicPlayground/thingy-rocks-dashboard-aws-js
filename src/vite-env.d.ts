@@ -15,11 +15,17 @@ declare const SENTRY_DSN: string | undefined
  */
 declare const FIRMWARE_RELEASE: string
 /**
- * Version of the Modem firmware that is considered to be the latest release
+ * Version of the Modem firmware that is considered to be the latest release for 9160
  *
  * @example '1.3.3'
  */
-declare const MODEM_FIRMWARE_RELEASE: string
+declare const MODEM_FIRMWARE_RELEASE_9160: string
+/**
+ * Version of the Modem firmware that is considered to be the latest release for 9161, 9131
+ *
+ * @example '2.0.0'
+ */
+declare const MODEM_FIRMWARE_RELEASE_91x: string
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 interface ImportMeta {
