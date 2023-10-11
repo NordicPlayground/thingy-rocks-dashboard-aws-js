@@ -53,7 +53,7 @@
     "@swc/jest": "0.2.29",
     "@types/jest": "29.5.5",
     "@types/lodash-es": "4.17.9",
-    "@types/node": "20.8.3",
+    "@types/node": "20.8.4",
     "@types/styled-components": "5.1.28",
     "bootstrap": "5.3.2",
     "chalk": "5.3.0",
