@@ -79,7 +79,7 @@ export const UpdateWarning = ({ reported }: { reported: Reported }) => {
 						</a>
 					</abbr>
 				)}
-				{needsMfwUpdate && !is91x && (
+				{needsMfwUpdate && is91x && (
 					<abbr
 						title={`Modem firmware update available, device is running ${dev.modV}, release version is ${MODEM_FIRMWARE_RELEASE_91x}`}
 					>
