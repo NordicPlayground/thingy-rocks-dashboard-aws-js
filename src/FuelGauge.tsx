@@ -57,20 +57,17 @@ export const FuelGauge = ({
 					{isCharging ? (
 						<Charging>
 							<BatteryCharging />
-							<br />
-							<span>{SoC}%</span>
 						</Charging>
 					) : (
 						<NotCharging>
 							<BatteryIcon SoC={SoC} />
-							<br />
-							<span>{SoC}%</span>
 						</NotCharging>
 					)}
 				</button>
 			</dt>
-			<dd>
+			<dd class="d-flex flex-column align-items-start justify-content-center">
 				<button type={'button'} onClick={() => onClick?.()}>
+					<span class="me-2">{SoC}%</span>
 					{TTE !== undefined && (
 						<span class="me-2">empty {formatDistance(TTE)}</span>
 					)}
@@ -78,7 +75,6 @@ export const FuelGauge = ({
 						<span class="me-2">full {formatDistance(TTF)}</span>
 					)}
 				</button>
-				<br />
 				<button type={'button'} onClick={() => onClick?.()}>
 					<span class="me-2">{V / 1000} V</span>
 					<span class="me-2">

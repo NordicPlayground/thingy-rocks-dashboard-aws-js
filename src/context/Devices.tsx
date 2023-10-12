@@ -270,6 +270,13 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 								},
 							} as Record<GeoLocationSource, GeoLocation>
 						}
+						// Remove values not sent by the device (merge only adds new values)
+						if (reported.fg !== undefined && updated.state?.fg !== undefined) {
+							updated.state = {
+								...updated.state,
+								fg: reported.fg,
+							}
+						}
 						return {
 							...devices,
 							[deviceId]: updated,
