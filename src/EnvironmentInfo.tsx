@@ -5,9 +5,9 @@ import {
 	Laugh,
 	Meh,
 	Skull,
-	Slash,
 	Smile,
 	Thermometer,
+	XSquare,
 } from 'lucide-preact'
 import styled from 'styled-components'
 import type { Device } from './context/Devices'
@@ -44,7 +44,7 @@ const BSECLabel = styled.abbr`
 // See https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf
 const IAQ = ({ iaq }: { iaq: number }) => {
 	let iaqLabel = 'unknown'
-	let Icon = Slash
+	let Icon = XSquare
 	if (iaq >= 0 && iaq <= 50) {
 		iaqLabel = 'Excellent'
 		Icon = Laugh
