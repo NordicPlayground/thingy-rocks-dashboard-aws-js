@@ -50,41 +50,41 @@ export const FuelGauge = ({
 }) => {
 	const { V, I: current, T: temp, SoC, TTF, TTE } = fg.v
 	const isCharging = current < 0
+	const ChargingIndicator = isCharging ? Charging : NotCharging
 	return (
 		<>
 			<dt>
-				<button type={'button'} onClick={() => onClick?.()}>
-					{isCharging ? (
-						<Charging>
-							<BatteryCharging />
-						</Charging>
-					) : (
-						<NotCharging>
-							<BatteryIcon SoC={SoC} />
-						</NotCharging>
-					)}
-				</button>
+				<ChargingIndicator>
+					<button type={'button'} onClick={() => onClick?.()}>
+						{isCharging ? <BatteryCharging /> : <BatteryIcon SoC={SoC} />}
+					</button>
+				</ChargingIndicator>
 			</dt>
 			<dd class="d-flex flex-column align-items-start justify-content-center">
-				<button type={'button'} onClick={() => onClick?.()}>
-					<span class="me-2">{SoC}%</span>
-					{TTE !== undefined && (
-						<span class="me-2">empty {formatDistance(TTE)}</span>
-					)}
-					{TTF !== undefined && (
-						<span class="me-2">full {formatDistance(TTF)}</span>
-					)}
-				</button>
-				<button type={'button'} onClick={() => onClick?.()}>
-					<span class="me-2">{V / 1000} V</span>
-					<span class="me-2">
-						<Zap strokeWidth={1} /> {current} mA
-					</span>
-					<span class="me-2">
-						<Thermometer strokeWidth={1} />
-						{temp / 10} °C
-					</span>
-				</button>
+				<ChargingIndicator>
+					<button type={'button'} onClick={() => onClick?.()}>
+						<span class="me-2">{SoC}%</span>
+						{TTE !== undefined && (
+							<span class="me-1">(empty {formatDistance(TTE)})</span>
+						)}
+						{TTF !== undefined && (
+							<span class="me-1">(full {formatDistance(TTF)})</span>
+						)}
+					</button>
+				</ChargingIndicator>
+				<ChargingIndicator>
+					<button type={'button'} onClick={() => onClick?.()}>
+						<span class="me-1">{V / 1000} V</span>
+						<span class="me-1">
+							<Zap strokeWidth={1} class="me-0" />
+							{current} mA
+						</span>
+						<span class="me-1">
+							<Thermometer strokeWidth={1} class="me-0" />
+							{temp / 10} °C
+						</span>
+					</button>
+				</ChargingIndicator>
 			</dd>
 		</>
 	)
