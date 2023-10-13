@@ -1,4 +1,4 @@
-import { mcc2iso } from './mcc2iso'
+import { mcc2iso } from './mcc2iso.js'
 
 /**
  * returns the two-letter ISO 3661 country code for a given MCC/MNC combination

@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import type { Device } from './context/Devices'
-import { mccmnc2country } from './mccmnc2country'
+import { mccmnc2country } from './mccmnc2country.js'
 
 export const Flag = styled.img`
 	width: 20px;

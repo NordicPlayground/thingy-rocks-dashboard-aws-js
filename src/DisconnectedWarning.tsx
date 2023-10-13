@@ -1,6 +1,6 @@
 import { CloudOff } from 'lucide-preact'
 import styled from 'styled-components'
-import { useWebsocket } from './context/WebsocketConnection'
+import { useWebsocket } from './context/WebsocketConnection.js'
 
 const Disconnected = styled.div`
 	color: var(--color-nordic-red);

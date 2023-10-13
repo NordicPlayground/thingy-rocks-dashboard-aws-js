@@ -1,11 +1,11 @@
 import { CloudOff, MapPin, MapPinOff } from 'lucide-preact'
 import styled from 'styled-components'
-import { GeoLocationAge } from './GeoLocationAge'
-import { locationSourceColors } from './colors'
-import type { Device, GeoLocation } from './context/Devices'
-import { useDevices } from './context/Devices'
-import { LocationSourceLabels } from './context/LocationSourceLabels'
-import { sortLocations } from './sortLocations'
+import { GeoLocationAge } from './GeoLocationAge.js'
+import { locationSourceColors } from './colors.js'
+import type { Device, GeoLocation } from './context/Devices.js'
+import { useDevices } from './context/Devices.js'
+import { LocationSourceLabels } from './context/LocationSourceLabels.js'
+import { sortLocations } from './sortLocations.js'
 
 const LocationSourceSwitch = styled.button`
 	font-weight: var(--monospace-font-weight-bold);

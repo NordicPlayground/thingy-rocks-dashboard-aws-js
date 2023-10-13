@@ -1,5 +1,5 @@
 import { Globe } from 'lucide-preact'
-import { useMap } from '../context/Map'
+import { useMap } from '../context/Map.js'
 
 /**
  * Show the entire world map

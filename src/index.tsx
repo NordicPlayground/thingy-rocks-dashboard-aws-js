@@ -1,7 +1,7 @@
 import { formatDistanceToNow } from 'date-fns'
 import { render } from 'preact'
-import { App } from './App'
-import './sentry'
+import { App } from './App.js'
+import './sentry.js'
 
 console.debug('mapName', MAP_NAME)
 console.debug(`identityPoolId`, COGNITO_IDENTITY_POOL_ID)

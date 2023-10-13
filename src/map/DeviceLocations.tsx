@@ -1,6 +1,6 @@
 import { useEffect } from 'preact/hooks'
-import { useDevices } from '../context/Devices'
-import { useMap } from '../context/Map'
+import { useDevices } from '../context/Devices.js'
+import { useMap } from '../context/Map.js'
 
 export const DeviceLocations = () => {
 	const { devices, alias } = useDevices()

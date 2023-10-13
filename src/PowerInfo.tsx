@@ -1,7 +1,7 @@
 import { BatteryCharging, BatteryMedium, Sun, SunDim } from 'lucide-preact'
 import styled from 'styled-components'
-import type { Reported } from './context/Devices'
-import { useSettings } from './context/Settings'
+import type { Reported } from './context/Devices.js'
+import { useSettings } from './context/Settings.js'
 
 const Charging = styled.span`
 	color: var(--color-nordic-sun);

@@ -9,9 +9,9 @@ import {
 	type LucideProps,
 } from 'lucide-preact'
 import styled from 'styled-components'
-import { EnergyEstimate, type Device } from './context/Devices'
-import { LTEm } from './icons/LTE-m'
-import { NBIot } from './icons/NBIot'
+import { EnergyEstimate, type Device } from './context/Devices.js'
+import { LTEm } from './icons/LTE-m.js'
+import { NBIot } from './icons/NBIot.js'
 
 const EnergyEstimateIcons: Record<
 	EnergyEstimate,
