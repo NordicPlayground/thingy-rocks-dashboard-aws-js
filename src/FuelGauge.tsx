@@ -33,7 +33,7 @@ const BatteryIcon = ({ SoC }: { SoC: number }) => {
 
 const formatter = new Intl.RelativeTimeFormat(undefined, { style: 'long' })
 const formatDistance = (seconds: number): string => {
-	if (seconds > 60 * 60 * 24)
+	if (seconds > 60 * 60 * 24 * 3)
 		return formatter.format(Math.ceil(seconds / (60 * 60 * 24)), 'days')
 	if (seconds > 60 * 60)
 		return formatter.format(Math.ceil(seconds / (60 * 60)), 'hours')
@@ -65,10 +65,14 @@ export const FuelGauge = ({
 					<button type={'button'} onClick={() => onClick?.()}>
 						<span class="me-2">{SoC}%</span>
 						{TTE !== undefined && (
-							<span class="me-1">(empty {formatDistance(TTE)})</span>
+							<abbr class="me-1" title={`${TTE} seconds`}>
+								(empty {formatDistance(TTE)})
+							</abbr>
 						)}
 						{TTF !== undefined && (
-							<span class="me-1">(full {formatDistance(TTF)})</span>
+							<abbr class="me-1" title={`${TTF} seconds`}>
+								(full {formatDistance(TTF)})
+							</abbr>
 						)}
 					</button>
 				</ChargingIndicator>

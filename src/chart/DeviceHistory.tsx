@@ -1,13 +1,20 @@
 import { format, subSeconds } from 'date-fns'
-import { Battery, Sun, Thermometer, X, type LucideProps } from 'lucide-preact'
+import {
+	Battery,
+	Sun,
+	Thermometer,
+	X,
+	type LucideProps,
+	Zap,
+} from 'lucide-preact'
 import { useRef } from 'preact/hooks'
 import styled from 'styled-components'
-import { colors } from '../colors'
-import { useDevices, type Reading } from '../context/Devices'
-import { useSettings } from '../context/Settings'
-import { useHistoryChart } from '../context/showHistoryChart'
-import { HistoryChart } from './HistoryChart'
-import type { Dataset } from './chartMath'
+import { colors } from '../colors.js'
+import { useDevices, type Reading } from '../context/Devices.js'
+import { useSettings } from '../context/Settings.js'
+import { useHistoryChart } from '../context/showHistoryChart.js'
+import { HistoryChart } from './HistoryChart.js'
+import type { Dataset } from './chartMath.js'
 
 const chartBaseWidth = 0.6 // percent of window width
 const chartBaseHeight = 0.5 // percent of window width
@@ -36,9 +43,10 @@ const ChartContainer = styled.aside`
 `
 
 type ChartInfo = {
-	dataset: Dataset
+	datasets: Dataset[]
 	title: string
 	Icon: (props: LucideProps) => JSX.Element
+	color: string
 }
 
 const findUpperLimit = (v: Array<Reading>): number =>
@@ -77,63 +85,104 @@ export const DeviceHistory = () => {
 		charts.push({
 			Icon: Sun,
 			title: 'Solar',
-			dataset: {
-				min: 0,
-				max: 5,
-				values: history.solGain.map(([v, d]) => [
-					v,
-					subSeconds(history.base, d),
-				]),
-				color: colors['nordic-sun'],
-				format: (v) => `${v.toFixed(1)}mA`,
-				helperLines: [
-					{
-						label: '1m',
-						value: gainReferenceEveryMinute,
-					},
-					{
-						label: '60m',
-						value: gainReferenceEveryHour,
-					},
-				],
-			},
+			color: colors['nordic-sun'],
+			datasets: [
+				{
+					min: 0,
+					max: 5,
+					values: history.solGain.map(([v, d]) => [
+						v,
+						subSeconds(history.base, d),
+					]),
+					color: colors['nordic-sun'],
+					format: (v) => `${v.toFixed(1)}mA`,
+					helperLines: [
+						{
+							label: '1m',
+							value: gainReferenceEveryMinute,
+						},
+						{
+							label: '60m',
+							value: gainReferenceEveryHour,
+						},
+					],
+				},
+			],
 		})
 	}
 	if (history?.bat !== undefined) {
 		charts.push({
 			Icon: Battery,
 			title: 'Batt.',
-			dataset: {
-				min: 3.0,
-				max: 5.5,
-				values: history.bat.map(([v, d]) => [v, subSeconds(history.base, d)]),
-				color: colors['nordic-blue'],
-				format: (v) => `${v.toFixed(1)}V`,
-				helperLines: (history?.guides ?? [])
-					.filter(([type]) => type === 'bat')
-					.map(([, v, d]) => ({
-						label: `${Math.floor(
-							(Date.now() - subSeconds(history.base, d).getTime()) /
-								1000 /
-								60 /
-								60,
-						)}h ago`,
-						value: v,
-					})),
-			},
+			color: colors['nordic-blue'],
+			datasets: [
+				{
+					min: 3.0,
+					max: 5.5,
+					values: history.bat.map(([v, d]) => [v, subSeconds(history.base, d)]),
+					color: colors['nordic-blue'],
+					format: (v) => `${v.toFixed(1)}V`,
+					helperLines: (history?.guides ?? [])
+						.filter(([type]) => type === 'bat')
+						.map(([, v, d]) => ({
+							label: `${Math.floor(
+								(Date.now() - subSeconds(history.base, d).getTime()) /
+									1000 /
+									60 /
+									60,
+							)}h ago`,
+							value: v,
+						})),
+				},
+			],
 		})
 	}
 	if (history?.temp !== undefined) {
 		charts.push({
 			Icon: Thermometer,
 			title: 'Temp.',
-			dataset: {
-				min: findLowerLimit(history.temp),
-				max: findUpperLimit(history.temp),
-				values: history.temp.map(([v, d]) => [v, subSeconds(history.base, d)]),
-				color: colors['nordic-red'],
-				format: (v) => `${v.toFixed(1)}°C`,
-			},
+			color: colors['nordic-red'],
+			datasets: [
+				{
+					min: findLowerLimit(history.temp),
+					max: findUpperLimit(history.temp),
+					values: history.temp.map(([v, d]) => [
+						v,
+						subSeconds(history.base, d),
+					]),
+					color: colors['nordic-red'],
+					format: (v) => `${v.toFixed(1)}°C`,
+				},
+			],
+		})
+	}
+
+	// Fuel gauge data
+	const fgData: Dataset[] = []
+	if (history?.fgI !== undefined) {
+		fgData.push({
+			min: -100, //-500,
+			max: 100, //1000,
+			values: history.fgI.map(([v, d]) => [v, subSeconds(history.base, d)]),
+			color: colors['nordic-sun'],
+			format: (v) => `${Math.round(v)} mA`,
+		})
+	}
+	if (history?.fgSoC !== undefined) {
+		fgData.push({
+			min: 0,
+			max: 100,
+			values: history.fgSoC.map(([v, d]) => [v, subSeconds(history.base, d)]),
+			color: colors['nordic-blue'],
+			format: (v) => `${Math.round(v)}%`,
+		})
+	}
+	if (fgData.length > 0) {
+		charts.push({
+			Icon: Zap,
+			title: 'PMIC',
+			color: colors['nordic-sun'],
+			datasets: fgData,
 		})
 	}
 
@@ -171,11 +220,11 @@ const Chart = ({ charts: charts }: { charts: ChartInfo[] }) => {
 			ref={containerRef}
 			style={{ height: `${height}px`, width: `${width}px` }}
 		>
-			{charts.map(({ dataset, Icon, title }, i) => (
+			{charts.map(({ datasets, color, Icon, title }, i) => (
 				<ChartWithIcon>
 					<IconWithText
 						style={{
-							color: dataset.color,
+							color,
 						}}
 					>
 						<Icon
@@ -194,7 +243,7 @@ const Chart = ({ charts: charts }: { charts: ChartInfo[] }) => {
 								format: (d) => format(d, 'HH:mm'),
 								hideLabels: i !== charts.length - 1,
 							},
-							datasets: [dataset],
+							datasets,
 						}}
 						width={width}
 						height={height / charts.length}

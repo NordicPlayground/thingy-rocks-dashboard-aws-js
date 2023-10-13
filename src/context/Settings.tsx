@@ -65,7 +65,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 	return (
 		<SettingsContext.Provider
 			value={{
-				settings: settings,
+				settings,
 				update: (newSettings) => {
 					updateSettings((settings) => {
 						const merged = { ...settings, ...newSettings }
