@@ -1,7 +1,6 @@
 import { ChevronUp, Settings2, Star, StarOff } from 'lucide-preact'
 import styled from 'styled-components'
-import { CodeInput } from './CodeInput.js'
-import { isLightBulb, useDevices } from './context/Devices.js'
+import { useDevices } from './context/Devices.js'
 import { useSettings } from './context/Settings.js'
 
 const SettingsPanel = styled.aside`
@@ -17,7 +16,6 @@ const SettingsPanel = styled.aside`
 `
 
 export const Settings = () => {
-	const { devices, alias } = useDevices()
 	const {
 		settings: {
 			showSettings,
@@ -27,7 +25,6 @@ export const Settings = () => {
 			showFavorites,
 			consumptionThreshold,
 			showUpdateWarning,
-			favorites,
 		},
 		update,
 		reset,
@@ -89,22 +86,6 @@ export const Settings = () => {
 							Show firmware update warning?
 						</label>
 					</div>
-					<h3 class="h5 mt-3">Management</h3>
-					<p>Below you can provide the device's code to manage it.</p>
-					{/* Code input for Lightbulbs */}
-					{Object.values(devices)
-						.filter(isLightBulb)
-						?.filter(({ id }) => {
-							if (!showFavorites) return true
-							return favorites.includes(id)
-						})
-						.map((device) => (
-							<CodeInput
-								device={device}
-								key={device.id}
-								alias={alias(device.id)}
-							/>
-						))}
 					<h2 class="h4 mt-4">Solar</h2>
 					<label htmlFor={'consumptionThreshold'}>
 						Above this value, charge is considered sufficiently high enough so
@@ -264,7 +245,7 @@ const FavoriteSelector = () => {
 					if (i2 === -1) return -Number.MAX_SAFE_INTEGER
 					return i1 - i2
 				})
-				.map(([id, device], i) => {
+				.map(([id], i) => {
 					const favorited = favorites.includes(id)
 					return (
 						<li class="list-group-item">

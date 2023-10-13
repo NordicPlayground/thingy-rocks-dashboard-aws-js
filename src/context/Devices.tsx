@@ -115,14 +115,6 @@ export type Reported = Partial<{
 		ts: number // 1670245539000
 	}
 	sol: SolarInfo
-	// LED lights
-	led: {
-		v: {
-			type: 'rgb' | 'on/off'
-			color?: [number, number, number] // [0, 169, 206]
-		}
-		ts: number // 1670245539000
-	}
 	// Device has a fixed geo location
 	geo: {
 		lng: number // 10.4383147713927
@@ -196,9 +188,6 @@ export const isTracker = (device: Device): boolean => {
 	const { appV, brdV } = device.state?.dev?.v ?? {}
 	return appV !== undefined && brdV !== undefined
 }
-export const isLightBulb = (device: Device): boolean =>
-	device.state?.led !== undefined
-
 export const hasSoftSIM = (device: Device): boolean =>
 	device.state?.dev?.v?.appV?.includes('softsim') ?? false
 
@@ -369,7 +358,6 @@ const getLastUpdateTime = (device?: Device): null | number => {
 		state?.dev?.ts,
 		state?.env?.ts,
 		state?.gnss?.ts,
-		state?.led?.ts,
 		state?.roam?.ts,
 		state?.sol?.ts,
 	].filter((s) => s !== undefined) as number[]

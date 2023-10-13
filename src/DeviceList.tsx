@@ -1,15 +1,8 @@
 import styled from 'styled-components'
 import { DisconnectedWarning } from './DisconnectedWarning.js'
 import { HistoryOnly } from './HistoryOnly.js'
-import { LightbulbDevice } from './LightbulbDevice.js'
 import { Tracker } from './Tracker.js'
-import {
-	GeoLocationSource,
-	isLightBulb,
-	isTracker,
-	useDevices,
-} from './context/Devices.js'
-import { useMap } from './context/Map.js'
+import { isTracker, useDevices } from './context/Devices.js'
 import { useSettings } from './context/Settings.js'
 import { useHistoryChart } from './context/showHistoryChart.js'
 
@@ -115,8 +108,7 @@ export const IssuerName = styled.dd`
 
 export const DeviceList = () => {
 	const { devices, lastUpdateTs } = useDevices()
-	const map = useMap()
-	const { hide: hideHistoryChart, show: showHistoryChart } = useHistoryChart()
+	const { show: showHistoryChart } = useHistoryChart()
 	const {
 		settings: { showFavorites, favorites },
 	} = useSettings()
@@ -147,28 +139,6 @@ export const DeviceList = () => {
 						return (
 							<li>
 								<Tracker key={`device:${device.id}`} device={device} />
-							</li>
-						)
-					if (isLightBulb(device))
-						return (
-							<li>
-								<LightbulbDevice
-									key={`device:${device.id}`}
-									device={device}
-									onClick={() => {
-										if (device.state?.geo !== undefined) {
-											map?.center(
-												{
-													...device.state.geo,
-													accuracy: 0,
-													source: GeoLocationSource.fixed,
-												},
-												16,
-											)
-										}
-										hideHistoryChart()
-									}}
-								/>
 							</li>
 						)
 					if (device.history !== undefined)

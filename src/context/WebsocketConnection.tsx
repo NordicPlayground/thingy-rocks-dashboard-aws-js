@@ -1,6 +1,5 @@
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useRef, useState } from 'preact/hooks'
-import type { RGB } from '../rgbToHex'
 import {
 	useDevices,
 	type GeoLocation,
@@ -21,15 +20,6 @@ enum MessageContext {
 	DeviceMessage = 'https://thingy.rocks/device-message',
 	DeviceLocation = 'https://thingy.rocks/device-location',
 	DeviceHistory = 'https://thingy.rocks/device-history',
-	Lightbulb = 'https://thingy.rocks/lightbulb',
-}
-
-type LightbulbMessage = {
-	'@context': MessageContext.Lightbulb
-	lightbulb: {
-		type: 'rgb'
-		color?: RGB
-	}
 }
 
 type Message = {
@@ -53,7 +43,6 @@ type Message = {
 			'@context': MessageContext.DeviceHistory
 			history: Summary
 	  }
-	| LightbulbMessage
 )
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
@@ -115,14 +104,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				case MessageContext.DeviceHistory:
 					deviceMessages.updateHistory(message.deviceId, message.history)
 					break
-				case MessageContext.Lightbulb:
-					deviceMessages.updateState(message.deviceId, {
-						led: {
-							v: message.lightbulb,
-							ts: Date.now(),
-						},
-					})
-					break
 				default:
 					console.error(`[WS]`, 'Unknown message', message)
 			}
@@ -143,11 +124,14 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		if (!connected) return
 		if (connection.current === undefined) return
 
-		const pingInterval = setInterval(() => {
-			connection.current?.send(
-				JSON.stringify({ message: 'sendmessage', data: 'PING' }),
-			)
-		}, 1000 * 60 * 9) // every 9 minutes
+		const pingInterval = setInterval(
+			() => {
+				connection.current?.send(
+					JSON.stringify({ message: 'sendmessage', data: 'PING' }),
+				)
+			},
+			1000 * 60 * 9,
+		) // every 9 minutes
 
 		// Initial greeting
 		connection.current.send(
