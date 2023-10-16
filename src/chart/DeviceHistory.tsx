@@ -161,7 +161,7 @@ export const DeviceHistory = () => {
 	const fgData: Dataset[] = []
 	if (history?.fgI !== undefined) {
 		fgData.push({
-			min: -100, //-500,
+			min: -450, //-500,
 			max: 100, //1000,
 			values: history.fgI.map(([v, d]) => [v, subSeconds(history.base, d)]),
 			color: colors['nordic-sun'],
