@@ -71,7 +71,7 @@ export const FuelGauge = ({
 						)}
 						{TTF !== undefined && (
 							<abbr class="me-1" title={`${TTF} seconds`}>
-								(full {formatDistance(TTF)})
+								(charging)
 							</abbr>
 						)}
 					</button>
