@@ -1,4 +1,5 @@
 import {
+	AlertCircle,
 	BatteryCharging,
 	BatteryFull,
 	BatteryLow,
@@ -48,7 +49,7 @@ export const FuelGauge = ({
 	fg: Pick<Required<Reported>, 'fg'>['fg']
 	onClick?: () => unknown
 }) => {
-	const { V, I: current, T: temp, SoC, TTF, TTE } = fg.v
+	const { V, I: current, T: temp, SoC, TTE } = fg.v
 	const isCharging = current < 0
 	const ChargingIndicator = isCharging ? Charging : NotCharging
 	return (
@@ -65,15 +66,14 @@ export const FuelGauge = ({
 					<button type={'button'} onClick={() => onClick?.()}>
 						<span class="me-2">{SoC}%</span>
 						{TTE !== undefined && (
-							<abbr class="me-1" title={`${TTE} seconds`}>
-								(empty {formatDistance(TTE)})
-							</abbr>
+							<>
+								<span class="me-1">(empty {formatDistance(TTE)})</span>
+								<abbr title={'Time-to-empty estimate is experimental.'}>
+									<AlertCircle strokeWidth={1} class="me-0" />
+								</abbr>
+							</>
 						)}
-						{TTF !== undefined && (
-							<abbr class="me-1" title={`${TTF} seconds`}>
-								(charging)
-							</abbr>
-						)}
+						{isCharging && <span class="me-1">(charging)</span>}
 					</button>
 				</ChargingIndicator>
 				<ChargingIndicator>
