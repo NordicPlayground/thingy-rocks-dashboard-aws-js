@@ -2,3 +2,4 @@ node_modules/
 build/
 static/flags
 .well-known/
+test_suite_analysis/
