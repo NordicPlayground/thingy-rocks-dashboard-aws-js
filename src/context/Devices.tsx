@@ -158,6 +158,31 @@ export type Device = {
 	hiddenLocations?: Record<GeoLocationSource, true>
 }
 
+// NR+ Gateway
+export type NRPlusNode = {
+	pccStatus?: {
+		status: string // e.g. "valid - PDC can be received"
+		ts: number
+	}
+	env?: {
+		modemTemp: number
+		temp: number
+		ts: number
+	}
+	btn?: {
+		n: number // e.g. 1,
+		ts: number
+	}
+}
+export type NRPlusGateway = {
+	id: string
+	state: {
+		nodes: Record<string, NRPlusNode>
+		id: number // e.g. 38,
+		networkId: number // e.g. 22
+	}
+}
+
 export type Devices = Record<string, Device>
 
 export type Reading = [
@@ -194,8 +219,19 @@ export const isTracker = (device: Device): boolean => {
 	const { appV, brdV } = device.state?.dev?.v ?? {}
 	return appV !== undefined && brdV !== undefined
 }
+
 export const hasSoftSIM = (device: Device): boolean =>
 	device.state?.dev?.v?.appV?.includes('softsim') ?? false
+
+export const isNRPlusGateway = (
+	device: Record<string, unknown>,
+): device is NRPlusGateway =>
+	'id' in device &&
+	typeof device.id === 'string' &&
+	device.id?.startsWith('nrplus-gw-') &&
+	'state' in device &&
+	typeof device.state === 'object' &&
+	'nodes' in (device.state ?? {})
 
 export const DevicesContext = createContext<{
 	devices: Devices
@@ -340,7 +376,21 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						},
 					}))
 				},
-				lastUpdateTs: (deviceId) => getLastUpdateTime(knownDevices[deviceId]),
+				lastUpdateTs: (deviceId) => {
+					const device = knownDevices[deviceId]
+					if (device === undefined) return null
+					return isNRPlusGateway(device)
+						? getLastUpdateTime(
+								Object.values(device.state.nodes)
+									.map((node) => [
+										node.pccStatus?.ts,
+										node.btn?.ts,
+										node.env?.ts,
+									])
+									.flat(),
+						  )
+						: getDeviceLastUpdateTime(knownDevices[deviceId])
+				},
 				updateAlias: (deviceId, alias) => {
 					deviceAliases[deviceId] = alias
 				},
@@ -356,9 +406,9 @@ export const Consumer = DevicesContext.Consumer
 
 export const useDevices = () => useContext(DevicesContext)
 
-const getLastUpdateTime = (device?: Device): null | number => {
+const getDeviceLastUpdateTime = (device?: Device): null | number => {
 	const state = device?.state
-	const lastUpdateTimeStamps: number[] = [
+	return getLastUpdateTime([
 		state?.bat?.ts,
 		state?.btn?.ts,
 		state?.dev?.ts,
@@ -366,9 +416,14 @@ const getLastUpdateTime = (device?: Device): null | number => {
 		state?.gnss?.ts,
 		state?.roam?.ts,
 		state?.sol?.ts,
-	].filter((s) => s !== undefined) as number[]
+	])
+}
 
-	return lastUpdateTimeStamps.length > 0
-		? Math.max(...lastUpdateTimeStamps)
-		: null
+export const getLastUpdateTime = (
+	lastUpdateTimeStamps: (number | undefined)[],
+): null | number => {
+	const nonEmpty = lastUpdateTimeStamps.filter(
+		(s) => s !== undefined,
+	) as number[]
+	return nonEmpty.length > 0 ? Math.max(...nonEmpty) : null
 }

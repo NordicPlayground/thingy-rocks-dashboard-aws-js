@@ -2,9 +2,10 @@ import styled from 'styled-components'
 import { DisconnectedWarning } from './DisconnectedWarning.js'
 import { HistoryOnly } from './HistoryOnly.js'
 import { Tracker } from './Tracker.js'
-import { isTracker, useDevices } from './context/Devices.js'
+import { isNRPlusGateway, isTracker, useDevices } from './context/Devices.js'
 import { useSettings } from './context/Settings.js'
 import { useHistoryChart } from './context/showHistoryChart.js'
+import { NRPlusGatewayTile } from './NRPlusGatewayTile.js'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -141,6 +142,13 @@ export const DeviceList = () => {
 								<Tracker key={`device:${device.id}`} device={device} />
 							</li>
 						)
+					if (isNRPlusGateway(device)) {
+						return (
+							<li>
+								<NRPlusGatewayTile gateway={device} />
+							</li>
+						)
+					}
 					if (device.history !== undefined)
 						return (
 							<li>

@@ -1,10 +1,10 @@
-import { useDevices, type Device } from './context/Devices.js'
+import { useDevices } from './context/Devices.js'
 
 export const DeviceName = ({
 	device,
 	fallback,
 }: {
-	device: Device
+	device: { id: string }
 	fallback?: string
 }) => {
 	const { alias } = useDevices()
