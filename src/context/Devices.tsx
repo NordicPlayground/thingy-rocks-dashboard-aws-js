@@ -181,6 +181,7 @@ export type NRPlusGateway = {
 		id: number // e.g. 38,
 		networkId: number // e.g. 22
 	}
+	location?: Record<GeoLocationSource, GeoLocation>
 }
 
 export type Devices = Record<string, Device>

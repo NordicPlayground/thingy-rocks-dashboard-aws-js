@@ -21,6 +21,8 @@ import { RelativeTime } from './RelativeTime.js'
 import { ButtonPress } from './ButtonPress.js'
 import { useState } from 'preact/hooks'
 import { useWebsocket } from './context/WebsocketConnection.js'
+import { useMap } from './context/Map.js'
+import { sortLocations } from './sortLocations.js'
 
 export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 	const { lastUpdateTs } = useDevices()
@@ -30,9 +32,21 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 	const [deviceCode, setDeviceCode] = useState<string>(
 		localStorage.getItem(key) ?? '',
 	)
+	const map = useMap()
+	const { location } = gateway
+	const rankedLocations = Object.values(location ?? []).sort(sortLocations)
+	const deviceLocation = rankedLocations[0]
+
 	return (
 		<>
-			<Title type={'button'}>
+			<Title
+				type={'button'}
+				onClick={() => {
+					if (deviceLocation !== undefined) {
+						map?.center(deviceLocation)
+					}
+				}}
+			>
 				<NRPlus class="icon" />
 				<span class="info">
 					<DeviceName device={gateway} />
@@ -97,6 +111,17 @@ const Node = ({
 }) => {
 	const [configure, setConfigure] = useState<boolean>(false)
 	const { send } = useWebsocket()
+	const [relay, setRelay] = useState<Record<string, string | null>>({})
+
+	const viaRelay = (id: string) => (payload: string) => {
+		const relayVia = relay[id]
+		const command = `dect beacon_rach_tx -t ${id} -d "${payload}"`
+		if (relayVia !== undefined)
+			return `dect client_rach_tx --b_name ${relayVia} -d ${JSON.stringify(
+				command,
+			)}`
+		return command
+	}
 
 	return (
 		<>
@@ -125,10 +150,25 @@ const Node = ({
 						<button type="button me-1" onClick={() => setConfigure(false)}>
 							<X strokeWidth={1} />
 						</button>
-						<button type="button me-1" onClick={() => setConfigure(false)}>
-							<LightbulbOff strokeWidth={2} />
-						</button>
+						<select
+							onChange={(e) => {
+								setRelay((r) => ({
+									...r,
+									[id]: (e.target as HTMLSelectElement).value,
+								}))
+							}}
+						>
+							<option selected={relay[id] === undefined}>no relay</option>
+							{Object.keys(gateway.state.nodes ?? {})
+								.filter((otherNodeId) => otherNodeId !== id)
+								.map((otherNodeId) => (
+									<option selected={otherNodeId === relay[id]}>
+										{otherNodeId}
+									</option>
+								))}
+						</select>
 						{[
+							{ name: 'REMOTE_CTRL', color: 'white' },
 							{ name: 'RED', color: 'RED' },
 							{ name: 'GREEN', color: '#18d718' },
 							{ name: 'BLUE', color: '#1c8afb' },
@@ -138,10 +178,12 @@ const Node = ({
 									type="button me-1"
 									style={{ color }}
 									onClick={() => {
-										setConfigure(false)
+										const nrplusCtrl = viaRelay(id)(`LED_${name} ON`)
+										console.log(`[NR+]`, nrplusCtrl)
 										send({
+											deviceId: gateway.id,
 											code: localStorage.getItem(`${gateway.id}:code`),
-											nrplusCtrl: `dect beacon_rach_tx -t ${id} -d "LED_${name} ON"`,
+											nrplusCtrl,
 										})
 									}}
 								>
@@ -151,10 +193,12 @@ const Node = ({
 									type="button me-1"
 									style={{ color }}
 									onClick={() => {
-										setConfigure(false)
+										const nrplusCtrl = viaRelay(id)(`LED_${name} OFF`)
+										console.log(`[NR+]`, nrplusCtrl)
 										send({
+											deviceId: gateway.id,
 											code: localStorage.getItem(`${gateway.id}:code`),
-											nrplusCtrl: `dect beacon_rach_tx -t ${id} -d "LED_${name} OFF"`,
+											nrplusCtrl,
 										})
 									}}
 								>

@@ -5,6 +5,7 @@ import {
 	type GeoLocation,
 	type Reported,
 	type Summary,
+	GeoLocationSource,
 } from './Devices.js'
 
 export const WebsocketContext = createContext<{
@@ -26,6 +27,8 @@ type Message = {
 	'@context': MessageContext
 	deviceId: string
 	deviceAlias?: string
+	// Fixed location for the device
+	deviceLocation?: string // e.g. 63.42115901688979,10.437200141182338
 } & (
 	| {
 			'@context': MessageContext.DeviceLocation
@@ -110,6 +113,22 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			if ('deviceAlias' in message) {
 				deviceMessages.updateAlias(message.deviceId, message.deviceAlias)
 			}
+			if ('deviceLocation' in message) {
+				const [lat, lng] = message.deviceLocation
+					.split(',')
+					.map((s) => s.trim())
+					.map((s) => parseFloat(s)) as [number, number]
+				deviceMessages.updateLocation(
+					message.deviceId,
+					{
+						lat,
+						lng,
+						accuracy: 100,
+						source: GeoLocationSource.fixed,
+					},
+					'fixed',
+				)
+			}
 		})
 
 		return () => {
@@ -148,7 +167,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			value={{
 				connected,
 				send: (message) => {
-					console.debug(`[WS]`, { message })
+					console.debug(`[WS]`, message)
 					connection?.current?.send(
 						JSON.stringify({
 							message: 'sendmessage',
