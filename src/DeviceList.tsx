@@ -145,7 +145,7 @@ export const DeviceList = () => {
 					if (isNRPlusGateway(device)) {
 						return (
 							<li>
-								<NRPlusGatewayTile gateway={device} />
+								<NRPlusGatewayTile gateway={device} key={device.id} />
 							</li>
 						)
 					}
