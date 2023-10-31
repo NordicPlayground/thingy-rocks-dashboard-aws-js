@@ -13,6 +13,7 @@ import {
 	Lightbulb,
 	LightbulbOff,
 	Lock,
+	RouterIcon,
 	Thermometer,
 	UploadCloud,
 	X,
@@ -111,17 +112,18 @@ const Node = ({
 }) => {
 	const [configure, setConfigure] = useState<boolean>(false)
 	const { send } = useWebsocket()
-	const [relay, setRelay] = useState<Record<string, string | null>>({})
+	const [relay, setRelay] = useState<Record<string, boolean>>({})
 
-	const viaRelay = (id: string) => (payload: string) => {
-		const relayVia = relay[id]
+	const viaRelay = (useRelay: boolean) => (payload: string) => {
 		const command = `dect beacon_rach_tx -t ${id} -d "${payload}"`
-		if (relayVia !== undefined)
-			return `dect client_rach_tx --b_name ${relayVia} -d ${JSON.stringify(
+		if (useRelay)
+			return `dect client_rach_tx --b_name relay_node -d ${JSON.stringify(
 				command,
 			)}`
 		return command
 	}
+
+	const temp = node.env?.temp ?? node.env?.modemTemp
 
 	return (
 		<>
@@ -138,9 +140,9 @@ const Node = ({
 						>
 							<Lightbulb strokeWidth={1} />
 						</button>
-						{node.env !== undefined && (
+						{temp !== undefined && (
 							<span>
-								<Thermometer strokeWidth={1} /> {node.env.temp.toFixed(1)} °C
+								<Thermometer strokeWidth={1} /> {temp.toFixed(1)} °C
 							</span>
 						)}
 					</span>
@@ -150,23 +152,20 @@ const Node = ({
 						<button type="button me-1" onClick={() => setConfigure(false)}>
 							<X strokeWidth={1} />
 						</button>
-						<select
-							onChange={(e) => {
-								setRelay((r) => ({
-									...r,
-									[id]: (e.target as HTMLSelectElement).value,
-								}))
-							}}
-						>
-							<option selected={relay[id] === undefined}>no relay</option>
-							{Object.keys(gateway.state.nodes ?? {})
-								.filter((otherNodeId) => otherNodeId !== id)
-								.map((otherNodeId) => (
-									<option selected={otherNodeId === relay[id]}>
-										{otherNodeId}
-									</option>
-								))}
-						</select>
+						<label title={'Use relay'} class="mx-1">
+							<input
+								type="checkbox"
+								checked={relay[id] ?? false}
+								onInput={(e) => {
+									setRelay((r) => ({
+										...r,
+										[id]: (e.target as HTMLInputElement).checked,
+									}))
+								}}
+								class="me-1"
+							/>
+							<RouterIcon strokeWidth={1} />
+						</label>
 						{[
 							{ name: 'REMOTE_CTRL', color: 'white' },
 							{ name: 'RED', color: 'RED' },
@@ -178,7 +177,9 @@ const Node = ({
 									type="button me-1"
 									style={{ color }}
 									onClick={() => {
-										const nrplusCtrl = viaRelay(id)(`LED_${name} ON`)
+										const nrplusCtrl = viaRelay(relay[id] ?? false)(
+											`LED_${name} ON`,
+										)
 										console.log(`[NR+]`, nrplusCtrl)
 										send({
 											deviceId: gateway.id,
@@ -193,7 +194,9 @@ const Node = ({
 									type="button me-1"
 									style={{ color }}
 									onClick={() => {
-										const nrplusCtrl = viaRelay(id)(`LED_${name} OFF`)
+										const nrplusCtrl = viaRelay(relay[id] ?? false)(
+											`LED_${name} OFF`,
+										)
 										console.log(`[NR+]`, nrplusCtrl)
 										send({
 											deviceId: gateway.id,

@@ -166,7 +166,7 @@ export type NRPlusNode = {
 	}
 	env?: {
 		modemTemp: number
-		temp: number
+		temp?: number
 		ts: number
 	}
 	btn?: {
