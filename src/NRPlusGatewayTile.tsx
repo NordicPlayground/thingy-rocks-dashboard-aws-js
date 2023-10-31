@@ -94,7 +94,12 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 					</>
 				)}
 				{Object.entries(gateway.state.nodes).map(([id, node]) => (
-					<Node id={id} node={node} gateway={gateway} />
+					<Node
+						id={id}
+						node={node}
+						gateway={gateway}
+						hasCode={deviceCode.length > 0}
+					/>
 				))}
 			</Properties>
 		</>
@@ -105,10 +110,12 @@ const Node = ({
 	id,
 	node,
 	gateway,
+	hasCode,
 }: {
 	id: string
 	gateway: NRPlusGateway
 	node: NRPlusNode
+	hasCode: boolean
 }) => {
 	const [configure, setConfigure] = useState<boolean>(false)
 	const { send } = useWebsocket()
@@ -131,7 +138,7 @@ const Node = ({
 				<Hexagon strokeWidth={1} class="ms-2 p-1" /> {id}
 			</dt>
 			<dd>
-				{!configure && (
+				{hasCode && !configure && (
 					<span class="p-1">
 						<button
 							type="button"
