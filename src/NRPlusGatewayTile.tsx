@@ -138,15 +138,17 @@ const Node = ({
 				<Hexagon strokeWidth={1} class="ms-2 p-1" /> {id}
 			</dt>
 			<dd>
-				{hasCode && !configure && (
+				{!configure && (
 					<span class="p-1">
-						<button
-							type="button"
-							class="me-2"
-							onClick={() => setConfigure(true)}
-						>
-							<Lightbulb strokeWidth={1} />
-						</button>
+						{hasCode && (
+							<button
+								type="button"
+								class="me-2"
+								onClick={() => setConfigure(true)}
+							>
+								<Lightbulb strokeWidth={1} />
+							</button>
+						)}
 						{temp !== undefined && (
 							<span>
 								<Thermometer strokeWidth={1} /> {temp.toFixed(1)} °C
