@@ -7,14 +7,9 @@ export type ButtonPress = {
 	ts: number // 1669741244042
 }
 
-export type SolarInfo = {
-	v: {
-		gain: number // mA, 4.391489028930664
-		bat?: number // V, 3.872000217437744
-	}
-	ts: number // 1670321526312
-}
-
+/**
+ * @deprecated Use FuelGauge
+ */
 export type BatteryInfo = {
 	v: number // 4398
 	ts: number // 1669741244042
@@ -101,6 +96,9 @@ export type Reported = Partial<{
 		}
 		ts: number //1669741243982
 	}
+	/**
+	 * @deprecated Use `fg`
+	 */
 	bat: BatteryInfo
 	btn: ButtonPress
 	gnss: {
@@ -114,7 +112,6 @@ export type Reported = Partial<{
 		}
 		ts: number // 1670245539000
 	}
-	sol: SolarInfo
 	// Device has a fixed geo location
 	geo: {
 		lng: number // 10.4383147713927
@@ -309,6 +306,18 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 								fg: reported.fg,
 							}
 						}
+						// Convert legacy battery info to fuel gauge
+						if (reported.bat !== undefined) {
+							if ((reported.fg?.ts ?? 0) < reported.bat.ts) {
+								reported.fg = {
+									v: {
+										...(reported.fg?.v ?? {}),
+										V: reported.bat.v,
+									},
+									ts: reported.bat.ts,
+								}
+							}
+						}
 						return {
 							...devices,
 							[deviceId]: updated,
@@ -410,13 +419,12 @@ export const useDevices = () => useContext(DevicesContext)
 const getDeviceLastUpdateTime = (device?: Device): null | number => {
 	const state = device?.state
 	return getLastUpdateTime([
-		state?.bat?.ts,
 		state?.btn?.ts,
 		state?.dev?.ts,
 		state?.env?.ts,
 		state?.gnss?.ts,
 		state?.roam?.ts,
-		state?.sol?.ts,
+		state?.fg?.ts,
 	])
 }
 

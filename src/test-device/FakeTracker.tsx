@@ -52,11 +52,6 @@ const fakeTrackerState = (): Reported => ({
 		},
 		ts: Date.now(),
 	},
-	bat: { v: 3879, ts: Date.now() },
-	sol: {
-		v: { gain: 4.03, bat: 3.85 },
-		ts: Date.now(),
-	},
 	fg: {
 		v: {
 			V: 2754,

@@ -28,7 +28,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		send('LWM2M-shadows')
 		const listener = (message: Record<string, unknown>) => {
 			if (isLwM2MShadows(message)) {
-				console.log(`[LwM2M]`, message)
 				setObjects(
 					Object.entries(message.shadows).reduce(
 						(objects, [k, { objects: o }]) => ({ ...objects, [k]: o }),
@@ -39,7 +38,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					if (alias !== undefined) deviceMessages.updateAlias(deviceId, alias)
 					const reported: Reported = {}
 					for (const object of objects) {
-						console.log({ object })
 						if (isDeviceInformation(object)) {
 							const {
 								0: imei,
@@ -100,12 +98,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 								4: TTF,
 								5: TTE,
 							} = object.Resources
-							if (V !== undefined) {
-								reported.bat = {
-									v: V * 1000,
-									ts: new Date(object.Resources['99']).getTime(),
-								}
-							}
 							reported.fg = {
 								v: {
 									V: V !== undefined ? V * 1000 : undefined,

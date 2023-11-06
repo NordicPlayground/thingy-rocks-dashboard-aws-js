@@ -14,7 +14,6 @@ import {
 import { DeviceName } from './DeviceName.js'
 import { EnvironmentInfo } from './EnvironmentInfo.js'
 import { LocationInfo } from './LocationInfo.js'
-import { PowerInfo } from './PowerInfo.js'
 import { RelativeTime } from './RelativeTime.js'
 import { SignalQuality } from './SignalQuality.js'
 import { UpdateWarning } from './UpdateWarning.js'
@@ -133,14 +132,6 @@ export const Tracker = ({ device }: { device: Device }) => {
 						toggleHistoryChart(device.id)
 					}}
 				/>
-				{state !== undefined && (
-					<PowerInfo
-						state={state}
-						onClick={() => {
-							toggleHistoryChart(device.id)
-						}}
-					/>
-				)}
 				{state?.fg !== undefined && (
 					<FuelGauge
 						fg={state.fg}

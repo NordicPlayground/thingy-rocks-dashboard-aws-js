@@ -73,24 +73,25 @@ export const FuelGauge = ({
 				)}
 			</dt>
 			<dd class="d-flex flex-column align-items-start justify-content-center">
-				<ChargingIndicator>
-					<button type={'button'} onClick={() => onClick?.()}>
-						<span class="me-2">{SoC}%</span>
-						{TTE !== undefined && (
-							<>
-								<span class="me-1">(empty {formatDistance(TTE)})</span>
-								<abbr title={'Time-to-empty estimate is experimental.'}>
-									<AlertCircle strokeWidth={1} class="me-0" />
-								</abbr>
-							</>
-						)}
-						{isCharging && <span class="me-1">(charging)</span>}
-					</button>
-				</ChargingIndicator>
+				{(SoC !== undefined || TTE !== undefined) && (
+					<ChargingIndicator>
+						<button type={'button'} onClick={() => onClick?.()}>
+							{SoC !== undefined && <span class="me-2">{SoC}%</span>}
+							{TTE !== undefined && (
+								<>
+									<span class="me-1">(empty {formatDistance(TTE)})</span>
+									<abbr title={'Time-to-empty estimate is experimental.'}>
+										<AlertCircle strokeWidth={1} class="me-0" />
+									</abbr>
+								</>
+							)}
+							{isCharging && <span class="me-1">(charging)</span>}
+						</button>
+					</ChargingIndicator>
+				)}
 				<ChargingIndicator>
 					<button type={'button'} onClick={() => onClick?.()}>
 						{V !== undefined && <span class="me-1">{V / 1000} V</span>}
-
 						<span class="me-1">
 							<Zap strokeWidth={1} class="me-0" />
 							{current} mA
