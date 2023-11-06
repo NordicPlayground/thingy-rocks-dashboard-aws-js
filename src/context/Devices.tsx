@@ -10,7 +10,7 @@ export type ButtonPress = {
 export type SolarInfo = {
 	v: {
 		gain: number // mA, 4.391489028930664
-		bat: number // V, 3.872000217437744
+		bat?: number // V, 3.872000217437744
 	}
 	ts: number // 1670321526312
 }
@@ -68,7 +68,7 @@ export type Reported = Partial<{
 	dev: {
 		v: {
 			imei: string // '351358815341265'
-			iccid: string // '89457387300008502281'
+			iccid?: string // '89457387300008502281'
 			modV: string // 'mfw_nrf9160_1.3.2'
 			brdV: string // 'thingy91_nrf9160'
 			appV: string // '1.1.0-thingy91_nrf9160_ns'
@@ -78,22 +78,22 @@ export type Reported = Partial<{
 	}
 	roam: {
 		v: {
-			band: number // 20
-			nw: string // 'LTE-M'
-			rsrp: number // -88
-			area: number // 30401
-			mccmnc: number // 24201
-			cell: number // 21679616
-			ip: string // '100.74.127.54'
+			band?: number // 20
+			nw?: string // 'LTE-M'
+			rsrp?: number // -88
+			area?: number // 30401
+			mccmnc?: number // 24201
+			cell?: number // 21679616
+			ip?: string // '100.74.127.54'
 			eest?: EnergyEstimate // 8
 		}
 		ts: number // 1669741244010
 	}
 	env: {
 		v: {
-			temp: number // 27.75
-			hum: number // 13.257
-			atmp: number // 101.497
+			temp?: number // 27.75
+			hum?: number // 13.257
+			atmp?: number // 101.497
 			/*
 			 * @see https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf
 			 */
@@ -107,10 +107,10 @@ export type Reported = Partial<{
 		v: {
 			lng: number // 10.4383147713927
 			lat: number // 63.42503380159108
-			acc: number // 19.08224868774414
-			alt: number // 117.34368896484375
-			spd: number // 5.4213972091674805
-			hdg: number // 170.65904235839844
+			acc?: number // 19.08224868774414
+			alt?: number // 117.34368896484375
+			spd?: number // 5.4213972091674805
+			hdg?: number // 170.65904235839844
 		}
 		ts: number // 1670245539000
 	}
@@ -123,10 +123,10 @@ export type Reported = Partial<{
 	// Fuel gauge, see https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/pull/836
 	fg: {
 		v: {
-			V: number // e.g. 2754
-			I: number // e.g. -250
-			T: number // e.g. 231
-			SoC: number // e.g. 93
+			V?: number // e.g. 2754
+			I?: number // e.g. -250
+			T?: number // e.g. 231
+			SoC?: number // e.g. 93
 			TTF?: number // e.g. 4652
 			TTE?: number // e.g. 4652
 		}
@@ -145,7 +145,7 @@ export enum GeoLocationSource {
 export type GeoLocation = {
 	lat: number
 	lng: number
-	accuracy: number
+	accuracy?: number
 	source: GeoLocationSource
 	label?: string
 	ts?: Date

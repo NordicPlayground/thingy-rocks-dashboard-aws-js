@@ -114,6 +114,8 @@ export const DeviceList = () => {
 		settings: { showFavorites, favorites },
 	} = useSettings()
 
+	console.log(devices)
+
 	const devicesToShow = Object.entries(devices)
 		.filter(([deviceId]) => {
 			if (!showFavorites) return true

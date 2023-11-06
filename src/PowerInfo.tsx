@@ -56,7 +56,7 @@ export const PowerInfo = ({
 							) : (
 								<BatteryMedium strokeWidth={1} />
 							)}
-							{sol.bat.toFixed(3)} V
+							{sol.bat !== undefined && <>{sol.bat.toFixed(3)} V</>}
 						</ChargeState>
 					</button>
 				</dd>

@@ -105,7 +105,7 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 											<GeoLocationAge age={location.ts} />,{' '}
 										</>
 									)}
-									<span>{Math.round(location.accuracy)} m</span>)
+									<span>{Math.round(location.accuracy ?? 500)} m</span>)
 								</small>
 							</li>
 						))}

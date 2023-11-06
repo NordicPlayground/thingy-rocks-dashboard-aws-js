@@ -115,7 +115,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 				console.debug(`[map]`, 'add source', locationAreaBaseId, location)
 				map.addSource(
 					locationAreaSourceId,
-					geoJSONPolygonFromCircle([lng, lat], accuracy, 6, Math.PI / 2),
+					geoJSONPolygonFromCircle([lng, lat], accuracy ?? 500, 6, Math.PI / 2),
 				)
 				// Center point
 				map.addSource(centerSourceId, {
@@ -150,7 +150,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 						'symbol-placement': 'line',
 						'text-field': `${deviceAlias} (${
 							LocationSourceLabels[source]
-						}, ${Math.round(accuracy)} m)`,
+						}, ${Math.round(accuracy ?? 500)} m)`,
 						'text-font': [glyphFonts.regular],
 						'text-offset': [0, -1],
 						'text-size': 14,
@@ -235,7 +235,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 				}
 				// Update existing sources
 				;(areaSource as GeoJSONSource).setData(
-					geoJSONPolygonFromCircle([lng, lat], accuracy, 6, Math.PI / 2)
+					geoJSONPolygonFromCircle([lng, lat], accuracy ?? 500, 6, Math.PI / 2)
 						.data as GeoJSON.FeatureCollection,
 				)
 				;(map.getSource(centerSourceId) as GeoJSONSource)?.setData({

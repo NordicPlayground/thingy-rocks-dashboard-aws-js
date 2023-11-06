@@ -11,16 +11,21 @@ import {
 export const WebsocketContext = createContext<{
 	connected: boolean
 	send: (message: any) => void
+	onMessage: (listener: Listener) => void
+	removeMessageListener: (listener: Listener) => void
 }>({
 	connected: false,
 	send: () => undefined,
+	onMessage: () => undefined,
+	removeMessageListener: () => undefined,
 })
 
-enum MessageContext {
+export enum MessageContext {
 	DeviceShadow = 'https://thingy.rocks/device-shadow',
 	DeviceMessage = 'https://thingy.rocks/device-message',
 	DeviceLocation = 'https://thingy.rocks/device-location',
 	DeviceHistory = 'https://thingy.rocks/device-history',
+	LwM2MShadows = 'https://thingy.rocks/lwm2m-shadows',
 }
 
 type Message = {
@@ -46,13 +51,19 @@ type Message = {
 			'@context': MessageContext.DeviceHistory
 			history: Summary
 	  }
+	| {
+			'@context': MessageContext.LwM2MShadows
+	  }
 )
+
+type Listener = (message: Record<string, unknown>) => void
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const connection = useRef<WebSocket>()
 	const deviceMessages = useDevices()
 	const [connected, setConnected] = useState<boolean>(false)
 	const [connectionAttempt, setConnectionAttempt] = useState<number>(1)
+	const listeners = useRef<Array<Listener>>([])
 
 	useEffect(() => {
 		if (connection.current !== undefined) return
@@ -107,13 +118,16 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				case MessageContext.DeviceHistory:
 					deviceMessages.updateHistory(message.deviceId, message.history)
 					break
+				case MessageContext.LwM2MShadows:
+					// ignore here
+					break
 				default:
-					console.error(`[WS]`, 'Unknown message', message)
+					console.debug(`[WS]`, 'Unknown message', message)
 			}
-			if ('deviceAlias' in message) {
+			if (message.deviceAlias !== undefined) {
 				deviceMessages.updateAlias(message.deviceId, message.deviceAlias)
 			}
-			if ('deviceLocation' in message) {
+			if (message.deviceLocation !== undefined) {
 				const [lat, lng] = message.deviceLocation
 					.split(',')
 					.map((s) => s.trim())
@@ -129,6 +143,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					'fixed',
 				)
 			}
+			listeners.current.map((fn) => fn(message))
 		})
 
 		return () => {
@@ -174,6 +189,12 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 							data: message,
 						}),
 					)
+				},
+				onMessage: (listener) => {
+					listeners.current.push(listener)
+				},
+				removeMessageListener: (listener) => {
+					listeners.current = listeners.current.filter((l) => l !== listener)
 				},
 			}}
 		>

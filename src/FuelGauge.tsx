@@ -26,10 +26,10 @@ const NotCharging = styled.span`
 `
 
 const BatteryIcon = ({ SoC }: { SoC: number }) => {
-	if (SoC > 80) return <BatteryFull />
-	if (SoC > 50) return <BatteryMedium />
-	if (SoC > 25) return <BatteryLow />
-	return <BatteryWarning />
+	if (SoC > 80) return <BatteryFull strokeWidth={1} />
+	if (SoC > 50) return <BatteryMedium strokeWidth={1} />
+	if (SoC > 25) return <BatteryLow strokeWidth={1} />
+	return <BatteryWarning strokeWidth={1} />
 }
 
 const formatter = new Intl.RelativeTimeFormat(undefined, { style: 'long' })
@@ -50,16 +50,27 @@ export const FuelGauge = ({
 	onClick?: () => unknown
 }) => {
 	const { V, I: current, T: temp, SoC, TTE } = fg.v
-	const isCharging = current < 0
+	const isCharging = (current ?? 0) < 0
 	const ChargingIndicator = isCharging ? Charging : NotCharging
 	return (
 		<>
 			<dt>
-				<ChargingIndicator>
-					<button type={'button'} onClick={() => onClick?.()}>
-						{isCharging ? <BatteryCharging /> : <BatteryIcon SoC={SoC} />}
-					</button>
-				</ChargingIndicator>
+				{SoC !== undefined && (
+					<ChargingIndicator>
+						<button type={'button'} onClick={() => onClick?.()}>
+							{isCharging ? (
+								<BatteryCharging strokeWidth={1} />
+							) : (
+								<BatteryIcon SoC={SoC} />
+							)}
+						</button>
+					</ChargingIndicator>
+				)}
+				{SoC === undefined && (
+					<NotCharging>
+						<BatteryMedium strokeWidth={1} />
+					</NotCharging>
+				)}
 			</dt>
 			<dd class="d-flex flex-column align-items-start justify-content-center">
 				<ChargingIndicator>
@@ -78,15 +89,18 @@ export const FuelGauge = ({
 				</ChargingIndicator>
 				<ChargingIndicator>
 					<button type={'button'} onClick={() => onClick?.()}>
-						<span class="me-1">{V / 1000} V</span>
+						{V !== undefined && <span class="me-1">{V / 1000} V</span>}
+
 						<span class="me-1">
 							<Zap strokeWidth={1} class="me-0" />
 							{current} mA
 						</span>
-						<span class="me-1">
-							<Thermometer strokeWidth={1} class="me-0" />
-							{temp / 10} °C
-						</span>
+						{temp !== undefined && (
+							<span class="me-1">
+								<Thermometer strokeWidth={1} class="me-0" />
+								{temp / 10} °C
+							</span>
+						)}
 					</button>
 				</ChargingIndicator>
 			</dd>

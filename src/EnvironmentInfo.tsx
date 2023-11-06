@@ -21,7 +21,7 @@ export const EnvironmentInfo = ({
 }) => {
 	const env = device.state?.env?.v
 	const iaq = env?.bsec_iaq
-	if (env === undefined) return null
+	if (env?.temp === undefined) return null
 	return (
 		<>
 			<dt>
