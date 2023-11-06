@@ -198,9 +198,6 @@ export type Summary = {
 	// Fuel gauge readings, see https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/blob/4713549af719a7e119324853aa117d752ac856e3/docs/cloud-protocol/Reported.ts#L111
 	fgSoC?: Array<Reading>
 	fgI?: Array<Reading>
-	fgTTE?: Array<Reading>
-	fgTTF?: Array<Reading>
-	fgT?: Array<Reading>
 }
 
 export const isTracker = (device: Device): boolean => {
