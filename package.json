@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@aws-amplify/core": "5.8.5",
-    "@aws-sdk/credential-provider-cognito-identity": "3.441.0",
+    "@aws-sdk/credential-provider-cognito-identity": "3.444.0",
     "@hello.nrfcloud.com/proto-lwm2m": "1.6.0",
     "@nordicsemiconductor/rsrp-bar": "6.0.0",
     "@sentry/react": "7.77.0",
