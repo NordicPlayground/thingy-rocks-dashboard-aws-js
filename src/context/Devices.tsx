@@ -190,27 +190,17 @@ export type Reading = [
 ]
 export type Summary = {
 	base: Date // '2022-12-07T12:09:59.488Z'
+	/**
+	 * @deprecated use fuel gauge data
+	 */
 	bat?: Array<Reading>
 	temp?: Array<Reading>
-	solBat?: Array<Reading>
-	solGain?: Array<Reading>
 	// Fuel gauge readings, see https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/blob/4713549af719a7e119324853aa117d752ac856e3/docs/cloud-protocol/Reported.ts#L111
 	fgSoC?: Array<Reading>
 	fgI?: Array<Reading>
 	fgTTE?: Array<Reading>
 	fgTTF?: Array<Reading>
 	fgT?: Array<Reading>
-	/**
-	 * Contains one or more significant readings to display as guides.
-	 *
-	 * Used for example to visualize that the battery level did not change for Thingys with Solar shield.
-	 */
-	guides?: [
-		type: 'bat' | 'temp' | 'solGain',
-		v: number,
-		// Delta to the base date in seconds
-		d: number,
-	][]
 }
 
 export const isTracker = (device: Device): boolean => {

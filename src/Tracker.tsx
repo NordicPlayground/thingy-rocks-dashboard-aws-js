@@ -1,5 +1,5 @@
 import { identifyIssuer } from 'e118-iin-list'
-import { Sun, UploadCloud, Wifi } from 'lucide-preact'
+import { UploadCloud, Wifi } from 'lucide-preact'
 import styled from 'styled-components'
 import { ButtonPress } from './ButtonPress.js'
 import { CountryFlag } from './CountryFlag.js'
@@ -8,7 +8,6 @@ import {
 	LastUpdate,
 	Properties,
 	ShieldIcon,
-	SolarColor,
 	Title,
 } from './DeviceList.js'
 import { DeviceName } from './DeviceName.js'
@@ -85,13 +84,6 @@ export const Tracker = ({ device }: { device: Device }) => {
 									color: wifiColor,
 								}}
 							/>
-						</ShieldIcon>
-					)}
-					{appV?.includes('solar') === true && (
-						<ShieldIcon>
-							<SolarColor>
-								<Sun />
-							</SolarColor>
 						</ShieldIcon>
 					)}
 					<DeviceName device={device} />

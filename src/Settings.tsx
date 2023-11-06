@@ -20,10 +20,7 @@ export const Settings = () => {
 		settings: {
 			showSettings,
 			enableTestDevice,
-			gainReferenceEveryMinute,
-			gainReferenceEveryHour,
 			showFavorites,
-			consumptionThreshold,
 			showUpdateWarning,
 		},
 		update,
@@ -85,76 +82,6 @@ export const Settings = () => {
 						<label class="form-check-label" htmlFor="showUpdateWarning">
 							Show firmware update warning?
 						</label>
-					</div>
-					<h2 class="h4 mt-4">Solar</h2>
-					<label htmlFor={'consumptionThreshold'}>
-						Above this value, charge is considered sufficiently high enough so
-						device does not use battery:
-					</label>
-					<div class="input-group mb-3">
-						<input
-							type="number"
-							class="form-control"
-							id="consumptionThreshold"
-							placeholder="e.g. '3.4 mA'"
-							step={0.1}
-							min={0}
-							value={consumptionThreshold}
-							onChange={(e) => {
-								update({
-									consumptionThreshold: parseFloat(
-										(e.target as HTMLInputElement).value,
-									),
-								})
-							}}
-						/>
-						<span class="input-group-text">mA</span>
-					</div>
-					<p class={'mb-0'}>
-						Configure the reference values shown in the Gain chart. Power
-						consumption when sending updates:
-					</p>
-					<div class="d-md-flex mb-3">
-						<div class="input-group">
-							<span class="input-group-text">every minute</span>
-							<input
-								type="number"
-								class="form-control"
-								id="gainReferenceEveryMinute"
-								placeholder="e.g. '2 mA'"
-								step={0.1}
-								min={0}
-								value={gainReferenceEveryMinute}
-								onChange={(e) => {
-									update({
-										gainReferenceEveryMinute: parseFloat(
-											(e.target as HTMLInputElement).value,
-										),
-									})
-								}}
-							/>
-							<span class="input-group-text">mA</span>
-						</div>
-						<div class="ms-md-3 input-group">
-							<span class="input-group-text">every hour</span>
-							<input
-								type="number"
-								class="form-control"
-								id="gainReferenceEveryHour"
-								placeholder="e.g. '1 mA'"
-								step={0.1}
-								min={0}
-								value={gainReferenceEveryHour}
-								onChange={(e) => {
-									update({
-										gainReferenceEveryHour: parseFloat(
-											(e.target as HTMLInputElement).value,
-										),
-									})
-								}}
-							/>
-							<span class="input-group-text">mA</span>
-						</div>
 					</div>
 				</div>
 				<div class="card-footer d-flex justify-content-between">

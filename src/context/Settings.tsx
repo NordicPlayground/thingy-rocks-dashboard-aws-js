@@ -2,29 +2,17 @@ import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useState } from 'preact/hooks'
 
 type Settings = {
-	/**
-	 * Above this value, charge is considered sufficiently high enough so device does not use battery.
-	 */
-	consumptionThreshold: number
 	enableTestDevice: boolean
 	showSettings: boolean
 	showFavorites: boolean
 	favorites: string[]
-	/**
-	 * Configure the reference lines shown in the Gain chart
-	 */
-	gainReferenceEveryMinute: number
-	gainReferenceEveryHour: number
 	showUpdateWarning: boolean
 	managementCodes: Record<string, string>
 }
 
 const defaultSettings: Settings = {
-	consumptionThreshold: 3.4,
 	enableTestDevice: false,
 	showSettings: false,
-	gainReferenceEveryMinute: 3.4,
-	gainReferenceEveryHour: 2.3,
 	showFavorites: false,
 	favorites: [],
 	showUpdateWarning: true,

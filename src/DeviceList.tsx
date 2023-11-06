@@ -69,10 +69,6 @@ export const Properties = styled.dl`
 	}
 `
 
-export const SolarColor = styled.span`
-	color: var(--color-nordic-sun);
-`
-
 export const ShieldIcon = styled.span`
 	margin-right: 0.25rem;
 `

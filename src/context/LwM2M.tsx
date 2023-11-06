@@ -6,7 +6,6 @@ import {
 	type ConnectionInformation_14203,
 	type DeviceInformation_14204,
 	type Environment_14205,
-	type SolarCharge_14210,
 } from '@hello.nrfcloud.com/proto-lwm2m'
 import { useEffect, useState } from 'preact/hooks'
 import { MessageContext, useWebsocket } from './WebsocketConnection.js'
@@ -109,15 +108,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 								},
 								ts: new Date(object.Resources['99']).getTime(),
 							}
-						} else if (isSolarCharge(object)) {
-							const { 0: gain, 1: bat } = object.Resources
-							reported.fg = {
-								v: {
-									I: gain,
-									V: bat,
-								},
-								ts: new Date(object.Resources['99']).getTime(),
-							}
 						} else if (isGeolocation(object)) {
 							const {
 								1: lng,
@@ -201,7 +191,5 @@ const isDeviceInformation = (
 ): object is DeviceInformation_14204 => isLwM2MObject(14204, object)
 const isEnvironment = (object: unknown): object is Environment_14205 =>
 	isLwM2MObject(14205, object)
-const isSolarCharge = (object: unknown): object is SolarCharge_14210 =>
-	isLwM2MObject(14210, object)
 const isBatteryAndPower = (object: unknown): object is BatteryAndPower_14202 =>
 	isLwM2MObject(14202, object)

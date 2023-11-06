@@ -1,17 +1,9 @@
 import { format, subSeconds } from 'date-fns'
-import {
-	Battery,
-	Sun,
-	Thermometer,
-	X,
-	type LucideProps,
-	Zap,
-} from 'lucide-preact'
+import { Battery, Thermometer, X, type LucideProps, Zap } from 'lucide-preact'
 import { useRef } from 'preact/hooks'
 import styled from 'styled-components'
 import { colors } from '../colors.js'
 import { useDevices, type Reading } from '../context/Devices.js'
-import { useSettings } from '../context/Settings.js'
 import { useHistoryChart } from '../context/showHistoryChart.js'
 import { HistoryChart } from './HistoryChart.js'
 import type { Dataset } from './chartMath.js'
@@ -71,9 +63,6 @@ const findLowerLimit = (v: Array<Reading>): number =>
 export const DeviceHistory = () => {
 	const { devices } = useDevices()
 	const { deviceId } = useHistoryChart()
-	const {
-		settings: { gainReferenceEveryHour, gainReferenceEveryMinute },
-	} = useSettings()
 
 	if (deviceId === undefined) return null
 
@@ -81,35 +70,6 @@ export const DeviceHistory = () => {
 
 	const charts: ChartInfo[] = []
 
-	if (history?.solGain !== undefined) {
-		charts.push({
-			Icon: Sun,
-			title: 'Solar',
-			color: colors['nordic-sun'],
-			datasets: [
-				{
-					min: 0,
-					max: 5,
-					values: history.solGain.map(([v, d]) => [
-						v,
-						subSeconds(history.base, d),
-					]),
-					color: colors['nordic-sun'],
-					format: (v) => `${v.toFixed(1)}mA`,
-					helperLines: [
-						{
-							label: '1m',
-							value: gainReferenceEveryMinute,
-						},
-						{
-							label: '60m',
-							value: gainReferenceEveryHour,
-						},
-					],
-				},
-			],
-		})
-	}
 	if (history?.bat !== undefined) {
 		charts.push({
 			Icon: Battery,
@@ -122,17 +82,6 @@ export const DeviceHistory = () => {
 					values: history.bat.map(([v, d]) => [v, subSeconds(history.base, d)]),
 					color: colors['nordic-blue'],
 					format: (v) => `${v.toFixed(1)}V`,
-					helperLines: (history?.guides ?? [])
-						.filter(([type]) => type === 'bat')
-						.map(([, v, d]) => ({
-							label: `${Math.floor(
-								(Date.now() - subSeconds(history.base, d).getTime()) /
-									1000 /
-									60 /
-									60,
-							)}h ago`,
-							value: v,
-						})),
 				},
 			],
 		})
