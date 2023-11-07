@@ -1,6 +1,6 @@
 import { createContext, type ComponentChildren } from 'preact'
 import {
-	type LwM2MObject,
+	type LwM2MObjectInstance,
 	type Geolocation_14201,
 	type BatteryAndPower_14202,
 	type ConnectionInformation_14203,
@@ -12,14 +12,16 @@ import { MessageContext, useWebsocket } from './WebsocketConnection.js'
 import { useDevices, type Reported, GeoLocationSource } from './Devices.js'
 
 const LwM2MContext = createContext<{
-	objects: Record<string, LwM2MObject[]>
+	objects: Record<string, LwM2MObjectInstance[]>
 }>({
 	objects: {},
 })
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const { send, onMessage, removeMessageListener, connected } = useWebsocket()
-	const [objects, setObjects] = useState<Record<string, Array<LwM2MObject>>>({})
+	const [objects, setObjects] = useState<
+		Record<string, Array<LwM2MObjectInstance>>
+	>({})
 	const deviceMessages = useDevices()
 
 	useEffect(() => {
@@ -109,6 +111,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 								ts: new Date(object.Resources['99']).getTime(),
 							}
 						} else if (isGeolocation(object)) {
+							console.log('Geolocation', object)
 							const {
 								1: lng,
 								0: lat,
@@ -116,28 +119,56 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 								2: alt,
 								4: spd,
 								5: hdg,
+								6: src,
 							} = object.Resources
-							reported.gnss = {
-								v: {
-									lng,
-									lat,
-									acc,
-									alt,
-									spd,
-									hdg,
-								},
-								ts: new Date(object.Resources['99']).getTime(),
+							if ((object.ObjectInstanceID ?? 0) === 0) {
+								// GNSS fix
+								reported.gnss = {
+									v: {
+										lng,
+										lat,
+										acc,
+										alt,
+										spd,
+										hdg,
+									},
+									ts: new Date(object.Resources['99']).getTime(),
+								}
+								deviceMessages.updateLocation(
+									deviceId,
+									{
+										lng,
+										lat,
+										accuracy: acc,
+										source: GeoLocationSource.GNSS,
+									},
+									'GNSS',
+								)
+							} else if (object.ObjectInstanceID === 1) {
+								// Network scan
+								deviceMessages.updateLocation(
+									deviceId,
+									{
+										lng,
+										lat,
+										accuracy: acc,
+										source: src as GeoLocationSource,
+									},
+									src,
+								)
+							} else if (object.ObjectInstanceID === 2) {
+								// Single cell geo location
+								deviceMessages.updateLocation(
+									deviceId,
+									{
+										lng,
+										lat,
+										accuracy: acc,
+										source: GeoLocationSource.SCELL,
+									},
+									src,
+								)
 							}
-							deviceMessages.updateLocation(
-								deviceId,
-								{
-									lng,
-									lat,
-									accuracy: acc,
-									source: GeoLocationSource.GNSS,
-								},
-								'GNSS',
-							)
 						}
 						deviceMessages.updateState(deviceId, reported)
 					}
@@ -164,7 +195,7 @@ const isLwM2MShadows = (
 	shadows: Array<{
 		deviceId: string
 		alias?: string
-		objects: Array<LwM2MObject>
+		objects: Array<LwM2MObjectInstance>
 	}>
 } =>
 	message !== null &&
@@ -172,24 +203,24 @@ const isLwM2MShadows = (
 	'@context' in message &&
 	message['@context'] === MessageContext.LwM2MShadows
 
-const isLwM2MObject = (
+const isLwM2MObjectInstance = (
 	ObjectID: number,
 	object: unknown,
-): object is LwM2MObject =>
+): object is LwM2MObjectInstance =>
 	object !== null &&
 	typeof object === 'object' &&
 	'ObjectID' in object &&
 	object.ObjectID === ObjectID
 
 const isGeolocation = (object: unknown): object is Geolocation_14201 =>
-	isLwM2MObject(14201, object)
+	isLwM2MObjectInstance(14201, object)
 const isConnectionInformation = (
 	object: unknown,
-): object is ConnectionInformation_14203 => isLwM2MObject(14203, object)
+): object is ConnectionInformation_14203 => isLwM2MObjectInstance(14203, object)
 const isDeviceInformation = (
 	object: unknown,
-): object is DeviceInformation_14204 => isLwM2MObject(14204, object)
+): object is DeviceInformation_14204 => isLwM2MObjectInstance(14204, object)
 const isEnvironment = (object: unknown): object is Environment_14205 =>
-	isLwM2MObject(14205, object)
+	isLwM2MObjectInstance(14205, object)
 const isBatteryAndPower = (object: unknown): object is BatteryAndPower_14202 =>
-	isLwM2MObject(14202, object)
+	isLwM2MObjectInstance(14202, object)
