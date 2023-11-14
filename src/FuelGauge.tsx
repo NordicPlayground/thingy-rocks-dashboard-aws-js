@@ -76,7 +76,9 @@ export const FuelGauge = ({
 				{(SoC !== undefined || TTE !== undefined) && (
 					<ChargingIndicator>
 						<button type={'button'} onClick={() => onClick?.()}>
-							{SoC !== undefined && <span class="me-2">{SoC}%</span>}
+							{SoC !== undefined && (
+								<span class="me-2">{Math.min(100, Math.max(0, SoC))}%</span>
+							)}
 							{TTE !== undefined && (
 								<>
 									<span class="me-1">(empty {formatDistance(TTE)})</span>
