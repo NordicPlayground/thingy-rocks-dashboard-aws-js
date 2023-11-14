@@ -101,7 +101,7 @@ export const FuelGauge = ({
 						{temp !== undefined && (
 							<span class="me-1">
 								<Thermometer strokeWidth={1} class="me-0" />
-								{temp / 10} °C
+								{(temp / 10).toFixed(1)} °C
 							</span>
 						)}
 					</button>
