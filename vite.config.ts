@@ -30,7 +30,7 @@ if (sentryDSN === undefined) {
 } else {
 	console.debug(chalk.yellow(`Sentry DSN`), chalk.blue(sentryDSN))
 }
-const firmwareRelease = process.env.FIRMWARE_RELEASE ?? '1.10.0'
+const firmwareRelease = process.env.FIRMWARE_RELEASE ?? '1.11.1'
 const modemFirmwareRelease9160 =
 	process.env.MODEM_FIRMWARE_RELEASE_9160 ?? '1.3.5'
 const modemFirmwareRelease91x =
