@@ -1,4 +1,3 @@
-import type { CognitoIdentityCredentials } from '@aws-sdk/credential-provider-cognito-identity'
 import { isEqual } from 'lodash-es'
 import type {
 	GeoJSONSource,
@@ -11,10 +10,10 @@ import { useContext } from 'preact/hooks'
 import { locationSourceColors } from '../colors.js'
 import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle.js'
 import { mapStyle } from '../map/style.js'
-import { transformRequest } from '../map/transformRequest.js'
 import { captureMessage } from '../sentry.js'
 import { GeoLocationSource, type GeoLocation } from './Devices.js'
 import { LocationSourceLabels } from './LocationSourceLabels.js'
+import type { AuthHelper } from '../WithMapAuthHelper.js'
 
 export const MapContext = createContext<DeviceMap>(undefined as any)
 
@@ -256,10 +255,10 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 
 export const Provider = ({
 	children,
-	credentials,
+	authHelper,
 }: {
 	children: ComponentChildren
-	credentials: CognitoIdentityCredentials
+	authHelper: AuthHelper
 }) => {
 	const map = new MapLibreGlMap({
 		container: 'map',
@@ -269,11 +268,11 @@ export const Provider = ({
 		}),
 		center: [10.437581513483195, 63.42148461054351],
 		zoom: 12,
-		transformRequest: transformRequest(credentials),
 		refreshExpiredTiles: false,
 		trackResize: false,
 		keyboard: false,
 		renderWorldCopies: false,
+		transformRequest: authHelper.getMapAuthenticationOptions().transformRequest,
 	})
 
 	return (

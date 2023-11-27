@@ -6,16 +6,16 @@ import { Provider as HistoryChartProvider } from './context/showHistoryChart.js'
 import { Provider as WebsocketProvider } from './context/WebsocketConnection.js'
 import { Dashboard } from './Dashboard.js'
 import { FakeTracker } from './test-device/FakeTracker.js'
-import { WithCredentials as CredentialsProvider } from './WithCredentials.js'
+import { WithMapAuthHelper as MapAuthHelperProvider } from './WithMapAuthHelper.js'
 
 export const App = () => (
-	<CredentialsProvider>
-		{(credentials) => (
+	<MapAuthHelperProvider>
+		{(authHelper) => (
 			<SettingsProvider>
 				<DevicesProvider>
 					<WebsocketProvider>
 						<LwM2MProvider>
-							<MapProvider credentials={credentials}>
+							<MapProvider authHelper={authHelper}>
 								<HistoryChartProvider>
 									<Dashboard />
 								</HistoryChartProvider>
@@ -26,5 +26,5 @@ export const App = () => (
 				</DevicesProvider>
 			</SettingsProvider>
 		)}
-	</CredentialsProvider>
+	</MapAuthHelperProvider>
 )
