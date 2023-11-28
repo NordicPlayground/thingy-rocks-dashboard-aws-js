@@ -1,9 +1,7 @@
 {
   "extends": [
-    "@nordicsemiconductor/eslint-config-asset-tracker-cloud-typescript",
-    "plugin:jsx-a11y/recommended"
+    "@nordicsemiconductor/eslint-config-asset-tracker-cloud-typescript"
   ],
-  "plugins": ["jsx-a11y"],
   "overrides": [
     {
       "files": ["*.tsx"],

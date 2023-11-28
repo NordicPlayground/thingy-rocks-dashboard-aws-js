@@ -63,7 +63,6 @@
     "eslint": "8.54.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-import": "2.29.0",
-    "eslint-plugin-jsx-a11y": "6.8.0",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-unicorn": "49.0.0",
     "handlebars": "4.7.8",
