@@ -24,7 +24,7 @@ export const App = () => {
 				<main class="col-8">
 					<NRPlusTopology
 						topology={parsedTopology}
-						size={{ width: 250, height: 100 }}
+						size={{ width: 250, height: 150 }}
 						showHelpers
 					/>
 				</main>

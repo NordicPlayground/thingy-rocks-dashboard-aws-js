@@ -14,14 +14,17 @@ enum Colors {
 export const NRPlusTopology = ({
 	topology,
 	size: { width, height },
+	nodeSize,
 	showHelpers,
 }: {
 	topology: NRPlusNetworkTopology
 	size: { width: number; height: number }
+	nodeSize?: number
 	showHelpers?: boolean
 }) => {
 	// Start with the sink nodes, for now we assume only one sink
 	const sinkNodes = topology.nodes.filter(({ sink }) => sink)
+	const s = nodeSize ?? 20
 	return (
 		<svg
 			width={width}
@@ -62,21 +65,11 @@ export const NRPlusTopology = ({
 
 			{/* Draw connections */}
 			{sinkNodes.map((node) => (
-				<NodeConnections
-					x={width / 2}
-					y={height / 2}
-					topology={topology}
-					node={node}
-				/>
+				<NodeConnections x={s} y={s} topology={topology} node={node} />
 			))}
 			{/* Draw nodes */}
 			{sinkNodes.map((node) => (
-				<ConnectedNode
-					x={width / 2}
-					y={height / 2}
-					topology={topology}
-					node={node}
-				/>
+				<ConnectedNode x={s} y={s} topology={topology} node={node} size={s} />
 			))}
 		</svg>
 	)
@@ -86,55 +79,50 @@ const Node = ({
 	x,
 	y,
 	node,
-	size,
+	size: s,
 }: {
 	x: number
 	y: number
 	node: NRPlusNodeInfo
-	size?: number
-}) => {
-	const s = size ?? 20
-	return (
-		<g>
-			<path
-				fill={Colors.cellular}
-				d={`M ${x - s / 2},${y - s / 2} l ${s},0 l 0,${s} l ${-s},0 l 0,${-s}`}
-			/>
-			<text
-				fill={Colors.text}
-				font-size={'10'}
-				x={x}
-				y={y + 4}
-				text-anchor="middle"
-			>
-				{node.id}
-			</text>
-			<text
-				fill={Colors.cellular}
-				font-size={'10'}
-				x={x}
-				y={y + 24}
-				text-anchor="middle"
-			>
-				{node.title}
-			</text>
-		</g>
-	)
-}
+	size: number
+}) => (
+	<g>
+		<path
+			fill={Colors.cellular}
+			d={`M ${x - s / 2},${y - s / 2} l ${s},0 l 0,${s} l ${-s},0 l 0,${-s}`}
+		/>
+		<text
+			fill={Colors.text}
+			font-size={'10'}
+			x={x}
+			y={y + 4}
+			text-anchor="middle"
+		>
+			{node.id}
+		</text>
+		<text
+			fill={Colors.cellular}
+			font-size={'10'}
+			x={x}
+			y={y + 24}
+			text-anchor="middle"
+		>
+			{node.title}
+		</text>
+	</g>
+)
 
 const connectedNodes = ({
 	node,
 	topology,
 	x,
 	y,
-	fov,
 	startAngle,
 }: {
 	x: number
 	y: number
 	topology: NRPlusNetworkTopology
 	node: NRPlusNodeInfo
-	fov?: number
 	startAngle?: number
 }): {
 	connectionNodes: {
@@ -143,12 +131,11 @@ const connectedNodes = ({
 		angle: number
 		node: NRPlusNodeInfo
 	}[]
-	angleStep: number
 } => {
 	const incomingConnections = topology.connections.filter(
 		({ to }) => to === node.id,
 	)
-	const angleStep = (fov ?? Math.PI * 2) / incomingConnections.length
+	const angleStep = Math.PI / 6
 	let angle = startAngle ?? 0
 	const connectionNodes: {
 		x: number
@@ -172,7 +159,7 @@ const connectedNodes = ({
 		angle += angleStep
 	}
 
-	return { connectionNodes, angleStep }
+	return { connectionNodes }
 }
 
 const NodeConnections = ({
@@ -180,22 +167,19 @@ const NodeConnections = ({
 	topology,
 	x,
 	y,
-	fov,
 	startAngle,
 }: {
 	x: number
 	y: number
 	topology: NRPlusNetworkTopology
 	node: NRPlusNodeInfo
-	fov?: number
 	startAngle?: number
 }) => {
-	const { connectionNodes, angleStep } = connectedNodes({
+	const { connectionNodes } = connectedNodes({
 		node,
 		topology,
 		x,
 		y,
-		fov,
 		startAngle,
 	})
 	return (
@@ -213,7 +197,6 @@ const NodeConnections = ({
 						y={conn.y}
 						node={conn.node}
 						topology={topology}
-						fov={angleStep}
 						startAngle={conn.angle}
 					/>
 				</g>
@@ -227,37 +210,42 @@ const ConnectedNode = ({
 	topology,
 	x,
 	y,
-	fov,
 	startAngle,
+	size,
 }: {
 	x: number
 	y: number
 	topology: NRPlusNetworkTopology
 	node: NRPlusNodeInfo
-	fov?: number
 	startAngle?: number
+	size: number
 }) => {
-	const { connectionNodes, angleStep } = connectedNodes({
+	const { connectionNodes } = connectedNodes({
 		node,
 		topology,
 		x,
 		y,
-		fov,
 		startAngle,
 	})
 	return (
 		<g>
-			<Node x={x} y={y} node={node} key={node.id} />
+			<Node x={x} y={y} node={node} key={node.id} size={size} />
 			{connectionNodes.map((conn) => (
 				<g>
-					<Node x={conn.x} y={conn.y} node={conn.node} key={conn.node.id} />
+					<Node
+						x={conn.x}
+						y={conn.y}
+						node={conn.node}
+						key={conn.node.id}
+						size={size}
+					/>
 					<ConnectedNode
 						x={conn.x}
 						y={conn.y}
 						node={conn.node}
 						topology={topology}
-						fov={angleStep}
 						startAngle={conn.angle}
+						size={size}
 					/>
 				</g>
 			))}
