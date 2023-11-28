@@ -25,6 +25,7 @@ import { useWebsocket } from './context/WebsocketConnection.js'
 import { useMap } from './context/Map.js'
 import { sortLocations } from './sortLocations.js'
 import { removeOldLocation } from './removeOldLocation.js'
+import { NRPlusTopology } from './nrplus/NRPlusTopology.js'
 
 export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 	const { lastUpdateTs } = useDevices()
@@ -65,6 +66,14 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 					</LastUpdate>
 				)}
 			</Title>
+			{gateway.state.topology !== undefined && (
+				<>
+					<NRPlusTopology
+						topology={gateway.state.topology}
+						size={{ width: 250, height: 100 }}
+					/>
+				</>
+			)}
 			<Properties>
 				{configureCode && (
 					<>

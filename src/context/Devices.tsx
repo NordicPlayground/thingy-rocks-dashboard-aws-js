@@ -1,6 +1,7 @@
 import { merge } from 'lodash'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useState } from 'preact/hooks'
+import type { NRPlusNetworkTopology } from '../nrplus/parseTopology'
 
 export type ButtonPress = {
 	v: number // 4398
@@ -177,6 +178,7 @@ export type NRPlusGateway = {
 		nodes: Record<string, NRPlusNode>
 		id: number // e.g. 38,
 		networkId: number // e.g. 22
+		topology?: NRPlusNetworkTopology
 	}
 	location?: Record<GeoLocationSource, GeoLocation>
 }
