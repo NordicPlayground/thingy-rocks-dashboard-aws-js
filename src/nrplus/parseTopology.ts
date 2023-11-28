@@ -1,33 +1,36 @@
 import { Bytestream } from './Bytestream.js'
 
-type NRPlusNode = {
+export type NRPlusNodeInfo = {
 	id: number
 	title: string
+	sink?: boolean
 }
-type NRPlusConnection = {
+export type NRPlusNodeConnection = {
 	from: number
 	to: number
 	distance: number
 }
 export type NRPlusNetworkTopology = {
-	nodes: NRPlusNode[]
-	connections: NRPlusConnection[]
+	nodes: NRPlusNodeInfo[]
+	connections: NRPlusNodeConnection[]
 }
-const readNode = (stream: Bytestream): null | NRPlusNode => {
+const nodeRx = /(?<id>[0-9]+)(?<sink>\*)?:(?<title>.+)/
+const readNode = (stream: Bytestream): null | NRPlusNodeInfo => {
 	const c = stream.current()
 	const line = stream.readLine()
-	if (/[0-9]+:\S+/.test(line)) {
-		const [id, title] = line.split(':', 2) as [string, string]
+	if (nodeRx.test(line)) {
+		const { id, sink, title } = nodeRx.exec(line)?.groups as any
 		return {
 			id: parseInt(id, 10),
 			title,
+			sink: sink !== undefined,
 		}
 	}
 	stream.seek(c)
 	return null
 }
 const connectRx = /(?<from>[0-9]+)(?<distance>-{1,})>(?<to>[0-9]+)$/
-const readConnection = (stream: Bytestream): null | NRPlusConnection => {
+const readConnection = (stream: Bytestream): null | NRPlusNodeConnection => {
 	const c = stream.current()
 	const line = stream.readLine()
 	if (connectRx.test(line)) {
@@ -42,22 +45,23 @@ const readConnection = (stream: Bytestream): null | NRPlusConnection => {
 	return null
 }
 export const parseTopology = (topology: string): NRPlusNetworkTopology => {
-	const topo: NRPlusNetworkTopology = {
-		nodes: [],
-		connections: [],
-	}
+	const nodes: Array<NRPlusNodeInfo> = []
+	const connections: Array<NRPlusNodeConnection> = []
 
 	const s = new Bytestream(topology)
 
-	let node: null | NRPlusNode = null
+	let node: null | NRPlusNodeInfo = null
 	while ((node = readNode(s))) {
-		topo.nodes.push(node)
+		nodes.push(node)
 	}
 
-	let connection: NRPlusConnection | null = null
+	let connection: NRPlusNodeConnection | null = null
 	while ((connection = readConnection(s))) {
-		topo.connections.push(connection)
+		connections.push(connection)
 	}
 
-	return topo
+	return {
+		nodes,
+		connections,
+	}
 }

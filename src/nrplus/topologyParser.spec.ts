@@ -10,19 +10,22 @@ void describe('topologyParser()', () => {
 				{
 					id: 38,
 					title: 'Sink',
+					sink: true,
 				},
-
 				{
 					id: 41,
 					title: 'Client',
+					sink: false,
 				},
 				{
 					id: 39,
 					title: 'Relay',
+					sink: false,
 				},
 				{
 					id: 40,
 					title: 'Client',
+					sink: false,
 				},
 			],
 			connections: [
@@ -46,7 +49,7 @@ void describe('topologyParser()', () => {
 		assert.deepEqual(
 			parseTopology(
 				[
-					`38:Sink`,
+					`38*:Sink`,
 					`41:Client`,
 					`39:Relay`,
 					`40:Client`,
