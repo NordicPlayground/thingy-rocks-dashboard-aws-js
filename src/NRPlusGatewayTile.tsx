@@ -70,7 +70,7 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 				<>
 					<NRPlusTopology
 						topology={gateway.state.topology}
-						size={{ width: 250, height: 100 }}
+						size={{ width: 250, height: 150 }}
 					/>
 				</>
 			)}
