@@ -24,6 +24,7 @@ import { useState } from 'preact/hooks'
 import { useWebsocket } from './context/WebsocketConnection.js'
 import { useMap } from './context/Map.js'
 import { sortLocations } from './sortLocations.js'
+import { removeOldLocation } from './removeOldLocation.js'
 
 export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 	const { lastUpdateTs } = useDevices()
@@ -35,7 +36,9 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 	)
 	const map = useMap()
 	const { location } = gateway
-	const rankedLocations = Object.values(location ?? []).sort(sortLocations)
+	const rankedLocations = Object.values(location ?? [])
+		.sort(sortLocations)
+		.filter(removeOldLocation)
 	const deviceLocation = rankedLocations[0]
 
 	return (

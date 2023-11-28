@@ -111,7 +111,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				case MessageContext.DeviceLocation:
 					deviceMessages.updateLocation(
 						message.deviceId,
-						message.location,
+						{
+							...message.location,
+							ts: new Date(),
+						},
 						message.location.source,
 					)
 					break
@@ -139,6 +142,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						lng,
 						accuracy: 100,
 						source: GeoLocationSource.fixed,
+						ts: new Date(),
 					},
 					'fixed',
 				)

@@ -141,6 +141,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 										lat,
 										accuracy: acc,
 										source: GeoLocationSource.GNSS,
+										ts: new Date(object.Resources['99']),
 									},
 									'GNSS',
 								)
@@ -153,6 +154,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 										lat,
 										accuracy: acc,
 										source: src as GeoLocationSource,
+										ts: new Date(object.Resources['99']),
 									},
 									src,
 								)
@@ -165,6 +167,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 										lat,
 										accuracy: acc,
 										source: GeoLocationSource.SCELL,
+										ts: new Date(object.Resources['99']),
 									},
 									src,
 								)

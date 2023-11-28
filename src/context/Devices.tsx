@@ -145,7 +145,7 @@ export type GeoLocation = {
 	accuracy?: number
 	source: GeoLocationSource
 	label?: string
-	ts?: Date
+	ts: Date
 }
 export type Device = {
 	id: string

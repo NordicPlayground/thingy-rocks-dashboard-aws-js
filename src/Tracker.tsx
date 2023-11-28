@@ -28,6 +28,7 @@ import { ThingyIcon } from './icons/ThingyIcon.js'
 import { ThingyXIcon } from './icons/ThingyXIcon.js'
 import { sortLocations } from './sortLocations.js'
 import { FuelGauge } from './FuelGauge.js'
+import { removeOldLocation } from './removeOldLocation.js'
 
 const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;
@@ -49,7 +50,9 @@ export const Tracker = ({ device }: { device: Device }) => {
 	} = useSettings()
 
 	const { location, state } = device
-	const rankedLocations = Object.values(location ?? []).sort(sortLocations)
+	const rankedLocations = Object.values(location ?? [])
+		.sort(sortLocations)
+		.filter(removeOldLocation)
 	const deviceLocation = rankedLocations[0]
 
 	const buttonPress = state?.btn
@@ -61,8 +64,8 @@ export const Tracker = ({ device }: { device: Device }) => {
 		brdV?.includes('nrf9160dk') ?? false
 			? DKIcon
 			: brdV?.includes('thingy91x') ?? false
-			? ThingyXIcon
-			: ThingyIcon
+			  ? ThingyXIcon
+			  : ThingyIcon
 
 	return (
 		<>

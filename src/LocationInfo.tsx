@@ -6,6 +6,7 @@ import type { Device, GeoLocation } from './context/Devices.js'
 import { useDevices } from './context/Devices.js'
 import { LocationSourceLabels } from './context/LocationSourceLabels.js'
 import { sortLocations } from './sortLocations.js'
+import { removeOldLocation } from './removeOldLocation.js'
 
 const LocationSourceSwitch = styled.button`
 	font-weight: var(--monospace-font-weight-bold);
@@ -79,7 +80,9 @@ const LocationSourceButton = ({
 export const LocationInfo = ({ device }: { device: Device }) => {
 	const { location, state } = device
 	const nod = state?.cfg?.nod ?? []
-	const rankedLocations = Object.values(location ?? []).sort(sortLocations)
+	const rankedLocations = Object.values(location ?? [])
+		.sort(sortLocations)
+		.filter(removeOldLocation)
 	const hasLocation = rankedLocations.length > 0
 	if (hasLocation || nod.length > 0)
 		return (
