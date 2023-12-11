@@ -171,11 +171,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			1000 * 60 * 9,
 		) // every 9 minutes
 
-		// Initial greeting
-		connection.current.send(
-			JSON.stringify({ message: 'sendmessage', data: 'HELLO' }),
-		)
-
 		return () => {
 			clearInterval(pingInterval)
 		}
