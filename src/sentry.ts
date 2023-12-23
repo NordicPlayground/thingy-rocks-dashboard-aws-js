@@ -1,7 +1,5 @@
-Sentry.captureMessage('Something went wrong')
-
 import * as Sentry from '@sentry/react'
-import { BrowserTracing } from '@sentry/tracing'
+import { BrowserTracing } from '@sentry/browser'
 
 const enableSentry =
 	SENTRY_DSN !== undefined && import.meta.env.PROD !== undefined
