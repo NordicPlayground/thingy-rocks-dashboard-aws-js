@@ -32,7 +32,7 @@ if (sentryDSN === undefined) {
 }
 const firmwareRelease = process.env.FIRMWARE_RELEASE ?? '1.11.1'
 const modemFirmwareRelease9160 =
-	process.env.MODEM_FIRMWARE_RELEASE_9160 ?? '1.3.5'
+	process.env.MODEM_FIRMWARE_RELEASE_9160 ?? '1.3.6'
 const modemFirmwareRelease91x =
 	process.env.MODEM_FIRMWARE_RELEASE_91x ?? '2.0.0'
 
