@@ -6,16 +6,16 @@ import {
 	SignalMedium,
 	SignalZero,
 	Slash,
-	type LucideProps,
 } from 'lucide-preact'
 import styled from 'styled-components'
 import { EnergyEstimate, type Device } from './context/Devices.js'
 import { LTEm } from './icons/LTE-m.js'
 import { NBIot } from './icons/NBIot.js'
+import type { LucideProps } from './icons/lucide.js'
 
 const EnergyEstimateIcons: Record<
 	EnergyEstimate,
-	(props: LucideProps) => JSX.Element
+	(props: LucideProps) => JSX.Element | null
 > = {
 	[EnergyEstimate.Bad]: SignalZero,
 	[EnergyEstimate.Poor]: SignalLow,
