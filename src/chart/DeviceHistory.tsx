@@ -130,7 +130,7 @@ export const DeviceHistory = () => {
 	if (fgData.length > 0) {
 		charts.push({
 			Icon: Zap,
-			title: 'PMIC',
+			title: 'PMIC\nnPM1300',
 			color: colors['nordic-sun'],
 			datasets: fgData,
 		})
@@ -154,6 +154,8 @@ const IconWithText = styled.div`
 	left: 0;
 	width: 10%;
 	height: 100%;
+	white-space: break-spaces;
+    text-align: center;
 }
 `
 
