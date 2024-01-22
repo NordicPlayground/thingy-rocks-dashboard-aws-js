@@ -15,6 +15,7 @@ import {
 	Lock,
 	RouterIcon,
 	Thermometer,
+	UnlockIcon,
 	UploadCloud,
 	X,
 } from 'lucide-preact'
@@ -41,6 +42,7 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 		.sort(sortLocations)
 		.filter(removeOldLocation)
 	const deviceLocation = rankedLocations[0]
+	const hasCode = deviceCode.length > 0
 
 	return (
 		<>
@@ -57,7 +59,11 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 					<DeviceName device={gateway} />
 				</span>
 				<button type="button" onClick={() => setConfigureCode((c) => !c)}>
-					<Lock strokeWidth={1} class="ms-2 p-1" />
+					{hasCode ? (
+						<UnlockIcon strokeWidth={1} class="ms-2 p-1" />
+					) : (
+						<Lock strokeWidth={1} class="ms-2 p-1" />
+					)}
 				</button>
 				{lastUpdateTime !== undefined && (
 					<LastUpdate title="Last update">
@@ -81,37 +87,48 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 							<KeyRound strokeWidth={1} class="ms-2 p-1" />
 						</dt>
 						<dd class="d-flex my-2">
-							<input
-								type="password"
-								autoComplete="off"
-								class="form-control form-control-sm me-2"
-								value={deviceCode}
-								onInput={(e) =>
-									setDeviceCode((e.target as HTMLInputElement).value)
-								}
-							/>
-							<button
-								type="button"
-								onClick={() => {
-									localStorage.setItem(key, deviceCode)
-									setConfigureCode(false)
-								}}
-							>
-								<Check strokeWidth={1} />
-							</button>
-							<button type="button" onClick={() => setConfigureCode(false)}>
-								<X strokeWidth={1} />
-							</button>
+							<form autoComplete="off">
+								{/* Hack to disable auto-complete in Chrome */}
+								<input
+									autocomplete="false"
+									name="hidden"
+									type="text"
+									style="display:none;"
+								/>
+								<input
+									type="password"
+									autoComplete="off"
+									class="form-control form-control-sm me-2"
+									value={deviceCode}
+									onInput={(e) =>
+										setDeviceCode((e.target as HTMLInputElement).value)
+									}
+								/>
+								<button
+									type="button"
+									onClick={() => {
+										localStorage.setItem(key, deviceCode)
+										setConfigureCode(false)
+									}}
+								>
+									<Check strokeWidth={1} />
+								</button>
+								<button
+									type="button"
+									onClick={() => {
+										setConfigureCode(false)
+										setDeviceCode('')
+										localStorage.removeItem(key)
+									}}
+								>
+									<X strokeWidth={1} />
+								</button>
+							</form>
 						</dd>
 					</>
 				)}
 				{Object.entries(gateway.state.nodes).map(([id, node]) => (
-					<Node
-						id={id}
-						node={node}
-						gateway={gateway}
-						hasCode={deviceCode.length > 0}
-					/>
+					<Node id={id} node={node} gateway={gateway} hasCode={hasCode} />
 				))}
 			</Properties>
 		</>
