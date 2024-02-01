@@ -29,6 +29,7 @@ import { ThingyXIcon } from './icons/ThingyXIcon.js'
 import { sortLocations } from './sortLocations.js'
 import { FuelGauge } from './FuelGauge.js'
 import { removeOldLocation } from './removeOldLocation.js'
+import { PinTile } from './PinTile.js'
 
 const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;
@@ -64,8 +65,8 @@ export const Tracker = ({ device }: { device: Device }) => {
 		brdV?.includes('nrf9160dk') ?? false
 			? DKIcon
 			: brdV?.includes('thingy91x') ?? false
-			  ? ThingyXIcon
-			  : ThingyIcon
+				? ThingyXIcon
+				: ThingyIcon
 
 	return (
 		<>
@@ -98,6 +99,7 @@ export const Tracker = ({ device }: { device: Device }) => {
 						<RelativeTime time={new Date(lastUpdateTime)} />
 					</LastUpdate>
 				)}
+				<PinTile device={device} />
 			</Title>
 			<Properties>
 				<SignalQuality device={device} />

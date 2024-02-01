@@ -2,6 +2,7 @@ import { ChevronUp, Settings2, Star, StarOff } from 'lucide-preact'
 import styled from 'styled-components'
 import { useDevices } from './context/Devices.js'
 import { useSettings } from './context/Settings.js'
+import { colors } from './colors.js'
 
 const SettingsPanel = styled.aside`
 	font-family: 'Inter', sans-serif;
@@ -206,5 +207,39 @@ const FavoriteSelector = () => {
 					)
 				})}
 		</ul>
+	)
+}
+
+/**
+ * Toggle the Favorites
+ */
+export const FavoritesButton = () => {
+	const {
+		update,
+		settings: { showFavorites },
+	} = useSettings()
+	return (
+		<button
+			type={'button'}
+			class="btn btn-link"
+			onClick={() => {
+				update({ showFavorites: !showFavorites })
+			}}
+		>
+			{showFavorites && (
+				<Star
+					strokeWidth={2}
+					class={'mx-1'}
+					style={{ color: colors['nordic-fall'] }}
+				/>
+			)}
+			{!showFavorites && (
+				<StarOff
+					strokeWidth={2}
+					class={'mx-1'}
+					style={{ color: colors['nordic-middle-grey'] }}
+				/>
+			)}
+		</button>
 	)
 }

@@ -27,6 +27,7 @@ import { useMap } from './context/Map.js'
 import { sortLocations } from './sortLocations.js'
 import { removeOldLocation } from './removeOldLocation.js'
 import { NRPlusTopology } from './nrplus/NRPlusTopology.js'
+import { PinTile } from './PinTile.js'
 
 export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 	const { lastUpdateTs } = useDevices()
@@ -71,6 +72,7 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 						<RelativeTime time={new Date(lastUpdateTime)} />
 					</LastUpdate>
 				)}
+				<PinTile device={gateway} />
 			</Title>
 			{gateway.state.topology !== undefined && (
 				<>

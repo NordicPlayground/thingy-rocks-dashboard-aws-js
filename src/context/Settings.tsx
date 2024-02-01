@@ -3,8 +3,8 @@ import { useContext, useState } from 'preact/hooks'
 
 type Settings = {
 	enableTestDevice: boolean
-	showSettings: boolean
 	showFavorites: boolean
+	showSettings: boolean
 	favorites: string[]
 	showUpdateWarning: boolean
 	managementCodes: Record<string, string>
@@ -12,8 +12,8 @@ type Settings = {
 
 const defaultSettings: Settings = {
 	enableTestDevice: false,
-	showSettings: false,
 	showFavorites: false,
+	showSettings: false,
 	favorites: [],
 	showUpdateWarning: true,
 	managementCodes: {},
@@ -57,7 +57,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				update: (newSettings) => {
 					updateSettings((settings) => {
 						const merged = { ...settings, ...newSettings }
-						localStorage.setItem('settings', JSON.stringify(merged))
+						localStorage.setItem('settings', JSON.stringify(settings))
 						return merged
 					})
 				},
