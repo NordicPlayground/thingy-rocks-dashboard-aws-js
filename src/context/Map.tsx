@@ -125,6 +125,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 							type: 'Point',
 							coordinates: [lng, lat],
 						},
+						properties: {},
 					},
 				})
 				// Render Hexagon

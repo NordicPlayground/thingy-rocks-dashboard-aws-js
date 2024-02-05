@@ -16,7 +16,7 @@ export const geoJSONPolygonFromCircle = (
 
 	const km = radiusMeters / 1000
 
-	const ret = []
+	const ret: number[][] = []
 	const distanceX = km / (111.32 * Math.cos((coords.latitude * Math.PI) / 180))
 	const distanceY = km / 110.574
 
@@ -28,7 +28,7 @@ export const geoJSONPolygonFromCircle = (
 
 		ret.push([coords.longitude + x, coords.latitude + y])
 	}
-	ret.push(ret[0])
+	ret.push(ret[0] as number[]) // Close circle
 
 	return {
 		type: 'geojson',
@@ -41,6 +41,7 @@ export const geoJSONPolygonFromCircle = (
 						type: 'Polygon',
 						coordinates: [ret],
 					},
+					properties: {},
 				},
 			],
 		},
