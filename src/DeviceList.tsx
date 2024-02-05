@@ -2,10 +2,18 @@ import styled from 'styled-components'
 import { DisconnectedWarning } from './DisconnectedWarning.js'
 import { HistoryOnly } from './HistoryOnly.js'
 import { Tracker } from './Tracker.js'
-import { isNRPlusGateway, isTracker, useDevices } from './context/Devices.js'
+import {
+	DeviceType,
+	isNRPlusGateway,
+	isTracker,
+	isWirepasGateway,
+	useDevices,
+	type Device,
+} from './context/Devices.js'
 import { useSettings } from './context/Settings.js'
 import { useHistoryChart } from './context/showHistoryChart.js'
 import { NRPlusGatewayTile } from './NRPlusGatewayTile.js'
+import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -104,13 +112,27 @@ export const IssuerName = styled.dd`
 `
 
 export const DeviceList = () => {
-	const { devices, lastUpdateTs } = useDevices()
+	const { devices, lastUpdateTs, type } = useDevices()
 	const { show: showHistoryChart } = useHistoryChart()
 	const {
-		settings: { showFavorites, favorites },
+		settings: { showFavorites, favorites, enableWirepas5GMeshGateways },
 	} = useSettings()
 
-	const devicesToShow = Object.entries(devices)
+	const devicesToShow = (
+		[
+			...Object.entries(devices),
+			...Object.entries(devices)
+				.filter(
+					([gwId]) =>
+						type(gwId) === DeviceType.WIREPAS_5G_MESH_GW &&
+						enableWirepas5GMeshGateways,
+				)
+				.map(([gwId, gw]) => [
+					gwId,
+					{ ...gw, type: DeviceType.WIREPAS_5G_MESH_GW },
+				]),
+		] as [string, Device][]
+	)
 		.filter(([deviceId]) => {
 			if (!showFavorites) return true
 			return favorites.includes(deviceId)
@@ -142,6 +164,13 @@ export const DeviceList = () => {
 						return (
 							<li>
 								<NRPlusGatewayTile gateway={device} key={device.id} />
+							</li>
+						)
+					}
+					if (isWirepasGateway(device)) {
+						return (
+							<li>
+								<WirepasGatewayTile gateway={device} key={device.id} />
 							</li>
 						)
 					}

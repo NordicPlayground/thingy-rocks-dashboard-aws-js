@@ -6,6 +6,7 @@ import {
 	type Reported,
 	type Summary,
 	GeoLocationSource,
+	DeviceType,
 } from './Devices.js'
 
 export const WebsocketContext = createContext<{
@@ -34,6 +35,7 @@ type Message = {
 	deviceAlias?: string
 	// Fixed location for the device
 	deviceLocation?: string // e.g. 63.42115901688979,10.437200141182338
+	deviceType?: string
 } & (
 	| {
 			'@context': MessageContext.DeviceLocation
@@ -145,6 +147,12 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						ts: new Date(),
 					},
 					'fixed',
+				)
+			}
+			if (message.deviceType !== undefined) {
+				deviceMessages.updateType(
+					message.deviceId,
+					message.deviceType as DeviceType,
 				)
 			}
 			listeners.current.map((fn) => fn(message))

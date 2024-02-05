@@ -148,12 +148,19 @@ export type GeoLocation = {
 	label?: string
 	ts: Date
 }
+
+export enum DeviceType {
+	WIREPAS_5G_MESH_GW = 'wirepas-5g-mesh-gateway',
+	NRPLUS_GW = 'nrplus-gateway',
+	SOFT_SIM = 'soft-sim',
+}
 export type Device = {
 	id: string
 	state?: Reported
 	location?: Record<GeoLocationSource, GeoLocation>
 	history?: Summary
 	hiddenLocations?: Record<GeoLocationSource, true>
+	type?: DeviceType
 }
 
 // NR+ Gateway
@@ -183,6 +190,29 @@ export type NRPlusGateway = {
 	location?: Record<GeoLocationSource, GeoLocation>
 }
 
+/**
+ * Quality of Service
+ */
+export enum WirepasMeshQOS {
+	Normal = 0,
+	High = 1,
+}
+
+export type WirepasGatewayNode = {
+	travelTimeMs: number // e.g. 54
+	hops: number // e.g. 1
+	rxTime: string // e.g. '2024-02-05T13:44:06.050Z'
+	qos: WirepasMeshQOS // e.g. 1
+}
+export type WirepasGateway = {
+	id: string
+	type: DeviceType.WIREPAS_5G_MESH_GW
+	location?: Record<GeoLocationSource, GeoLocation>
+	state: {
+		nodes: Record<string /* node id */, WirepasGatewayNode>
+	}
+}
+
 export type Devices = Record<string, Device>
 
 export type Reading = [
@@ -203,6 +233,7 @@ export type Summary = {
 }
 
 export const isTracker = (device: Device): boolean => {
+	if (!('state' in device)) return false
 	const { appV, brdV } = device.state?.dev?.v ?? {}
 	return appV !== undefined && brdV !== undefined
 }
@@ -220,6 +251,14 @@ export const isNRPlusGateway = (
 	typeof device.state === 'object' &&
 	'nodes' in (device.state ?? {})
 
+export const isWirepasGateway = (
+	device: Record<string, unknown>,
+): device is WirepasGateway =>
+	'id' in device &&
+	typeof device.id === 'string' &&
+	'type' in device &&
+	device.type === DeviceType.WIREPAS_5G_MESH_GW
+
 export const DevicesContext = createContext<{
 	devices: Devices
 	updateState: (deviceId: string, reported: Reported) => void
@@ -230,21 +269,26 @@ export const DevicesContext = createContext<{
 	) => void
 	updateHistory: (deviceId: string, history: Summary) => void
 	updateAlias: (deviceId: string, alias: string) => void
+	updateType: (deviceId: string, type: DeviceType) => void
 	toggleHiddenLocation: (deviceId: string, location: GeoLocationSource) => void
 	lastUpdateTs: (deviceId: string) => number | null
 	alias: (deviceId: string) => string | undefined
+	type: (deviceId: string) => DeviceType | undefined
 }>({
 	updateState: () => undefined,
 	updateLocation: () => undefined,
 	updateHistory: () => undefined,
 	updateAlias: () => undefined,
 	alias: () => undefined,
+	updateType: () => undefined,
+	type: () => undefined,
 	toggleHiddenLocation: () => undefined,
 	lastUpdateTs: () => null,
 	devices: {},
 })
 
 const deviceAliases: Record<string, string> = {}
+const deviceTypes: Record<string, DeviceType> = {}
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [knownDevices, updateDevices] = useState<Devices>({})
@@ -378,22 +422,30 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				lastUpdateTs: (deviceId) => {
 					const device = knownDevices[deviceId]
 					if (device === undefined) return null
-					return isNRPlusGateway(device)
-						? getLastUpdateTime(
-								Object.values(device.state.nodes)
-									.map((node) => [
-										node.pccStatus?.ts,
-										node.btn?.ts,
-										node.env?.ts,
-									])
-									.flat(),
-						  )
-						: getDeviceLastUpdateTime(knownDevices[deviceId])
+					if (isNRPlusGateway(device))
+						return getLastUpdateTime(
+							Object.values(device.state.nodes)
+								.map((node) => [node.pccStatus?.ts, node.btn?.ts, node.env?.ts])
+								.flat(),
+						)
+					if (deviceTypes[device.id] === DeviceType.WIREPAS_5G_MESH_GW) {
+						const nodes = (device as WirepasGateway).state.nodes
+						return getLastUpdateTime(
+							Object.values(nodes).map((node) =>
+								new Date(node.rxTime).getTime(),
+							),
+						)
+					}
+					return getDeviceLastUpdateTime(knownDevices[deviceId])
 				},
 				updateAlias: (deviceId, alias) => {
 					deviceAliases[deviceId] = alias
 				},
 				alias: (deviceId) => deviceAliases[deviceId],
+				updateType: (deviceId, type) => {
+					deviceTypes[deviceId] = type
+				},
+				type: (deviceId) => deviceTypes[deviceId],
 			}}
 		>
 			{children}
