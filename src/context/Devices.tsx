@@ -2,6 +2,7 @@ import { merge } from 'lodash'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useState } from 'preact/hooks'
 import type { NRPlusNetworkTopology } from '../nrplus/parseTopology'
+import { maybeDate } from '../maybeDate.js'
 
 export type ButtonPress = {
 	v: number // 4398
@@ -441,7 +442,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					if (deviceTypes[device.id] === DeviceType.WIREPAS_5G_MESH_GW) {
 						const nodes = (device as WirepasGateway).state.nodes
 						return getLastUpdateTime(
-							Object.values(nodes).map((node) => new Date(node.ts).getTime()),
+							Object.values(nodes).map((node) => maybeDate(node.ts)?.getTime()),
 						)
 					}
 					return getDeviceLastUpdateTime(knownDevices[deviceId])
