@@ -7,9 +7,7 @@ import { DeviceName } from './DeviceName.js'
 import { LastUpdate, Properties, Title } from './DeviceList.js'
 import { NRPlus } from './icons/NRPlus.js'
 import {
-	Check,
 	Hexagon,
-	KeyRound,
 	Lightbulb,
 	LightbulbOff,
 	Lock,
@@ -28,22 +26,23 @@ import { sortLocations } from './sortLocations.js'
 import { removeOldLocation } from './removeOldLocation.js'
 import { NRPlusTopology } from './nrplus/NRPlusTopology.js'
 import { PinTile } from './PinTile.js'
+import { ConfigureCode } from './ConfigureCode.js'
+import { useSettings } from './context/Settings.js'
 
 export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
+	const {
+		settings: { managementCodes },
+	} = useSettings()
 	const { lastUpdateTs } = useDevices()
 	const lastUpdateTime = lastUpdateTs(gateway.id) as number
 	const [configureCode, setConfigureCode] = useState<boolean>(false)
-	const key = `${gateway.id}:code`
-	const [deviceCode, setDeviceCode] = useState<string>(
-		localStorage.getItem(key) ?? '',
-	)
 	const map = useMap()
 	const { location } = gateway
 	const rankedLocations = Object.values(location ?? [])
 		.sort(sortLocations)
 		.filter(removeOldLocation)
 	const deviceLocation = rankedLocations[0]
-	const hasCode = deviceCode.length > 0
+	const hasCode = managementCodes[gateway.id] !== undefined
 
 	return (
 		<>
@@ -84,50 +83,12 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 			)}
 			<Properties>
 				{configureCode && (
-					<>
-						<dt>
-							<KeyRound strokeWidth={1} class="ms-2 p-1" />
-						</dt>
-						<dd class="d-flex my-2">
-							<form autoComplete="off">
-								{/* Hack to disable auto-complete in Chrome */}
-								<input
-									autocomplete="false"
-									name="hidden"
-									type="text"
-									style="display:none;"
-								/>
-								<input
-									type="password"
-									autoComplete="off"
-									class="form-control form-control-sm me-2"
-									value={deviceCode}
-									onInput={(e) =>
-										setDeviceCode((e.target as HTMLInputElement).value)
-									}
-								/>
-								<button
-									type="button"
-									onClick={() => {
-										localStorage.setItem(key, deviceCode)
-										setConfigureCode(false)
-									}}
-								>
-									<Check strokeWidth={1} />
-								</button>
-								<button
-									type="button"
-									onClick={() => {
-										setConfigureCode(false)
-										setDeviceCode('')
-										localStorage.removeItem(key)
-									}}
-								>
-									<X strokeWidth={1} />
-								</button>
-							</form>
-						</dd>
-					</>
+					<ConfigureCode
+						device={gateway}
+						onCode={() => {
+							setConfigureCode(false)
+						}}
+					/>
 				)}
 				{Object.entries(gateway.state.nodes).map(([id, node]) => (
 					<Node id={id} node={node} gateway={gateway} hasCode={hasCode} />
@@ -148,6 +109,9 @@ const Node = ({
 	node: NRPlusNode
 	hasCode: boolean
 }) => {
+	const {
+		settings: { managementCodes },
+	} = useSettings()
 	const [configure, setConfigure] = useState<boolean>(false)
 	const { send } = useWebsocket()
 	const [relay, setRelay] = useState<Record<string, boolean>>({})
@@ -223,7 +187,7 @@ const Node = ({
 										console.log(`[NR+]`, nrplusCtrl)
 										send({
 											deviceId: gateway.id,
-											code: localStorage.getItem(`${gateway.id}:code`),
+											code: managementCodes[gateway.id],
 											nrplusCtrl,
 										})
 									}}
@@ -240,7 +204,7 @@ const Node = ({
 										console.log(`[NR+]`, nrplusCtrl)
 										send({
 											deviceId: gateway.id,
-											code: localStorage.getItem(`${gateway.id}:code`),
+											code: managementCodes[gateway.id],
 											nrplusCtrl,
 										})
 									}}

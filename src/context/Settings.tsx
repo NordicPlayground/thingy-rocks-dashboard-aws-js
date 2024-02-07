@@ -59,7 +59,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				update: (newSettings) => {
 					updateSettings((settings) => {
 						const merged = { ...settings, ...newSettings }
-						localStorage.setItem('settings', JSON.stringify(settings))
+						localStorage.setItem('settings', JSON.stringify(merged))
 						return merged
 					})
 				},

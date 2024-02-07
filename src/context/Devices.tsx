@@ -199,10 +199,20 @@ export enum WirepasMeshQOS {
 }
 
 export type WirepasGatewayNode = {
-	travelTimeMs: number // e.g. 54
+	// latency in MS
+	lat: number // e.g. 54
 	hops: number // e.g. 1
-	rxTime: string // e.g. '2024-02-05T13:44:06.050Z'
+	ts: string // e.g. '2024-02-05T13:44:06.050Z'
 	qos: WirepasMeshQOS // e.g. 1
+	payload?: {
+		temp: number // e.g. 24.850000381469727
+		btn?: number
+		led?: {
+			r?: boolean
+			g?: boolean
+			b?: boolean
+		}
+	}
 }
 export type WirepasGateway = {
 	id: string
@@ -431,9 +441,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					if (deviceTypes[device.id] === DeviceType.WIREPAS_5G_MESH_GW) {
 						const nodes = (device as WirepasGateway).state.nodes
 						return getLastUpdateTime(
-							Object.values(nodes).map((node) =>
-								new Date(node.rxTime).getTime(),
-							),
+							Object.values(nodes).map((node) => new Date(node.ts).getTime()),
 						)
 					}
 					return getDeviceLastUpdateTime(knownDevices[deviceId])
