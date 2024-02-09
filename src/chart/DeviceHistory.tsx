@@ -8,6 +8,7 @@ import { useHistoryChart } from '../context/showHistoryChart.js'
 import { HistoryChart } from './HistoryChart.js'
 import type { Dataset } from './chartMath.js'
 import type { LucideProps } from '../icons/lucide.js'
+import type { Ref } from 'preact'
 
 const chartBaseWidth = 0.6 // percent of window width
 const chartBaseHeight = 0.5 // percent of window width
@@ -169,7 +170,7 @@ const Chart = ({ charts: charts }: { charts: ChartInfo[] }) => {
 
 	return (
 		<ChartContainer
-			ref={containerRef}
+			ref={containerRef as Ref<HTMLElement>}
 			style={{ height: `${height}px`, width: `${width}px` }}
 		>
 			{charts.map(({ datasets, color, Icon, title }, i) => (
