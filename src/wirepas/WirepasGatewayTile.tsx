@@ -214,7 +214,15 @@ const Node = ({
 								send({
 									deviceId: gateway.id,
 									code,
-									led: ledState,
+									wirepasCtrl: {
+										nodes: {
+											[id]: {
+												payload: {
+													led: ledState,
+												},
+											},
+										},
+									},
 								})
 							}}
 						>
