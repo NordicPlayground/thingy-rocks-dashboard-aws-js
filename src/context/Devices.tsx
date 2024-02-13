@@ -155,12 +155,12 @@ export enum DeviceType {
 	NRPLUS_GW = 'nrplus-gateway',
 	SOFT_SIM = 'soft-sim',
 }
+export type Location = Record<GeoLocationSource, GeoLocation>
 export type Device = {
 	id: string
 	state?: Reported
-	location?: Record<GeoLocationSource, GeoLocation>
+	location?: Location
 	history?: Summary
-	hiddenLocations?: Record<GeoLocationSource, true>
 	type?: DeviceType
 }
 
@@ -188,7 +188,7 @@ export type NRPlusGateway = {
 		networkId: number // e.g. 22
 		topology?: NRPlusNetworkTopology
 	}
-	location?: Record<GeoLocationSource, GeoLocation>
+	location?: Location
 }
 
 /**
@@ -221,7 +221,7 @@ export type WirepasGatewayNode = {
 export type WirepasGateway = {
 	id: string
 	type: DeviceType.WIREPAS_5G_MESH_GW
-	location?: Record<GeoLocationSource, GeoLocation>
+	location?: Location
 	state: {
 		nodes: Record<string /* node id */, WirepasGatewayNode>
 	}
@@ -284,7 +284,6 @@ export const DevicesContext = createContext<{
 	updateHistory: (deviceId: string, history: Summary) => void
 	updateAlias: (deviceId: string, alias: string) => void
 	updateType: (deviceId: string, type: DeviceType) => void
-	toggleHiddenLocation: (deviceId: string, location: GeoLocationSource) => void
 	lastUpdateTs: (deviceId: string) => number | null
 	alias: (deviceId: string) => string | undefined
 	type: (deviceId: string) => DeviceType | undefined
@@ -296,7 +295,6 @@ export const DevicesContext = createContext<{
 	alias: () => undefined,
 	updateType: () => undefined,
 	type: () => undefined,
-	toggleHiddenLocation: () => undefined,
 	lastUpdateTs: () => null,
 	devices: {},
 })
@@ -332,7 +330,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 									source: GeoLocationSource.GNSS,
 									ts: new Date(reported.gnss.ts),
 								},
-							} as Record<GeoLocationSource, GeoLocation>
+							} as Location
 						}
 						// Use fixed location from shadow
 						if (reported.geo !== undefined) {
@@ -344,7 +342,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 									accuracy: 1,
 									source: GeoLocationSource.fixed,
 								},
-							} as Record<GeoLocationSource, GeoLocation>
+							} as Location
 						}
 						// Remove values not sent by the device (merge only adds new values)
 						if (reported.fg !== undefined && updated.state?.fg !== undefined) {
@@ -371,33 +369,18 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						}
 					})
 				},
-				updateLocation: (deviceId, location, originalSource) => {
-					updateDevices((devices) => {
-						if (
-							originalSource === 'single-cell' &&
-							(devices[deviceId]?.state?.dev?.v?.appV?.includes('wifi') ??
-								false)
-						) {
-							// Ignore single-cell locations for Wi-Fi devices
-							console.debug(
-								`Ignored single-cell location for Wi-Fi DK`,
-								deviceId,
-								location,
-							)
-							return devices
-						}
-						return {
-							...devices,
-							[deviceId]: {
-								...devices[deviceId],
-								id: deviceId,
-								location: {
-									...(devices[deviceId]?.location ?? {}),
-									[location.source]: location,
-								} as Record<GeoLocationSource, GeoLocation>,
-							},
-						}
-					})
+				updateLocation: (deviceId, location) => {
+					updateDevices((devices) => ({
+						...devices,
+						[deviceId]: {
+							...devices[deviceId],
+							id: deviceId,
+							location: {
+								...(devices[deviceId]?.location ?? {}),
+								[location.source]: location,
+							} as Location,
+						},
+					}))
 				},
 				updateHistory: (deviceId, history) => {
 					updateDevices((devices) => ({
@@ -409,27 +392,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 								...history,
 								base: new Date(history.base),
 							},
-						},
-					}))
-				},
-				toggleHiddenLocation: (deviceId, source) => {
-					let { hiddenLocations } = knownDevices[deviceId] ?? {}
-					if (hiddenLocations?.[source] === true) {
-						delete hiddenLocations[source]
-					} else {
-						if (hiddenLocations === undefined)
-							hiddenLocations = {} as Record<GeoLocationSource, true>
-						hiddenLocations[source] = true
-					}
-					updateDevices((devices) => ({
-						...devices,
-						[deviceId]: {
-							...devices[deviceId],
-							id: deviceId,
-							hiddenLocations: hiddenLocations as Record<
-								GeoLocationSource,
-								true
-							>,
 						},
 					}))
 				},

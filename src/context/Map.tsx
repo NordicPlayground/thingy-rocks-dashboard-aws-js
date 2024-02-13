@@ -28,7 +28,10 @@ type DeviceMap = {
 		deviceId: string
 		deviceAlias: string
 		location: GeoLocation
-		hidden?: boolean
+	}) => void
+	removeDeviceLocation: (args: {
+		deviceId: string
+		location: GeoLocation
 	}) => void
 	center: (center: GeoLocation, zoom?: number) => void
 	// Show a large view of the entire world
@@ -52,7 +55,24 @@ export const locationSourceDashArray: Record<
 	[GeoLocationSource.fixed]: [1],
 }
 
-let zooming = false
+const ids = (deviceId: string, source: GeoLocationSource) => {
+	const locationAreaBaseId = `${deviceId}-location-${source}-area`
+	const locationAreaSourceId = `${locationAreaBaseId}-source`
+	const centerSourceId = `${locationAreaBaseId}-center`
+	const areaLayerId = `${locationAreaBaseId}-circle`
+	const areaLayerLabelId = `${locationAreaBaseId}-label`
+	const centerLabelId = `${locationAreaBaseId}-deviceId-label`
+	const centerLabelSource = `${locationAreaBaseId}-source-label`
+
+	return {
+		locationAreaSourceId,
+		centerSourceId,
+		areaLayerId,
+		areaLayerLabelId,
+		centerLabelId,
+		centerLabelSource,
+	}
+}
 
 /**
  * The `map` parameter is potentially undefined,
@@ -62,24 +82,10 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 	const isLoaded = new Promise((resolve) => map?.on('load', resolve))
 	const centerOnDeviceZoomLevel = 12
 
-	map?.on('zoomstart', () => {
-		console.debug('[map]', 'zoom start')
-		zooming = true
-	})
-	map?.on('zoomend', () => {
-		console.debug('[map]', 'zoom end')
-		zooming = false
-	})
-
 	return {
-		showDeviceLocation: async ({ deviceId, deviceAlias, location, hidden }) => {
+		showDeviceLocation: async ({ deviceId, deviceAlias, location }) => {
 			if (map === undefined) {
 				captureMessage(`Map is not available.`)
-				return
-			}
-
-			// Suspend updates during zooming
-			if (zooming) {
 				return
 			}
 
@@ -92,26 +98,22 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 
 			await isLoaded
 
-			const locationAreaBaseId = `${deviceId}-location-${source}-area`
+			const {
+				locationAreaSourceId,
+				centerSourceId,
+				areaLayerId,
+				areaLayerLabelId,
+				centerLabelId,
+				centerLabelSource,
+			} = ids(deviceId, source)
 
-			const locationAreaSourceId = `${locationAreaBaseId}-source`
-			const centerSourceId = `${locationAreaBaseId}-center`
 			const areaSource = map.getSource(locationAreaSourceId)
 
-			const areaLayerId = `${locationAreaBaseId}-circle`
-			const areaLayerLabelId = `${locationAreaBaseId}-label`
-			const centerLabelId = `${locationAreaBaseId}-deviceId-label`
-			const centerLabelSource = `${locationAreaBaseId}-source-label`
-
 			if (areaSource === undefined) {
-				if (hidden === true) {
-					// Don't add
-					return
-				}
 				// Create new sources and layers
 				// For properties, see https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
 				// Data for Hexagon
-				console.debug(`[map]`, 'add source', locationAreaBaseId, location)
+				console.debug(`[map]`, 'add source', locationAreaSourceId, location)
 				map.addSource(
 					locationAreaSourceId,
 					geoJSONPolygonFromCircle([lng, lat], accuracy ?? 500, 6, Math.PI / 2),
@@ -217,22 +219,6 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 					map.getCanvas().style.cursor = ''
 				})
 			} else {
-				if (hidden === true) {
-					// Remove
-					if (map.getLayer(areaLayerId) !== undefined)
-						map.removeLayer(areaLayerId)
-					if (map.getLayer(areaLayerLabelId) !== undefined)
-						map.removeLayer(areaLayerLabelId)
-					if (map.getLayer(centerLabelId) !== undefined)
-						map.removeLayer(centerLabelId)
-					if (map.getLayer(centerLabelSource) !== undefined)
-						map.removeLayer(centerLabelSource)
-					map.removeSource(locationAreaSourceId)
-					if (map.getSource(centerSourceId) !== undefined)
-						map.removeSource(centerSourceId)
-
-					return
-				}
 				// Update existing sources
 				;(areaSource as GeoJSONSource).setData(
 					geoJSONPolygonFromCircle([lng, lat], accuracy ?? 500, 6, Math.PI / 2)
@@ -246,6 +232,40 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 					},
 				} as GeoJSON.Feature)
 			}
+		},
+		removeDeviceLocation: ({ deviceId, location }) => {
+			if (map === undefined) {
+				captureMessage(`Map is not available.`)
+				return
+			}
+			delete deviceLocations[deviceId]
+			const { source } = location
+			const {
+				locationAreaSourceId,
+				centerSourceId,
+				areaLayerId,
+				areaLayerLabelId,
+				centerLabelId,
+				centerLabelSource,
+			} = ids(deviceId, source)
+
+			const areaSource = map.getSource(locationAreaSourceId)
+
+			if (areaSource !== undefined) {
+				// Remove
+				if (map.getLayer(areaLayerId) !== undefined)
+					map.removeLayer(areaLayerId)
+				if (map.getLayer(areaLayerLabelId) !== undefined)
+					map.removeLayer(areaLayerLabelId)
+				if (map.getLayer(centerLabelId) !== undefined)
+					map.removeLayer(centerLabelId)
+				if (map.getLayer(centerLabelSource) !== undefined)
+					map.removeLayer(centerLabelSource)
+				map.removeSource(locationAreaSourceId)
+				if (map.getSource(centerSourceId) !== undefined)
+					map.removeSource(centerSourceId)
+			}
+			return
 		},
 		center: (center, zoom) =>
 			map?.flyTo({ center, zoom: zoom ?? centerOnDeviceZoomLevel }),

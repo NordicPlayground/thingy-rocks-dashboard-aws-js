@@ -3,6 +3,7 @@ import { Provider as LwM2MProvider } from './context/LwM2M.js'
 import { Provider as MapProvider } from './context/Map.js'
 import { Provider as SettingsProvider } from './context/Settings.js'
 import { Provider as HistoryChartProvider } from './context/showHistoryChart.js'
+import { Provider as VisibleDevicesProvider } from './context/VisibleDevices.js'
 import { Provider as WebsocketProvider } from './context/WebsocketConnection.js'
 import { Dashboard } from './Dashboard.js'
 import { FakeTracker } from './test-device/FakeTracker.js'
@@ -13,15 +14,17 @@ export const App = () => (
 		{(authHelper) => (
 			<SettingsProvider>
 				<DevicesProvider>
-					<WebsocketProvider>
-						<LwM2MProvider>
-							<MapProvider authHelper={authHelper}>
-								<HistoryChartProvider>
-									<Dashboard />
-								</HistoryChartProvider>
-							</MapProvider>
-						</LwM2MProvider>
-					</WebsocketProvider>
+					<VisibleDevicesProvider>
+						<WebsocketProvider>
+							<LwM2MProvider>
+								<MapProvider authHelper={authHelper}>
+									<HistoryChartProvider>
+										<Dashboard />
+									</HistoryChartProvider>
+								</MapProvider>
+							</LwM2MProvider>
+						</WebsocketProvider>
+					</VisibleDevicesProvider>
 					<FakeTracker />
 				</DevicesProvider>
 			</SettingsProvider>

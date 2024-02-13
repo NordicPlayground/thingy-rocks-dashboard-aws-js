@@ -3,17 +3,14 @@ import { DisconnectedWarning } from './DisconnectedWarning.js'
 import { HistoryOnly } from './HistoryOnly.js'
 import { Tracker } from './Tracker.js'
 import {
-	DeviceType,
 	isNRPlusGateway,
 	isTracker,
 	isWirepasGateway,
-	useDevices,
-	type Device,
 } from './context/Devices.js'
-import { useSettings } from './context/Settings.js'
 import { useHistoryChart } from './context/showHistoryChart.js'
 import { NRPlusGatewayTile } from './NRPlusGatewayTile.js'
 import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
+import { useVisibleDevices } from './context/VisibleDevices.js'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -112,44 +109,14 @@ export const IssuerName = styled.dd`
 `
 
 export const DeviceList = () => {
-	const { devices, lastUpdateTs, type } = useDevices()
 	const { show: showHistoryChart } = useHistoryChart()
-	const {
-		settings: { showFavorites, favorites },
-	} = useSettings()
-
-	const devicesToShow = (
-		[
-			...Object.entries(devices),
-			...Object.entries(devices)
-				.filter(([gwId]) => type(gwId) === DeviceType.WIREPAS_5G_MESH_GW)
-				.map(([gwId, gw]) => [
-					gwId,
-					{ ...gw, type: DeviceType.WIREPAS_5G_MESH_GW },
-				]),
-		] as [string, Device][]
-	)
-		.filter(([deviceId]) => {
-			if (!showFavorites) return true
-			return favorites.includes(deviceId)
-		})
-		.filter(([deviceId, device]) => {
-			const ts = lastUpdateTs(deviceId)
-			if (ts === null) return device.history !== undefined // show devices that have history available (history will have a cut-off of 60 minutes)
-			if (ts < Date.now() - 60 * 60 * 1000) return false
-			return true
-		})
-		.sort(([id1], [id2]) => {
-			if (!showFavorites)
-				return (lastUpdateTs(id2) ?? 0) - (lastUpdateTs(id1) ?? 0)
-			return favorites.indexOf(id1) - favorites.indexOf(id2)
-		})
+	const devicesToShow = useVisibleDevices()
 
 	return (
 		<DeviceState>
 			<DisconnectedWarning />
 			<ul>
-				{devicesToShow.map(([, device]) => {
+				{devicesToShow.map((device) => {
 					if (isTracker(device))
 						return (
 							<li>

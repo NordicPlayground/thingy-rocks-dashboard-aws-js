@@ -2,20 +2,14 @@ import { CloudOff, MapPin, MapPinOff } from 'lucide-preact'
 import styled from 'styled-components'
 import { GeoLocationAge } from './GeoLocationAge.js'
 import { locationSourceColors } from './colors.js'
-import type { Device, GeoLocation } from './context/Devices.js'
-import { useDevices } from './context/Devices.js'
+import type { Device } from './context/Devices.js'
 import { LocationSourceLabels } from './context/LocationSourceLabels.js'
 import { sortLocations } from './sortLocations.js'
 import { removeOldLocation } from './removeOldLocation.js'
 
-const LocationSourceSwitch = styled.button`
+const LocationSource = styled.span`
 	font-weight: var(--monospace-font-weight-bold);
 	margin-right: 0.5rem;
-`
-
-const LocationSourceLabelDisabled = styled(LocationSourceSwitch)`
-	color: var(--color-nordic-middle-grey);
-	text-decoration: line-through;
 `
 
 const NoLocation = styled.span`
@@ -42,41 +36,6 @@ const LocationDetails = styled.ul`
 	}
 `
 
-const LocationSourceButton = ({
-	device: { id, hiddenLocations },
-	location,
-}: {
-	device: Device
-	location: GeoLocation
-}) => {
-	const { toggleHiddenLocation } = useDevices()
-	const { source } = location
-
-	const isDisabled = hiddenLocations?.[source] ?? false
-
-	if (isDisabled)
-		return (
-			<LocationSourceLabelDisabled
-				onClick={() => {
-					toggleHiddenLocation(id, source)
-				}}
-			>
-				{LocationSourceLabels[source]}
-			</LocationSourceLabelDisabled>
-		)
-
-	return (
-		<LocationSourceSwitch
-			style={{ color: locationSourceColors[source] }}
-			onClick={() => {
-				toggleHiddenLocation(id, source)
-			}}
-		>
-			{LocationSourceLabels[source]}
-		</LocationSourceSwitch>
-	)
-}
-
 export const LocationInfo = ({ device }: { device: Device }) => {
 	const { location, state } = device
 	const nod = state?.cfg?.nod ?? []
@@ -100,7 +59,11 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 					<LocationDetails>
 						{rankedLocations.map((location) => (
 							<li>
-								<LocationSourceButton device={device} location={location} />
+								<LocationSource
+									style={{ color: locationSourceColors[location.source] }}
+								>
+									{LocationSourceLabels[location.source]}
+								</LocationSource>
 								<small>
 									(
 									{location.ts !== undefined && (
