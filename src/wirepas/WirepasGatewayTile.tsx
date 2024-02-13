@@ -32,6 +32,7 @@ import { useSettings } from '../context/Settings.js'
 import { useWebsocket } from '../context/WebsocketConnection.js'
 import { ButtonPressDiff } from '../ButtonPress.js'
 import type { ButtonPress as ButtonPressData } from '../context/Devices.js'
+import { sum } from 'lodash-es'
 
 export const WirepasGatewayTile = ({
 	gateway,
@@ -134,7 +135,8 @@ const Node = ({
 		b: false,
 		...(node.payload?.led ?? {}),
 	}
-	const color = [r ? 255 : 128, g ? 255 : 128, b ? 255 : 128]
+	const color = [r ? 255 : 0, g ? 255 : 0, b ? 255 : 0]
+	const noColor = sum(color) === 0
 	const {
 		settings: { managementCodes },
 	} = useSettings()
@@ -161,10 +163,10 @@ const Node = ({
 					<button
 						type="button"
 						class="btn btn-link"
-						style={{ color: `rgb(${color.join(',')})` }}
+						style={{ color: noColor ? 'gray' : `rgb(${color.join(',')})` }}
 						onClick={() => setConfigureLED((c) => !c)}
 					>
-						<Lightbulb strokeWidth={1} />
+						<Lightbulb strokeWidth={noColor ? 1 : 2} />
 					</button>
 				) : (
 					<span style={{ color: `rgb(${color.join(',')})` }}>
