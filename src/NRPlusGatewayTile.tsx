@@ -8,6 +8,7 @@ import { LastUpdate, Properties, Title } from './DeviceList.js'
 import { NRPlus } from './icons/NRPlus.js'
 import {
 	Hexagon,
+	KeyRound,
 	Lightbulb,
 	LightbulbOff,
 	Lock,
@@ -83,12 +84,19 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 			)}
 			<Properties>
 				{configureCode && (
-					<ConfigureCode
-						device={gateway}
-						onCode={() => {
-							setConfigureCode(false)
-						}}
-					/>
+					<>
+						<dt>
+							<KeyRound strokeWidth={1} class="ms-2 p-1" />
+						</dt>
+						<dd class="d-flex my-2">
+							<ConfigureCode
+								device={gateway}
+								onCode={() => {
+									setConfigureCode(false)
+								}}
+							/>
+						</dd>
+					</>
 				)}
 				{Object.entries(gateway.state.nodes).map(([id, node]) => (
 					<Node id={id} node={node} gateway={gateway} hasCode={hasCode} />

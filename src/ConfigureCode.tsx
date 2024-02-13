@@ -1,4 +1,4 @@
-import { Check, KeyRound, X } from 'lucide-preact'
+import { Check, X } from 'lucide-preact'
 import { useState } from 'preact/hooks'
 import { useSettings } from './context/Settings.js'
 
@@ -17,49 +17,42 @@ export const ConfigureCode = ({
 		managementCodes[device.id] ?? '',
 	)
 	return (
-		<>
-			<dt>
-				<KeyRound strokeWidth={1} class="ms-2 p-1" />
-			</dt>
-			<dd class="d-flex my-2">
-				<form autoComplete="off">
-					<input
-						type="password"
-						autoComplete="off"
-						class="form-control form-control-sm me-2"
-						value={deviceCode}
-						onInput={(e) => setDeviceCode((e.target as HTMLInputElement).value)}
-					/>
-					<button
-						type="button"
-						onClick={() => {
-							console.log({ device: device.id, deviceCode })
-							onCode(deviceCode)
-							update({
-								managementCodes: {
-									...managementCodes,
-									[device.id]: deviceCode,
-								},
-							})
-						}}
-					>
-						<Check strokeWidth={1} />
-					</button>
-					<button
-						type="button"
-						onClick={() => {
-							onCode(null)
-							const codes = { ...managementCodes }
-							delete codes[device.id]
-							update({
-								managementCodes: codes,
-							})
-						}}
-					>
-						<X strokeWidth={1} />
-					</button>
-				</form>
-			</dd>
-		</>
+		<form autoComplete="off" class="d-flex align-items-center">
+			<input
+				type="password"
+				autoComplete="off"
+				class="form-control form-control-sm me-2"
+				value={deviceCode}
+				onInput={(e) => setDeviceCode((e.target as HTMLInputElement).value)}
+			/>
+			<button
+				type="button"
+				onClick={() => {
+					console.log({ device: device.id, deviceCode })
+					onCode(deviceCode)
+					update({
+						managementCodes: {
+							...managementCodes,
+							[device.id]: deviceCode,
+						},
+					})
+				}}
+			>
+				<Check strokeWidth={1} />
+			</button>
+			<button
+				type="button"
+				onClick={() => {
+					onCode(null)
+					const codes = { ...managementCodes }
+					delete codes[device.id]
+					update({
+						managementCodes: codes,
+					})
+				}}
+			>
+				<X strokeWidth={1} />
+			</button>
+		</form>
 	)
 }

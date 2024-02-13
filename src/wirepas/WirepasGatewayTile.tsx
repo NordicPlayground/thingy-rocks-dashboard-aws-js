@@ -1,7 +1,7 @@
 import {
 	Check,
 	Focus,
-	Hexagon,
+	KeyRound,
 	Lightbulb,
 	LightbulbOff,
 	Lock,
@@ -12,7 +12,7 @@ import {
 	X,
 	Zap,
 } from 'lucide-preact'
-import { LastUpdate, Properties, Title } from '../DeviceList.js'
+import { LastUpdate, Title } from '../DeviceList.js'
 import { DeviceName } from '../DeviceName.js'
 import { PinTile } from '../PinTile.js'
 import { RelativeTime } from '../RelativeTime.js'
@@ -31,8 +31,8 @@ import { ConfigureCode } from '../ConfigureCode.js'
 import { useSettings } from '../context/Settings.js'
 import { useWebsocket } from '../context/WebsocketConnection.js'
 import { ButtonPressDiff } from '../ButtonPress.js'
-import type { ButtonPress as ButtonPressData } from '../context/Devices.js'
 import { sum } from 'lodash-es'
+import { formatId } from './formatId.js'
 
 export const WirepasGatewayTile = ({
 	gateway,
@@ -87,36 +87,27 @@ export const WirepasGatewayTile = ({
 				)}
 				<PinTile device={gateway} />
 			</Title>
-			<Properties>
+			<table>
 				{configureCode && (
-					<ConfigureCode
-						device={gateway}
-						onCode={() => {
-							setConfigureCode(false)
-						}}
-					/>
+					<tr>
+						<td>
+							<KeyRound strokeWidth={1} class="mx-2" />
+						</td>
+						<td colspan={5}>
+							<ConfigureCode
+								device={gateway}
+								onCode={() => {
+									setConfigureCode(false)
+								}}
+							/>
+						</td>
+					</tr>
 				)}
 				{Object.entries(gateway.state.nodes).map(([id, node]) => (
 					<Node id={id} node={node} gateway={gateway} />
 				))}
-			</Properties>
+			</table>
 		</>
-	)
-}
-
-export const ButtonPress = (props: {
-	buttonPress: ButtonPressData
-	untilSeconds?: number
-}) => {
-	return (
-		<ButtonPressDiff {...props}>
-			{(diffSeconds) => (
-				<span style={{ color: 'var(--color-nordic-pink)' }}>
-					<Focus strokeWidth={2} class="me-2" />
-					{diffSeconds} seconds ago
-				</span>
-			)}
-		</ButtonPressDiff>
 	)
 }
 
@@ -155,45 +146,53 @@ const Node = ({
 	})
 	return (
 		<>
-			<dt>
-				<Hexagon strokeWidth={1} class="ms-1 p-1" /> {id}{' '}
-			</dt>
-			<dd>
-				{hasCode ? (
-					<button
-						type="button"
-						class="btn btn-link"
-						style={{ color: noColor ? 'gray' : `rgb(${color.join(',')})` }}
-						onClick={() => setConfigureLED((c) => !c)}
-					>
-						<Lightbulb strokeWidth={noColor ? 1 : 2} />
-					</button>
-				) : (
-					<span style={{ color: `rgb(${color.join(',')})` }}>
-						<Lightbulb strokeWidth={1} />
+			<tr>
+				<td>
+					{hasCode ? (
+						<button
+							type="button"
+							class="btn btn-link"
+							style={{
+								color: noColor ? 'gray' : `rgb(${color.join(',')})`,
+							}}
+							onClick={() => setConfigureLED((c) => !c)}
+						>
+							<Lightbulb strokeWidth={noColor ? 1 : 2} class="mx-1" />
+						</button>
+					) : (
+						<span
+							style={{ color: noColor ? 'gray' : `rgb(${color.join(',')})` }}
+						>
+							<Lightbulb strokeWidth={noColor ? 1 : 2} class="mx-1" />
+						</span>
+					)}
+				</td>
+				<td>
+					{node.qos === WirepasMeshQOS.High && (
+						<abbr title="QoS: high">
+							<Zap strokeWidth={1} />
+						</abbr>
+					)}
+				</td>
+				<td>{formatId(id)}</td>
+				<td>
+					<span class={'ms-1'}>
+						<Waypoints strokeWidth={1} class={'me-1'} />
+						{node.hops} <small>({node.lat} ms)</small>
 					</span>
-				)}
-				<span class={'ms-1'}>
-					<Waypoints strokeWidth={1} class={'me-1'} />
-					{node.hops} <small>({node.lat} ms)</small>
-				</span>
-				{node.qos === WirepasMeshQOS.High && (
-					<abbr class={'ms-1'} title="QoS: high">
-						<Zap strokeWidth={1} />
-					</abbr>
-				)}
-				{node.payload?.temp !== undefined && (
-					<>
-						<Thermometer strokeWidth={1} class={'me-1'} />
-						{node.payload.temp.toFixed(1)} °C
-					</>
-				)}
-				<br />
-				{node.payload?.btn !== undefined && (
-					<ButtonPress buttonPress={node.payload.btn} />
-				)}
-				{configureLED && (
-					<>
+				</td>
+				<td>
+					{node.payload?.temp !== undefined && (
+						<span>
+							<Thermometer strokeWidth={1} class={'me-1'} />
+							{node.payload.temp.toFixed(1)} °C
+						</span>
+					)}
+				</td>
+			</tr>
+			{configureLED && (
+				<tr>
+					<td colspan={5}>
 						<button
 							type="button"
 							class="btn btn-link"
@@ -259,9 +258,26 @@ const Node = ({
 						>
 							<X strokeWidth={1} />
 						</button>
-					</>
-				)}
-			</dd>
+					</td>
+				</tr>
+			)}
+			{node.payload?.btn !== undefined && (
+				<ButtonPressDiff
+					buttonPress={{
+						...node.payload.btn,
+						ts: Date.now() - 2000,
+					}}
+				>
+					{(diffSeconds) => (
+						<tr style={{ color: 'var(--color-nordic-pink)' }}>
+							<td>
+								<Focus strokeWidth={2} class="mx-1" />
+							</td>
+							<td colspan={4}>{diffSeconds} seconds ago</td>
+						</tr>
+					)}
+				</ButtonPressDiff>
+			)}
 		</>
 	)
 }
