@@ -1,5 +1,6 @@
 import {
 	Check,
+	Focus,
 	Hexagon,
 	Lightbulb,
 	LightbulbOff,
@@ -29,6 +30,8 @@ import { useState } from 'preact/hooks'
 import { ConfigureCode } from '../ConfigureCode.js'
 import { useSettings } from '../context/Settings.js'
 import { useWebsocket } from '../context/WebsocketConnection.js'
+import { ButtonPressDiff } from '../ButtonPress.js'
+import type { ButtonPress as ButtonPressData } from '../context/Devices.js'
 
 export const WirepasGatewayTile = ({
 	gateway,
@@ -100,6 +103,22 @@ export const WirepasGatewayTile = ({
 	)
 }
 
+export const ButtonPress = (props: {
+	buttonPress: ButtonPressData
+	untilSeconds?: number
+}) => {
+	return (
+		<ButtonPressDiff {...props}>
+			{(diffSeconds) => (
+				<span style={{ color: 'var(--color-nordic-pink)' }}>
+					<Focus strokeWidth={2} class="me-2" />
+					{diffSeconds} seconds ago
+				</span>
+			)}
+		</ButtonPressDiff>
+	)
+}
+
 const Node = ({
 	id,
 	node,
@@ -154,7 +173,7 @@ const Node = ({
 				)}
 				<span class={'ms-1'}>
 					<Waypoints strokeWidth={1} class={'me-1'} />
-					{node.hops} / {node.lat} ms
+					{node.hops} <small>({node.lat} ms)</small>
 				</span>
 				{node.qos === WirepasMeshQOS.High && (
 					<abbr class={'ms-1'} title="QoS: high">
@@ -168,6 +187,9 @@ const Node = ({
 					</>
 				)}
 				<br />
+				{node.payload?.btn !== undefined && (
+					<ButtonPress buttonPress={node.payload.btn} />
+				)}
 				{configureLED && (
 					<>
 						<button
