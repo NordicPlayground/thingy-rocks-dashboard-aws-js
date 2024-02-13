@@ -262,12 +262,7 @@ const Node = ({
 				</tr>
 			)}
 			{node.payload?.btn !== undefined && (
-				<ButtonPressDiff
-					buttonPress={{
-						...node.payload.btn,
-						ts: Date.now() - 2000,
-					}}
-				>
+				<ButtonPressDiff buttonPress={node.payload.btn}>
 					{(diffSeconds) => (
 						<tr style={{ color: 'var(--color-nordic-pink)' }}>
 							<td>
