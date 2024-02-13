@@ -3,7 +3,6 @@ import { useContext, useState } from 'preact/hooks'
 
 type Settings = {
 	enableTestDevice: boolean
-	enableWirepas5GMeshGateways: boolean
 	showFavorites: boolean
 	showSettings: boolean
 	favorites: string[]
@@ -13,7 +12,6 @@ type Settings = {
 
 const defaultSettings: Settings = {
 	enableTestDevice: false,
-	enableWirepas5GMeshGateways: false,
 	showFavorites: false,
 	showSettings: false,
 	favorites: [],

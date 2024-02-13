@@ -21,7 +21,6 @@ export const Settings = () => {
 		settings: {
 			showSettings,
 			enableTestDevice,
-			enableWirepas5GMeshGateways,
 			showFavorites,
 			showUpdateWarning,
 		},
@@ -70,22 +69,6 @@ export const Settings = () => {
 						/>
 						<label class="form-check-label" htmlFor="showTestDevice">
 							Show test device?
-						</label>
-					</div>
-					<div class="form-check mt-2">
-						<input
-							class="form-check-input"
-							type="checkbox"
-							id="showWirepasGateways"
-							checked={enableWirepas5GMeshGateways}
-							onClick={() =>
-								update({
-									enableWirepas5GMeshGateways: !enableWirepas5GMeshGateways,
-								})
-							}
-						/>
-						<label class="form-check-label" htmlFor="showWirepasGateways">
-							Show Wirepas 5G Mesh Gateways?
 						</label>
 					</div>
 					<h2 class="h4 mt-4">Devices</h2>

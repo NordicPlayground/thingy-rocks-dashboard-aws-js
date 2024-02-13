@@ -115,18 +115,14 @@ export const DeviceList = () => {
 	const { devices, lastUpdateTs, type } = useDevices()
 	const { show: showHistoryChart } = useHistoryChart()
 	const {
-		settings: { showFavorites, favorites, enableWirepas5GMeshGateways },
+		settings: { showFavorites, favorites },
 	} = useSettings()
 
 	const devicesToShow = (
 		[
 			...Object.entries(devices),
 			...Object.entries(devices)
-				.filter(
-					([gwId]) =>
-						type(gwId) === DeviceType.WIREPAS_5G_MESH_GW &&
-						enableWirepas5GMeshGateways,
-				)
+				.filter(([gwId]) => type(gwId) === DeviceType.WIREPAS_5G_MESH_GW)
 				.map(([gwId, gw]) => [
 					gwId,
 					{ ...gw, type: DeviceType.WIREPAS_5G_MESH_GW },
