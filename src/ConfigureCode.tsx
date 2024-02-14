@@ -28,7 +28,6 @@ export const ConfigureCode = ({
 			<button
 				type="button"
 				onClick={() => {
-					console.log({ device: device.id, deviceCode })
 					onCode(deviceCode)
 					update({
 						managementCodes: {

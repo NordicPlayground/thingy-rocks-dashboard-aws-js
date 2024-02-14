@@ -30,7 +30,7 @@ import { PinTile } from './PinTile.js'
 import { ConfigureCode } from './ConfigureCode.js'
 import { useSettings } from './context/Settings.js'
 import { cancelEvent } from './cancelEvent.js'
-import { useHistoryChart } from './context/showHistoryChart.js'
+import { hideDetails } from './hooks/useDetails.js'
 
 export const NRPlusGatewayTile = ({
 	gateway,
@@ -43,7 +43,6 @@ export const NRPlusGatewayTile = ({
 		settings: { managementCodes },
 	} = useSettings()
 	const { lastUpdateTs } = useDevices()
-	const { hide: hideHistoryChart } = useHistoryChart()
 	const lastUpdateTime = lastUpdateTs(gateway.id) as number
 	const [configureCode, setConfigureCode] = useState<boolean>(false)
 	const { location } = gateway
@@ -61,7 +60,7 @@ export const NRPlusGatewayTile = ({
 					if (deviceLocation !== undefined) {
 						onCenter(deviceLocation)
 					}
-					hideHistoryChart()
+					hideDetails()
 				})}
 			>
 				<NRPlus class="icon" />

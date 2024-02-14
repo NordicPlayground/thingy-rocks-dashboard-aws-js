@@ -4,11 +4,11 @@ import { useRef } from 'preact/hooks'
 import styled from 'styled-components'
 import { colors } from '../colors.js'
 import { useDevices, type Reading } from '../context/Devices.js'
-import { useHistoryChart } from '../context/showHistoryChart.js'
 import { HistoryChart } from './HistoryChart.js'
 import type { Dataset } from './chartMath.js'
 import type { LucideProps } from '../icons/lucide.js'
 import type { Ref } from 'preact'
+import { useDetails, hideDetails } from '../hooks/useDetails.js'
 
 const chartBaseWidth = 0.6 // percent of window width
 const chartBaseHeight = 0.5 // percent of window width
@@ -64,7 +64,7 @@ const findLowerLimit = (v: Array<Reading>): number =>
  */
 export const DeviceHistory = () => {
 	const { devices } = useDevices()
-	const { deviceId } = useHistoryChart()
+	const deviceId = useDetails()
 
 	if (deviceId === undefined) return null
 
@@ -162,7 +162,6 @@ const IconWithText = styled.div`
 
 const Chart = ({ charts: charts }: { charts: ChartInfo[] }) => {
 	const containerRef = useRef<HTMLDivElement>()
-	const { hide } = useHistoryChart()
 	const [width, height] = [
 		window.innerWidth * chartBaseWidth,
 		((window.innerHeight * chartBaseHeight) / 3) * charts.length,
@@ -203,7 +202,7 @@ const Chart = ({ charts: charts }: { charts: ChartInfo[] }) => {
 					/>
 				</ChartWithIcon>
 			))}
-			<Button type={'button'} onClick={() => hide()}>
+			<Button type={'button'} onClick={() => hideDetails()}>
 				<X />
 			</Button>
 		</ChartContainer>

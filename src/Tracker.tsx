@@ -24,7 +24,6 @@ import {
 	type GeoLocation,
 } from './context/Devices.js'
 import { useSettings } from './context/Settings.js'
-import { useHistoryChart } from './context/showHistoryChart.js'
 import { DKIcon } from './icons/DKIcon.js'
 import { SIMIcon } from './icons/SIMIcon.js'
 import { SoftSIMIcon } from './icons/SoftSIMIcon.js'
@@ -34,6 +33,7 @@ import { sortLocations } from './sortLocations.js'
 import { FuelGauge } from './FuelGauge.js'
 import { removeOldLocation } from './removeOldLocation.js'
 import { PinTile } from './PinTile.js'
+import { showDetails } from './hooks/useDetails.js'
 
 const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;
@@ -54,7 +54,6 @@ export const Tracker = ({
 	onCenter: (location: GeoLocation) => void
 }) => {
 	const { lastUpdateTs } = useDevices()
-	const { toggle: toggleHistoryChart } = useHistoryChart()
 	const {
 		settings: { showUpdateWarning },
 	} = useSettings()
@@ -85,7 +84,7 @@ export const Tracker = ({
 					if (deviceLocation !== undefined) {
 						onCenter(deviceLocation)
 					}
-					toggleHistoryChart(device.id)
+					showDetails(device.id)
 				}}
 			>
 				<BoardIcon class="icon" />
@@ -135,14 +134,14 @@ export const Tracker = ({
 				<EnvironmentInfo
 					device={device}
 					onClick={() => {
-						toggleHistoryChart(device.id)
+						showDetails(device.id)
 					}}
 				/>
 				{state?.fg !== undefined && (
 					<FuelGauge
 						fg={state.fg}
 						onClick={() => {
-							toggleHistoryChart(device.id)
+							showDetails(device.id)
 						}}
 					/>
 				)}

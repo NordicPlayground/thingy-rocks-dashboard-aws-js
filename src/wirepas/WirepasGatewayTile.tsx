@@ -36,8 +36,7 @@ import { ButtonPressDiff } from '../ButtonPress.js'
 import { sum } from 'lodash-es'
 import { formatId } from './formatId.js'
 import { cancelEvent } from '../cancelEvent.js'
-import { useHistoryChart } from '../context/showHistoryChart.js'
-import { useWirepasTopology } from '../context/showWirepasTopology.js'
+import { showDetails } from '../hooks/useDetails.js'
 
 export const WirepasGatewayTile = ({
 	gateway,
@@ -59,8 +58,6 @@ export const WirepasGatewayTile = ({
 	const deviceLocation = rankedLocations[0]
 	const code = managementCodes[gateway.id]
 	const hasCode = code !== undefined
-	const { hide: hideHistoryChart } = useHistoryChart()
-	const { show: showTopology } = useWirepasTopology()
 	const [expandNodes, setExpandNodes] = useState<boolean>(false)
 
 	const nodes = Object.entries(gateway.state.nodes)
@@ -74,8 +71,7 @@ export const WirepasGatewayTile = ({
 					if (deviceLocation !== undefined) {
 						onCenter(deviceLocation)
 					}
-					hideHistoryChart()
-					showTopology(gateway.id)
+					showDetails(gateway.id)
 				})}
 			>
 				<FiveGMesh class="icon" />

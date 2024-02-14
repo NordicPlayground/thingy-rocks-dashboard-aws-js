@@ -8,11 +8,11 @@ import {
 	isWirepasGateway,
 	type GeoLocation,
 } from './context/Devices.js'
-import { useHistoryChart } from './context/showHistoryChart.js'
 import { NRPlusGatewayTile } from './NRPlusGatewayTile.js'
 import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
 import { useVisibleDevices } from './context/VisibleDevices.js'
 import { useMap } from './context/Map.js'
+import { showDetails } from './hooks/useDetails.js'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -111,7 +111,6 @@ export const IssuerName = styled.dd`
 `
 
 export const DeviceList = () => {
-	const { show: showHistoryChart } = useHistoryChart()
 	const devicesToShow = useVisibleDevices()
 	const map = useMap()
 
@@ -162,7 +161,7 @@ export const DeviceList = () => {
 								<HistoryOnly
 									device={device}
 									onClick={() => {
-										showHistoryChart(device.id)
+										showDetails(device.id)
 									}}
 								/>
 							</li>
