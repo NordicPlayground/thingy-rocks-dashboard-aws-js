@@ -21,8 +21,8 @@ import {
 	WirepasMeshQOS,
 	type WirepasGateway,
 	type WirepasGatewayNode,
+	type GeoLocation,
 } from '../context/Devices.js'
-import { useMap } from '../context/Map.js'
 import { removeOldLocation } from '../removeOldLocation.js'
 import { sortLocations } from '../sortLocations.js'
 import { FiveGMesh } from '../icons/5GMesh.js'
@@ -33,17 +33,20 @@ import { useWebsocket } from '../context/WebsocketConnection.js'
 import { ButtonPressDiff } from '../ButtonPress.js'
 import { sum } from 'lodash-es'
 import { formatId } from './formatId.js'
+import { cancelEvent } from '../cancelEvent.js'
+import { useHistoryChart } from '../context/showHistoryChart.js'
 
 export const WirepasGatewayTile = ({
 	gateway,
+	onCenter,
 }: {
 	gateway: WirepasGateway
+	onCenter: (location: GeoLocation) => void
 }) => {
 	const {
 		settings: { managementCodes },
 	} = useSettings()
 	const [configureCode, setConfigureCode] = useState<boolean>(false)
-	const map = useMap()
 	const { lastUpdateTs } = useDevices()
 	const lastUpdateTime = lastUpdateTs(gateway.id) as number
 	const { location } = gateway
@@ -53,22 +56,27 @@ export const WirepasGatewayTile = ({
 	const deviceLocation = rankedLocations[0]
 	const code = managementCodes[gateway.id]
 	const hasCode = code !== undefined
+	const { hide: hideHistoryChart } = useHistoryChart()
 
 	return (
 		<>
 			<Title
 				type={'button'}
-				onClick={() => {
+				onClick={cancelEvent(() => {
 					if (deviceLocation !== undefined) {
-						map?.center(deviceLocation)
+						onCenter(deviceLocation)
 					}
-				}}
+					hideHistoryChart()
+				})}
 			>
 				<FiveGMesh class="icon" />
 				<span class="info">
 					<DeviceName device={gateway} />
 				</span>
-				<button type="button" onClick={() => setConfigureCode((c) => !c)}>
+				<button
+					type="button"
+					onClick={cancelEvent(() => setConfigureCode((c) => !c))}
+				>
 					{hasCode ? (
 						<UnlockIcon
 							strokeWidth={2}

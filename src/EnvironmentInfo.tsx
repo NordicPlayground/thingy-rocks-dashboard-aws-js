@@ -28,7 +28,12 @@ export const EnvironmentInfo = ({
 				<Thermometer strokeWidth={2} />
 			</dt>
 			<dd>
-				<button type={'button'} onClick={() => onClick?.()}>
+				<button
+					type={'button'}
+					onClick={() => {
+						onClick?.()
+					}}
+				>
 					{env.temp.toFixed(1)} °C
 					{iaq !== undefined && <IAQ iaq={iaq} />}
 				</button>

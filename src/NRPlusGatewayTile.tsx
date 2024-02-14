@@ -2,6 +2,7 @@ import {
 	useDevices,
 	type NRPlusGateway,
 	type NRPlusNode,
+	type GeoLocation,
 } from './context/Devices.js'
 import { DeviceName } from './DeviceName.js'
 import { LastUpdate, Properties, Title } from './DeviceList.js'
@@ -22,22 +23,29 @@ import { RelativeTime } from './RelativeTime.js'
 import { ButtonPress } from './ButtonPress.js'
 import { useState } from 'preact/hooks'
 import { useWebsocket } from './context/WebsocketConnection.js'
-import { useMap } from './context/Map.js'
 import { sortLocations } from './sortLocations.js'
 import { removeOldLocation } from './removeOldLocation.js'
 import { NRPlusTopology } from './nrplus/NRPlusTopology.js'
 import { PinTile } from './PinTile.js'
 import { ConfigureCode } from './ConfigureCode.js'
 import { useSettings } from './context/Settings.js'
+import { cancelEvent } from './cancelEvent.js'
+import { useHistoryChart } from './context/showHistoryChart.js'
 
-export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
+export const NRPlusGatewayTile = ({
+	gateway,
+	onCenter,
+}: {
+	gateway: NRPlusGateway
+	onCenter: (location: GeoLocation) => void
+}) => {
 	const {
 		settings: { managementCodes },
 	} = useSettings()
 	const { lastUpdateTs } = useDevices()
+	const { hide: hideHistoryChart } = useHistoryChart()
 	const lastUpdateTime = lastUpdateTs(gateway.id) as number
 	const [configureCode, setConfigureCode] = useState<boolean>(false)
-	const map = useMap()
 	const { location } = gateway
 	const rankedLocations = Object.values(location ?? [])
 		.sort(sortLocations)
@@ -49,17 +57,21 @@ export const NRPlusGatewayTile = ({ gateway }: { gateway: NRPlusGateway }) => {
 		<>
 			<Title
 				type={'button'}
-				onClick={() => {
+				onClick={cancelEvent(() => {
 					if (deviceLocation !== undefined) {
-						map?.center(deviceLocation)
+						onCenter(deviceLocation)
 					}
-				}}
+					hideHistoryChart()
+				})}
 			>
 				<NRPlus class="icon" />
 				<span class="info">
 					<DeviceName device={gateway} />
 				</span>
-				<button type="button" onClick={() => setConfigureCode((c) => !c)}>
+				<button
+					type="button"
+					onClick={cancelEvent(() => setConfigureCode((c) => !c))}
+				>
 					{hasCode ? (
 						<UnlockIcon strokeWidth={1} class="ms-2 p-1" />
 					) : (

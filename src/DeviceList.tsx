@@ -6,11 +6,13 @@ import {
 	isNRPlusGateway,
 	isTracker,
 	isWirepasGateway,
+	type GeoLocation,
 } from './context/Devices.js'
 import { useHistoryChart } from './context/showHistoryChart.js'
 import { NRPlusGatewayTile } from './NRPlusGatewayTile.js'
 import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
 import { useVisibleDevices } from './context/VisibleDevices.js'
+import { useMap } from './context/Map.js'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -111,6 +113,11 @@ export const IssuerName = styled.dd`
 export const DeviceList = () => {
 	const { show: showHistoryChart } = useHistoryChart()
 	const devicesToShow = useVisibleDevices()
+	const map = useMap()
+
+	const center = (location: GeoLocation) => {
+		map?.center(location)
+	}
 
 	return (
 		<DeviceState>
@@ -120,20 +127,32 @@ export const DeviceList = () => {
 					if (isTracker(device))
 						return (
 							<li>
-								<Tracker key={`device:${device.id}`} device={device} />
+								<Tracker
+									key={`device:${device.id}`}
+									device={device}
+									onCenter={center}
+								/>
 							</li>
 						)
 					if (isNRPlusGateway(device)) {
 						return (
 							<li>
-								<NRPlusGatewayTile gateway={device} key={device.id} />
+								<NRPlusGatewayTile
+									gateway={device}
+									key={device.id}
+									onCenter={center}
+								/>
 							</li>
 						)
 					}
 					if (isWirepasGateway(device)) {
 						return (
 							<li>
-								<WirepasGatewayTile gateway={device} key={device.id} />
+								<WirepasGatewayTile
+									gateway={device}
+									key={device.id}
+									onCenter={center}
+								/>
 							</li>
 						)
 					}

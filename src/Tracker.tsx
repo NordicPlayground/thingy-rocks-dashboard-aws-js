@@ -17,8 +17,12 @@ import { RelativeTime } from './RelativeTime.js'
 import { SignalQuality } from './SignalQuality.js'
 import { UpdateWarning } from './UpdateWarning.js'
 import { wifiColor } from './colors.js'
-import { hasSoftSIM, useDevices, type Device } from './context/Devices.js'
-import { useMap } from './context/Map.js'
+import {
+	hasSoftSIM,
+	useDevices,
+	type Device,
+	type GeoLocation,
+} from './context/Devices.js'
 import { useSettings } from './context/Settings.js'
 import { useHistoryChart } from './context/showHistoryChart.js'
 import { DKIcon } from './icons/DKIcon.js'
@@ -42,9 +46,14 @@ const StyledSoftSIMIcon = styled(SoftSIMIcon)`
 	margin: 0 0 0 4px;
 `
 
-export const Tracker = ({ device }: { device: Device }) => {
+export const Tracker = ({
+	device,
+	onCenter,
+}: {
+	device: Device
+	onCenter: (location: GeoLocation) => void
+}) => {
 	const { lastUpdateTs } = useDevices()
-	const map = useMap()
 	const { toggle: toggleHistoryChart } = useHistoryChart()
 	const {
 		settings: { showUpdateWarning },
@@ -74,7 +83,7 @@ export const Tracker = ({ device }: { device: Device }) => {
 				type={'button'}
 				onClick={() => {
 					if (deviceLocation !== undefined) {
-						map?.center(deviceLocation)
+						onCenter(deviceLocation)
 					}
 					toggleHistoryChart(device.id)
 				}}

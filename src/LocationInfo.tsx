@@ -6,6 +6,7 @@ import type { Device } from './context/Devices.js'
 import { LocationSourceLabels } from './context/LocationSourceLabels.js'
 import { sortLocations } from './sortLocations.js'
 import { removeOldLocation } from './removeOldLocation.js'
+import { useMap } from './context/Map.js'
 
 const LocationSource = styled.span`
 	font-weight: var(--monospace-font-weight-bold);
@@ -43,6 +44,7 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 		.sort(sortLocations)
 		.filter(removeOldLocation)
 	const hasLocation = rankedLocations.length > 0
+	const map = useMap()
 	if (hasLocation || nod.length > 0)
 		return (
 			<>
@@ -59,20 +61,27 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 					<LocationDetails>
 						{rankedLocations.map((location) => (
 							<li>
-								<LocationSource
-									style={{ color: locationSourceColors[location.source] }}
+								<button
+									type="button"
+									onClick={() => {
+										map.center(location)
+									}}
 								>
-									{LocationSourceLabels[location.source]}
-								</LocationSource>
-								<small>
-									(
-									{location.ts !== undefined && (
-										<>
-											<GeoLocationAge age={location.ts} />,{' '}
-										</>
-									)}
-									<span>{Math.round(location.accuracy ?? 500)} m</span>)
-								</small>
+									<LocationSource
+										style={{ color: locationSourceColors[location.source] }}
+									>
+										{LocationSourceLabels[location.source]}
+									</LocationSource>
+									<small>
+										(
+										{location.ts !== undefined && (
+											<>
+												<GeoLocationAge age={location.ts} />,{' '}
+											</>
+										)}
+										<span>{Math.round(location.accuracy ?? 500)} m</span>)
+									</small>
+								</button>
 							</li>
 						))}
 					</LocationDetails>
