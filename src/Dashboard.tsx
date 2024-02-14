@@ -6,6 +6,7 @@ import { FavoritesButton, Settings, SettingsButton } from './Settings.js'
 import { DeviceHistory } from './chart/DeviceHistory.js'
 import { DeviceLocations } from './map/DeviceLocations.js'
 import { ZoomToWorldButton } from './map/ZoomToWorldButton.js'
+import { WirepasTopology } from './wirepas/WirepasTopology.js'
 
 const SideMenu = styled.nav`
 	position: absolute;
@@ -26,6 +27,7 @@ export const Dashboard = () => (
 		<DeviceList />
 		<DeviceLocations />
 		<DeviceHistory />
+		<WirepasTopology />
 		<Settings />
 		<SideMenu>
 			<GitHubButton />

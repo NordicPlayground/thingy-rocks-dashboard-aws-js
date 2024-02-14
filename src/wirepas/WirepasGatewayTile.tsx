@@ -5,6 +5,8 @@ import {
 	Lightbulb,
 	LightbulbOff,
 	Lock,
+	Minus,
+	Plus,
 	Thermometer,
 	UnlockIcon,
 	UploadCloud,
@@ -35,6 +37,7 @@ import { sum } from 'lodash-es'
 import { formatId } from './formatId.js'
 import { cancelEvent } from '../cancelEvent.js'
 import { useHistoryChart } from '../context/showHistoryChart.js'
+import { useWirepasTopology } from '../context/showWirepasTopology.js'
 
 export const WirepasGatewayTile = ({
 	gateway,
@@ -57,6 +60,11 @@ export const WirepasGatewayTile = ({
 	const code = managementCodes[gateway.id]
 	const hasCode = code !== undefined
 	const { hide: hideHistoryChart } = useHistoryChart()
+	const { show: showTopology } = useWirepasTopology()
+	const [expandNodes, setExpandNodes] = useState<boolean>(false)
+
+	const nodes = Object.entries(gateway.state.nodes)
+	const nodesSlice = nodes.slice(0, expandNodes ? undefined : 5)
 
 	return (
 		<>
@@ -67,6 +75,7 @@ export const WirepasGatewayTile = ({
 						onCenter(deviceLocation)
 					}
 					hideHistoryChart()
+					showTopology(gateway.id)
 				})}
 			>
 				<FiveGMesh class="icon" />
@@ -111,9 +120,40 @@ export const WirepasGatewayTile = ({
 						</td>
 					</tr>
 				)}
-				{Object.entries(gateway.state.nodes).map(([id, node]) => (
+				{nodesSlice.map(([id, node]) => (
 					<Node id={id} node={node} gateway={gateway} />
 				))}
+				{nodes.length > 5 &&
+					(expandNodes ? (
+						<tr>
+							<td colSpan={6}>
+								<button
+									class="btn"
+									type="button"
+									onClick={() => setExpandNodes(false)}
+								>
+									<small>
+										<Minus strokeWidth={1} class={'mx-1'} /> collapse
+									</small>
+								</button>
+							</td>
+						</tr>
+					) : (
+						<tr>
+							<td colSpan={5}>
+								<button
+									class="btn"
+									type="button"
+									onClick={() => setExpandNodes(true)}
+								>
+									<small>
+										<Plus strokeWidth={1} class={'mx-1'} /> show{' '}
+										{nodes.length - nodesSlice.length} more
+									</small>
+								</button>
+							</td>
+						</tr>
+					))}
 			</table>
 		</>
 	)

@@ -1,15 +1,9 @@
+import { Colors } from './Colors.js'
+import { Helpers } from './Helpers.js'
 import {
 	type NRPlusNetworkTopology,
 	type NRPlusNodeInfo,
 } from './parseTopology.js'
-
-enum Colors {
-	connection = '#d1203a',
-	helpers = '#ff61dd88',
-	forces = '#5f9efb',
-	cellular = '#f48120',
-	text = '#333333',
-}
 
 export const NRPlusTopology = ({
 	topology,
@@ -33,35 +27,7 @@ export const NRPlusTopology = ({
 			version="1.1"
 			xmlns="http://www.w3.org/2000/svg"
 		>
-			{(showHelpers ?? false) && (
-				<g>
-					{/* Border */}
-					<path
-						d={`M 1,1 L ${width - 1},1 L ${width - 1},${height - 1} 1,${
-							height - 1
-						} L 1,1`}
-						stroke-width={1}
-						fill={'none'}
-						stroke={Colors.helpers}
-						stroke-dasharray="2 2"
-					/>
-					{/* Center */}
-					<path
-						d={`M 1,${height / 2} L ${width - 1},${height / 2}`}
-						stroke-width={1}
-						fill={'none'}
-						stroke={Colors.helpers}
-						stroke-dasharray="2 2"
-					/>
-					<path
-						d={`M ${width / 2},1 L ${width / 2},${height - 1}`}
-						stroke-width={1}
-						fill={'none'}
-						stroke={Colors.helpers}
-						stroke-dasharray="2 2"
-					/>
-				</g>
-			)}
+			{(showHelpers ?? false) && <Helpers width={width} height={height} />}
 
 			{/* Draw connections */}
 			{sinkNodes.map((node) => (

@@ -13,14 +13,14 @@ import type { Ref } from 'preact'
 const chartBaseWidth = 0.6 // percent of window width
 const chartBaseHeight = 0.5 // percent of window width
 
-const Button = styled.button`
+export const Button = styled.button`
 	color: var(--color-nordic-middle-grey);
 	background-color: transparent;
 	padding: 0;
 	border: 0;
 `
 
-const ChartContainer = styled.aside`
+export const ChartContainer = styled.aside`
 	background-color: var(--color-panel-bg);
 	position: absolute;
 	bottom: 0;
