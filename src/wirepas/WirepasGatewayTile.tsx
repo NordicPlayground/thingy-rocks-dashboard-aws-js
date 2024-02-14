@@ -154,7 +154,7 @@ const Node = ({
 	})
 	return (
 		<>
-			<tr>
+			<tr style={{ fontSize: '80%' }}>
 				<td>
 					{hasCode ? (
 						<button
