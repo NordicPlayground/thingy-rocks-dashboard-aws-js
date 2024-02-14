@@ -7,11 +7,12 @@ import {
 } from '../context/Devices.js'
 import { useMap } from '../context/Map.js'
 import { useVisibleDevices } from '../context/VisibleDevices.js'
+import { removeOldLocation } from '../removeOldLocation.js'
 
 type DeviceLocation = {
-	location: Location
-	alias?: string
-	id: string
+	deviceId: string
+	deviceAlias?: string
+	location: GeoLocation
 }
 
 export const DeviceLocations = () => {
@@ -23,24 +24,27 @@ export const DeviceLocations = () => {
 			(device): device is Device & { location: Location } =>
 				device.location !== undefined,
 		)
-		.map((device) => ({
-			location: device.location,
-			alias: alias(device.id),
-			id: device.id,
-		}))
+		.map((device) =>
+			Object.values(device.location)
+				.filter(removeOldLocation)
+				.map((l) => ({
+					deviceId: device.id,
+					deviceAlias: alias(device.id),
+					location: l,
+				})),
+		)
+		.flat()
 
 	return (
 		<>
-			{deviceLocations.map((deviceLocation) =>
-				Object.values(deviceLocation.location).map((l) => (
-					<DeviceLocation
-						id={deviceLocation.id}
-						alias={deviceLocation.alias}
-						location={l}
-						key={locationKey(deviceLocation.id, l)}
-					/>
-				)),
-			)}
+			{deviceLocations.map((l) => (
+				<DeviceLocation
+					id={l.deviceId}
+					alias={l.deviceAlias}
+					location={l.location}
+					key={locationKey(l.deviceId, l.location)}
+				/>
+			))}
 		</>
 	)
 }
