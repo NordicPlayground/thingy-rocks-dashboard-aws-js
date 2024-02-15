@@ -15,6 +15,11 @@ export const WirepasTopologyDiagram = ({
 	size: { width: number; height: number }
 	distance?: number
 }) => {
+	if (connections.length === 0) {
+		console.warn(`[WirepasTopology]`, `No connections.`)
+		return null
+	}
+
 	const targets = connections.map(({ to }) => to)
 	const sources = connections.map(({ from }) => from)
 

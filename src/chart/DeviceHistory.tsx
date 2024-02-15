@@ -64,11 +64,12 @@ const findLowerLimit = (v: Array<Reading>): number =>
  */
 export const DeviceHistory = () => {
 	const { devices } = useDevices()
-	const deviceId = useDetails()
 
+	const deviceId = useDetails()
 	if (deviceId === undefined) return null
 
 	const history = devices[deviceId]?.history
+	if (history === undefined) return null
 
 	const charts: ChartInfo[] = []
 
