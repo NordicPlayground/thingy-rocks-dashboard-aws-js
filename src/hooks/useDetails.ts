@@ -12,7 +12,12 @@ export const useDetails = (): string | undefined => {
 	useEffect(() => {
 		const listener = (ev: HashChangeEvent) => {
 			try {
-				setDeviceId(new URL(ev.newURL).hash.slice(1))
+				const maybeDeviceId = new URL(ev.newURL).hash.slice(1)
+				if (maybeDeviceId.length > 0) {
+					setDeviceId(maybeDeviceId)
+				} else {
+					setDeviceId(undefined)
+				}
 			} catch (err) {
 				console.debug(`[useDetails]`, err)
 			}
