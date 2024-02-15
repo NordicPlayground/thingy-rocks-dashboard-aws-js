@@ -1,6 +1,7 @@
 import { Check, X } from 'lucide-preact'
 import { useState } from 'preact/hooks'
 import { useSettings } from './context/Settings.js'
+import { cancelEvent } from './cancelEvent.js'
 
 export const ConfigureCode = ({
 	device,
@@ -17,7 +18,11 @@ export const ConfigureCode = ({
 		managementCodes[device.id] ?? '',
 	)
 	return (
-		<form autoComplete="off" class="d-flex align-items-center">
+		<form
+			autoComplete="off"
+			class="d-flex align-items-center"
+			onSubmit={cancelEvent}
+		>
 			<input
 				type="password"
 				autoComplete="off"

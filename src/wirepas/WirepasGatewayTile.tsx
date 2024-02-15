@@ -35,7 +35,7 @@ import { useWebsocket } from '../context/WebsocketConnection.js'
 import { ButtonPressDiff } from '../ButtonPress.js'
 import { sum } from 'lodash-es'
 import { formatId } from './formatId.js'
-import { cancelEvent } from '../cancelEvent.js'
+import { withCancel } from '../cancelEvent.js'
 import { showDetails } from '../hooks/useDetails.js'
 
 export const WirepasGatewayTile = ({
@@ -67,7 +67,7 @@ export const WirepasGatewayTile = ({
 		<>
 			<Title
 				type={'button'}
-				onClick={cancelEvent(() => {
+				onClick={withCancel(() => {
 					if (deviceLocation !== undefined) {
 						onCenter(deviceLocation)
 					}
@@ -80,7 +80,7 @@ export const WirepasGatewayTile = ({
 				</span>
 				<button
 					type="button"
-					onClick={cancelEvent(() => setConfigureCode((c) => !c))}
+					onClick={withCancel(() => setConfigureCode((c) => !c))}
 				>
 					{hasCode ? (
 						<UnlockIcon

@@ -1,7 +1,7 @@
 import { PinIcon, PinOffIcon } from 'lucide-preact'
 import { useSettings } from './context/Settings.js'
 import { colors } from './colors.js'
-import { cancelEvent } from './cancelEvent.js'
+import { withCancel } from './cancelEvent.js'
 
 export const PinTile = ({ device }: { device: { id: string } }) => {
 	const {
@@ -15,7 +15,7 @@ export const PinTile = ({ device }: { device: { id: string } }) => {
 		<button
 			type={'button'}
 			class="btn btn-link"
-			onClick={cancelEvent(() => {
+			onClick={withCancel(() => {
 				update({ favorites: favorites.filter((id) => id !== device.id) })
 			})}
 		>
@@ -29,7 +29,7 @@ export const PinTile = ({ device }: { device: { id: string } }) => {
 		<button
 			type={'button'}
 			class="btn btn-link"
-			onClick={cancelEvent(() => {
+			onClick={withCancel(() => {
 				update({ favorites: [...favorites, device.id] })
 			})}
 		>

@@ -29,7 +29,7 @@ import { NRPlusTopology } from './nrplus/NRPlusTopology.js'
 import { PinTile } from './PinTile.js'
 import { ConfigureCode } from './ConfigureCode.js'
 import { useSettings } from './context/Settings.js'
-import { cancelEvent } from './cancelEvent.js'
+import { withCancel } from './cancelEvent.js'
 import { hideDetails } from './hooks/useDetails.js'
 
 export const NRPlusGatewayTile = ({
@@ -56,7 +56,7 @@ export const NRPlusGatewayTile = ({
 		<>
 			<Title
 				type={'button'}
-				onClick={cancelEvent(() => {
+				onClick={withCancel(() => {
 					if (deviceLocation !== undefined) {
 						onCenter(deviceLocation)
 					}
@@ -69,7 +69,7 @@ export const NRPlusGatewayTile = ({
 				</span>
 				<button
 					type="button"
-					onClick={cancelEvent(() => setConfigureCode((c) => !c))}
+					onClick={withCancel(() => setConfigureCode((c) => !c))}
 				>
 					{hasCode ? (
 						<UnlockIcon strokeWidth={1} class="ms-2 p-1" />
