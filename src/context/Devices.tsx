@@ -206,7 +206,10 @@ export type WirepasGatewayNode = {
 	ts: string // e.g. '2024-02-05T13:44:06.050Z'
 	qos: WirepasMeshQOS // e.g. 1
 	payload?: {
-		temp?: number // e.g. 24.850000381469727
+		temp?: {
+			v: number // e.g. 24.850000381469727
+			ts: number
+		}
 		btn?: {
 			v: number
 			ts: number

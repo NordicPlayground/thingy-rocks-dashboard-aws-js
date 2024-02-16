@@ -188,6 +188,9 @@ const Node = ({
 		g,
 		b,
 	})
+	const temp = node.payload?.temp?.v
+	const tempTs = node.payload?.temp?.ts
+
 	return (
 		<>
 			<tr style={{ fontSize: '80%' }}>
@@ -226,10 +229,22 @@ const Node = ({
 					</span>
 				</td>
 				<td>
-					{node.payload?.temp !== undefined && (
+					{temp !== undefined && (
 						<span>
-							<Thermometer strokeWidth={1} class={'me-1'} />
-							{node.payload.temp.toFixed(1)} °C
+							<span>
+								<Thermometer strokeWidth={1} />
+								<span>{temp.toFixed(1)} °C</span>
+							</span>
+							{tempTs !== undefined && (
+								<small class={'ms-2'} style={{ opacity: 0.75 }}>
+									<UploadCloud
+										strokeWidth={1}
+										style={{ width: '18px' }}
+										class={'me-1'}
+									/>
+									<RelativeTime time={new Date(tempTs)} />
+								</small>
+							)}
 						</span>
 					)}
 				</td>
