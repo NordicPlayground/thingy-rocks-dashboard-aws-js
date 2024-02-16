@@ -8,6 +8,7 @@ import { DeviceName } from './DeviceName.js'
 import { LastUpdate, Properties, Title } from './DeviceList.js'
 import { NRPlus } from './icons/NRPlus.js'
 import {
+	Focus,
 	Hexagon,
 	KeyRound,
 	Lightbulb,
@@ -20,7 +21,7 @@ import {
 	X,
 } from 'lucide-preact'
 import { RelativeTime } from './RelativeTime.js'
-import { ButtonPress } from './ButtonPress.js'
+import { ButtonPressDiff } from './ButtonPress.js'
 import { useState } from 'preact/hooks'
 import { useWebsocket } from './context/WebsocketConnection.js'
 import { sortLocations } from './sortLocations.js'
@@ -145,6 +146,8 @@ const Node = ({
 	}
 
 	const temp = node.env?.temp ?? node.env?.modemTemp
+	const tempTs = node.env?.ts
+	const tempIsCurrent = Date.now() - (tempTs ?? 0) < 60 * 60 * 1000
 
 	return (
 		<>
@@ -163,10 +166,23 @@ const Node = ({
 								<Lightbulb strokeWidth={1} />
 							</button>
 						)}
-						{temp !== undefined && (
-							<span>
-								<Thermometer strokeWidth={1} /> {temp.toFixed(1)} °C
-							</span>
+						{temp !== undefined && tempIsCurrent && (
+							<>
+								<span>
+									<Thermometer strokeWidth={1} />
+									<span>{temp.toFixed(1)} °C</span>
+								</span>
+								{tempTs !== undefined && (
+									<small class={'ms-2'} style={{ opacity: 0.75 }}>
+										<UploadCloud
+											strokeWidth={1}
+											style={{ width: '18px' }}
+											class={'me-1'}
+										/>
+										<RelativeTime time={new Date(tempTs)} />
+									</small>
+								)}
+							</>
 						)}
 					</span>
 				)}
@@ -236,12 +252,26 @@ const Node = ({
 				)}
 			</dd>
 			{node.btn !== undefined && (
-				<ButtonPress
-					buttonPress={{
-						v: node.btn.n,
-						ts: node.btn.ts,
-					}}
-				/>
+				<>
+					<ButtonPressDiff
+						buttonPress={{
+							v: node.btn.n,
+							ts: node.btn.ts,
+						}}
+					>
+						{(diffSeconds) => (
+							<>
+								<dt style={{ color: 'var(--color-nordic-pink)' }}>
+									<span class={'ms-3'}>└</span>
+									<Focus strokeWidth={3} class="ms-2 p-1" />
+								</dt>
+								<dd style={{ color: 'var(--color-nordic-pink)' }}>
+									<strong>{diffSeconds} seconds ago</strong>
+								</dd>
+							</>
+						)}
+					</ButtonPressDiff>
+				</>
 			)}
 		</>
 	)
