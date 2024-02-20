@@ -117,7 +117,7 @@ const Hexagon = ({ size }: { size: number }) => {
 	const [startX, startY] = start as [number, number]
 	return (
 		<path
-			d={`M ${startX},${startY} ${rest.map(([x, y]) => `L ${x},${y}`)}`}
+			d={`M ${startX},${startY} ${rest.map(([x, y]) => `L ${x},${y}`).join(' ')}`}
 			fill={Colors.cellular}
 		/>
 	)
