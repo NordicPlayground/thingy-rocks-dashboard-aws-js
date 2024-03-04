@@ -31,7 +31,7 @@
     "@aws-amplify/core": "6.0.16",
     "@aws-sdk/credential-provider-cognito-identity": "3.515.0",
     "@aws/amazon-location-utilities-auth-helper": "1.0.3",
-    "@hello.nrfcloud.com/proto-lwm2m": "2.4.6",
+    "@hello.nrfcloud.com/proto-lwm2m": "2.7.3",
     "@nordicsemiconductor/rsrp-bar": "8.0.1",
     "@sentry/react": "7.101.1",
     "@sentry/tracing": "7.101.1",
