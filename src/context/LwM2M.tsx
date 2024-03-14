@@ -215,15 +215,23 @@ const isLwM2MObjectInstance = (
 	'ObjectID' in object &&
 	object.ObjectID === ObjectID
 
-const isGeolocation = (object: unknown): object is Geolocation_14201 =>
+const isGeolocation = (
+	object: unknown,
+): object is LwM2MObjectInstance<Geolocation_14201> =>
 	isLwM2MObjectInstance(14201, object)
 const isConnectionInformation = (
 	object: unknown,
-): object is ConnectionInformation_14203 => isLwM2MObjectInstance(14203, object)
+): object is LwM2MObjectInstance<ConnectionInformation_14203> =>
+	isLwM2MObjectInstance(14203, object)
 const isDeviceInformation = (
 	object: unknown,
-): object is DeviceInformation_14204 => isLwM2MObjectInstance(14204, object)
-const isEnvironment = (object: unknown): object is Environment_14205 =>
+): object is LwM2MObjectInstance<DeviceInformation_14204> =>
+	isLwM2MObjectInstance(14204, object)
+const isEnvironment = (
+	object: unknown,
+): object is LwM2MObjectInstance<Environment_14205> =>
 	isLwM2MObjectInstance(14205, object)
-const isBatteryAndPower = (object: unknown): object is BatteryAndPower_14202 =>
+const isBatteryAndPower = (
+	object: unknown,
+): object is LwM2MObjectInstance<BatteryAndPower_14202> =>
 	isLwM2MObjectInstance(14202, object)
