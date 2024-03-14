@@ -1,6 +1,7 @@
 import { Provider as DevicesProvider } from './context/Devices.js'
 import { Provider as LwM2MProvider } from './context/LwM2M.js'
 import { Provider as MapProvider } from './context/Map.js'
+import { Provider as MemfaultProvider } from './memfault/Context.js'
 import { Provider as SettingsProvider } from './context/Settings.js'
 import { Provider as VisibleDevicesProvider } from './context/VisibleDevices.js'
 import { Provider as WebsocketProvider } from './context/WebsocketConnection.js'
@@ -16,9 +17,11 @@ export const App = () => (
 					<VisibleDevicesProvider>
 						<WebsocketProvider>
 							<LwM2MProvider>
-								<MapProvider authHelper={authHelper}>
-									<Dashboard />
-								</MapProvider>
+								<MemfaultProvider>
+									<MapProvider authHelper={authHelper}>
+										<Dashboard />
+									</MapProvider>
+								</MemfaultProvider>
 							</LwM2MProvider>
 						</WebsocketProvider>
 					</VisibleDevicesProvider>

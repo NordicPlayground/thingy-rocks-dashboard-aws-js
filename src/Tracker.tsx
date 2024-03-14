@@ -34,6 +34,7 @@ import { FuelGauge } from './FuelGauge.js'
 import { removeOldLocation } from './removeOldLocation.js'
 import { PinTile } from './PinTile.js'
 import { showDetails } from './hooks/useDetails.js'
+import { Reboots } from './memfault/Reboots.js'
 
 const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;
@@ -149,6 +150,7 @@ export const Tracker = ({
 				{showUpdateWarning && device.state !== undefined && (
 					<UpdateWarning reported={device.state} />
 				)}
+				<Reboots device={device} />
 			</Properties>
 		</>
 	)
