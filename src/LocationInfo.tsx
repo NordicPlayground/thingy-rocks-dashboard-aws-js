@@ -1,5 +1,5 @@
 import { CloudOff, MapPin, MapPinOff } from 'lucide-preact'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { GeoLocationAge } from './GeoLocationAge.js'
 import { locationSourceColors } from './colors.js'
 import type { Device } from './context/Devices.js'

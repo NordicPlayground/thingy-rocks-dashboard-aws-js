@@ -8,8 +8,8 @@ import {
 	Thermometer,
 	Zap,
 } from 'lucide-preact'
-import styled from 'styled-components'
-import type { Reported } from './context/Devices'
+import { styled } from 'styled-components'
+import type { Reported } from './context/Devices.js'
 
 const Charging = styled.span`
 	color: var(--color-nordic-grass);

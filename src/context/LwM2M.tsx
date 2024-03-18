@@ -6,7 +6,7 @@ import {
 	type ConnectionInformation_14203,
 	type DeviceInformation_14204,
 	type Environment_14205,
-} from '@hello.nrfcloud.com/proto-lwm2m'
+} from '@hello.nrfcloud.com/proto-map'
 import { useEffect, useState } from 'preact/hooks'
 import { MessageContext, useWebsocket } from './WebsocketConnection.js'
 import { useDevices, type Reported, GeoLocationSource } from './Devices.js'

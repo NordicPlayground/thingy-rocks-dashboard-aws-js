@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { AppUpdateNotifier } from './AppUpdateNotifier.js'
 import { DeviceList } from './DeviceList.js'
 import { GitHubButton } from './GitHubButton.js'

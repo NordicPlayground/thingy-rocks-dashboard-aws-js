@@ -1,6 +1,6 @@
 import { identifyIssuer } from 'e118-iin-list'
 import { UploadCloud, Wifi } from 'lucide-preact'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { ButtonPress } from './ButtonPress.js'
 import { CountryFlag } from './CountryFlag.js'
 import {

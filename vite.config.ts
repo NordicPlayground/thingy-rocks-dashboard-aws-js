@@ -1,5 +1,5 @@
 import { fromEnv } from '@nordicsemiconductor/from-env'
-import preact from '@preact/preset-vite'
+import { preact } from '@preact/preset-vite'
 import chalk from 'chalk'
 import fs from 'fs'
 import Handlebars from 'handlebars'
