@@ -1,0 +1,32 @@
+name: PRs
+
+on:
+  pull_request:
+
+env:
+  CNAME: world.thingy.rocks
+  WEBSOCKET_ENDPOINT: wss://ouqkjmrbb8.execute-api.eu-central-1.amazonaws.com/2022-11-22
+  MAP_NAME: thingy-rocks-backend-map
+  COGNITO_IDENTITY_POOL_ID: eu-central-1:09c73822-5984-44ff-be03-db63403fdf59
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "20.x"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --no-audit
+
+      - run: npx tsc
+
+      - run: npm test
+
+      - name: Build
+        run: npm run build
