@@ -1,5 +1,5 @@
 import { CloudOff } from 'lucide-preact'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { useWebsocket } from './context/WebsocketConnection.js'
 
 const Disconnected = styled.div`

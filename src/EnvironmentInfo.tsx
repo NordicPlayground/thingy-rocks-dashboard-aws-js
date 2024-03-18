@@ -9,8 +9,8 @@ import {
 	Thermometer,
 	XSquare,
 } from 'lucide-preact'
-import styled from 'styled-components'
-import type { Device } from './context/Devices'
+import { styled } from 'styled-components'
+import type { Device } from './context/Devices.js'
 
 export const EnvironmentInfo = ({
 	device,

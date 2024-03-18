@@ -1,7 +1,7 @@
 import { merge } from 'lodash-es'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useState } from 'preact/hooks'
-import type { NRPlusNetworkTopology } from '../nrplus/parseTopology'
+import type { NRPlusNetworkTopology } from '../nrplus/parseTopology.js'
 import { maybeDate } from '../maybeDate.js'
 
 export type ButtonPress = {

@@ -1,7 +1,7 @@
 import { format, subSeconds } from 'date-fns'
 import { Battery, Thermometer, X, Zap } from 'lucide-preact'
 import { useRef } from 'preact/hooks'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { colors } from '../colors.js'
 import { useDevices, type Reading } from '../context/Devices.js'
 import { HistoryChart } from './HistoryChart.js'
@@ -9,6 +9,7 @@ import type { Dataset } from './chartMath.js'
 import type { LucideProps } from '../icons/lucide.js'
 import type { Ref } from 'preact'
 import { useDetails, hideDetails } from '../hooks/useDetails.js'
+import type { JSX } from 'preact'
 
 const chartBaseWidth = 0.6 // percent of window width
 const chartBaseHeight = 0.5 // percent of window width

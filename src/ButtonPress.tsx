@@ -1,8 +1,8 @@
 import { Focus } from 'lucide-preact'
 import type { VNode } from 'preact'
 import { useEffect, useState } from 'preact/hooks'
-import styled from 'styled-components'
-import type { ButtonPress as ButtonPressData } from './context/Devices'
+import { styled } from 'styled-components'
+import type { ButtonPress as ButtonPressData } from './context/Devices.js'
 
 const diff = (ts: ButtonPressData['ts']): number =>
 	Math.floor((Date.now() - ts) / 1000)

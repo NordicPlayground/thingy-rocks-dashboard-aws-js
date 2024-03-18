@@ -1,10 +1,9 @@
 import { FakeDevice } from './FakeDevice.js'
+import type { Reported, Summary } from '../context/Devices.js'
 
 export const FakeTracker = () => (
 	<FakeDevice fakeState={fakeTrackerState} fakeHistory={fakeTrackerHistory} />
 )
-
-import type { Reported, Summary } from '../context/Devices'
 
 const fakeTrackerState = (): Reported => ({
 	cfg: {

@@ -7,11 +7,12 @@ import {
 	SignalZero,
 	Slash,
 } from 'lucide-preact'
-import styled from 'styled-components'
+import { styled } from 'styled-components'
 import { EnergyEstimate, type Device } from './context/Devices.js'
 import { LTEm } from './icons/LTE-m.js'
 import { NBIot } from './icons/NBIot.js'
 import type { LucideProps } from './icons/lucide.js'
+import type { JSX } from 'preact'
 
 const EnergyEstimateIcons: Record<
 	EnergyEstimate,
