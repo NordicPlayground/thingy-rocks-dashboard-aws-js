@@ -4,7 +4,7 @@ import type {
 	LngLatLike,
 	PropertyValueSpecification,
 } from 'maplibre-gl'
-import { Map as MapLibreGlMap } from 'maplibre-gl'
+import { AttributionControl, Map as MapLibreGlMap } from 'maplibre-gl'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext } from 'preact/hooks'
 import { locationSourceColors } from '../colors.js'
@@ -294,7 +294,9 @@ export const Provider = ({
 		keyboard: false,
 		renderWorldCopies: false,
 		transformRequest: authHelper.getMapAuthenticationOptions().transformRequest,
+		attributionControl: false,
 	})
+	map.addControl(new AttributionControl(), 'bottom-left')
 
 	return (
 		<MapContext.Provider value={deviceMap(map)}>{children}</MapContext.Provider>

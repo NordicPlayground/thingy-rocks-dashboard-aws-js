@@ -9,10 +9,17 @@ import { ZoomToWorldButton } from './map/ZoomToWorldButton.js'
 import { WirepasTopology } from './wirepas/WirepasTopology.js'
 
 const SideMenu = styled.nav`
+	width: 375px;
 	position: absolute;
-	right: 1rem;
-	bottom: 1rem;
+	right: 0;
+	bottom: 0;
+	height: calc(var(--menu-height) - 2px);
 	color: #fff;
+	background-color: var(--color-panel-bg);
+	padding: 0.5rem;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 	button {
 		color: inherit;
 	}

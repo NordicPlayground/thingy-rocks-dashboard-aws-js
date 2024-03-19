@@ -21,8 +21,11 @@ const DeviceState = styled.section`
 	top: 0;
 	user-select: none;
 	overflow: hidden;
-	max-height: 100vh;
+	max-height: calc(100vh - var(--menu-height));
 	overflow-y: auto;
+	scrollbar-color: #ffffff66 var(--color-panel-bg);
+	scrollbar-width: thin;
+	width: 375px;
 	> ul {
 		list-style: none;
 		margin: 0;

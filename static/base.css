@@ -23,6 +23,8 @@
 
   /* Other */
   --color-panel-bg: #0b0b0f75;
+
+  --menu-height: 60px;
 }
 
 #map {
