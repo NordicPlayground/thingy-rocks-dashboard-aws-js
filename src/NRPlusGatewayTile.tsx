@@ -21,7 +21,7 @@ import {
 	X,
 } from 'lucide-preact'
 import { RelativeTime } from './RelativeTime.js'
-import { ButtonPressDiff } from './ButtonPress.js'
+import { ShowWhenHot } from './ShowWhenHot.js'
 import { useState } from 'preact/hooks'
 import { useWebsocket } from './context/WebsocketConnection.js'
 import { sortLocations } from './sortLocations.js'
@@ -253,12 +253,7 @@ const Node = ({
 			</dd>
 			{node.btn !== undefined && (
 				<>
-					<ButtonPressDiff
-						buttonPress={{
-							v: node.btn.n,
-							ts: node.btn.ts,
-						}}
-					>
+					<ShowWhenHot ts={new Date(node.btn.ts)}>
 						{(diffSeconds) => (
 							<>
 								<dt style={{ color: 'var(--color-nordic-pink)' }}>
@@ -270,7 +265,7 @@ const Node = ({
 								</dd>
 							</>
 						)}
-					</ButtonPressDiff>
+					</ShowWhenHot>
 				</>
 			)}
 		</>

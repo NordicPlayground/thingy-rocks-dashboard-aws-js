@@ -8,6 +8,7 @@ import {
 	GeoLocationSource,
 	DeviceType,
 } from './Devices.js'
+import type { Reboot } from '../memfault/Context.js'
 
 export const WebsocketContext = createContext<{
 	connected: boolean
@@ -27,6 +28,7 @@ export enum MessageContext {
 	DeviceLocation = 'https://thingy.rocks/device-location',
 	DeviceHistory = 'https://thingy.rocks/device-history',
 	LwM2MShadows = 'https://thingy.rocks/lwm2m-shadows',
+	MemfaultReboot = 'https://thingy.rocks/memfault-reboot',
 }
 
 type Message = {
@@ -55,6 +57,10 @@ type Message = {
 	  }
 	| {
 			'@context': MessageContext.LwM2MShadows
+	  }
+	| {
+			'@context': MessageContext.MemfaultReboot
+			reboot: Reboot
 	  }
 )
 
@@ -124,6 +130,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					deviceMessages.updateHistory(message.deviceId, message.history)
 					break
 				case MessageContext.LwM2MShadows:
+				case MessageContext.MemfaultReboot:
 					// ignore here
 					break
 				default:

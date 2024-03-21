@@ -1,10 +1,9 @@
 import { Focus } from 'lucide-preact'
-import type { VNode } from 'preact'
-import { useEffect, useState } from 'preact/hooks'
 import { styled } from 'styled-components'
 import type { ButtonPress as ButtonPressData } from './context/Devices.js'
+import { ShowWhenHot } from './ShowWhenHot.js'
 
-const diff = (ts: ButtonPressData['ts']): number =>
+export const diff = (ts: ButtonPressData['ts']): number =>
 	Math.floor((Date.now() - ts) / 1000)
 
 const HotDt = styled.dt`
@@ -17,12 +16,9 @@ const HotDd = styled.dd`
 /**
  * Display a button press for a given period
  */
-export const ButtonPress = (props: {
-	buttonPress: ButtonPressData
-	untilSeconds?: number
-}) => {
+export const ButtonPress = (props: { buttonPress: ButtonPressData }) => {
 	return (
-		<ButtonPressDiff {...props}>
+		<ShowWhenHot ts={new Date(props.buttonPress.ts)}>
 			{(diffSeconds) => (
 				<>
 					<HotDt>
@@ -31,32 +27,6 @@ export const ButtonPress = (props: {
 					<HotDd>{diffSeconds} seconds ago</HotDd>
 				</>
 			)}
-		</ButtonPressDiff>
+		</ShowWhenHot>
 	)
-}
-
-export const ButtonPressDiff = ({
-	buttonPress: { ts },
-	untilSeconds,
-	children,
-}: {
-	buttonPress: ButtonPressData
-	untilSeconds?: number
-	children: (diffSeconds: number) => VNode<any>
-}) => {
-	const [diffSeconds, setDiffSeconds] = useState<number>(diff(ts))
-
-	useEffect(() => {
-		const i = setInterval(() => {
-			const diffSeconds = diff(ts)
-			setDiffSeconds(diffSeconds)
-			if (diffSeconds > (untilSeconds ?? 30)) clearInterval(i)
-		}, 1000)
-		return () => {
-			clearInterval(i)
-		}
-	}, [ts])
-
-	if (diffSeconds > (untilSeconds ?? 30)) return null
-	return children(diffSeconds)
 }

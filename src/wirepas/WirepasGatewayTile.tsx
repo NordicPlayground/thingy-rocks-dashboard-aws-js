@@ -32,7 +32,7 @@ import { useState } from 'preact/hooks'
 import { ConfigureCode } from '../ConfigureCode.js'
 import { useSettings } from '../context/Settings.js'
 import { useWebsocket } from '../context/WebsocketConnection.js'
-import { ButtonPressDiff } from '../ButtonPress.js'
+import { ShowWhenHot } from '../ShowWhenHot.js'
 import { sum } from 'lodash-es'
 import { formatId } from './formatId.js'
 import { withCancel } from '../cancelEvent.js'
@@ -321,7 +321,7 @@ const Node = ({
 				</tr>
 			)}
 			{node.payload?.btn !== undefined && (
-				<ButtonPressDiff buttonPress={node.payload.btn}>
+				<ShowWhenHot ts={new Date(node.payload.btn.ts)}>
 					{(diffSeconds) => (
 						<tr style={{ color: 'var(--color-nordic-pink)' }}>
 							<td>
@@ -330,7 +330,7 @@ const Node = ({
 							<td colspan={4}>{diffSeconds} seconds ago</td>
 						</tr>
 					)}
-				</ButtonPressDiff>
+				</ShowWhenHot>
 			)}
 		</>
 	)

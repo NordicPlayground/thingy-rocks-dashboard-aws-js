@@ -1,6 +1,7 @@
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
 import { isEqual } from 'lodash-es'
+import { MessageContext, useWebsocket } from '../context/WebsocketConnection.js'
 
 export type Reboot = {
 	reason: number // e.g. 7
@@ -30,6 +31,7 @@ export const useMemfault = () => useContext(MemfaultContext)
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [reboots, setReboots] = useState<Record<string, Reboot[]>>({})
+	const { onMessage, removeMessageListener, connected } = useWebsocket()
 
 	const fetchReboots = async () => {
 		void fetch(
@@ -61,6 +63,23 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		}
 	}, [])
 
+	// Listen to Memfault reboots
+	const listener = (message: Record<string, unknown>) => {
+		if (isMemfaultReboot(message)) {
+			setReboots((r) => ({
+				...r,
+				[message.deviceId]: [message.reboot, ...(r[message.deviceId] ?? [])],
+			}))
+		}
+	}
+	useEffect(() => {
+		if (!connected) return
+		onMessage(listener)
+		return () => {
+			removeMessageListener(listener)
+		}
+	})
+
 	return (
 		<MemfaultContext.Provider
 			value={{
@@ -71,3 +90,15 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		</MemfaultContext.Provider>
 	)
 }
+
+const isMemfaultReboot = (
+	message: unknown,
+): message is {
+	'@context': MessageContext.MemfaultReboot
+	deviceId: string
+	reboot: Reboot
+} =>
+	message !== null &&
+	typeof message === 'object' &&
+	'@context' in message &&
+	message['@context'] === MessageContext.MemfaultReboot
