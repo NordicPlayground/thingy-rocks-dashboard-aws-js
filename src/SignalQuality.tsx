@@ -1,5 +1,7 @@
 import { RSRP, SignalQualityTriangle } from '@bifravst/rsrp-bar'
 import {
+	EarthIcon,
+	SatelliteIcon,
 	Signal,
 	SignalHigh,
 	SignalLow,
@@ -77,7 +79,7 @@ export const SignalQuality = ({ device }: { device: Device }) => {
 					</abbr>
 				</dt>
 				<dd>
-					<NetworkInfo device={device} />
+					<ConnectionTechnology device={device} />
 					{rsrpDbm ?? '?'} dBm
 					{eest !== undefined && (
 						<EestLabel
@@ -111,7 +113,7 @@ export const SignalQuality = ({ device }: { device: Device }) => {
 				)}
 			</dt>
 			<dd>
-				<NetworkInfo device={device} />
+				<ConnectionTechnology device={device} />
 				{rsrpDbm ?? '?'} dBm
 			</dd>
 		</>
@@ -126,6 +128,12 @@ const Abbr = styled.abbr`
 	}
 `
 
+const ConnectionTechnology = ({ device }: { device: Device }) => {
+	const { nw } = device.state?.roam?.v ?? {}
+	if (nw?.toLowerCase().includes('ntn') ?? false) return <NTN />
+	return <NetworkInfo device={device} />
+}
+
 const NetworkInfo = ({ device }: { device: Device }) => {
 	const { nw, band } = device.state?.roam?.v ?? {}
 	return (
@@ -134,3 +142,10 @@ const NetworkInfo = ({ device }: { device: Device }) => {
 		</Abbr>
 	)
 }
+
+const NTN = () => (
+	<span style={{ marginRight: '0.5rem' }}>
+		<EarthIcon />
+		<SatelliteIcon />
+	</span>
+)
