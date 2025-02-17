@@ -198,7 +198,6 @@ const processObjects = (
 				ts: new Date(object.Resources['99'] * 1000).getTime(),
 			}
 		} else if (isGeolocation(object)) {
-			console.log('Geolocation', object)
 			const {
 				1: lng,
 				0: lat,

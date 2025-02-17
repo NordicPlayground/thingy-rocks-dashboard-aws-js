@@ -302,13 +302,11 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					})
 
 					const maybeUpdated = getDeviceLastUpdateTime(reported)
-					console.log({ reported, maybeUpdated })
 					if (maybeUpdated !== null) {
-						setLastUpdateTs((u) => {
-							const t = newer(new Date(maybeUpdated), u[deviceId])
-							console.log(`Last updated`, deviceId, t)
-							return { ...u, [deviceId]: t }
-						})
+						setLastUpdateTs((u) => ({
+							...u,
+							[deviceId]: newer(new Date(maybeUpdated), u[deviceId]),
+						}))
 					}
 				},
 				updateLocation: (deviceId, location) => {
