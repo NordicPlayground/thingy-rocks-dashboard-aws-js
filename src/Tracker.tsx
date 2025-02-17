@@ -1,5 +1,6 @@
 import { identifyIssuer } from 'e118-iin-list'
 import { UploadCloud, Wifi } from 'lucide-preact'
+import type { JSX } from 'preact/jsx-runtime'
 import { styled } from 'styled-components'
 import { ButtonPress } from './ButtonPress.js'
 import { CountryFlag } from './CountryFlag.js'
@@ -20,6 +21,7 @@ import { SignalQuality } from './SignalQuality.js'
 import { UpdateWarning } from './UpdateWarning.js'
 import { wifiColor } from './colors.js'
 import {
+	hasNUSIM,
 	hasSoftSIM,
 	useDevices,
 	type Device,
@@ -28,6 +30,7 @@ import {
 import { useSettings } from './context/Settings.js'
 import { showDetails } from './hooks/useDetails.js'
 import { DKIcon } from './icons/DKIcon.js'
+import { NuSIMIcon } from './icons/NuSIMIcon.tsx'
 import { SIMIcon } from './icons/SIMIcon.js'
 import { SoftSIMIcon } from './icons/SoftSIMIcon.js'
 import { ThingyIcon } from './icons/ThingyIcon.js'
@@ -45,6 +48,13 @@ const StyledSoftSIMIcon = styled(SoftSIMIcon)`
 	width: 20px;
 	height: 18px;
 	margin: 0 0 0 4px;
+`
+
+const StyledNuSIMIcon = styled(NuSIMIcon)`
+	width: 20px;
+	height: 16px;
+	margin: 0 0 0 4px;
+	color: var(--color-nordic-blue);
 `
 
 export const Tracker = ({
@@ -114,13 +124,7 @@ export const Tracker = ({
 				{iccid !== undefined && (
 					<>
 						<dt>
-							{hasSoftSIM(device) ? (
-								<abbr title="SoftSIM">
-									<StyledSoftSIMIcon />
-								</abbr>
-							) : (
-								<StyledSIMIcon />
-							)}
+							<SIMTechnology device={device} />
 						</dt>
 						<IssuerName>{identifyIssuer(iccid)?.companyName ?? '?'}</IssuerName>
 					</>
@@ -153,4 +157,20 @@ export const Tracker = ({
 			</Properties>
 		</>
 	)
+}
+
+const SIMTechnology = ({ device }: { device: Device }): JSX.Element => {
+	if (hasSoftSIM(device))
+		return (
+			<abbr title="SoftSIM">
+				<StyledSoftSIMIcon />
+			</abbr>
+		)
+	if (hasNUSIM(device))
+		return (
+			<abbr title="nuSIM">
+				<StyledNuSIMIcon />
+			</abbr>
+		)
+	return <StyledSIMIcon />
 }

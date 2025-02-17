@@ -188,6 +188,20 @@ export const isTracker = (device: Device): boolean => {
 export const hasSoftSIM = (device: Device): boolean =>
 	device.state?.dev?.v?.appV?.includes('softsim') ?? false
 
+export const hasNUSIM = (device: Device): boolean =>
+	[
+		'89882280000126652045',
+		'89882280000126652052',
+		'89882280000126652060',
+		'89882280000126652078',
+		'89882280000126652086',
+		'89882280000126652094',
+		'89882280000126652102',
+		'89882280000126652110',
+		'89882280000126652128',
+		'89882280000126652136',
+	].includes(device.state?.dev?.v?.iccid ?? '-1')
+
 export const DevicesContext = createContext<{
 	devices: Devices
 	updateState: (deviceId: string, reported: Reported) => void
