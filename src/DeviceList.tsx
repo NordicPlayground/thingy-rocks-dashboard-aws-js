@@ -80,6 +80,7 @@ export const LastUpdate = styled.abbr`
 	margin-left: 0.5rem;
 	opacity: 0.8;
 	font-size: 85%;
+	white-space: nowrap;
 	svg {
 		margin-right: 0.5rem;
 	}

@@ -132,7 +132,7 @@ export type Reported = Partial<{
 }>
 
 export enum GeoLocationSource {
-	GNSS = 'gnss',
+	GNSS = 'GNSS',
 	fixed = 'fixed',
 	MCELL = 'MCELL',
 	SCELL = 'SCELL',
@@ -199,7 +199,7 @@ export const DevicesContext = createContext<{
 	updateHistory: (deviceId: string, history: Summary) => void
 	updateAlias: (deviceId: string, alias: string) => void
 	updateType: (deviceId: string, type: DeviceType) => void
-	lastUpdateTs: (deviceId: string) => number | null
+	lastUpdateTs: Record<string, Date | undefined>
 	alias: (deviceId: string) => string | undefined
 	type: (deviceId: string) => DeviceType | undefined
 }>({
@@ -210,7 +210,7 @@ export const DevicesContext = createContext<{
 	alias: () => undefined,
 	updateType: () => undefined,
 	type: () => undefined,
-	lastUpdateTs: () => null,
+	lastUpdateTs: {},
 	devices: {},
 })
 
@@ -219,6 +219,9 @@ const deviceTypes: Record<string, DeviceType> = {}
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [knownDevices, updateDevices] = useState<Devices>({})
+	const [lastUpdateTs, setLastUpdateTs] = useState<
+		Record<string, Date | undefined>
+	>({})
 
 	return (
 		<DevicesContext.Provider
@@ -283,6 +286,16 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 							[deviceId]: updated,
 						}
 					})
+
+					const maybeUpdated = getDeviceLastUpdateTime(reported)
+					console.log({ reported, maybeUpdated })
+					if (maybeUpdated !== null) {
+						setLastUpdateTs((u) => {
+							const t = newer(new Date(maybeUpdated), u[deviceId])
+							console.log(`Last updated`, deviceId, t)
+							return { ...u, [deviceId]: t }
+						})
+					}
 				},
 				updateLocation: (deviceId, location) => {
 					updateDevices((devices) => ({
@@ -295,6 +308,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 								[location.source]: location,
 							} as Location,
 						},
+					}))
+					setLastUpdateTs((u) => ({
+						...u,
+						[deviceId]: newer(location.ts, u[deviceId]),
 					}))
 				},
 				updateHistory: (deviceId, history) => {
@@ -310,11 +327,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						},
 					}))
 				},
-				lastUpdateTs: (deviceId) => {
-					const device = knownDevices[deviceId]
-					if (device === undefined) return null
-					return getDeviceLastUpdateTime(knownDevices[deviceId])
-				},
+				lastUpdateTs,
 				updateAlias: (deviceId, alias) => {
 					deviceAliases[deviceId] = alias
 				},
@@ -330,13 +343,14 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 	)
 }
 
+const newer = (d1: Date, d2?: Date) => (d2 === undefined || d1 > d2 ? d1 : d2)
+
 export const Consumer = DevicesContext.Consumer
 
 export const useDevices = () => useContext(DevicesContext)
 
-const getDeviceLastUpdateTime = (device?: Device): null | number => {
-	const state = device?.state
-	return getLastUpdateTime([
+const getDeviceLastUpdateTime = (state: Reported): null | number =>
+	getLastUpdateTime([
 		state?.btn?.ts,
 		state?.dev?.ts,
 		state?.env?.ts,
@@ -344,7 +358,6 @@ const getDeviceLastUpdateTime = (device?: Device): null | number => {
 		state?.roam?.ts,
 		state?.fg?.ts,
 	])
-}
 
 export const getLastUpdateTime = (
 	lastUpdateTimeStamps: (number | undefined)[],

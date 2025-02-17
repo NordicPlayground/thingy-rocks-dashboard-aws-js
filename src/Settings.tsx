@@ -166,10 +166,11 @@ const FavoriteSelector = () => {
 	return (
 		<ul class="list-group">
 			{Object.entries(devices)
-				.filter(
-					([, d]) =>
-						(lastUpdateTs(d.id) ?? 0) > Date.now() - 24 * 60 * 60 * 1000,
-				)
+				.filter(([, d]) => {
+					const maybeUpdated = lastUpdateTs[d.id]
+					if (maybeUpdated === undefined) return false
+					return maybeUpdated.getTime() > Date.now() - 24 * 60 * 60 * 1000
+				})
 				.sort(([id1], [id2]) => {
 					const i1 = favorites.indexOf(id1)
 					const i2 = favorites.indexOf(id2)

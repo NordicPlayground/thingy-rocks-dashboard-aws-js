@@ -37,7 +37,7 @@
     "@sentry/tracing": "7.120.3",
     "compare-versions": "6.1.1",
     "date-fns": "4.1.0",
-    "e118-iin-list": "4.4.0",
+    "e118-iin-list": "4.4.1",
     "lodash-es": "4.17.21",
     "lucide-preact": "0.475.0",
     "maplibre-gl": "5.1.0",

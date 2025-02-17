@@ -17,14 +17,17 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			return favorites.includes(device.id)
 		})
 		.filter((device) => {
-			const ts = lastUpdateTs(device.id)
+			const ts = lastUpdateTs[device.id]?.getTime() ?? null
 			if (ts === null) return device.history !== undefined // show devices that have history available (history will have a cut-off of 60 minutes)
 			if (ts < Date.now() - 60 * 60 * 1000) return false
 			return true
 		})
 		.sort(({ id: id1 }, { id: id2 }) => {
 			if (!showFavorites)
-				return (lastUpdateTs(id2) ?? 0) - (lastUpdateTs(id1) ?? 0)
+				return (
+					(lastUpdateTs[id2]?.getTime() ?? 0) -
+					(lastUpdateTs[id1]?.getTime() ?? 0)
+				)
 			return favorites.indexOf(id1) - favorites.indexOf(id2)
 		})
 

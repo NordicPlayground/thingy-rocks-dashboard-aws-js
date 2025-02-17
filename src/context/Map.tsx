@@ -113,7 +113,13 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 				// Create new sources and layers
 				// For properties, see https://maplibre.org/maplibre-gl-js-docs/style-spec/layers/
 				// Data for Hexagon
-				console.debug(`[map]`, 'add source', locationAreaSourceId, location)
+				console.debug(
+					`[map]`,
+					'add source',
+					locationAreaSourceId,
+					location,
+					source,
+				)
 				map.addSource(
 					locationAreaSourceId,
 					geoJSONPolygonFromCircle([lng, lat], accuracy ?? 500, 6, Math.PI / 2),

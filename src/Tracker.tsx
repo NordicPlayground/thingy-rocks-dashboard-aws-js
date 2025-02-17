@@ -68,7 +68,7 @@ export const Tracker = ({
 	const buttonPress = state?.btn
 	const { brdV, appV, iccid } = state?.dev?.v ?? {}
 
-	const lastUpdateTime = lastUpdateTs(device.id) as number
+	const maybeLastUpdateTime = lastUpdateTs[device.id]
 
 	const BoardIcon =
 		(brdV?.includes('nrf9160dk') ?? false)
@@ -101,10 +101,10 @@ export const Tracker = ({
 					<DeviceName device={device} />
 				</span>
 				<CountryFlag device={device} />
-				{lastUpdateTime !== undefined && (
+				{maybeLastUpdateTime !== undefined && (
 					<LastUpdate title="Last update">
 						<UploadCloud strokeWidth={1} />
-						<RelativeTime time={new Date(lastUpdateTime)} />
+						<RelativeTime time={maybeLastUpdateTime} />
 					</LastUpdate>
 				)}
 				<PinTile device={device} />

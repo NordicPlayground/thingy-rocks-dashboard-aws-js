@@ -1,3 +1,4 @@
+import type { LwM2MObjectInstance } from '@hello.nrfcloud.com/proto-map/lwm2m'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useRef, useState } from 'preact/hooks'
 import type { Reboot } from '../memfault/Context.js'
@@ -29,6 +30,7 @@ export enum MessageContext {
 	DeviceHistory = 'https://thingy.rocks/device-history',
 	LwM2MShadows = 'https://thingy.rocks/lwm2m-shadows',
 	MemfaultReboot = 'https://thingy.rocks/memfault-reboot',
+	LwM2MUpdate = 'https://thingy.rocks/lwm2m-update',
 }
 
 type Message = {
@@ -61,6 +63,11 @@ type Message = {
 	| {
 			'@context': MessageContext.MemfaultReboot
 			reboot: Reboot
+	  }
+	| {
+			'@context': MessageContext.LwM2MUpdate
+			deviceId: string
+			objects: Array<LwM2MObjectInstance>
 	  }
 )
 
@@ -131,6 +138,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					break
 				case MessageContext.LwM2MShadows:
 				case MessageContext.MemfaultReboot:
+				case MessageContext.LwM2MUpdate:
 					// ignore here
 					break
 				default:
