@@ -30,6 +30,7 @@ import {
 import { useSettings } from './context/Settings.js'
 import { showDetails } from './hooks/useDetails.js'
 import { DKIcon } from './icons/DKIcon.js'
+import { Myriota } from './icons/Myriota.tsx'
 import { NuSIMIcon } from './icons/NuSIMIcon.tsx'
 import { SIMIcon } from './icons/SIMIcon.js'
 import { SoftSIMIcon } from './icons/SoftSIMIcon.js'
@@ -57,6 +58,14 @@ const StyledNuSIMIcon = styled(NuSIMIcon)`
 	color: var(--color-nordic-blue);
 `
 
+const BoardIcon = ({ device }: { device: Device }) => {
+	const brdV = device.state?.dev?.v?.brdV
+	if (brdV?.includes('myriota') ?? false) return <Myriota class="icon" />
+	if (brdV?.includes('nrf9160dk') ?? false) return <DKIcon class="icon" />
+	if (brdV?.includes('thingy91x') ?? false) return <ThingyXIcon class="icon" />
+	return <ThingyIcon class="icon" />
+}
+
 export const Tracker = ({
 	device,
 	onCenter,
@@ -76,16 +85,9 @@ export const Tracker = ({
 	const deviceLocation = rankedLocations[0]
 
 	const buttonPress = state?.btn
-	const { brdV, appV, iccid } = state?.dev?.v ?? {}
+	const { appV, iccid } = state?.dev?.v ?? {}
 
 	const maybeLastUpdateTime = lastUpdateTs[device.id]
-
-	const BoardIcon =
-		(brdV?.includes('nrf9160dk') ?? false)
-			? DKIcon
-			: (brdV?.includes('thingy91x') ?? false)
-				? ThingyXIcon
-				: ThingyIcon
 
 	return (
 		<>
@@ -97,7 +99,7 @@ export const Tracker = ({
 					showDetails(device.id)
 				}}
 			>
-				<BoardIcon class="icon" />
+				<BoardIcon device={device} />
 				<span class="info">
 					{appV?.includes('wifi') === true && (
 						<ShieldIcon>
