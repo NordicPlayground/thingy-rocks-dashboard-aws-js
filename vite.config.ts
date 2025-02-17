@@ -34,10 +34,10 @@ if (sentryDSN === undefined) {
 const firmwareRelease = process.env.FIRMWARE_RELEASE ?? '2.2.1'
 // See https://www.nordicsemi.com/Products/Development-hardware/nRF9160-DK/Download
 const modemFirmwareRelease9160 =
-	process.env.MODEM_FIRMWARE_RELEASE_9160 ?? '1.3.6'
+	process.env.MODEM_FIRMWARE_RELEASE_9160 ?? '1.3.7'
 // See https://www.nordicsemi.com/Products/nRF9161/Download
 const modemFirmwareRelease91x =
-	process.env.MODEM_FIRMWARE_RELEASE_91x ?? '2.0.1'
+	process.env.MODEM_FIRMWARE_RELEASE_91x ?? '2.0.2'
 
 const replaceInIndex = (data: Record<string, string>) => ({
 	name: 'replace-in-index',
