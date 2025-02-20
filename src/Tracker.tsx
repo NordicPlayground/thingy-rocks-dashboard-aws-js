@@ -30,6 +30,7 @@ import {
 import { useSettings } from './context/Settings.js'
 import { showDetails } from './hooks/useDetails.js'
 import { DKIcon } from './icons/DKIcon.js'
+import { Keysight } from './icons/Keysight.tsx'
 import { Myriota } from './icons/Myriota.tsx'
 import { NuSIMIcon } from './icons/NuSIMIcon.tsx'
 import { SIMIcon } from './icons/SIMIcon.js'
@@ -60,6 +61,7 @@ const StyledNuSIMIcon = styled(NuSIMIcon)`
 
 const BoardIcon = ({ device }: { device: Device }) => {
 	const brdV = device.state?.dev?.v?.brdV
+	if (brdV?.includes('keysight') ?? false) return <Keysight class="icon" />
 	if (brdV?.includes('myriota') ?? false) return <Myriota class="icon" />
 	if (brdV?.includes('nrf9160dk') ?? false) return <DKIcon class="icon" />
 	if (brdV?.includes('thingy91x') ?? false) return <ThingyXIcon class="icon" />
