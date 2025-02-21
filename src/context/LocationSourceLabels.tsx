@@ -6,6 +6,6 @@ export const LocationSourceLabels = {
 	[GeoLocationSource.WIFI]: 'Wi-Fi',
 	[GeoLocationSource.SCELL]: 'single-cell',
 	[GeoLocationSource.MCELL]: 'multi-cell',
-	[GeoLocationSource.LPL]: 'LTE precision location',
+	[GeoLocationSource.LPL]: 'LTE Precision Location',
 	[GeoLocationSource.fixed]: 'Fixed Location',
 }
