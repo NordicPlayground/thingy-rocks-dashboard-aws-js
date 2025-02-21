@@ -91,23 +91,25 @@ export const FuelGauge = ({
 						</button>
 					</ChargingIndicator>
 				)}
-				<ChargingIndicator>
-					<button type={'button'} onClick={() => onClick?.()}>
-						{V !== undefined && <span class="me-1">{V / 1000} V</span>}
-						{current !== undefined && (
-							<span class="me-1">
-								<Zap strokeWidth={1} class="me-0" />
-								{current} mA
-							</span>
-						)}
-						{temp !== undefined && (
-							<span class="me-1">
-								<Thermometer strokeWidth={1} class="me-0" />
-								{(temp / 10).toFixed(1)} °C
-							</span>
-						)}
-					</button>
-				</ChargingIndicator>
+				{(V !== undefined || current !== undefined || temp !== undefined) && (
+					<ChargingIndicator>
+						<button type={'button'} onClick={() => onClick?.()}>
+							{V !== undefined && <span class="me-1">{V / 1000} V</span>}
+							{current !== undefined && (
+								<span class="me-1">
+									<Zap strokeWidth={1} class="me-0" />
+									{current} mA
+								</span>
+							)}
+							{temp !== undefined && (
+								<span class="me-1">
+									<Thermometer strokeWidth={1} class="me-0" />
+									{(temp / 10).toFixed(1)} °C
+								</span>
+							)}
+						</button>
+					</ChargingIndicator>
+				)}
 			</dd>
 		</>
 	)
