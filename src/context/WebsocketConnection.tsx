@@ -44,6 +44,7 @@ type Message = {
 	| {
 			'@context': MessageContext.DeviceLocation
 			location: GeoLocation
+			ts: number
 	  }
 	| {
 			'@context': MessageContext.DeviceShadow
@@ -128,7 +129,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						message.deviceId,
 						{
 							...message.location,
-							ts: new Date(),
+							ts: new Date(message.ts),
 						},
 						message.location.source,
 					)
