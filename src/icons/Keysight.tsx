@@ -1,4 +1,4 @@
-export const Keysight = ({ ...props }) => (
+export const KeysightIcon = ({ ...props }) => (
 	<svg
 		width="261.1261"
 		height="248.17519"

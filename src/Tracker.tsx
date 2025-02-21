@@ -30,10 +30,11 @@ import {
 import { useSettings } from './context/Settings.js'
 import { showDetails } from './hooks/useDetails.js'
 import { DKIcon } from './icons/DKIcon.js'
-import { Keysight } from './icons/Keysight.tsx'
-import { Myriota } from './icons/Myriota.tsx'
+import { KeysightIcon } from './icons/Keysight.tsx'
+import { MyriotaIcon } from './icons/Myriota.tsx'
 import { NuSIMIcon } from './icons/NuSIMIcon.tsx'
 import { SIMIcon } from './icons/SIMIcon.js'
+import { SkyloIcon } from './icons/Skylo.tsx'
 import { SoftSIMIcon } from './icons/SoftSIMIcon.js'
 import { ThingyIcon } from './icons/ThingyIcon.js'
 import { ThingyXIcon } from './icons/ThingyXIcon.js'
@@ -61,8 +62,10 @@ const StyledNuSIMIcon = styled(NuSIMIcon)`
 
 const BoardIcon = ({ device }: { device: Device }) => {
 	const brdV = device.state?.dev?.v?.brdV
-	if (brdV?.includes('keysight') ?? false) return <Keysight class="icon" />
-	if (brdV?.includes('myriota') ?? false) return <Myriota class="icon" />
+	if (brdV?.includes('keysight') ?? false) return <KeysightIcon class="icon" />
+	if (brdV?.includes('skylo') ?? false)
+		return <SkyloIcon class="icon" style={{ padding: '2px 0' }} />
+	if (brdV?.includes('myriota') ?? false) return <MyriotaIcon class="icon" />
 	if (brdV?.includes('nrf9160dk') ?? false) return <DKIcon class="icon" />
 	if (brdV?.includes('thingy91x') ?? false) return <ThingyXIcon class="icon" />
 	return <ThingyIcon class="icon" />
