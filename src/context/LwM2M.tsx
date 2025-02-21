@@ -245,6 +245,26 @@ const processObjects = (
 					source: GeoLocationSource.SCELL,
 					ts: new Date(object.Resources['99'] * 1000),
 				})
+			} else if (object.ObjectInstanceID === 3) {
+				// LPL fix
+				reported.lpl = {
+					v: {
+						lng,
+						lat,
+						acc,
+						alt,
+						spd,
+						hdg,
+					},
+					ts: new Date(object.Resources['99'] * 1000).getTime(),
+				}
+				locations.set('LPL', {
+					lng,
+					lat,
+					accuracy: acc,
+					source: GeoLocationSource.LPL,
+					ts: new Date(object.Resources['99'] * 1000),
+				})
 			}
 		}
 	}

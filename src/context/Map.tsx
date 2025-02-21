@@ -53,6 +53,7 @@ export const locationSourceDashArray: Record<
 	[GeoLocationSource.MCELL]: [4, 2],
 	[GeoLocationSource.SCELL]: [8, 4, 1, 4],
 	[GeoLocationSource.fixed]: [1],
+	[GeoLocationSource.LPL]: [8, 2, 4, 2],
 }
 
 const ids = (deviceId: string, source: GeoLocationSource) => {

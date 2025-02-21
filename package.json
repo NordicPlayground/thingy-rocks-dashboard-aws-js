@@ -32,7 +32,7 @@
     "@aws-sdk/credential-provider-cognito-identity": "3.750.0",
     "@aws/amazon-location-utilities-auth-helper": "1.2.1",
     "@bifravst/rsrp-bar": "8.0.6",
-    "@hello.nrfcloud.com/proto-map": "16.2.4",
+    "@hello.nrfcloud.com/proto-map": "16.2.5",
     "@sentry/react": "9.1.0",
     "@sentry/tracing": "7.120.3",
     "compare-versions": "6.1.1",

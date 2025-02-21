@@ -48,6 +48,18 @@ export enum EnergyEstimate {
 	Excellent = 9,
 }
 
+type GeoLocationData = {
+	v: {
+		lng: number // 10.4383147713927
+		lat: number // 63.42503380159108
+		acc?: number // 19.08224868774414
+		alt?: number // 117.34368896484375
+		spd?: number // 5.4213972091674805
+		hdg?: number // 170.65904235839844
+	}
+	ts: number // 1670245539000
+}
+
 export type Reported = Partial<{
 	cfg: {
 		act: boolean
@@ -101,17 +113,8 @@ export type Reported = Partial<{
 	 */
 	bat: BatteryInfo
 	btn: ButtonPress
-	gnss: {
-		v: {
-			lng: number // 10.4383147713927
-			lat: number // 63.42503380159108
-			acc?: number // 19.08224868774414
-			alt?: number // 117.34368896484375
-			spd?: number // 5.4213972091674805
-			hdg?: number // 170.65904235839844
-		}
-		ts: number // 1670245539000
-	}
+	gnss: GeoLocationData
+	lpl: GeoLocationData
 	// Device has a fixed geo location
 	geo: {
 		lng: number // 10.4383147713927
@@ -137,6 +140,7 @@ export enum GeoLocationSource {
 	MCELL = 'MCELL',
 	SCELL = 'SCELL',
 	WIFI = 'WIFI',
+	LPL = 'LPL',
 }
 
 export type GeoLocation = {
@@ -261,6 +265,22 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 									accuracy: reported.gnss.v.acc,
 									source: GeoLocationSource.GNSS,
 									ts: new Date(reported.gnss.ts),
+								},
+							} as Location
+						}
+						// Use LPL location from shadow
+						if (
+							reported.lpl !== undefined &&
+							reported.lpl.ts > Date.now() - 60 * 60 * 1000
+						) {
+							updated.location = {
+								...(updated.location ?? {}),
+								[GeoLocationSource.LPL]: {
+									lat: reported.lpl.v.lat,
+									lng: reported.lpl.v.lng,
+									accuracy: reported.lpl.v.acc,
+									source: GeoLocationSource.LPL,
+									ts: new Date(reported.lpl.ts),
 								},
 							} as Location
 						}
