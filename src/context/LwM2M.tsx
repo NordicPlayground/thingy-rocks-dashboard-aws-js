@@ -7,7 +7,7 @@ import {
 	type LwM2MObjectInstance,
 } from '@hello.nrfcloud.com/proto-map/lwm2m'
 import { createContext, type ComponentChildren } from 'preact'
-import { useEffect, useState } from 'preact/hooks'
+import { useContext, useEffect, useState } from 'preact/hooks'
 import {
 	GeoLocationSource,
 	useDevices,
@@ -35,8 +35,11 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		const listener = (message: Record<string, unknown>) => {
 			if (isLwM2MShadows(message)) {
 				setObjects(
-					Object.entries(message.shadows).reduce(
-						(objects, [k, { objects: o }]) => ({ ...objects, [k]: o }),
+					Object.values(message.shadows).reduce(
+						(objects, { objects: o, deviceId }) => ({
+							...objects,
+							[deviceId]: o,
+						}),
 						{},
 					),
 				)
@@ -270,3 +273,5 @@ const processObjects = (
 	}
 	return { reported, locations }
 }
+
+export const useLwM2MObjects = () => useContext(LwM2MContext)

@@ -3,6 +3,7 @@ import { UploadCloud, Wifi } from 'lucide-preact'
 import type { JSX } from 'preact/jsx-runtime'
 import { styled } from 'styled-components'
 import { ButtonPress } from './ButtonPress.js'
+import { ConnectionQuality } from './ConnectionQuality.tsx'
 import { CountryFlag } from './CountryFlag.js'
 import {
 	IssuerName,
@@ -128,6 +129,7 @@ export const Tracker = ({
 			</Title>
 			<Properties>
 				<SignalQuality device={device} />
+				<ConnectionQuality device={device} />
 				{iccid !== undefined && (
 					<>
 						<dt>
