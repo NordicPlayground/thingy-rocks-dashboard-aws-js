@@ -14,13 +14,13 @@ env:
   CNAME: world.thingy.rocks
   SENTRY_DSN: https://f0636caa395147fcb07f781d0c1e8e6c@o4504255385174016.ingest.sentry.io/4504255391596544
   # EU
-  # WEBSOCKET_ENDPOINT: wss://ouqkjmrbb8.execute-api.eu-central-1.amazonaws.com/2022-11-22
-  # MAP_NAME: thingy-rocks-backend-map
-  # COGNITO_IDENTITY_POOL_ID: eu-central-1:09c73822-5984-44ff-be03-db63403fdf59
-  # US
-  WEBSOCKET_ENDPOINT: wss://ui1r9dn0sk.execute-api.us-west-2.amazonaws.com/2022-11-22
+  WEBSOCKET_ENDPOINT: wss://ouqkjmrbb8.execute-api.eu-central-1.amazonaws.com/2022-11-22
   MAP_NAME: thingy-rocks-backend-map
-  COGNITO_IDENTITY_POOL_ID: us-west-2:45eec48f-6f2b-47dc-93ef-0d33ec36a698
+  COGNITO_IDENTITY_POOL_ID: eu-central-1:09c73822-5984-44ff-be03-db63403fdf59
+  # US
+  # WEBSOCKET_ENDPOINT: wss://ui1r9dn0sk.execute-api.us-west-2.amazonaws.com/2022-11-22
+  # MAP_NAME: thingy-rocks-backend-map
+  # COGNITO_IDENTITY_POOL_ID: us-west-2:45eec48f-6f2b-47dc-93ef-0d33ec36a698
 
 jobs:
   next-release:
