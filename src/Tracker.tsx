@@ -129,7 +129,12 @@ export const Tracker = ({
 			</Title>
 			<Properties>
 				<SignalQuality device={device} />
-				<ConnectionQuality device={device} />
+				<ConnectionQuality
+					device={device}
+					onClick={() => {
+						showDetails(device.id)
+					}}
+				/>
 				{iccid !== undefined && (
 					<>
 						<dt>

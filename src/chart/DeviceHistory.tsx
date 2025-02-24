@@ -1,5 +1,12 @@
 import { format, subSeconds } from 'date-fns'
-import { Battery, Thermometer, X, Zap, type LucideIcon } from 'lucide-preact'
+import {
+	ArrowLeftRight,
+	Battery,
+	Thermometer,
+	X,
+	Zap,
+	type LucideIcon,
+} from 'lucide-preact'
 import type { Ref } from 'preact'
 import { useRef } from 'preact/hooks'
 import { styled } from 'styled-components'
@@ -134,6 +141,25 @@ export const DeviceHistory = () => {
 			title: 'PMIC\nnPM1300',
 			color: colors['nordic-sun'],
 			datasets: fgData,
+		})
+	}
+	if (history?.cqLatency !== undefined) {
+		charts.push({
+			Icon: ArrowLeftRight,
+			title: 'Latency',
+			color: colors['nordic-blue'],
+			datasets: [
+				{
+					min: findLowerLimit(history.cqLatency),
+					max: findUpperLimit(history.cqLatency),
+					values: history.cqLatency.map(([v, d]) => [
+						v,
+						subSeconds(history.base, d),
+					]),
+					color: colors['nordic-blue'],
+					format: (v) => `${Math.floor(v)} ms`,
+				},
+			],
 		})
 	}
 
