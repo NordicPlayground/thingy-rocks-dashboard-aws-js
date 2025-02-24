@@ -1,6 +1,7 @@
 import { merge } from 'lodash-es'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useState } from 'preact/hooks'
+import type { NRPlusNetworkTopology } from '../nrplus/parseTopology.js'
 
 export type ButtonPress = {
 	v: number // 4398
@@ -153,6 +154,7 @@ export type GeoLocation = {
 }
 
 export enum DeviceType {
+	NRPLUS_GW = 'nrplus-gateway',
 	SOFT_SIM = 'soft-sim',
 }
 export type Location = Record<GeoLocationSource, GeoLocation>
@@ -162,6 +164,33 @@ export type Device = {
 	location?: Location
 	history?: Summary
 	type?: DeviceType
+}
+
+// NR+ Gateway
+export type NRPlusNode = {
+	pccStatus?: {
+		status: string // e.g. "valid - PDC can be received"
+		ts: number
+	}
+	env?: {
+		modemTemp: number
+		temp?: number
+		ts: number
+	}
+	btn?: {
+		n: number // e.g. 1,
+		ts: number
+	}
+}
+export type NRPlusGateway = {
+	id: string
+	state: {
+		nodes: Record<string, NRPlusNode>
+		id: number // e.g. 38,
+		networkId: number // e.g. 22
+		topology?: NRPlusNetworkTopology
+	}
+	location?: Location
 }
 
 export type Devices = Record<string, Device>
@@ -207,6 +236,16 @@ export const hasNUSIM = (device: Device): boolean =>
 		'89882280000126652128',
 		'89882280000126652136',
 	].includes(device.state?.dev?.v?.iccid ?? '-1')
+
+export const isNRPlusGateway = (
+	device: Record<string, unknown>,
+): device is NRPlusGateway =>
+	'id' in device &&
+	typeof device.id === 'string' &&
+	device.id?.startsWith('nrplus-gw-') &&
+	'state' in device &&
+	typeof device.state === 'object' &&
+	'nodes' in (device.state ?? {})
 
 export const DevicesContext = createContext<{
 	devices: Devices
@@ -323,7 +362,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						}
 					})
 
-					const maybeUpdated = getDeviceLastUpdateTime(reported)
+					const maybeUpdated = getDeviceLastUpdateTime(
+						knownDevices[deviceId]!,
+						reported,
+					)
 					if (maybeUpdated !== null) {
 						setLastUpdateTs((u) => ({
 							...u,
@@ -383,8 +425,17 @@ export const Consumer = DevicesContext.Consumer
 
 export const useDevices = () => useContext(DevicesContext)
 
-const getDeviceLastUpdateTime = (state: Reported): null | number =>
-	getLastUpdateTime([
+const getDeviceLastUpdateTime = (
+	device: Device,
+	state: Reported,
+): null | number => {
+	if (isNRPlusGateway(device))
+		return getLastUpdateTime(
+			Object.values(device.state.nodes)
+				.map((node) => [node.pccStatus?.ts, node.btn?.ts, node.env?.ts])
+				.flat(),
+		)
+	return getLastUpdateTime([
 		state?.btn?.ts,
 		state?.dev?.ts,
 		state?.env?.ts,
@@ -392,6 +443,7 @@ const getDeviceLastUpdateTime = (state: Reported): null | number =>
 		state?.roam?.ts,
 		state?.fg?.ts,
 	])
+}
 
 export const getLastUpdateTime = (
 	lastUpdateTimeStamps: (number | undefined)[],
