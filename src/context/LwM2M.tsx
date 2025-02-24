@@ -1,4 +1,5 @@
 import {
+	timestampResources,
 	type BatteryAndPower_14202,
 	type ConnectionInformation_14203,
 	type DeviceInformation_14204,
@@ -52,6 +53,28 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					}
 				}
 			} else if (isLwM2MUpdate(message)) {
+				setObjects((objects) => ({
+					...objects,
+					[message.deviceId]: [
+						...message.objects,
+						...(objects[message.deviceId] ?? []),
+					]
+						.filter((object) => {
+							const tsId = timestampResources.get(object.ObjectID)!
+							return (
+								(object.Resources[tsId]! as number) >
+								(Date.now() - 60 * 60 * 1000) / 1000
+							)
+						})
+						.sort((a, b) => {
+							const tsAId = timestampResources.get(a.ObjectID)!
+							const tsBId = timestampResources.get(b.ObjectID)!
+							return (
+								(b.Resources[tsBId]! as number) -
+								(a.Resources[tsAId]! as number)
+							)
+						}),
+				}))
 				if (message.alias !== undefined)
 					deviceMessages.updateAlias(message.deviceId, message.alias)
 				const { locations, reported } = processObjects(message.objects)
