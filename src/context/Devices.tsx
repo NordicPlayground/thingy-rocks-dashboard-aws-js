@@ -237,9 +237,9 @@ export const hasNUSIM = (device: Device): boolean =>
 		'89882280000126652136',
 	].includes(device.state?.dev?.v?.iccid ?? '-1')
 
-export const isNRPlusGateway = (
-	device: Record<string, unknown>,
-): device is NRPlusGateway =>
+export const isNRPlusGateway = (device: unknown): device is NRPlusGateway =>
+	typeof device === 'object' &&
+	device !== null &&
 	'id' in device &&
 	typeof device.id === 'string' &&
 	device.id?.startsWith('nrplus-gw-') &&
