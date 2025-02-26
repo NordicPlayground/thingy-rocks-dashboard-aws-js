@@ -109,13 +109,17 @@ export const NRPlusGatewayTile = ({
 						</dd>
 					</>
 				)}
-				{Object.entries(gateway.state.nodes).map(([id, node]) => (
-					<Node id={id} node={node} gateway={gateway} hasCode={hasCode} />
-				))}
+				{Object.entries(gateway.state.nodes)
+					.filter(([, node]) => isClient(node))
+					.map(([id, node]) => (
+						<Node id={id} node={node} gateway={gateway} hasCode={hasCode} />
+					))}
 			</Properties>
 		</>
 	)
 }
+
+const isClient = (node: NRPlusNode) => node.env?.temp !== undefined
 
 const Node = ({
 	id,
