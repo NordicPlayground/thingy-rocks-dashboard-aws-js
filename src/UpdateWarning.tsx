@@ -21,8 +21,8 @@ export const UpdateWarning = ({ reported }: { reported: Reported }) => {
 
 	if (dev === undefined) return null
 
-	const mfw = dev.modV.replace(/^mfw_nrf[0-9]+_/, '')
-	const fw = dev.appV.replace(/-.+/, '')
+	const mfw = (dev.modV ?? '').replace(/^mfw_nrf[0-9]+_/, '')
+	const fw = (dev.appV ?? '').replace(/-.+/, '')
 
 	let needsMfwUpdate = false
 	let needsFwUpdate = false

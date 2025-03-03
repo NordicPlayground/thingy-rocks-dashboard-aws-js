@@ -19,7 +19,7 @@ export const Reboots = ({ device }: { device: Device }) => {
 	const numReboots = deviceReboots.length
 	const lastReboot = deviceReboots[0] as Reboot
 
-	const hasDtcFeature = device.state?.dev?.v.appV.includes('dt2c') ?? false
+	const hasDtcFeature = device.state?.dev?.v.appV?.includes('dt2c') ?? false
 
 	return (
 		<>

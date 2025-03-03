@@ -77,9 +77,9 @@ export type Reported = Partial<{
 		v: {
 			imei: string // '351358815341265'
 			iccid?: string // '89457387300008502281'
-			modV: string // 'mfw_nrf9160_1.3.2'
+			modV?: string // 'mfw_nrf9160_1.3.2'
 			brdV: string // 'thingy91_nrf9160'
-			appV: string // '1.1.0-thingy91_nrf9160_ns'
+			appV?: string // '1.1.0-thingy91_nrf9160_ns'
 			bat?: string
 		}
 		ts: number // 1669731049109
