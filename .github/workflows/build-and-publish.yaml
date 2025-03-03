@@ -13,6 +13,8 @@ permissions:
 env:
   CNAME: world.thingy.rocks
   SENTRY_DSN: https://f0636caa395147fcb07f781d0c1e8e6c@o4504255385174016.ingest.sentry.io/4504255391596544
+  # For uploading sourcemaps
+  SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   # EU
   WEBSOCKET_ENDPOINT: wss://ouqkjmrbb8.execute-api.eu-central-1.amazonaws.com/2022-11-22
   MAP_NAME: thingy-rocks-backend-map

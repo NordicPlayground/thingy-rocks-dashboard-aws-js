@@ -1,5 +1,6 @@
 import { fromEnv } from '@nordicsemiconductor/from-env'
 import { preact } from '@preact/preset-vite'
+import { sentryVitePlugin } from '@sentry/vite-plugin'
 import chalk from 'chalk'
 import fs from 'fs'
 import Handlebars from 'handlebars'
@@ -53,6 +54,10 @@ export default defineConfig({
 		preact(),
 		replaceInIndex({
 			version,
+		}),
+		sentryVitePlugin({
+			org: 'nordic-semiconductor-asa',
+			project: 'thingy-world',
 		}),
 	],
 	base: `${(process.env.BASE_URL ?? '').replace(/\/+$/, '')}/`,

@@ -3,3 +3,6 @@ build/
 static/flags
 .well-known/
 test_suite_analysis/
+
+# Sentry Config File
+.env.sentry-build-plugin
