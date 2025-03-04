@@ -10,6 +10,7 @@ if (enableSentry) {
 		dsn: SENTRY_DSN,
 		integrations: [browserTracingIntegration()],
 		tracesSampleRate: 0.05,
+		release: VERSION,
 	})
 	Sentry.setTag('app_version', VERSION)
 } else {
