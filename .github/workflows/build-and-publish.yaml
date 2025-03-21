@@ -84,7 +84,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
         run:
           npx wrangler pages deploy --project-name thingy-world --branch saga
-          --commit-hash ${{ github.sha }}
+          --commit-hash ${{ github.sha }} ./build
 
       - name: Semantic release
         env:
