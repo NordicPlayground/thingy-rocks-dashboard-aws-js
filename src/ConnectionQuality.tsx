@@ -1,7 +1,7 @@
 import { LwM2MObjectID } from '@hello.nrfcloud.com/proto-map/lwm2m'
 import { ArrowLeftRightIcon } from 'lucide-preact'
-import type { Device } from './context/Devices.tsx'
-import { useLwM2MObjects } from './context/LwM2M.tsx'
+import type { Device } from './context/Devices.js'
+import { useLwM2MObjects } from './context/LwM2M.js'
 
 export const ConnectionQuality = ({
 	device,

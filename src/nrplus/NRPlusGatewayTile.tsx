@@ -12,26 +12,26 @@ import {
 	X,
 } from 'lucide-preact'
 import { useState } from 'preact/hooks'
-import { withCancel } from './cancelEvent.js'
-import { ConfigureCode } from './ConfigureCode.js'
+import { ConfigureCode } from '../ConfigureCode.js'
 import {
 	useDevices,
 	type GeoLocation,
 	type NRPlusGateway,
 	type NRPlusNode,
-} from './context/Devices.js'
-import { useSettings } from './context/Settings.js'
-import { useWebsocket } from './context/WebsocketConnection.js'
-import { LastUpdate, Properties, Title } from './DeviceList.js'
-import { DeviceName } from './DeviceName.js'
-import { hideDetails } from './hooks/useDetails.js'
-import { NRPlus } from './icons/NRPlus.js'
-import { NRPlusTopology } from './nrplus/NRPlusTopology.js'
-import { PinTile } from './PinTile.js'
-import { RelativeTime } from './RelativeTime.js'
-import { removeOldLocation } from './removeOldLocation.js'
-import { ShowWhenHot } from './ShowWhenHot.js'
-import { sortLocations } from './sortLocations.js'
+} from '../context/Devices.js'
+import { useSettings } from '../context/Settings.js'
+import { useWebsocket } from '../context/WebsocketConnection.js'
+import { LastUpdate, Properties, Title } from '../DeviceList.js'
+import { DeviceName } from '../DeviceName.js'
+import { hideDetails } from '../hooks/useDetails.js'
+import { PinTile } from '../PinTile.js'
+import { RelativeTime } from '../RelativeTime.js'
+import { removeOldLocation } from '../removeOldLocation.js'
+import { ShowWhenHot } from '../ShowWhenHot.js'
+import { sortLocations } from '../sortLocations.js'
+import { withCancel } from './cancelEvent.js'
+import { NRPlus } from './NRPlusIcon.js'
+import { NRPlusTopology } from './NRPlusTopology.js'
 
 export const NRPlusGatewayTile = ({
 	gateway,

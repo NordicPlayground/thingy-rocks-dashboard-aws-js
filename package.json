@@ -25,7 +25,7 @@
     "build": "node --max_old_space_size=8192 ./node_modules/vite/bin/vite.js build --emptyOutDir",
     "prepare": "husky",
     "postinstall": "cp -r node_modules/svg-country-flags/svg/ static/flags",
-    "test": "find ./ -type f -name '*.spec.ts' -not -path './node_modules/*' -print | xargs node --experimental-strip-types --no-warnings --test"
+    "test": "find ./ -type f -name '*.spec.ts' -not -path './node_modules/*' -print | xargs npx tsx --no-warnings --test"
   },
   "dependencies": {
     "@aws-amplify/core": "6.12.0",

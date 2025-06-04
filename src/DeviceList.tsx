@@ -2,6 +2,7 @@ import { styled } from 'styled-components'
 import {
 	isNRPlusGateway,
 	isTracker,
+	isWirepasGateway,
 	type GeoLocation,
 } from './context/Devices.js'
 import { useMap } from './context/Map.js'
@@ -9,8 +10,9 @@ import { useVisibleDevices } from './context/VisibleDevices.js'
 import { DisconnectedWarning } from './DisconnectedWarning.js'
 import { HistoryOnly } from './HistoryOnly.js'
 import { showDetails } from './hooks/useDetails.js'
-import { NRPlusGatewayTile } from './NRPlusGatewayTile.js'
+import { NRPlusGatewayTile } from './nrplus/NRPlusGatewayTile.js'
 import { Tracker } from './Tracker.js'
+import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
 
 const DeviceState = styled.section`
 	color: var(--color-nordic-light-grey);
@@ -139,6 +141,17 @@ export const DeviceList = () => {
 						return (
 							<li>
 								<NRPlusGatewayTile
+									gateway={device}
+									key={device.id}
+									onCenter={center}
+								/>
+							</li>
+						)
+					}
+					if (isWirepasGateway(device)) {
+						return (
+							<li>
+								<WirepasGatewayTile
 									gateway={device}
 									key={device.id}
 									onCenter={center}
