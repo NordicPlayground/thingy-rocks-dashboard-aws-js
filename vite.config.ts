@@ -84,6 +84,8 @@ export default defineConfig({
 		rollupOptions: {
 			input: {
 				main: path.join(process.cwd(), 'index.html'),
+				topology: path.join(process.cwd(), 'topology.html'),
+				'wirepas-topology': path.join(process.cwd(), 'wirepas-topology.html'),
 			},
 		},
 	},
