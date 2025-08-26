@@ -1,12 +1,12 @@
 import { UploadCloud } from 'lucide-preact'
 import { styled } from 'styled-components'
-import type { GeoLocation, NordicNrplusDevice } from './context/Devices.js'
+import type { GeoLocation, NordicNrplusDevice, NordicNrplusNeighbor } from './context/Devices.js'
 import { useDevices } from './context/Devices.js'
 import { DeviceName } from './DeviceName.js'
 import { hideDetails } from './hooks/useDetails.js'
+import { withCancel } from './nrplus/cancelEvent.js'
 import { PinTile } from './PinTile.js'
 import { RelativeTime } from './RelativeTime.js'
-import { cancelEvent } from './cancelEvent.ts'
 
 const Title = styled.header`
 	display: flex;
@@ -115,12 +115,13 @@ export const NordicNrplusNetworkTile = ({
 	
 	// Get the most recently updated device for the network title
 	const mostRecentDevice = devices.reduce((latest, device) => {
+		if (!latest) return device
 		const deviceTime = lastUpdateTs[device.id]?.getTime() ?? 0
 		const latestTime = lastUpdateTs[latest.id]?.getTime() ?? 0
 		return deviceTime > latestTime ? device : latest
-	}, devices[0])
+	}, devices[0] as NordicNrplusDevice | undefined)
 
-	const lastUpdateTime = lastUpdateTs[mostRecentDevice.id]
+	const lastUpdateTime = mostRecentDevice ? lastUpdateTs[mostRecentDevice.id] : undefined
 
 	// Get network info from any device that has connection profile
 	const networkInfo = devices.find(d => d.state?.nordicNrplus?.connectionProfile)?.state?.nordicNrplus?.connectionProfile
@@ -129,15 +130,15 @@ export const NordicNrplusNetworkTile = ({
 	const allNeighbors = devices.flatMap(device => {
 		const neighbors = device.state?.nordicNrplus?.neighbors ?? {}
 		return Object.entries(neighbors).map(([instanceId, neighbor]) => ({
-			...neighbor,
+			...(neighbor as NordicNrplusNeighbor),
 			deviceId: device.id,
 			instanceId
 		}))
 	}).sort((a, b) => b.ts - a.ts)
 
-	const handleClick = cancelEvent(() => {
+	const handleClick = withCancel(() => {
 		// Center on the most recent device location if available
-		const deviceLocation = Object.values(mostRecentDevice.location ?? {})[0]
+		const deviceLocation = Object.values(mostRecentDevice?.location ?? {})[0]
 		if (deviceLocation) {
 			onCenter(deviceLocation)
 		}

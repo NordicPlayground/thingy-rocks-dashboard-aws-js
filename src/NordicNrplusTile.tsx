@@ -1,12 +1,12 @@
 import { UploadCloud } from 'lucide-preact'
 import { styled } from 'styled-components'
-import type { GeoLocation, NordicNrplusDevice } from './context/Devices.js'
+import type { GeoLocation, NordicNrplusDevice, NordicNrplusNeighbor } from './context/Devices.js'
 import { useDevices } from './context/Devices.js'
 import { DeviceName } from './DeviceName.js'
 import { hideDetails } from './hooks/useDetails.js'
+import { withCancel } from './nrplus/cancelEvent.js'
 import { PinTile } from './PinTile.js'
 import { RelativeTime } from './RelativeTime.js'
-import { cancelEvent } from './cancelEvent.ts'
 
 const Title = styled.header`
 	display: flex;
@@ -108,7 +108,7 @@ export const NordicNrplusTile = ({
 	const neighbors = nordicNrplusData?.neighbors ?? {}
 	const buttonPresses = nordicNrplusData?.buttonPresses ?? {}
 
-	const handleClick = cancelEvent(() => {
+	const handleClick = withCancel(() => {
 		// Center on device location if available
 		const deviceLocation = Object.values(device.location ?? {})[0]
 		if (deviceLocation) {
@@ -153,13 +153,13 @@ export const NordicNrplusTile = ({
 				<NeighborsList>
 					<strong>Neighbors ({Object.keys(neighbors).length})</strong>
 					{Object.entries(neighbors)
-						.sort(([,a], [,b]) => b.ts - a.ts)
+						.sort(([,a], [,b]) => (b as NordicNrplusNeighbor).ts - (a as NordicNrplusNeighbor).ts)
 						.slice(0, 5) // Show only top 5 most recent
 						.map(([instanceId, neighbor]) => (
 							<NeighborItem key={instanceId}>
-								<span>ID: {neighbor.neighborId}</span>
-								{neighbor.rssi && (
-									<span>{neighbor.rssi} dBm</span>
+								<span>ID: {(neighbor as NordicNrplusNeighbor).neighborId}</span>
+								{(neighbor as NordicNrplusNeighbor).rssi && (
+									<span>{(neighbor as NordicNrplusNeighbor).rssi} dBm</span>
 								)}
 							</NeighborItem>
 						))}

@@ -263,10 +263,12 @@ export type NordicNrplusDevice = {
 	id: string
 	type: DeviceType.NORDIC_NRPLUS
 	location?: Location
-	state: {
-		neighbors: Record<string, NordicNrplusNeighbor>
-		connectionProfile?: NordicNrplusConnectionProfile
-		buttonPresses: Record<string, NordicNrplusButtonPress>
+	state?: Reported & {
+		nordicNrplus: {
+			neighbors: Record<string, NordicNrplusNeighbor>
+			connectionProfile?: NordicNrplusConnectionProfile
+			buttonPresses: Record<string, NordicNrplusButtonPress>
+		}
 	}
 }
 
@@ -339,7 +341,11 @@ export const isNordicNrplus = (device: unknown): device is NordicNrplusDevice =>
 	typeof device === 'object' &&
 	device !== null &&
 	'type' in device &&
-	(device as Device).type === DeviceType.NORDIC_NRPLUS
+	(device as Device).type === DeviceType.NORDIC_NRPLUS &&
+	'state' in device &&
+	typeof (device as Device).state === 'object' &&
+	(device as Device).state !== null &&
+	'nordicNrplus' in ((device as Device).state ?? {})
 
 export const DevicesContext = createContext<{
 	devices: Devices

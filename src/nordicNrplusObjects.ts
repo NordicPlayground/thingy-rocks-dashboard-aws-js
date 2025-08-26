@@ -6,7 +6,7 @@ import type { LwM2MObject } from '@hello.nrfcloud.com/proto-map/lwm2m'
  * This LwM2M Object describes neighboring devices.
  */
 export type NetworkNeighbor_14502 = LwM2MObject<{
-	ObjectID: 14502
+	ObjectID: number
 	ObjectVersion: '1.0'
 	Resources: {
 		/**
@@ -36,7 +36,7 @@ export type NetworkNeighbor_14502 = LwM2MObject<{
  * Connection details of a device connected to a DECT NR+ network.
  */
 export type DECTNRPlusConnectionProfile_14503 = LwM2MObject<{
-	ObjectID: 14503
+	ObjectID: number
 	ObjectVersion: '1.0'
 	Resources: {
 		/**

@@ -42,22 +42,22 @@ void describe('Nordic NR+ Device Support', () => {
 		// In the actual implementation, these objects would be processed
 		// by the LwM2M context and stored in the device state
 		
-		assert.equal(mockObjects[0].ObjectID, 14502)
-		assert.equal(mockObjects[1].ObjectID, 14503)
-		assert.equal(mockObjects[2].ObjectID, 14220)
+		assert.equal(mockObjects[0]?.ObjectID, 14502)
+		assert.equal(mockObjects[1]?.ObjectID, 14503)
+		assert.equal(mockObjects[2]?.ObjectID, 14220)
 		
 		// Verify expected data structure
 		const networkNeighbor = mockObjects[0]
-		assert.equal(networkNeighbor.Resources[0], 1523) // Neighbor ID
-		assert.equal(networkNeighbor.Resources[1], -98)  // RSSI
+		assert.equal(networkNeighbor?.Resources[0], 1523) // Neighbor ID
+		assert.equal(networkNeighbor?.Resources[1], -98)  // RSSI
 		
 		const connectionProfile = mockObjects[1]
-		assert.equal(connectionProfile.Resources[0], 862) // Long RD ID
-		assert.equal(connectionProfile.Resources[1], 22)  // Network ID
-		assert.equal(connectionProfile.Resources[2], 'PT') // Operational Mode
+		assert.equal(connectionProfile?.Resources[0], 862) // Long RD ID
+		assert.equal(connectionProfile?.Resources[1], 22)  // Network ID
+		assert.equal(connectionProfile?.Resources[2], 'PT') // Operational Mode
 		
 		const buttonPress = mockObjects[2]
-		assert.equal(buttonPress.ObjectInstanceID, 1) // Button ID from instance
+		assert.equal(buttonPress?.ObjectInstanceID, 1) // Button ID from instance
 	})
 
 	void it('should group devices by network ID', () => {

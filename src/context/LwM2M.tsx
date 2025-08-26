@@ -202,9 +202,9 @@ const processObjects = (
 	
 	// Check if any nordic-nrplus specific objects are present
 	const hasNordicNrplusObjects = objects.some(obj => 
-		obj.ObjectID === NETWORK_NEIGHBOR_OBJECT_ID || 
-		obj.ObjectID === DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID || 
-		obj.ObjectID === BUTTON_PRESS_OBJECT_ID
+		obj.ObjectID === (NETWORK_NEIGHBOR_OBJECT_ID as any) || 
+		obj.ObjectID === (DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID as any) || 
+		obj.ObjectID === (BUTTON_PRESS_OBJECT_ID as any)
 	)
 	
 	if (hasNordicNrplusObjects) {

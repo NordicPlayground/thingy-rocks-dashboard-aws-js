@@ -132,7 +132,7 @@ export const DeviceList = () => {
 	const standaloneNordicNrplusDevices: NordicNrplusDevice[] = []
 
 	nordicNrplusDevices.forEach(device => {
-		const networkId = device.state.nordicNrplus?.connectionProfile?.networkId
+		const networkId = device.state?.nordicNrplus?.connectionProfile?.networkId
 		if (networkId !== undefined) {
 			if (!nordicNrplusNetworks.has(networkId)) {
 				nordicNrplusNetworks.set(networkId, [])
