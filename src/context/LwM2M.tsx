@@ -1,6 +1,7 @@
 import {
 	timestampResources,
 	type BatteryAndPower_14202,
+	type ButtonPress_14220,
 	type ConnectionInformation_14203,
 	type DeviceInformation_14204,
 	type Environment_14205,
@@ -10,12 +11,22 @@ import {
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
 import {
+	DeviceType,
 	GeoLocationSource,
 	useDevices,
 	type GeoLocation,
 	type Reported,
 } from './Devices.js'
 import { MessageContext, useWebsocket } from './WebsocketConnection.js'
+import type {
+	DECTNRPlusConnectionProfile_14503,
+	NetworkNeighbor_14502,
+} from '../nordicNrplusObjects.js'
+
+// Nordic NR+ object IDs
+const NETWORK_NEIGHBOR_OBJECT_ID = 14502
+const DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID = 14503  
+const BUTTON_PRESS_OBJECT_ID = 14220
 
 const LwM2MContext = createContext<{
 	objects: Record<string, LwM2MObjectInstance[]>
@@ -46,10 +57,14 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				)
 				for (const { deviceId, alias, objects } of message.shadows) {
 					if (alias !== undefined) deviceMessages.updateAlias(deviceId, alias)
-					const { locations, reported } = processObjects(objects)
+					const { locations, reported, isNordicNrplus } = processObjects(objects)
 					deviceMessages.updateState(deviceId, reported)
 					for (const [src, location] of locations) {
 						deviceMessages.updateLocation(deviceId, location, src)
+					}
+					// Set device type if it's a nordic-nrplus device
+					if (isNordicNrplus) {
+						deviceMessages.updateType(deviceId, DeviceType.NORDIC_NRPLUS)
 					}
 				}
 			} else if (isLwM2MUpdate(message)) {
@@ -77,10 +92,14 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				}))
 				if (message.alias !== undefined)
 					deviceMessages.updateAlias(message.deviceId, message.alias)
-				const { locations, reported } = processObjects(message.objects)
+				const { locations, reported, isNordicNrplus } = processObjects(message.objects)
 				deviceMessages.updateState(message.deviceId, reported)
 				for (const [src, location] of locations) {
 					deviceMessages.updateLocation(message.deviceId, location, src)
+				}
+				// Set device type if it's a nordic-nrplus device
+				if (isNordicNrplus) {
+					deviceMessages.updateType(message.deviceId, DeviceType.NORDIC_NRPLUS)
 				}
 			}
 		}
@@ -142,6 +161,21 @@ const isBatteryAndPower = (
 ): object is LwM2MObjectInstance<BatteryAndPower_14202> =>
 	isLwM2MObjectInstance(14202, object)
 
+const isNetworkNeighbor = (
+	object: unknown,
+): object is LwM2MObjectInstance<NetworkNeighbor_14502> =>
+	isLwM2MObjectInstance(NETWORK_NEIGHBOR_OBJECT_ID, object)
+
+const isDECTNRPlusConnectionProfile = (
+	object: unknown,
+): object is LwM2MObjectInstance<DECTNRPlusConnectionProfile_14503> =>
+	isLwM2MObjectInstance(DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID, object)
+
+const isButtonPress = (
+	object: unknown,
+): object is LwM2MObjectInstance<ButtonPress_14220> =>
+	isLwM2MObjectInstance(BUTTON_PRESS_OBJECT_ID, object)
+
 const isLwM2MUpdate = (
 	message: unknown,
 ): message is {
@@ -160,9 +194,29 @@ const processObjects = (
 ): {
 	reported: Reported
 	locations: Map<string, GeoLocation>
+	isNordicNrplus: boolean
 } => {
 	const reported: Reported = {}
 	const locations: Map<string, GeoLocation> = new Map()
+	let isNordicNrplus = false
+	
+	// Check if any nordic-nrplus specific objects are present
+	const hasNordicNrplusObjects = objects.some(obj => 
+		obj.ObjectID === NETWORK_NEIGHBOR_OBJECT_ID || 
+		obj.ObjectID === DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID || 
+		obj.ObjectID === BUTTON_PRESS_OBJECT_ID
+	)
+	
+	if (hasNordicNrplusObjects) {
+		isNordicNrplus = true
+		// Initialize nordic-nrplus specific state
+		reported.nordicNrplus = {
+			neighbors: {},
+			connectionProfile: undefined,
+			buttonPresses: {},
+		}
+	}
+	
 	for (const object of objects) {
 		if (isDeviceInformation(object)) {
 			const {
@@ -292,9 +346,48 @@ const processObjects = (
 					ts: new Date(object.Resources['99'] * 1000),
 				})
 			}
+		} else if (isNetworkNeighbor(object)) {
+			// Process 14502 Network Neighbor object
+			const {
+				0: neighborId,
+				1: rssi,
+			} = object.Resources
+			const instanceId = object.ObjectInstanceID?.toString() ?? '0'
+			if (reported.nordicNrplus) {
+				reported.nordicNrplus.neighbors[instanceId] = {
+					neighborId,
+					rssi,
+					ts: new Date(object.Resources['99'] * 1000).getTime(),
+				}
+			}
+		} else if (isDECTNRPlusConnectionProfile(object)) {
+			// Process 14503 DECT NR+ Connection Profile object
+			const {
+				0: longRdId,
+				1: networkId,
+				2: operationalMode,
+			} = object.Resources
+			if (reported.nordicNrplus) {
+				reported.nordicNrplus.connectionProfile = {
+					longRdId,
+					networkId,
+					operationalMode,
+					ts: new Date(object.Resources['99'] * 1000).getTime(),
+				}
+			}
+		} else if (isButtonPress(object)) {
+			// Process 14220 Button Press object
+			const buttonId = object.ObjectInstanceID ?? 0
+			const instanceKey = buttonId.toString()
+			if (reported.nordicNrplus) {
+				reported.nordicNrplus.buttonPresses[instanceKey] = {
+					buttonId,
+					ts: new Date(object.Resources['99'] * 1000).getTime(),
+				}
+			}
 		}
 	}
-	return { reported, locations }
+	return { reported, locations, isNordicNrplus }
 }
 
 export const useLwM2MObjects = () => useContext(LwM2MContext)
