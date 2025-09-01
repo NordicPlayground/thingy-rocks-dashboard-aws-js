@@ -224,9 +224,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					{
 						let processedReported = message.reported
 						// If this is a nordic-nrplus device, process the LwM2M objects
-						if (message.deviceType === 'nordic-nrplus') {
+						/*if (message.deviceType === 'nordic-nrplus') {
 							processedReported = processNordicNrplusDeviceShadow(message.reported)
-						}
+							console.log(`[WS]`, 'Processed nordic-nrplus reported', processedReported)
+						}*/
 						deviceMessages.updateState(message.deviceId, processedReported)
 					}
 					break

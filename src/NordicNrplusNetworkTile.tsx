@@ -89,6 +89,7 @@ const NeighborsList = styled.div`
 	font-size: 85%;
 	max-height: 100px;
 	overflow-y: auto;
+	width: 100%;
 `
 
 const NeighborItem = styled.div`
@@ -112,6 +113,7 @@ export const NordicNrplusNetworkTile = ({
 	onCenter: (location: GeoLocation) => void
 }) => {
 	const { lastUpdateTs } = useDevices()
+	console.log('<NordicNrplusNetworkTile>' , lastUpdateTs)
 	
 	// Get the most recently updated device for the network title
 	const mostRecentDevice = devices.reduce((latest, device) => {
@@ -122,19 +124,22 @@ export const NordicNrplusNetworkTile = ({
 	}, devices[0] as NordicNrplusDevice | undefined)
 
 	const lastUpdateTime = mostRecentDevice ? lastUpdateTs[mostRecentDevice.id] : undefined
-
+	console.log(lastUpdateTime ? `[Tile] Rendering NordicNrplusNetworkTile for network ${networkId}, last update at ${lastUpdateTime.toISOString()}` : `[Tile] Rendering NordicNrplusNetworkTile for network ${networkId}, no last update time`, devices)
 	// Get network info from any device that has connection profile
 	const networkInfo = devices.find(d => d.state?.nordicNrplus?.connectionProfile)?.state?.nordicNrplus?.connectionProfile
+
+	console.log(`[Tile] Network ${networkId} has ${devices.length} devices`, devices)
 
 	// Collect all neighbors from all devices in the network
 	const allNeighbors = devices.flatMap(device => {
 		const neighbors = device.state?.nordicNrplus?.neighbors ?? {}
 		return Object.entries(neighbors).map(([instanceId, neighbor]) => ({
-			...(neighbor as NordicNrplusNeighbor),
+			...(neighbor),
 			deviceId: device.id,
 			instanceId
 		}))
 	}).sort((a, b) => b.ts - a.ts)
+	console.log(`[Tile] Network ${networkId} has ${allNeighbors.length} total neighbors`, allNeighbors)
 
 	const handleClick = withCancel(() => {
 		// Center on the most recent device location if available
@@ -161,14 +166,14 @@ export const NordicNrplusNetworkTile = ({
 				)}
 			</Title>
 			
-			{networkInfo && (
+			{/*networkInfo && (
 				<NetworkInfo>
 					<strong>Network {networkInfo.networkId}</strong>
 					{networkInfo.operationalMode && (
 						<div>Mode: {networkInfo.operationalMode}</div>
 					)}
 				</NetworkInfo>
-			)}
+			)*/}
 
 			<DevicesList>
 				{devices.map((device) => {
@@ -182,7 +187,7 @@ export const NordicNrplusNetworkTile = ({
 								<DeviceName device={device} />
 								{nordicData?.connectionProfile && (
 									<DeviceMeta>
-										<span>ID: {nordicData.connectionProfile.longRdId}</span>
+										<span>Mode: {nordicData.connectionProfile.operationalMode === 'FT' ? 'sink' : 'leaf'}</span>
 										{deviceNeighbors > 0 && <span>{deviceNeighbors} neighbors</span>}
 										{buttonPresses > 0 && <span>{buttonPresses} button presses</span>}
 									</DeviceMeta>
@@ -200,7 +205,7 @@ export const NordicNrplusNetworkTile = ({
 					{allNeighbors.slice(0, 5).map((neighbor) => (
 						<NeighborItem key={`${neighbor.deviceId}-${neighbor.instanceId}`}>
 							<span>ID: {neighbor.neighborId}</span>
-							{neighbor.rssi && (
+							{(neighbor.rssi != null) && (
 								<span>{neighbor.rssi} dBm</span>
 							)}
 						</NeighborItem>

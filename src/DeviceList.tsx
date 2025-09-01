@@ -127,11 +127,13 @@ export const DeviceList = () => {
 	}
 
 	// Group nordic-nrplus devices by network ID
-	const nordicNrplusDevices = devicesToShow.filter(isNordicNrplus) as NordicNrplusDevice[]
+	const nordicNrplusDevices = devicesToShow.filter(isNordicNrplus)
 	const nordicNrplusNetworks = new Map<number, NordicNrplusDevice[]>()
 	const standaloneNordicNrplusDevices: NordicNrplusDevice[] = []
-
+	console.log(`[DeviceList] Total devices to show: ${devicesToShow.length}`, devicesToShow)
+	console.log(`[DeviceList] Nordic-nrplus devices: ${nordicNrplusDevices.length}`, nordicNrplusDevices)
 	nordicNrplusDevices.forEach(device => {
+		console.log(`[DeviceList] Processing nordic-nrplus device ${device.id}`, device)
 		const networkId = device.state?.nordicNrplus?.connectionProfile?.networkId
 		if (networkId !== undefined) {
 			if (!nordicNrplusNetworks.has(networkId)) {

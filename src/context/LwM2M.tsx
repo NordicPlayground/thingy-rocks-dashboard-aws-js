@@ -347,6 +347,7 @@ const processObjects = (
 				})
 			}
 		} else if (isNetworkNeighbor(object)) {
+			console.log('Processing nordic-nrplus Network Neighbor object', object)
 			// Process 14502 Network Neighbor object
 			const {
 				0: neighborId,

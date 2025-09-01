@@ -80,6 +80,7 @@ const NeighborsList = styled.div`
 	font-size: 85%;
 	max-height: 150px;
 	overflow-y: auto;
+	width: 100%;
 `
 
 const NeighborItem = styled.div`
@@ -102,7 +103,7 @@ export const NordicNrplusTile = ({
 }) => {
 	const { lastUpdateTs } = useDevices()
 	const lastUpdateTime = lastUpdateTs[device.id]
-	
+	console.log(`[Tile] Rendering NordicNrplusTile for device ${device.id}`, device)
 	const nordicNrplusData = device.state?.nordicNrplus
 	const connectionProfile = nordicNrplusData?.connectionProfile
 	const neighbors = nordicNrplusData?.neighbors ?? {}
@@ -153,13 +154,13 @@ export const NordicNrplusTile = ({
 				<NeighborsList>
 					<strong>Neighbors ({Object.keys(neighbors).length})</strong>
 					{Object.entries(neighbors)
-						.sort(([,a], [,b]) => (b as NordicNrplusNeighbor).ts - (a as NordicNrplusNeighbor).ts)
+						.sort(([,a], [,b]) => b.ts - a.ts)
 						.slice(0, 5) // Show only top 5 most recent
 						.map(([instanceId, neighbor]) => (
 							<NeighborItem key={instanceId}>
-								<span>ID: {(neighbor as NordicNrplusNeighbor).neighborId}</span>
-								{(neighbor as NordicNrplusNeighbor).rssi && (
-									<span>{(neighbor as NordicNrplusNeighbor).rssi} dBm</span>
+								<span>ID: {(neighbor).neighborId}</span>
+								{(neighbor.rssi != null) && (
+									<span>{(neighbor).rssi} dBm</span>
 								)}
 							</NeighborItem>
 						))}
