@@ -1,6 +1,6 @@
 import { UploadCloud } from 'lucide-preact'
 import { styled } from 'styled-components'
-import type { GeoLocation, NordicNrplusDevice, NordicNrplusNeighbor } from './context/Devices.js'
+import type { GeoLocation, NordicNrplusDevice } from './context/Devices.js'
 import { useDevices } from './context/Devices.js'
 import { DeviceName } from './DeviceName.js'
 import { hideDetails } from './hooks/useDetails.js'
@@ -103,7 +103,10 @@ export const NordicNrplusTile = ({
 }) => {
 	const { lastUpdateTs } = useDevices()
 	const lastUpdateTime = lastUpdateTs[device.id]
-	console.log(`[Tile] Rendering NordicNrplusTile for device ${device.id}`, device)
+	console.log(
+		`[Tile] Rendering NordicNrplusTile for device ${device.id}`,
+		device,
+	)
 	const nordicNrplusData = device.state?.nordicNrplus
 	const connectionProfile = nordicNrplusData?.connectionProfile
 	const neighbors = nordicNrplusData?.neighbors ?? {}
@@ -125,7 +128,10 @@ export const NordicNrplusTile = ({
 				<span className="info">
 					<DeviceName device={device} />
 					{connectionProfile && (
-						<small>Network {connectionProfile.networkId} • {connectionProfile.operationalMode}</small>
+						<small>
+							Network {connectionProfile.networkId} •{' '}
+							{connectionProfile.operationalMode}
+						</small>
 					)}
 				</span>
 				{lastUpdateTime !== undefined && (
@@ -136,7 +142,7 @@ export const NordicNrplusTile = ({
 				)}
 				<PinTile device={device} />
 			</Title>
-			
+
 			{connectionProfile && (
 				<NetworkInfo>
 					<Properties>
@@ -154,14 +160,12 @@ export const NordicNrplusTile = ({
 				<NeighborsList>
 					<strong>Neighbors ({Object.keys(neighbors).length})</strong>
 					{Object.entries(neighbors)
-						.sort(([,a], [,b]) => b.ts - a.ts)
+						.sort(([, a], [, b]) => b.ts - a.ts)
 						.slice(0, 5) // Show only top 5 most recent
 						.map(([instanceId, neighbor]) => (
 							<NeighborItem key={instanceId}>
-								<span>ID: {(neighbor).neighborId}</span>
-								{(neighbor.rssi != null) && (
-									<span>{(neighbor).rssi} dBm</span>
-								)}
+								<span>ID: {neighbor.neighborId}</span>
+								{neighbor.rssi != null && <span>{neighbor.rssi} dBm</span>}
 							</NeighborItem>
 						))}
 				</NeighborsList>

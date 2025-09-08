@@ -74,108 +74,6 @@ type Message = {
 
 type Listener = (message: Record<string, unknown>) => void
 
-// Nordic NR+ object IDs
-const NETWORK_NEIGHBOR_OBJECT_ID = 14502
-const DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID = 14503  
-const BUTTON_PRESS_OBJECT_ID = 14220
-
-/**
- * Process nordic-nrplus device shadow messages that contain LwM2M objects
- * in the format "objectId:version": {instanceId: {resourceId: value}}
- */
-const processNordicNrplusDeviceShadow = (reported: any): Reported => {
-	const processed: Reported = { ...reported }
-	
-	// Check if any nordic-nrplus specific objects are present
-	const hasNordicNrplusObjects = Object.keys(reported).some(key => {
-		const [objectIdStr] = key.split(':')
-		if (!objectIdStr) return false
-		const objectId = parseInt(objectIdStr, 10)
-		return objectId === NETWORK_NEIGHBOR_OBJECT_ID || 
-			   objectId === DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID || 
-			   objectId === BUTTON_PRESS_OBJECT_ID
-	})
-	
-	if (hasNordicNrplusObjects) {
-		// Initialize nordic-nrplus specific state
-		processed.nordicNrplus = {
-			neighbors: {},
-			connectionProfile: undefined,
-			buttonPresses: {},
-		}
-		
-		// Process each LwM2M object
-		for (const [key, value] of Object.entries(reported)) {
-			const keyParts = key.split(':')
-			if (keyParts.length < 2) continue
-			
-			const objectIdStr = keyParts[0]
-			if (!objectIdStr || objectIdStr.trim() === '') continue
-			
-			const objectId = parseInt(objectIdStr.trim())
-			if (isNaN(objectId)) continue
-			
-			if (objectId === NETWORK_NEIGHBOR_OBJECT_ID && value && typeof value === 'object') {
-				// Process 14502 Network Neighbor object
-				for (const [instanceIdStr, instanceValue] of Object.entries(value)) {
-					if (instanceValue && typeof instanceValue === 'object') {
-						const resources = instanceValue as Record<string, any>
-						const neighborId = resources['0']
-						const rssi = resources['1']
-						const timestamp = resources['99']
-						
-						if (neighborId !== undefined && timestamp !== undefined) {
-							processed.nordicNrplus!.neighbors[instanceIdStr] = {
-								neighborId,
-								rssi,
-								ts: new Date(timestamp * 1000).getTime(),
-							}
-						}
-					}
-				}
-			} else if (objectId === DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID && value && typeof value === 'object') {
-				// Process 14503 DECT NR+ Connection Profile object
-				for (const [, instanceValue] of Object.entries(value)) {
-					if (instanceValue && typeof instanceValue === 'object') {
-						const resources = instanceValue as Record<string, any>
-						const longRdId = resources['0']
-						const networkId = resources['1']
-						const operationalMode = resources['2']
-						const timestamp = resources['99']
-						
-						if (longRdId !== undefined && networkId !== undefined && operationalMode !== undefined && timestamp !== undefined) {
-							processed.nordicNrplus!.connectionProfile = {
-								longRdId,
-								networkId,
-								operationalMode,
-								ts: new Date(timestamp * 1000).getTime(),
-							}
-						}
-					}
-				}
-			} else if (objectId === BUTTON_PRESS_OBJECT_ID && value && typeof value === 'object') {
-				// Process 14220 Button Press object
-				for (const [instanceIdStr, instanceValue] of Object.entries(value)) {
-					if (instanceValue && typeof instanceValue === 'object') {
-						const resources = instanceValue as Record<string, any>
-						const timestamp = resources['99']
-						const buttonId = parseInt(instanceIdStr)
-						
-						if (timestamp !== undefined && !isNaN(buttonId)) {
-							processed.nordicNrplus!.buttonPresses[instanceIdStr] = {
-								buttonId,
-								ts: new Date(timestamp * 1000).getTime(),
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	
-	return processed
-}
-
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const connection = useRef<WebSocket>()
 	const deviceMessages = useDevices()
@@ -222,7 +120,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			switch (message['@context']) {
 				case MessageContext.DeviceShadow:
 					{
-						let processedReported = message.reported
+						const processedReported = message.reported
 						// If this is a nordic-nrplus device, process the LwM2M objects
 						/*if (message.deviceType === 'nordic-nrplus') {
 							processedReported = processNordicNrplusDeviceShadow(message.reported)

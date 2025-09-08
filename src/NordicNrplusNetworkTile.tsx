@@ -1,6 +1,6 @@
 import { UploadCloud } from 'lucide-preact'
 import { styled } from 'styled-components'
-import type { GeoLocation, NordicNrplusDevice, NordicNrplusNeighbor } from './context/Devices.js'
+import type { GeoLocation, NordicNrplusDevice } from './context/Devices.js'
 import { useDevices } from './context/Devices.js'
 import { DeviceName } from './DeviceName.js'
 import { hideDetails } from './hooks/useDetails.js'
@@ -44,14 +44,6 @@ const LastUpdate = styled.span`
 	display: flex;
 	align-items: center;
 	gap: 0.25rem;
-`
-
-const NetworkInfo = styled.div`
-	background: rgba(0, 168, 200, 0.1);
-	border-radius: 0.25rem;
-	padding: 0.5rem;
-	margin: 0.5rem 0;
-	font-size: 85%;
 `
 
 const DevicesList = styled.div`
@@ -113,33 +105,49 @@ export const NordicNrplusNetworkTile = ({
 	onCenter: (location: GeoLocation) => void
 }) => {
 	const { lastUpdateTs } = useDevices()
-	console.log('<NordicNrplusNetworkTile>' , lastUpdateTs)
-	
+	console.log('<NordicNrplusNetworkTile>', lastUpdateTs)
+
 	// Get the most recently updated device for the network title
-	const mostRecentDevice = devices.reduce((latest, device) => {
-		if (!latest) return device
-		const deviceTime = lastUpdateTs[device.id]?.getTime() ?? 0
-		const latestTime = lastUpdateTs[latest.id]?.getTime() ?? 0
-		return deviceTime > latestTime ? device : latest
-	}, devices[0] as NordicNrplusDevice | undefined)
+	const mostRecentDevice = devices.reduce(
+		(latest, device) => {
+			if (!latest) return device
+			const deviceTime = lastUpdateTs[device.id]?.getTime() ?? 0
+			const latestTime = lastUpdateTs[latest.id]?.getTime() ?? 0
+			return deviceTime > latestTime ? device : latest
+		},
+		devices[0] as NordicNrplusDevice | undefined,
+	)
 
-	const lastUpdateTime = mostRecentDevice ? lastUpdateTs[mostRecentDevice.id] : undefined
-	console.log(lastUpdateTime ? `[Tile] Rendering NordicNrplusNetworkTile for network ${networkId}, last update at ${lastUpdateTime.toISOString()}` : `[Tile] Rendering NordicNrplusNetworkTile for network ${networkId}, no last update time`, devices)
-	// Get network info from any device that has connection profile
-	const networkInfo = devices.find(d => d.state?.nordicNrplus?.connectionProfile)?.state?.nordicNrplus?.connectionProfile
+	const lastUpdateTime = mostRecentDevice
+		? lastUpdateTs[mostRecentDevice.id]
+		: undefined
+	console.log(
+		lastUpdateTime
+			? `[Tile] Rendering NordicNrplusNetworkTile for network ${networkId}, last update at ${lastUpdateTime.toISOString()}`
+			: `[Tile] Rendering NordicNrplusNetworkTile for network ${networkId}, no last update time`,
+		devices,
+	)
 
-	console.log(`[Tile] Network ${networkId} has ${devices.length} devices`, devices)
+	console.log(
+		`[Tile] Network ${networkId} has ${devices.length} devices`,
+		devices,
+	)
 
 	// Collect all neighbors from all devices in the network
-	const allNeighbors = devices.flatMap(device => {
-		const neighbors = device.state?.nordicNrplus?.neighbors ?? {}
-		return Object.entries(neighbors).map(([instanceId, neighbor]) => ({
-			...(neighbor),
-			deviceId: device.id,
-			instanceId
-		}))
-	}).sort((a, b) => b.ts - a.ts)
-	console.log(`[Tile] Network ${networkId} has ${allNeighbors.length} total neighbors`, allNeighbors)
+	const allNeighbors = devices
+		.flatMap((device) => {
+			const neighbors = device.state?.nordicNrplus?.neighbors ?? {}
+			return Object.entries(neighbors).map(([instanceId, neighbor]) => ({
+				...neighbor,
+				deviceId: device.id,
+				instanceId,
+			}))
+		})
+		.sort((a, b) => b.ts - a.ts)
+	console.log(
+		`[Tile] Network ${networkId} has ${allNeighbors.length} total neighbors`,
+		allNeighbors,
+	)
 
 	const handleClick = withCancel(() => {
 		// Center on the most recent device location if available
@@ -156,7 +164,9 @@ export const NordicNrplusNetworkTile = ({
 				<span className="icon">🌐</span>
 				<span className="info">
 					<span>NR+ Network {networkId}</span>
-					<small>{devices.length} device{devices.length !== 1 ? 's' : ''}</small>
+					<small>
+						{devices.length} device{devices.length !== 1 ? 's' : ''}
+					</small>
 				</span>
 				{lastUpdateTime !== undefined && (
 					<LastUpdate title="Last update">
@@ -165,31 +175,35 @@ export const NordicNrplusNetworkTile = ({
 					</LastUpdate>
 				)}
 			</Title>
-			
-			{/*networkInfo && (
-				<NetworkInfo>
-					<strong>Network {networkInfo.networkId}</strong>
-					{networkInfo.operationalMode && (
-						<div>Mode: {networkInfo.operationalMode}</div>
-					)}
-				</NetworkInfo>
-			)*/}
 
 			<DevicesList>
 				{devices.map((device) => {
 					const nordicData = device.state?.nordicNrplus
-					const deviceNeighbors = Object.keys(nordicData?.neighbors ?? {}).length
-					const buttonPresses = Object.keys(nordicData?.buttonPresses ?? {}).length
-					
+					const deviceNeighbors = Object.keys(
+						nordicData?.neighbors ?? {},
+					).length
+					const buttonPresses = Object.keys(
+						nordicData?.buttonPresses ?? {},
+					).length
+
 					return (
 						<DeviceItem key={device.id}>
 							<DeviceInfo>
 								<DeviceName device={device} />
 								{nordicData?.connectionProfile && (
 									<DeviceMeta>
-										<span>Mode: {nordicData.connectionProfile.operationalMode === 'FT' ? 'sink' : 'leaf'}</span>
-										{deviceNeighbors > 0 && <span>{deviceNeighbors} neighbors</span>}
-										{buttonPresses > 0 && <span>{buttonPresses} button presses</span>}
+										<span>
+											Mode:{' '}
+											{nordicData.connectionProfile.operationalMode === 'FT'
+												? 'sink'
+												: 'leaf'}
+										</span>
+										{deviceNeighbors > 0 && (
+											<span>{deviceNeighbors} neighbors</span>
+										)}
+										{buttonPresses > 0 && (
+											<span>{buttonPresses} button presses</span>
+										)}
 									</DeviceMeta>
 								)}
 							</DeviceInfo>
@@ -205,13 +219,13 @@ export const NordicNrplusNetworkTile = ({
 					{allNeighbors.slice(0, 5).map((neighbor) => (
 						<NeighborItem key={`${neighbor.deviceId}-${neighbor.instanceId}`}>
 							<span>ID: {neighbor.neighborId}</span>
-							{(neighbor.rssi != null) && (
-								<span>{neighbor.rssi} dBm</span>
-							)}
+							{neighbor.rssi != null && <span>{neighbor.rssi} dBm</span>}
 						</NeighborItem>
 					))}
 					{allNeighbors.length > 5 && (
-						<div style={{ textAlign: 'center', opacity: 0.7, marginTop: '0.5rem' }}>
+						<div
+							style={{ textAlign: 'center', opacity: 0.7, marginTop: '0.5rem' }}
+						>
 							+{allNeighbors.length - 5} more neighbors
 						</div>
 					)}
