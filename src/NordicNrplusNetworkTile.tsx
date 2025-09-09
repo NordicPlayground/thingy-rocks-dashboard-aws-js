@@ -105,7 +105,6 @@ export const NordicNrplusNetworkTile = ({
 	onCenter: (location: GeoLocation) => void
 }) => {
 	const { lastUpdateTs } = useDevices()
-	console.log('<NordicNrplusNetworkTile>', lastUpdateTs)
 
 	// Get the most recently updated device for the network title
 	const mostRecentDevice = devices.reduce(
@@ -121,17 +120,6 @@ export const NordicNrplusNetworkTile = ({
 	const lastUpdateTime = mostRecentDevice
 		? lastUpdateTs[mostRecentDevice.id]
 		: undefined
-	console.log(
-		lastUpdateTime
-			? `[Tile] Rendering NordicNrplusNetworkTile for network ${networkId}, last update at ${lastUpdateTime.toISOString()}`
-			: `[Tile] Rendering NordicNrplusNetworkTile for network ${networkId}, no last update time`,
-		devices,
-	)
-
-	console.log(
-		`[Tile] Network ${networkId} has ${devices.length} devices`,
-		devices,
-	)
 
 	// Collect all neighbors from all devices in the network
 	const allNeighbors = devices
@@ -144,10 +132,6 @@ export const NordicNrplusNetworkTile = ({
 			}))
 		})
 		.sort((a, b) => b.ts - a.ts)
-	console.log(
-		`[Tile] Network ${networkId} has ${allNeighbors.length} total neighbors`,
-		allNeighbors,
-	)
 
 	const handleClick = withCancel(() => {
 		// Center on the most recent device location if available
@@ -216,19 +200,12 @@ export const NordicNrplusNetworkTile = ({
 			{allNeighbors.length > 0 && (
 				<NeighborsList>
 					<strong>Network Neighbors ({allNeighbors.length})</strong>
-					{allNeighbors.slice(0, 5).map((neighbor) => (
+					{allNeighbors.map((neighbor) => (
 						<NeighborItem key={`${neighbor.deviceId}-${neighbor.instanceId}`}>
 							<span>ID: {neighbor.neighborId}</span>
 							{neighbor.rssi != null && <span>{neighbor.rssi} dBm</span>}
 						</NeighborItem>
 					))}
-					{allNeighbors.length > 5 && (
-						<div
-							style={{ textAlign: 'center', opacity: 0.7, marginTop: '0.5rem' }}
-						>
-							+{allNeighbors.length - 5} more neighbors
-						</div>
-					)}
 				</NeighborsList>
 			)}
 		</>

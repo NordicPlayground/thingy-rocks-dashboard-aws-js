@@ -103,10 +103,6 @@ export const NordicNrplusTile = ({
 }) => {
 	const { lastUpdateTs } = useDevices()
 	const lastUpdateTime = lastUpdateTs[device.id]
-	console.log(
-		`[Tile] Rendering NordicNrplusTile for device ${device.id}`,
-		device,
-	)
 	const nordicNrplusData = device.state?.nordicNrplus
 	const connectionProfile = nordicNrplusData?.connectionProfile
 	const neighbors = nordicNrplusData?.neighbors ?? {}

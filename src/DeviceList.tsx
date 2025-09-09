@@ -130,10 +130,11 @@ export const DeviceList = () => {
 	const nordicNrplusDevices = devicesToShow.filter(isNordicNrplus)
 	const nordicNrplusNetworks = new Map<number, NordicNrplusDevice[]>()
 	const standaloneNordicNrplusDevices: NordicNrplusDevice[] = []
-	console.log(`[DeviceList] Total devices to show: ${devicesToShow.length}`, devicesToShow)
-	console.log(`[DeviceList] Nordic-nrplus devices: ${nordicNrplusDevices.length}`, nordicNrplusDevices)
-	nordicNrplusDevices.forEach(device => {
-		console.log(`[DeviceList] Processing nordic-nrplus device ${device.id}`, device)
+	console.log(
+		`[DeviceList] Total devices to show: ${devicesToShow.length}`,
+		devicesToShow,
+	)
+	nordicNrplusDevices.forEach((device) => {
 		const networkId = device.state?.nordicNrplus?.connectionProfile?.networkId
 		if (networkId !== undefined) {
 			if (!nordicNrplusNetworks.has(networkId)) {
@@ -147,7 +148,7 @@ export const DeviceList = () => {
 	})
 
 	// Filter out nordic-nrplus devices from the main list since we handle them separately
-	const otherDevices = devicesToShow.filter(device => !isNordicNrplus(device))
+	const otherDevices = devicesToShow.filter((device) => !isNordicNrplus(device))
 
 	return (
 		<DeviceState>
@@ -157,29 +158,20 @@ export const DeviceList = () => {
 					if (isTracker(device))
 						return (
 							<li key={`device:${device.id}`}>
-								<Tracker
-									device={device}
-									onCenter={center}
-								/>
+								<Tracker device={device} onCenter={center} />
 							</li>
 						)
 					if (isNRPlusGateway(device)) {
 						return (
 							<li key={device.id}>
-								<NRPlusGatewayTile
-									gateway={device}
-									onCenter={center}
-								/>
+								<NRPlusGatewayTile gateway={device} onCenter={center} />
 							</li>
 						)
 					}
 					if (isWirepasGateway(device)) {
 						return (
 							<li key={device.id}>
-								<WirepasGatewayTile
-									gateway={device}
-									onCenter={center}
-								/>
+								<WirepasGatewayTile gateway={device} onCenter={center} />
 							</li>
 						)
 					}
@@ -196,25 +188,24 @@ export const DeviceList = () => {
 						)
 					return null
 				})}
-				
+
 				{/* Render grouped nordic-nrplus networks */}
-				{Array.from(nordicNrplusNetworks.entries()).map(([networkId, devices]) => (
-					<li key={`network:${networkId}`}>
-						<NordicNrplusNetworkTile
-							devices={devices}
-							networkId={networkId}
-							onCenter={center}
-						/>
-					</li>
-				))}
-				
+				{Array.from(nordicNrplusNetworks.entries()).map(
+					([networkId, devices]) => (
+						<li key={`network:${networkId}`}>
+							<NordicNrplusNetworkTile
+								devices={devices}
+								networkId={networkId}
+								onCenter={center}
+							/>
+						</li>
+					),
+				)}
+
 				{/* Render standalone nordic-nrplus devices */}
 				{standaloneNordicNrplusDevices.map((device) => (
 					<li key={device.id}>
-						<NordicNrplusTile
-							device={device}
-							onCenter={center}
-						/>
+						<NordicNrplusTile device={device} onCenter={center} />
 					</li>
 				))}
 			</ul>

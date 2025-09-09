@@ -3,10 +3,12 @@ import {
 	type BatteryAndPower_14202,
 	type ButtonPress_14220,
 	type ConnectionInformation_14203,
+	type DECTNR_ConnectionProfile_14503,
 	type DeviceInformation_14204,
 	type Environment_14205,
 	type Geolocation_14201,
 	type LwM2MObjectInstance,
+	type NetworkNeighbor_14502,
 } from '@hello.nrfcloud.com/proto-map/lwm2m'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
@@ -18,14 +20,10 @@ import {
 	type Reported,
 } from './Devices.js'
 import { MessageContext, useWebsocket } from './WebsocketConnection.js'
-import type {
-	DECTNRPlusConnectionProfile_14503,
-	NetworkNeighbor_14502,
-} from '../nordicNrplusObjects.js'
 
 // Nordic NR+ object IDs
 const NETWORK_NEIGHBOR_OBJECT_ID = 14502
-const DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID = 14503  
+const DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID = 14503
 const BUTTON_PRESS_OBJECT_ID = 14220
 
 const LwM2MContext = createContext<{
@@ -57,7 +55,8 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				)
 				for (const { deviceId, alias, objects } of message.shadows) {
 					if (alias !== undefined) deviceMessages.updateAlias(deviceId, alias)
-					const { locations, reported, isNordicNrplus } = processObjects(objects)
+					const { locations, reported, isNordicNrplus } =
+						processObjects(objects)
 					deviceMessages.updateState(deviceId, reported)
 					for (const [src, location] of locations) {
 						deviceMessages.updateLocation(deviceId, location, src)
@@ -92,7 +91,9 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				}))
 				if (message.alias !== undefined)
 					deviceMessages.updateAlias(message.deviceId, message.alias)
-				const { locations, reported, isNordicNrplus } = processObjects(message.objects)
+				const { locations, reported, isNordicNrplus } = processObjects(
+					message.objects,
+				)
 				deviceMessages.updateState(message.deviceId, reported)
 				for (const [src, location] of locations) {
 					deviceMessages.updateLocation(message.deviceId, location, src)
@@ -168,7 +169,7 @@ const isNetworkNeighbor = (
 
 const isDECTNRPlusConnectionProfile = (
 	object: unknown,
-): object is LwM2MObjectInstance<DECTNRPlusConnectionProfile_14503> =>
+): object is LwM2MObjectInstance<DECTNR_ConnectionProfile_14503> =>
 	isLwM2MObjectInstance(DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID, object)
 
 const isButtonPress = (
@@ -199,14 +200,15 @@ const processObjects = (
 	const reported: Reported = {}
 	const locations: Map<string, GeoLocation> = new Map()
 	let isNordicNrplus = false
-	
+
 	// Check if any nordic-nrplus specific objects are present
-	const hasNordicNrplusObjects = objects.some(obj => 
-		obj.ObjectID === (NETWORK_NEIGHBOR_OBJECT_ID as any) || 
-		obj.ObjectID === (DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID as any) || 
-		obj.ObjectID === (BUTTON_PRESS_OBJECT_ID as any)
+	const hasNordicNrplusObjects = objects.some(
+		(obj) =>
+			obj.ObjectID === (NETWORK_NEIGHBOR_OBJECT_ID as any) ||
+			obj.ObjectID === (DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID as any) ||
+			obj.ObjectID === (BUTTON_PRESS_OBJECT_ID as any),
 	)
-	
+
 	if (hasNordicNrplusObjects) {
 		isNordicNrplus = true
 		// Initialize nordic-nrplus specific state
@@ -216,7 +218,7 @@ const processObjects = (
 			buttonPresses: {},
 		}
 	}
-	
+
 	for (const object of objects) {
 		if (isDeviceInformation(object)) {
 			const {
@@ -347,12 +349,8 @@ const processObjects = (
 				})
 			}
 		} else if (isNetworkNeighbor(object)) {
-			console.log('Processing nordic-nrplus Network Neighbor object', object)
 			// Process 14502 Network Neighbor object
-			const {
-				0: neighborId,
-				1: rssi,
-			} = object.Resources
+			const { 0: neighborId, 1: rssi } = object.Resources
 			const instanceId = object.ObjectInstanceID?.toString() ?? '0'
 			if (reported.nordicNrplus) {
 				reported.nordicNrplus.neighbors[instanceId] = {
@@ -363,11 +361,7 @@ const processObjects = (
 			}
 		} else if (isDECTNRPlusConnectionProfile(object)) {
 			// Process 14503 DECT NR+ Connection Profile object
-			const {
-				0: longRdId,
-				1: networkId,
-				2: operationalMode,
-			} = object.Resources
+			const { 0: longRdId, 1: networkId, 2: operationalMode } = object.Resources
 			if (reported.nordicNrplus) {
 				reported.nordicNrplus.connectionProfile = {
 					longRdId,

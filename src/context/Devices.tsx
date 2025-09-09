@@ -466,7 +466,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 						knownDevices[deviceId]!,
 						reported,
 					)
-					console.log('MAYBE UPDATED', { maybeUpdated, deviceId, reported })
 					if (maybeUpdated !== null) {
 						setLastUpdateTs((u) => ({
 							...u,
@@ -530,7 +529,6 @@ const getDeviceLastUpdateTime = (
 	device: Device,
 	state: Reported,
 ): null | number => {
-	console.log('Getting last update time for device', device)
 	if (isNRPlusGateway(device))
 		return getLastUpdateTime(
 			Object.values(device.state.nodes)
@@ -545,12 +543,15 @@ const getDeviceLastUpdateTime = (
 		)
 	}
 	if (isNordicNrplus(device)) {
-		console.log('Getting last update time for nordic-nrplus device', device.id, device, state)
 		return getLastUpdateTime([
 			// Nordic NR+ specific
 			device.state?.nordicNrplus.connectionProfile?.ts,
-			...Object.values(device.state?.nordicNrplus.neighbors ?? {}).map(n => n.ts),
-			...Object.values(device.state?.nordicNrplus.buttonPresses ?? {}).map(bp => bp.ts),
+			...Object.values(device.state?.nordicNrplus.neighbors ?? {}).map(
+				(n) => n.ts,
+			),
+			...Object.values(device.state?.nordicNrplus.buttonPresses ?? {}).map(
+				(bp) => bp.ts,
+			),
 		])
 	}
 	return getLastUpdateTime([
