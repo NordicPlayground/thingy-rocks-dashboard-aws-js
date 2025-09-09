@@ -100,7 +100,6 @@ export const NordicNrplusNetworkTile = ({
 		(device) =>
 			device.state?.nordicNrplus?.connectionProfile?.operationalMode === 'FT',
 	)
-	console.log('Sink device for network', networkId, sinkDevice?.id)
 	const leafDevices = devices.filter((device) => device !== sinkDevice)
 
 	const handleClick = withCancel(() => {
