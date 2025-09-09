@@ -1,56 +1,22 @@
-import { UploadCloud } from 'lucide-preact'
+import { Cpu, Leaf, Network, Signal, UploadCloud } from 'lucide-preact'
 import { styled } from 'styled-components'
+import { ButtonPress } from './ButtonPress.tsx'
 import type { GeoLocation, NordicNrplusDevice } from './context/Devices.js'
 import { useDevices } from './context/Devices.js'
+import { LastUpdate, Properties, Title } from './DeviceList.tsx'
 import { DeviceName } from './DeviceName.js'
 import { hideDetails } from './hooks/useDetails.js'
+import { LocationInfo } from './LocationInfo.js'
 import { withCancel } from './nrplus/cancelEvent.js'
+import { NRPlus } from './nrplus/NRPlusIcon.js'
 import { PinTile } from './PinTile.js'
 import { RelativeTime } from './RelativeTime.js'
-
-const Title = styled.header`
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	button.btn-link,
-	& > button {
-		border: 0;
-		background-color: transparent;
-		color: inherit;
-		padding: 0.25rem;
-		margin: 0;
-		cursor: pointer;
-	}
-	& > span.info {
-		font-size: 85%;
-		display: flex;
-		flex-direction: column;
-		text-align: left;
-		min-width: 0;
-		flex: 1;
-	}
-	.icon {
-		width: 24px;
-		height: 24px;
-		margin-right: 0.5rem;
-		color: #00a8c8;
-	}
-`
-
-const LastUpdate = styled.span`
-	font-size: 85%;
-	opacity: 0.75;
-	white-space: nowrap;
-	display: flex;
-	align-items: center;
-	gap: 0.25rem;
-`
 
 const DevicesList = styled.div`
 	margin-top: 0.5rem;
 	font-size: 85%;
+	width: 100%;
 `
-
 const DeviceItem = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -60,39 +26,28 @@ const DeviceItem = styled.div`
 	background: rgba(255, 255, 255, 0.05);
 	border-radius: 0.25rem;
 	border-left: 3px solid #00a8c8;
+	width: 100%;
+	box-sizing: border-box;
 `
-
 const DeviceInfo = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 0.25rem;
 	flex: 1;
-`
-
-const DeviceMeta = styled.div`
-	font-size: 0.8em;
-	opacity: 0.7;
-	display: flex;
-	gap: 1rem;
-`
-
-const NeighborsList = styled.div`
-	margin-top: 0.5rem;
-	font-size: 85%;
-	max-height: 100px;
-	overflow-y: auto;
 	width: 100%;
 `
 
-const NeighborItem = styled.div`
+const LocationWrapper = styled.div`
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
-	padding: 0.25rem 0;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-	&:last-child {
-		border-bottom: none;
-	}
+	gap: 0.25rem;
+`
+
+const DeviceNameWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	color: #00a8c8; //
 `
 
 export const NordicNrplusNetworkTile = ({
@@ -133,6 +88,21 @@ export const NordicNrplusNetworkTile = ({
 		})
 		.sort((a, b) => b.ts - a.ts)
 
+	const allUniqueDevices = new Map<string, (typeof allNeighbors)[number]>()
+	allNeighbors.forEach((neighbor) => {
+		const key = `${neighbor.deviceId}-${neighbor.instanceId}`
+		if (!allUniqueDevices.has(key)) {
+			allUniqueDevices.set(key, neighbor)
+		}
+	})
+
+	const sinkDevice = devices.find(
+		(device) =>
+			device.state?.nordicNrplus?.connectionProfile?.operationalMode === 'FT',
+	)
+	console.log('Sink device for network', networkId, sinkDevice?.id)
+	const leafDevices = devices.filter((device) => device !== sinkDevice)
+
 	const handleClick = withCancel(() => {
 		// Center on the most recent device location if available
 		const deviceLocation = Object.values(mostRecentDevice?.location ?? {})[0]
@@ -145,50 +115,87 @@ export const NordicNrplusNetworkTile = ({
 	return (
 		<>
 			<Title onClick={handleClick}>
-				<span className="icon">🌐</span>
-				<span className="info">
-					<span>NR+ Network {networkId}</span>
-					<small>
-						{devices.length} device{devices.length !== 1 ? 's' : ''}
-					</small>
-				</span>
-				{lastUpdateTime !== undefined && (
-					<LastUpdate title="Last update">
-						<UploadCloud strokeWidth={1} />
-						<RelativeTime time={new Date(lastUpdateTime)} />
-					</LastUpdate>
-				)}
+				<NRPlus class="icon" />
+				<span>Sink {sinkDevice?.id.slice(-4)}</span>
+				<div
+					style={{
+						display: 'flex',
+						alignItems: 'center',
+						gap: '0.5rem',
+						marginLeft: 'auto',
+					}}
+				>
+					{lastUpdateTime !== undefined && (
+						<LastUpdate title="Last update">
+							<UploadCloud strokeWidth={1} />
+							<RelativeTime time={new Date(lastUpdateTime)} />
+						</LastUpdate>
+					)}
+					{sinkDevice && <PinTile device={sinkDevice} />}
+				</div>
 			</Title>
-
+			<Properties>
+				<dt>
+					<Cpu size={16} />
+				</dt>{' '}
+				{allUniqueDevices.size} device{allUniqueDevices.size !== 1 ? 's' : ''}
+				<dt>
+					<Network size={16} />
+				</dt>{' '}
+				{`NR+ Network ${networkId}`}
+				{sinkDevice && <LocationInfo device={sinkDevice} />}
+			</Properties>
 			<DevicesList>
-				{devices.map((device) => {
+				{leafDevices.map((device) => {
 					const nordicData = device.state?.nordicNrplus
-					const deviceNeighbors = Object.keys(
-						nordicData?.neighbors ?? {},
-					).length
-					const buttonPresses = Object.keys(
-						nordicData?.buttonPresses ?? {},
-					).length
 
+					const sinkRssi =
+						nordicData?.neighbors[0]?.neighborId ===
+						sinkDevice?.state?.nordicNrplus.connectionProfile?.longRdId
+							? nordicData?.neighbors[0]?.rssi
+							: null
+
+					const buttonPressList = nordicData?.buttonPresses
 					return (
 						<DeviceItem key={device.id}>
 							<DeviceInfo>
-								<DeviceName device={device} />
+								{' '}
+								<div
+									style={{
+										display: 'flex',
+										alignItems: 'center',
+										gap: '0.25rem',
+									}}
+								>
+									<DeviceNameWrapper>
+										<Leaf size={16} />
+										<DeviceName device={device} />
+									</DeviceNameWrapper>
+								</div>
 								{nordicData?.connectionProfile && (
-									<DeviceMeta>
-										<span>
-											Mode:{' '}
-											{nordicData.connectionProfile.operationalMode === 'FT'
-												? 'sink'
-												: 'leaf'}
-										</span>
-										{deviceNeighbors > 0 && (
-											<span>{deviceNeighbors} neighbors</span>
+									<Properties>
+										{/* Show signal strength to sink */}
+										{sinkRssi != null && (
+											<>
+												<dt>
+													<Signal size={16} />
+													<dd>{sinkRssi} dBm</dd>
+												</dt>
+											</>
 										)}
-										{buttonPresses > 0 && (
-											<span>{buttonPresses} button presses</span>
-										)}
-									</DeviceMeta>
+										<dd>
+											{buttonPressList &&
+												Object.entries(buttonPressList).map(([, press]) => (
+													<ButtonPress
+														key={`${device.id}-press-${press.ts}`}
+														buttonPress={press}
+													/>
+												))}
+										</dd>
+										<LocationWrapper>
+											<LocationInfo device={device} />
+										</LocationWrapper>
+									</Properties>
 								)}
 							</DeviceInfo>
 							<PinTile device={device} />
@@ -196,18 +203,6 @@ export const NordicNrplusNetworkTile = ({
 					)
 				})}
 			</DevicesList>
-
-			{allNeighbors.length > 0 && (
-				<NeighborsList>
-					<strong>Network Neighbors ({allNeighbors.length})</strong>
-					{allNeighbors.map((neighbor) => (
-						<NeighborItem key={`${neighbor.deviceId}-${neighbor.instanceId}`}>
-							<span>ID: {neighbor.neighborId}</span>
-							{neighbor.rssi != null && <span>{neighbor.rssi} dBm</span>}
-						</NeighborItem>
-					))}
-				</NeighborsList>
-			)}
 		</>
 	)
 }

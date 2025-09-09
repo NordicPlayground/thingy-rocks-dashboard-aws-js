@@ -376,7 +376,7 @@ const processObjects = (
 			const instanceKey = buttonId.toString()
 			if (reported.nordicNrplus) {
 				reported.nordicNrplus.buttonPresses[instanceKey] = {
-					buttonId,
+					v: buttonId,
 					ts: new Date(object.Resources['99'] * 1000).getTime(),
 				}
 			}

@@ -128,11 +128,7 @@ export const DeviceList = () => {
 	// Group nordic-nrplus devices by network ID
 	const nordicNrplusDevices = devicesToShow.filter(isNordicNrplus)
 	const nordicNrplusNetworks = new Map<number, NordicNrplusDevice[]>()
-	//const standaloneNordicNrplusDevices: NordicNrplusDevice[] = []
-	console.log(
-		`[DeviceList] Total devices to show: ${devicesToShow.length}`,
-		devicesToShow,
-	)
+
 	//We only want to show nordic-nrplus devices that are part of a network
 	nordicNrplusDevices.forEach((device) => {
 		const networkId = device.state?.nordicNrplus?.connectionProfile?.networkId

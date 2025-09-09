@@ -255,7 +255,7 @@ export type NordicNrplusConnectionProfile = {
 }
 
 export type NordicNrplusButtonPress = {
-	buttonId: number // ObjectInstanceID indicates which button
+	v: number
 	ts: number
 }
 
