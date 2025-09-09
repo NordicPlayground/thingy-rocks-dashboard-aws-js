@@ -13,7 +13,6 @@ import { DisconnectedWarning } from './DisconnectedWarning.js'
 import { HistoryOnly } from './HistoryOnly.js'
 import { showDetails } from './hooks/useDetails.js'
 import { NordicNrplusNetworkTile } from './NordicNrplusNetworkTile.js'
-import { NordicNrplusTile } from './NordicNrplusTile.js'
 import { NRPlusGatewayTile } from './nrplus/NRPlusGatewayTile.js'
 import { Tracker } from './Tracker.js'
 import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
@@ -129,11 +128,12 @@ export const DeviceList = () => {
 	// Group nordic-nrplus devices by network ID
 	const nordicNrplusDevices = devicesToShow.filter(isNordicNrplus)
 	const nordicNrplusNetworks = new Map<number, NordicNrplusDevice[]>()
-	const standaloneNordicNrplusDevices: NordicNrplusDevice[] = []
+	//const standaloneNordicNrplusDevices: NordicNrplusDevice[] = []
 	console.log(
 		`[DeviceList] Total devices to show: ${devicesToShow.length}`,
 		devicesToShow,
 	)
+	//We only want to show nordic-nrplus devices that are part of a network
 	nordicNrplusDevices.forEach((device) => {
 		const networkId = device.state?.nordicNrplus?.connectionProfile?.networkId
 		if (networkId !== undefined) {
@@ -141,9 +141,6 @@ export const DeviceList = () => {
 				nordicNrplusNetworks.set(networkId, [])
 			}
 			nordicNrplusNetworks.get(networkId)!.push(device)
-		} else {
-			// Device without network ID - show individually
-			standaloneNordicNrplusDevices.push(device)
 		}
 	})
 
@@ -201,13 +198,6 @@ export const DeviceList = () => {
 						</li>
 					),
 				)}
-
-				{/* Render standalone nordic-nrplus devices */}
-				{standaloneNordicNrplusDevices.map((device) => (
-					<li key={device.id}>
-						<NordicNrplusTile device={device} onCenter={center} />
-					</li>
-				))}
 			</ul>
 		</DeviceState>
 	)
