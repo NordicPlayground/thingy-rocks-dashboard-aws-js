@@ -1,4 +1,5 @@
 import { Cpu, Leaf, Network, Signal, UploadCloud } from 'lucide-preact'
+import { useMemo } from 'preact/hooks'
 import { styled } from 'styled-components'
 import { ButtonPress } from '../ButtonPress.tsx'
 import type { GeoLocation, NordicNrplusDevice } from '../context/Devices.tsx'
@@ -47,7 +48,14 @@ const DeviceNameWrapper = styled.div`
 	display: flex;
 	align-items: center;
 	gap: 0.25rem;
-	color: #00a8c8; //
+	color: #00a8c8;
+`
+
+const SinkInfo = styled.div`
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-left: auto;
 `
 
 export const NordicNrplusNetworkTile = ({
@@ -111,19 +119,51 @@ export const NordicNrplusNetworkTile = ({
 		hideDetails()
 	})
 
+	const networkSinkRSSI = useMemo(
+		() =>
+			new Map(
+				leafDevices.map((device) => {
+					const nordicData = device.state?.nordicNrplus
+					return [
+						device.id,
+						nordicData?.neighbors[0]?.neighborId ===
+						sinkDevice?.state?.nordicNrplus.connectionProfile?.longRdId
+							? nordicData?.neighbors[0]?.rssi
+							: null,
+					]
+				}),
+			),
+		[leafDevices],
+	)
+
+	const deviceButtonPresses = useMemo(
+		() =>
+			new Map(
+				devices.map((device) => [
+					device.id,
+					device.state?.nordicNrplus?.buttonPresses,
+				]),
+			),
+		[devices],
+	)
+
+	const connectionProfiles = useMemo(
+		() =>
+			new Map(
+				devices.map((device) => [
+					device.id,
+					device.state?.nordicNrplus?.connectionProfile,
+				]),
+			),
+		[devices],
+	)
+
 	return (
 		<>
 			<Title onClick={handleClick}>
 				<NRPlus class="icon" />
 				<span>Sink {sinkDevice?.id.slice(-4)}</span>
-				<div
-					style={{
-						display: 'flex',
-						alignItems: 'center',
-						gap: '0.5rem',
-						marginLeft: 'auto',
-					}}
-				>
+				<SinkInfo>
 					{lastUpdateTime !== undefined && (
 						<LastUpdate title="Last update">
 							<UploadCloud strokeWidth={1} />
@@ -131,47 +171,32 @@ export const NordicNrplusNetworkTile = ({
 						</LastUpdate>
 					)}
 					{sinkDevice && <PinTile device={sinkDevice} />}
-				</div>
+				</SinkInfo>
 			</Title>
 			<Properties>
 				<dt>
 					<Cpu size={16} />
-				</dt>{' '}
+				</dt>
 				{allUniqueDevices.size} device{allUniqueDevices.size !== 1 ? 's' : ''}
 				<dt>
 					<Network size={16} />
-				</dt>{' '}
+				</dt>
 				{`NR+ Network ${networkId}`}
 				{sinkDevice && <LocationInfo device={sinkDevice} />}
 			</Properties>
 			<DevicesList>
 				{leafDevices.map((device) => {
-					const nordicData = device.state?.nordicNrplus
-
-					const sinkRssi =
-						nordicData?.neighbors[0]?.neighborId ===
-						sinkDevice?.state?.nordicNrplus.connectionProfile?.longRdId
-							? nordicData?.neighbors[0]?.rssi
-							: null
-
-					const buttonPressList = nordicData?.buttonPresses
+					const sinkRssi = networkSinkRSSI.get(device.id)
+					const buttonPressList = deviceButtonPresses.get(device.id)
+					const connectionProfile = connectionProfiles.get(device.id)
 					return (
 						<DeviceItem key={device.id}>
 							<DeviceInfo>
-								{' '}
-								<div
-									style={{
-										display: 'flex',
-										alignItems: 'center',
-										gap: '0.25rem',
-									}}
-								>
-									<DeviceNameWrapper>
-										<Leaf size={16} />
-										<DeviceName device={device} />
-									</DeviceNameWrapper>
-								</div>
-								{nordicData?.connectionProfile && (
+								<DeviceNameWrapper>
+									<Leaf size={16} />
+									<DeviceName device={device} />
+								</DeviceNameWrapper>
+								{connectionProfile && (
 									<Properties>
 										{/* Show signal strength to sink */}
 										{sinkRssi != null && (
