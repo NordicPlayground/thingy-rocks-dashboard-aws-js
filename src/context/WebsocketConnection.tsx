@@ -171,7 +171,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			if (message.deviceType !== undefined) {
 				// Map string device types to DeviceType enum
 				let deviceType: DeviceType
-				if (message.deviceType === 'nordic-nrplus') {
+				if (message.deviceType === DeviceType.NORDIC_NRPLUS) {
 					deviceType = DeviceType.NORDIC_NRPLUS
 				} else {
 					deviceType = message.deviceType as DeviceType
