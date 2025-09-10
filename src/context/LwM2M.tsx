@@ -55,14 +55,13 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				)
 				for (const { deviceId, alias, objects } of message.shadows) {
 					if (alias !== undefined) deviceMessages.updateAlias(deviceId, alias)
-					const { locations, reported, isNordicNrplus } =
-						processObjects(objects)
+					const { locations, reported } = processObjects(objects)
 					deviceMessages.updateState(deviceId, reported)
 					for (const [src, location] of locations) {
 						deviceMessages.updateLocation(deviceId, location, src)
 					}
 					// Set device type if it's a nordic-nrplus device
-					if (isNordicNrplus) {
+					if (isNordicNrplus(objects)) {
 						deviceMessages.updateType(deviceId, DeviceType.NORDIC_NRPLUS)
 					}
 				}
@@ -91,15 +90,13 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				}))
 				if (message.alias !== undefined)
 					deviceMessages.updateAlias(message.deviceId, message.alias)
-				const { locations, reported, isNordicNrplus } = processObjects(
-					message.objects,
-				)
+				const { locations, reported } = processObjects(message.objects)
 				deviceMessages.updateState(message.deviceId, reported)
 				for (const [src, location] of locations) {
 					deviceMessages.updateLocation(message.deviceId, location, src)
 				}
 				// Set device type if it's a nordic-nrplus device
-				if (isNordicNrplus) {
+				if (isNordicNrplus(message.objects)) {
 					deviceMessages.updateType(message.deviceId, DeviceType.NORDIC_NRPLUS)
 				}
 			}
@@ -195,22 +192,12 @@ const processObjects = (
 ): {
 	reported: Reported
 	locations: Map<string, GeoLocation>
-	isNordicNrplus: boolean
 } => {
 	const reported: Reported = {}
 	const locations: Map<string, GeoLocation> = new Map()
-	let isNordicNrplus = false
 
 	// Check if any nordic-nrplus specific objects are present
-	const hasNordicNrplusObjects = objects.some(
-		(obj) =>
-			obj.ObjectID === (NETWORK_NEIGHBOR_OBJECT_ID as any) ||
-			obj.ObjectID === (DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID as any) ||
-			obj.ObjectID === (BUTTON_PRESS_OBJECT_ID as any),
-	)
-
-	if (hasNordicNrplusObjects) {
-		isNordicNrplus = true
+	if (isNordicNrplus(objects)) {
 		// Initialize nordic-nrplus specific state
 		reported.nordicNrplus = {
 			neighbors: {},
@@ -382,7 +369,20 @@ const processObjects = (
 			}
 		}
 	}
-	return { reported, locations, isNordicNrplus }
+	return { reported, locations }
 }
 
 export const useLwM2MObjects = () => useContext(LwM2MContext)
+
+/**
+ * Determines if the given LwM2M objects belong to a nordic-nrplus device
+ *
+ * @deprecated Whether a device is a Nordic NR+ device should be determined using the IoT Thing Type of the respective thing.
+ */
+const isNordicNrplus = (objects: Array<LwM2MObjectInstance>): boolean =>
+	objects.some(
+		(obj) =>
+			obj.ObjectID === (NETWORK_NEIGHBOR_OBJECT_ID as any) ||
+			obj.ObjectID === (DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID as any) ||
+			obj.ObjectID === (BUTTON_PRESS_OBJECT_ID as any),
+	)
