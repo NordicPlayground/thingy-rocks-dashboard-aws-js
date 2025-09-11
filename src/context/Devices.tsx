@@ -133,6 +133,12 @@ export type Reported = Partial<{
 		}
 		ts: number // 1563968747123
 	}
+	// Nordic NR+ specific data
+	nordicNrplus: {
+		neighbors: Record<string, NordicNrplusNeighbor>
+		connectionProfile?: NordicNrplusConnectionProfile
+		buttonPresses: Record<string, NordicNrplusButtonPress>
+	}
 }>
 
 export enum GeoLocationSource {
@@ -157,6 +163,7 @@ export enum DeviceType {
 	WIREPAS_5G_MESH_GW = 'wirepas-5g-mesh-gateway',
 	NRPLUS_GW = 'nrplus-gateway',
 	SOFT_SIM = 'soft-sim',
+	NORDIC_NRPLUS = 'nordic-nrplus',
 }
 export type Location = Record<GeoLocationSource, GeoLocation>
 export type Device = {
@@ -233,6 +240,38 @@ export type WirepasGateway = {
 	}
 }
 
+// Nordic NRPLUS Device
+export type NordicNrplusNeighbor = {
+	neighborId: number
+	rssi?: number // Radio Signal Strength in dBm
+	ts: number
+}
+
+export type NordicNrplusConnectionProfile = {
+	longRdId: number
+	networkId: number
+	operationalMode: string
+	ts: number
+}
+
+export type NordicNrplusButtonPress = {
+	v: number
+	ts: number
+}
+
+export type NordicNrplusDevice = {
+	id: string
+	type: DeviceType.NORDIC_NRPLUS
+	location?: Location
+	state?: Reported & {
+		nordicNrplus: {
+			neighbors: Record<string, NordicNrplusNeighbor>
+			connectionProfile?: NordicNrplusConnectionProfile
+			buttonPresses: Record<string, NordicNrplusButtonPress>
+		}
+	}
+}
+
 export type Devices = Record<string, Device>
 
 export type Reading = [
@@ -297,6 +336,16 @@ export const isWirepasGateway = (
 	typeof device.id === 'string' &&
 	'type' in device &&
 	device.type === DeviceType.WIREPAS_5G_MESH_GW
+
+export const isNordicNrplus = (device: unknown): device is NordicNrplusDevice =>
+	typeof device === 'object' &&
+	device !== null &&
+	/*'type' in device &&
+	(device as Device).type === DeviceType.NORDIC_NRPLUS &&*/
+	'state' in device &&
+	typeof (device as Device).state === 'object' &&
+	(device as Device).state !== null &&
+	'nordicNrplus' in ((device as Device).state ?? {})
 
 export const DevicesContext = createContext<{
 	devices: Devices
@@ -492,6 +541,18 @@ const getDeviceLastUpdateTime = (
 		return getLastUpdateTime(
 			Object.values(nodes).map((node) => maybeDate(node.ts)?.getTime()),
 		)
+	}
+	if (isNordicNrplus(device)) {
+		return getLastUpdateTime([
+			// Nordic NR+ specific
+			device.state?.nordicNrplus.connectionProfile?.ts,
+			...Object.values(device.state?.nordicNrplus.neighbors ?? {}).map(
+				(n) => n.ts,
+			),
+			...Object.values(device.state?.nordicNrplus.buttonPresses ?? {}).map(
+				(bp) => bp.ts,
+			),
+		])
 	}
 	return getLastUpdateTime([
 		state?.btn?.ts,

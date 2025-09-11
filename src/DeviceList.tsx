@@ -1,15 +1,18 @@
 import { styled } from 'styled-components'
 import {
+	isNordicNrplus,
 	isNRPlusGateway,
 	isTracker,
 	isWirepasGateway,
 	type GeoLocation,
+	type NordicNrplusDevice,
 } from './context/Devices.js'
 import { useMap } from './context/Map.js'
 import { useVisibleDevices } from './context/VisibleDevices.js'
 import { DisconnectedWarning } from './DisconnectedWarning.js'
 import { HistoryOnly } from './HistoryOnly.js'
 import { showDetails } from './hooks/useDetails.js'
+import { NordicNrplusNetworkTile } from './nordicNRPlus/NordicNrplusNetworkTile.tsx'
 import { NRPlusGatewayTile } from './nrplus/NRPlusGatewayTile.js'
 import { Tracker } from './Tracker.js'
 import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
@@ -122,46 +125,52 @@ export const DeviceList = () => {
 		map?.center(location)
 	}
 
+	// Group nordic-nrplus devices by network ID
+	const nordicNrplusDevices = devicesToShow.filter(isNordicNrplus)
+	const nordicNrplusNetworks = new Map<number, NordicNrplusDevice[]>()
+
+	//We only want to show nordic-nrplus devices that are part of a network
+	nordicNrplusDevices.forEach((device) => {
+		const networkId = device.state?.nordicNrplus?.connectionProfile?.networkId
+		if (networkId !== undefined) {
+			if (!nordicNrplusNetworks.has(networkId)) {
+				nordicNrplusNetworks.set(networkId, [])
+			}
+			nordicNrplusNetworks.get(networkId)!.push(device)
+		}
+	})
+
+	// Filter out nordic-nrplus devices from the main list since we handle them separately
+	const otherDevices = devicesToShow.filter((device) => !isNordicNrplus(device))
+
 	return (
 		<DeviceState>
 			<DisconnectedWarning />
 			<ul>
-				{devicesToShow.map((device) => {
+				{otherDevices.map((device) => {
 					if (isTracker(device))
 						return (
-							<li>
-								<Tracker
-									key={`device:${device.id}`}
-									device={device}
-									onCenter={center}
-								/>
+							<li key={`device:${device.id}`}>
+								<Tracker device={device} onCenter={center} />
 							</li>
 						)
 					if (isNRPlusGateway(device)) {
 						return (
-							<li>
-								<NRPlusGatewayTile
-									gateway={device}
-									key={device.id}
-									onCenter={center}
-								/>
+							<li key={device.id}>
+								<NRPlusGatewayTile gateway={device} onCenter={center} />
 							</li>
 						)
 					}
 					if (isWirepasGateway(device)) {
 						return (
-							<li>
-								<WirepasGatewayTile
-									gateway={device}
-									key={device.id}
-									onCenter={center}
-								/>
+							<li key={device.id}>
+								<WirepasGatewayTile gateway={device} onCenter={center} />
 							</li>
 						)
 					}
 					if (device.history !== undefined)
 						return (
-							<li>
+							<li key={device.id}>
 								<HistoryOnly
 									device={device}
 									onClick={() => {
@@ -172,6 +181,19 @@ export const DeviceList = () => {
 						)
 					return null
 				})}
+
+				{/* Render grouped nordic-nrplus networks */}
+				{Array.from(nordicNrplusNetworks.entries()).map(
+					([networkId, devices]) => (
+						<li key={`network:${networkId}`}>
+							<NordicNrplusNetworkTile
+								devices={devices}
+								networkId={networkId}
+								onCenter={center}
+							/>
+						</li>
+					),
+				)}
 			</ul>
 		</DeviceState>
 	)

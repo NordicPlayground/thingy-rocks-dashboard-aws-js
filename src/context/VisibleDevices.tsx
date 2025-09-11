@@ -10,7 +10,6 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const {
 		settings: { showFavorites, favorites },
 	} = useSettings()
-
 	const devicesToShow = [
 		...Object.values(devices).filter(
 			(device) => type(device.id) !== DeviceType.WIREPAS_5G_MESH_GW,

@@ -3,9 +3,9 @@ import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useRef, useState } from 'preact/hooks'
 import type { Reboot } from '../memfault/Context.js'
 import {
+	DeviceType,
 	GeoLocationSource,
 	useDevices,
-	type DeviceType,
 	type GeoLocation,
 	type Reported,
 	type Summary,
@@ -119,7 +119,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			}
 			switch (message['@context']) {
 				case MessageContext.DeviceShadow:
-					deviceMessages.updateState(message.deviceId, message.reported)
+					{
+						const processedReported = message.reported
+						deviceMessages.updateState(message.deviceId, processedReported)
+					}
 					break
 				case MessageContext.DeviceMessage:
 					deviceMessages.updateState(message.deviceId, message.message)
@@ -166,10 +169,14 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				)
 			}
 			if (message.deviceType !== undefined) {
-				deviceMessages.updateType(
-					message.deviceId,
-					message.deviceType as DeviceType,
-				)
+				// Map string device types to DeviceType enum
+				let deviceType: DeviceType
+				if (message.deviceType === DeviceType.NORDIC_NRPLUS) {
+					deviceType = DeviceType.NORDIC_NRPLUS
+				} else {
+					deviceType = message.deviceType as DeviceType
+				}
+				deviceMessages.updateType(message.deviceId, deviceType)
 			}
 			listeners.current.map((fn) => fn(message))
 		})
