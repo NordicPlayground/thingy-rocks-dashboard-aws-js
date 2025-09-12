@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nordic NR+ Test Device Demo</title>
+    <style>
+        body {
+            font-family: Inter, sans-serif;
+            background: #1a2332;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .network-tile {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+        .title:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .icon {
+            width: 20px;
+            height: 20px;
+            background: #00a8c8;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+        .properties {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px 16px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+        .property-icon {
+            width: 16px;
+            height: 16px;
+            background: #666;
+            border-radius: 2px;
+        }
+        .devices-list {
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin: 4px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            border-left: 3px solid #00a8c8;
+        }
+        .device-info {
+            flex: 1;
+        }
+        .device-name {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #00a8c8;
+            margin-bottom: 4px;
+        }
+        .device-details {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 4px 8px;
+            font-size: 12px;
+            color: #ccc;
+        }
+        .leaf-icon {
+            width: 14px;
+            height: 14px;
+            background: #4a9;
+            border-radius: 2px;
+        }
+        .signal-icon {
+            width: 12px;
+            height: 12px;
+            background: #f84;
+            border-radius: 2px;
+        }
+        .last-update {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #999;
+        }
+        .pin-button {
+            width: 24px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 4px;
+            color: #ccc;
+            cursor: pointer;
+        }
+        .ping {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4a9;
+            border-radius: 50%;
+            margin-right: 4px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Nordic NR+ Test Network Demo</h2>
+        <p>This demonstrates how the FakeNordicNrplus test device appears in the NordicNrplusNetworkTile:</p>
+        
+        <div class="network-tile">
+            <div class="title">
+                <div style="display: flex; align-items: center;">
+                    <div class="icon"></div>
+                    <span>Sink 2cl</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <div class="last-update">
+                        <div style="width: 12px; height: 12px; background: #666; border-radius: 2px;"></div>
+                        <span>2 minutes ago</span>
+                    </div>
+                    <button class="pin-button">📌</button>
+                </div>
+            </div>
+            
+            <div class="properties">
+                <div class="property-icon"></div>
+                <div>3 devices</div>
+                <div class="property-icon"></div>
+                <div>NR+ Network 204</div>
+                <div class="property-icon"></div>
+                <div>63.423°, 10.442° <span style="color: #999; font-size: 11px;">(2 min ago)</span></div>
+            </div>
+            
+            <div class="devices-list">
+                <div class="device-item">
+                    <div class="device-info">
+                        <div class="device-name">
+                            <div class="leaf-icon"></div>
+                            <span>test-leaf-rcjtmwks</span>
+                        </div>
+                        <div class="device-details">
+                            <div class="signal-icon"></div>
+                            <div>-88 dBm</div>
+                            <div class="ping"></div>
+                            <div>Button press: 1</div>
+                            <div class="property-icon"></div>
+                            <div>63.439°, 10.448° <span style="color: #999;">(2 min ago)</span></div>
+                        </div>
+                    </div>
+                    <button class="pin-button">📌</button>
+                </div>
+                
+                <div class="device-item">
+                    <div class="device-info">
+                        <div class="device-name">
+                            <div class="leaf-icon"></div>
+                            <span>test-leaf-qlclwv6h</span>
+                        </div>
+                        <div class="device-details">
+                            <div class="signal-icon"></div>
+                            <div>-51 dBm</div>
+                            <div class="ping"></div>
+                            <div>Button press: 2</div>
+                            <div class="property-icon"></div>
+                            <div>63.448°, 10.456° <span style="color: #999;">(2 min ago)</span></div>
+                        </div>
+                    </div>
+                    <button class="pin-button">📌</button>
+                </div>
+            </div>
+        </div>
+        
+        <div style="margin-top: 24px; padding: 16px; background: rgba(0, 168, 200, 0.1); border-radius: 8px; border-left: 4px solid #00a8c8;">
+            <h4 style="margin: 0 0 8px 0; color: #00a8c8;">✅ Implementation Features</h4>
+            <ul style="margin: 0; padding-left: 16px; line-height: 1.6;">
+                <li><strong>1 Sink Device</strong>: FT mode with 2 neighbors</li>
+                <li><strong>2 Leaf Devices</strong>: PT mode, each with 1 neighbor (the sink)</li>
+                <li><strong>Random Network ID</strong>: 204 (range 1-255)</li>
+                <li><strong>Random dBm Values</strong>: -88, -51 dBm (range -90 to -50)</li>
+                <li><strong>Auto-refresh</strong>: Updates every 60 seconds</li>
+                <li><strong>Realistic Data</strong>: Environmental sensors, GPS, button presses</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
