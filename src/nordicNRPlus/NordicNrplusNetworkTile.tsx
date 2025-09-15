@@ -44,6 +44,107 @@ const LocationWrapper = styled.div`
 	gap: 0.25rem;
 `
 
+const TopologyContainer = styled.div`
+	width: 100%;
+	height: 200px;
+	margin: 1rem 0;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 0.5rem;
+	background: rgba(255, 255, 255, 0.02);
+`
+
+const SimpleTopologyVisualization = ({
+	sinkDevice,
+	leafDevices,
+	width = 300,
+	height = 180,
+}: {
+	sinkDevice: NordicNrplusDevice | undefined
+	leafDevices: NordicNrplusDevice[]
+	width?: number
+	height?: number
+}) => {
+	if (!sinkDevice) return null
+
+	const sinkX = width / 2
+	const sinkY = height / 2
+	const nodeSize = 16
+
+	// Position leaf devices in a circle around the sink
+	const radius = Math.min(width, height) * 0.3
+	const angleStep =
+		leafDevices.length > 0 ? (2 * Math.PI) / leafDevices.length : 0
+
+	return (
+		<svg
+			width={width}
+			height={height}
+			style={{ width: '100%', height: '100%' }}
+		>
+			{/* Draw connections from sink to each leaf */}
+			{leafDevices.map((device, index) => {
+				const angle = index * angleStep
+				const leafX = sinkX + radius * Math.cos(angle)
+				const leafY = sinkY + radius * Math.sin(angle)
+
+				return (
+					<g key={device.id}>
+						{/* Connection line */}
+						<line
+							x1={sinkX}
+							y1={sinkY}
+							x2={leafX}
+							y2={leafY}
+							stroke="#00a8c8"
+							strokeWidth={1}
+							strokeDasharray="2 2"
+							opacity={0.7}
+						/>
+						{/* Leaf node */}
+						<circle
+							cx={leafX}
+							cy={leafY}
+							r={nodeSize / 2}
+							fill="#4ade80"
+							stroke="#22c55e"
+							strokeWidth={1}
+						/>
+						<text
+							x={leafX}
+							y={leafY + 3}
+							textAnchor="middle"
+							fontSize="9"
+							fill="white"
+						>
+							{device.id.slice(-2)}
+						</text>
+					</g>
+				)
+			})}
+
+			{/* Sink node (drawn on top) */}
+			<circle
+				cx={sinkX}
+				cy={sinkY}
+				r={nodeSize / 2 + 2}
+				fill="#0891b2"
+				stroke="#00a8c8"
+				strokeWidth={2}
+			/>
+			<text
+				x={sinkX}
+				y={sinkY + 3}
+				textAnchor="middle"
+				fontSize="10"
+				fill="white"
+				fontWeight="bold"
+			>
+				{sinkDevice.id.slice(-2)}
+			</text>
+		</svg>
+	)
+}
+
 const DeviceNameWrapper = styled.div`
 	display: flex;
 	align-items: center;
@@ -184,6 +285,12 @@ export const NordicNrplusNetworkTile = ({
 				{`NR+ Network ${networkId}`}
 				{sinkDevice && <LocationInfo device={sinkDevice} />}
 			</Properties>
+			<TopologyContainer>
+				<SimpleTopologyVisualization
+					sinkDevice={sinkDevice}
+					leafDevices={leafDevices}
+				/>
+			</TopologyContainer>
 			<DevicesList>
 				{leafDevices.map((device) => {
 					const sinkRssi = networkSinkRSSI.get(device.id)

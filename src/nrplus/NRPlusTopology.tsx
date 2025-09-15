@@ -19,11 +19,6 @@ export const NRPlusTopology = ({
 	// Start with the sink nodes, for now we assume only one sink
 	const sinkNodes = topology.nodes.filter(({ sink }) => sink)
 	const s = nodeSize ?? 20
-
-	// Calculate sink position (center of view)
-	const sinkX = width / 2
-	const sinkY = height / 2
-
 	return (
 		<svg
 			width={width}
@@ -34,18 +29,13 @@ export const NRPlusTopology = ({
 		>
 			{(showHelpers ?? false) && <Helpers width={width} height={height} />}
 
-			{/* Draw sink-to-leaf topology */}
-			{sinkNodes.map((sinkNode) => (
-				<SinkTopology
-					key={sinkNode.id}
-					sink={sinkNode}
-					topology={topology}
-					sinkX={sinkX}
-					sinkY={sinkY}
-					size={s}
-					viewWidth={width}
-					viewHeight={height}
-				/>
+			{/* Draw connections */}
+			{sinkNodes.map((node) => (
+				<NodeConnections x={s} y={s} topology={topology} node={node} />
+			))}
+			{/* Draw nodes */}
+			{sinkNodes.map((node) => (
+				<ConnectedNode x={s} y={s} topology={topology} node={node} size={s} />
 			))}
 		</svg>
 	)
@@ -88,70 +78,143 @@ const Node = ({
 	</g>
 )
 
-const SinkTopology = ({
-	sink,
+const connectedNodes = ({
+	node,
 	topology,
-	sinkX,
-	sinkY,
-	size,
-	viewWidth,
-	viewHeight,
+	x,
+	y,
+	startAngle,
 }: {
-	sink: NRPlusNodeInfo
+	x: number
+	y: number
 	topology: NRPlusNetworkTopology
-	sinkX: number
-	sinkY: number
-	size: number
-	viewWidth: number
-	viewHeight: number
-}) => {
-	// Find all nodes that connect TO the sink (neighbors that the sink can see)
-	const neighborConnections = topology.connections.filter(
-		({ to }) => to === sink.id,
+	node: NRPlusNodeInfo
+	startAngle?: number
+}): {
+	connectionNodes: {
+		x: number
+		y: number
+		angle: number
+		node: NRPlusNodeInfo
+	}[]
+} => {
+	const incomingConnections = topology.connections.filter(
+		({ to }) => to === node.id,
 	)
-
-	// Get the actual neighbor nodes
-	const neighborNodes = neighborConnections.map((connection) => {
-		const node = topology.nodes.find(({ id }) => id === connection.from)
-		return {
-			node: node ?? {
+	const angleStep = Math.PI / 6
+	let angle = startAngle ?? 0
+	const connectionNodes: {
+		x: number
+		y: number
+		angle: number
+		node: NRPlusNodeInfo
+	}[] = []
+	for (const connection of incomingConnections) {
+		const connectedNode = topology.nodes.find(
+			({ id }) => id === connection.from,
+		)
+		connectionNodes.push({
+			node: connectedNode ?? {
 				id: connection.from,
 				title: connection.from.toString(),
 			},
-			distance: connection.distance,
-		}
+			x: x + connection.distance * 10 * Math.cos(angle),
+			y: y + connection.distance * 10 * Math.sin(angle),
+			angle,
+		})
+		angle += angleStep
+	}
+
+	return { connectionNodes }
+}
+
+const NodeConnections = ({
+	node,
+	topology,
+	x,
+	y,
+	startAngle,
+}: {
+	x: number
+	y: number
+	topology: NRPlusNetworkTopology
+	node: NRPlusNodeInfo
+	startAngle?: number
+}) => {
+	const { connectionNodes } = connectedNodes({
+		node,
+		topology,
+		x,
+		y,
+		startAngle,
 	})
-
-	// Calculate positions for neighbor nodes in a circle around the sink
-	const radius = Math.min(viewWidth, viewHeight) * 0.3
-	const angleStep =
-		neighborNodes.length > 0 ? (2 * Math.PI) / neighborNodes.length : 0
-
 	return (
 		<g>
-			{/* Draw lines from sink to each neighbor */}
-			{neighborNodes.map(({ node }, index) => {
-				const angle = index * angleStep
-				const neighborX = sinkX + radius * Math.cos(angle)
-				const neighborY = sinkY + radius * Math.sin(angle)
+			{connectionNodes.map((conn) => (
+				<g>
+					<path
+						d={`M ${x},${y} L ${conn.x},${conn.y}`}
+						stroke-width={1}
+						stroke={Colors.connection}
+						stroke-dasharray="2 2"
+					/>
+					<NodeConnections
+						x={conn.x}
+						y={conn.y}
+						node={conn.node}
+						topology={topology}
+						startAngle={conn.angle}
+					/>
+				</g>
+			))}
+		</g>
+	)
+}
 
-				return (
-					<g key={node.id}>
-						{/* Connection line */}
-						<path
-							d={`M ${sinkX},${sinkY} L ${neighborX},${neighborY}`}
-							stroke={Colors.connection}
-							stroke-width={1}
-							stroke-dasharray="2 2"
-						/>
-						{/* Neighbor node */}
-						<Node x={neighborX} y={neighborY} node={node} size={size} />
-					</g>
-				)
-			})}
-
-			{/* Draw sink node on top */}
-			<Node x={sinkX} y={sinkY} node={sink} size={size} />
+const ConnectedNode = ({
+	node,
+	topology,
+	x,
+	y,
+	startAngle,
+	size,
+}: {
+	x: number
+	y: number
+	topology: NRPlusNetworkTopology
+	node: NRPlusNodeInfo
+	startAngle?: number
+	size: number
+}) => {
+	const { connectionNodes } = connectedNodes({
+		node,
+		topology,
+		x,
+		y,
+		startAngle,
+	})
+	return (
+		<g>
+			<Node x={x} y={y} node={node} key={node.id} size={size} />
+			{connectionNodes.map((conn) => (
+				<g>
+					<Node
+						x={conn.x}
+						y={conn.y}
+						node={conn.node}
+						key={conn.node.id}
+						size={size}
+					/>
+					<ConnectedNode
+						x={conn.x}
+						y={conn.y}
+						node={conn.node}
+						topology={topology}
+						startAngle={conn.angle}
+						size={size}
+					/>
+				</g>
+			))}
 		</g>
 	)
 }
