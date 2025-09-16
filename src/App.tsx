@@ -6,6 +6,7 @@ import { Provider as VisibleDevicesProvider } from './context/VisibleDevices.js'
 import { Provider as WebsocketProvider } from './context/WebsocketConnection.js'
 import { Dashboard } from './Dashboard.js'
 import { Provider as MemfaultProvider } from './memfault/Context.js'
+import { FakeNordicNrplus } from './test-device/FakeNordicNrplus.js'
 import { FakeTracker } from './test-device/FakeTracker.js'
 import { WithMapAuthHelper as MapAuthHelperProvider } from './WithMapAuthHelper.js'
 
@@ -26,6 +27,7 @@ export const App = () => (
 						</WebsocketProvider>
 					</VisibleDevicesProvider>
 					<FakeTracker />
+					<FakeNordicNrplus />
 				</DevicesProvider>
 			</SettingsProvider>
 		)}
