@@ -2,22 +2,12 @@ import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
 import { isNordicNrplus } from '../context/Devices.js'
 
-describe('FakeNordicNrplus', () => {
-	it('should create valid Nordic NR+ device structure', () => {
+void describe('FakeNordicNrplus', () => {
+	void it('should create valid Nordic NR+ device structure', () => {
 		// Mock device data similar to what FakeNordicNrplus would create
 		const mockSinkDevice = {
 			id: 'test-sink-12345678',
 			state: {
-				dev: {
-					v: {
-						imei: '351358811471140',
-						iccid: '89470060200703359994',
-						modV: 'mfw_nrf9160_1.3.2',
-						brdV: 'nrf9161dk_nrf9161',
-						appV: '1.0.0-nrplus-sink',
-					},
-					ts: Date.now(),
-				},
 				nordicNrplus: {
 					connectionProfile: {
 						networkId: 42,
@@ -44,34 +34,12 @@ describe('FakeNordicNrplus', () => {
 						},
 					},
 				},
-				env: {
-					v: {
-						temp: 25.3,
-						hum: 45.2,
-						atmp: 101.2,
-					},
-					ts: Date.now(),
-				},
-				geo: {
-					lng: 10.4383147713927,
-					lat: 63.42503380159108,
-				},
 			},
 		}
 
 		const mockLeafDevice = {
 			id: 'test-leaf-12345679',
 			state: {
-				dev: {
-					v: {
-						imei: '351358811471111',
-						iccid: '89470060200703359991',
-						modV: 'mfw_nrf9160_1.3.2',
-						brdV: 'nrf9161dk_nrf9161',
-						appV: '1.0.0-nrplus-leaf',
-					},
-					ts: Date.now(),
-				},
 				nordicNrplus: {
 					connectionProfile: {
 						networkId: 42,
@@ -92,18 +60,6 @@ describe('FakeNordicNrplus', () => {
 							ts: Date.now() - 1000,
 						},
 					},
-				},
-				env: {
-					v: {
-						temp: 22.8,
-						hum: 52.1,
-						atmp: 100.8,
-					},
-					ts: Date.now(),
-				},
-				geo: {
-					lng: 10.4483147713927,
-					lat: 63.43503380159108,
 				},
 			},
 		}
@@ -131,20 +87,28 @@ describe('FakeNordicNrplus', () => {
 		)
 
 		// Verify the sink has multiple neighbors (2 leaf devices)
-		assert.equal(Object.keys(mockSinkDevice.state.nordicNrplus.neighbors).length, 2)
+		assert.equal(
+			Object.keys(mockSinkDevice.state.nordicNrplus.neighbors).length,
+			2,
+		)
 
 		// Verify the leaf has one neighbor (the sink)
-		assert.equal(Object.keys(mockLeafDevice.state.nordicNrplus.neighbors).length, 1)
+		assert.equal(
+			Object.keys(mockLeafDevice.state.nordicNrplus.neighbors).length,
+			1,
+		)
 
 		// Verify RSSI values are in reasonable range (-90 to -50 dBm)
-		const sinkNeighborRssi = mockSinkDevice.state.nordicNrplus.neighbors['0'].rssi
-		const leafNeighborRssi = mockLeafDevice.state.nordicNrplus.neighbors['0'].rssi
-		
+		const sinkNeighborRssi =
+			mockSinkDevice.state.nordicNrplus.neighbors['0'].rssi
+		const leafNeighborRssi =
+			mockLeafDevice.state.nordicNrplus.neighbors['0'].rssi
+
 		assert.ok(sinkNeighborRssi >= -90 && sinkNeighborRssi <= -50)
 		assert.ok(leafNeighborRssi >= -90 && leafNeighborRssi <= -50)
 	})
 
-	it('should group Nordic NR+ devices by network ID', () => {
+	void it('should group Nordic NR+ devices by network ID', () => {
 		const mockDevices = [
 			{
 				id: 'sink1',
