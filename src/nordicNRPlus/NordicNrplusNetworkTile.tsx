@@ -68,7 +68,19 @@ export const NordicNrplusNetworkTile = ({
 	networkId: number
 	onCenter: (location: GeoLocation) => void
 }) => {
-	const { showTopologyConnection, removeTopologyConnection } = useMap()
+	const { showTopologyConnection, removeTopologyConnection } = useMap() as {
+		showTopologyConnection: (params: {
+			connectionId: string
+			from: any
+			to: any
+			color: string
+			width: number
+			dashArray: number[]
+			opacity: number
+			minZoom: number
+		}) => Promise<void> | void
+		removeTopologyConnection: (connectionId: string) => void
+	}
 
 	const sinkDevice = devices.find(
 		(device) =>
@@ -98,6 +110,7 @@ export const NordicNrplusNetworkTile = ({
 						width: 2,
 						dashArray: [4, 2],
 						opacity: 0.7,
+						minZoom: 10, // Lines only visible at zoom level 10 and above
 					})
 				}
 			}

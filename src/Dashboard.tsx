@@ -6,7 +6,6 @@ import { FavoritesButton, Settings, SettingsButton } from './Settings.js'
 import { DeviceHistory } from './chart/DeviceHistory.js'
 import { DeviceLocations } from './map/DeviceLocations.js'
 import { ZoomToWorldButton } from './map/ZoomToWorldButton.js'
-import { NordicNrplusTopology } from './nordicNRPlus/NordicNrplusTopology.js'
 import { WirepasTopology } from './wirepas/WirepasTopology.js'
 
 const SideMenu = styled.nav`
@@ -34,7 +33,6 @@ export const Dashboard = () => (
 	<>
 		<DeviceList />
 		<DeviceLocations />
-		<NordicNrplusTopology />
 		<DeviceHistory />
 		<WirepasTopology />
 		<Settings />

@@ -45,6 +45,7 @@ type DeviceMap = {
 		width?: number
 		dashArray?: number[]
 		opacity?: number
+		minZoom?: number
 	}) => Promise<void>
 	// Remove topology connection
 	removeTopologyConnection: (connectionId: string) => void
@@ -302,6 +303,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 			width = 2,
 			dashArray = [2, 2],
 			opacity = 0.8,
+			minZoom = 8,
 		}): Promise<void> => {
 			if (map === undefined) {
 				captureMessage(`Map is not available.`)
@@ -351,6 +353,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 					'line-dasharray': dashArray,
 					'line-opacity': opacity,
 				},
+				minzoom: minZoom, // Lines disappear below this zoom level
 			})
 		},
 		removeTopologyConnection: (connectionId: string) => {
