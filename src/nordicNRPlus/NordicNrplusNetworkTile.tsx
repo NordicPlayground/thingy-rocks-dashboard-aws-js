@@ -1,9 +1,10 @@
 import { Cpu, Leaf, Network, Signal, UploadCloud } from 'lucide-preact'
-import { useMemo } from 'preact/hooks'
+import { useEffect, useMemo } from 'preact/hooks'
 import { styled } from 'styled-components'
 import { ButtonPress } from '../ButtonPress.tsx'
 import type { GeoLocation, NordicNrplusDevice } from '../context/Devices.tsx'
 import { useDevices } from '../context/Devices.tsx'
+import { useMap } from '../context/Map.js'
 import { LastUpdate, Properties, Title } from '../DeviceList.tsx'
 import { DeviceName } from '../DeviceName.tsx'
 import { hideDetails } from '../hooks/useDetails.ts'
@@ -67,6 +68,50 @@ export const NordicNrplusNetworkTile = ({
 	networkId: number
 	onCenter: (location: GeoLocation) => void
 }) => {
+	const { showTopologyConnection, removeTopologyConnection } = useMap()
+
+	const sinkDevice = devices.find(
+		(device) =>
+			device.state?.nordicNrplus?.connectionProfile?.operationalMode === 'FT',
+	)
+	const leafDevices = devices.filter((device) => device !== sinkDevice)
+
+	// Add effect to show topology connections
+	useEffect(() => {
+		const connections: string[] = []
+
+		// Show connections from sink to all leaf devices
+		leafDevices.forEach((leafDevice) => {
+			if (sinkDevice && leafDevice.location && sinkDevice.location) {
+				const sinkLocation = Object.values(sinkDevice.location)[0]
+				const leafLocation = Object.values(leafDevice.location)[0]
+
+				if (sinkLocation && leafLocation) {
+					const connectionId = `nrplus-${networkId}-${sinkDevice.id}-${leafDevice.id}`
+					connections.push(connectionId)
+
+					void showTopologyConnection({
+						connectionId,
+						from: sinkLocation,
+						to: leafLocation,
+						color: '#00a8c8', // Match your accent color
+						width: 2,
+						dashArray: [4, 2],
+						opacity: 0.7,
+						minZoom: 10, // Lines only visible at zoom level 10 and above
+					})
+				}
+			}
+		})
+
+		// Cleanup function to remove connections
+		return () => {
+			connections.forEach((connectionId) => {
+				removeTopologyConnection(connectionId)
+			})
+		}
+	}, [devices, networkId, showTopologyConnection, removeTopologyConnection])
+
 	const { lastUpdateTs } = useDevices()
 
 	// Get the most recently updated device for the network title
@@ -103,12 +148,6 @@ export const NordicNrplusNetworkTile = ({
 			allUniqueDevices.set(key, neighbor)
 		}
 	})
-
-	const sinkDevice = devices.find(
-		(device) =>
-			device.state?.nordicNrplus?.connectionProfile?.operationalMode === 'FT',
-	)
-	const leafDevices = devices.filter((device) => device !== sinkDevice)
 
 	const handleClick = withCancel(() => {
 		// Center on the most recent device location if available

@@ -28,7 +28,7 @@ type DeviceMap = {
 		deviceId: string
 		deviceAlias: string
 		location: GeoLocation
-	}) => void
+	}) => Promise<void>
 	removeDeviceLocation: (args: {
 		deviceId: string
 		location: GeoLocation
@@ -36,6 +36,19 @@ type DeviceMap = {
 	center: (center: GeoLocation, zoom?: number) => void
 	// Show a large view of the entire world
 	showWorld: () => void
+	// Show topology connection between two devices
+	showTopologyConnection: (args: {
+		connectionId: string
+		from: GeoLocation
+		to: GeoLocation
+		color?: string
+		width?: number
+		dashArray?: number[]
+		opacity?: number
+		minZoom?: number
+	}) => Promise<void>
+	// Remove topology connection
+	removeTopologyConnection: (connectionId: string) => void
 }
 
 // See https://docs.aws.amazon.com/location/latest/developerguide/esri.html for available fonts
@@ -84,7 +97,11 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 	const centerOnDeviceZoomLevel = 12
 
 	return {
-		showDeviceLocation: async ({ deviceId, deviceAlias, location }) => {
+		showDeviceLocation: async ({
+			deviceId,
+			deviceAlias,
+			location,
+		}): Promise<void> => {
 			if (map === undefined) {
 				captureMessage(`Map is not available.`)
 				return
@@ -278,6 +295,83 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 			map?.flyTo({ center, zoom: zoom ?? centerOnDeviceZoomLevel }),
 		showWorld: () =>
 			map?.flyTo({ center: [-33.96763064206279, 55.051422964953545], zoom: 2 }),
+		showTopologyConnection: async ({
+			connectionId,
+			from,
+			to,
+			color = '#00a8c8',
+			width = 2,
+			dashArray = [2, 2],
+			opacity = 0.8,
+			minZoom = 8,
+		}): Promise<void> => {
+			if (map === undefined) {
+				captureMessage(`Map is not available.`)
+				return
+			}
+
+			await isLoaded
+
+			const sourceId = `${connectionId}-source`
+
+			// Remove existing connection if it exists
+			if (map.getLayer(connectionId)) {
+				map.removeLayer(connectionId)
+			}
+			if (map.getSource(sourceId)) {
+				map.removeSource(sourceId)
+			}
+
+			// Add source for the connection line
+			map.addSource(sourceId, {
+				type: 'geojson',
+				data: {
+					type: 'Feature',
+					geometry: {
+						type: 'LineString',
+						coordinates: [
+							[from.lng, from.lat],
+							[to.lng, to.lat],
+						],
+					},
+					properties: {},
+				},
+			})
+
+			// Add layer for the connection line
+			map.addLayer({
+				id: connectionId,
+				type: 'line',
+				source: sourceId,
+				layout: {
+					'line-join': 'round',
+					'line-cap': 'round',
+				},
+				paint: {
+					'line-color': color,
+					'line-width': width,
+					'line-dasharray': dashArray,
+					'line-opacity': opacity,
+				},
+				minzoom: minZoom, // Lines disappear below this zoom level
+			})
+		},
+		removeTopologyConnection: (connectionId: string) => {
+			if (map === undefined) {
+				captureMessage(`Map is not available.`)
+				return
+			}
+
+			const sourceId = `${connectionId}-source`
+
+			// Remove layer and source
+			if (map.getLayer(connectionId)) {
+				map.removeLayer(connectionId)
+			}
+			if (map.getSource(sourceId)) {
+				map.removeSource(sourceId)
+			}
+		},
 	}
 }
 
