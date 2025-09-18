@@ -68,19 +68,7 @@ export const NordicNrplusNetworkTile = ({
 	networkId: number
 	onCenter: (location: GeoLocation) => void
 }) => {
-	const { showTopologyConnection, removeTopologyConnection } = useMap() as {
-		showTopologyConnection: (params: {
-			connectionId: string
-			from: any
-			to: any
-			color: string
-			width: number
-			dashArray: number[]
-			opacity: number
-			minZoom: number
-		}) => Promise<void> | void
-		removeTopologyConnection: (connectionId: string) => void
-	}
+	const { showTopologyConnection, removeTopologyConnection } = useMap()
 
 	const sinkDevice = devices.find(
 		(device) =>
