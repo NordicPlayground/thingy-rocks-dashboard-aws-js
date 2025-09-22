@@ -130,24 +130,7 @@ export const NordicNrplusNetworkTile = ({
 		: undefined
 
 	// Collect all neighbors from all devices in the network
-	const allNeighbors = devices
-		.flatMap((device) => {
-			const neighbors = device.state?.nordicNrplus?.neighbors ?? {}
-			return Object.entries(neighbors).map(([instanceId, neighbor]) => ({
-				...neighbor,
-				deviceId: device.id,
-				instanceId,
-			}))
-		})
-		.sort((a, b) => b.ts - a.ts)
-
-	const allUniqueDevices = new Map<string, (typeof allNeighbors)[number]>()
-	allNeighbors.forEach((neighbor) => {
-		const key = `${neighbor.deviceId}-${neighbor.instanceId}`
-		if (!allUniqueDevices.has(key)) {
-			allUniqueDevices.set(key, neighbor)
-		}
-	})
+	const totalDevices = devices.length
 
 	const handleClick = withCancel(() => {
 		// Center on the most recent device location if available
@@ -216,7 +199,7 @@ export const NordicNrplusNetworkTile = ({
 				<dt>
 					<Cpu size={16} />
 				</dt>
-				{allUniqueDevices.size} device{allUniqueDevices.size !== 1 ? 's' : ''}
+				{totalDevices} device{totalDevices !== 1 ? 's' : ''}
 				<dt>
 					<Network size={16} />
 				</dt>
