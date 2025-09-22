@@ -201,7 +201,7 @@ export const NordicNrplusNetworkTile = ({
 		<>
 			<Title onClick={handleClick}>
 				<NRPlus class="icon" />
-				<span>Sink {sinkDevice?.id.slice(-4)}</span>
+				<span>{sinkDevice?.id.slice(-4)}</span>
 				<SinkInfo>
 					{lastUpdateTime !== undefined && (
 						<LastUpdate title="Last update">
