@@ -1,6 +1,11 @@
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext } from 'preact/hooks'
-import { DeviceType, useDevices, type Device } from './Devices.js'
+import {
+	DeviceType,
+	isNordicNrplus,
+	useDevices,
+	type Device,
+} from './Devices.js'
 import { useSettings } from './Settings.js'
 
 export const VisibleDevicesContext = createContext<Array<Device>>([])
@@ -25,7 +30,9 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		.filter((device) => {
 			const ts = lastUpdateTs[device.id]?.getTime() ?? null
 			if (ts === null) return device.history !== undefined // show devices that have history available (history will have a cut-off of 60 minutes)
-			if (ts < Date.now() - 60 * 60 * 1000) return false
+			const isNrplus = isNordicNrplus(device)
+			const cutoff = isNrplus ? 3 * 60 * 60 * 1000 : 60 * 60 * 1000 // 3 hours for nordic-nrplus, 1 hour for others
+			if (ts < Date.now() - cutoff) return false
 			return true
 		})
 		.sort(({ id: id1 }, { id: id2 }) => {
