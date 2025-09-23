@@ -340,8 +340,8 @@ export const isWirepasGateway = (
 export const isNordicNrplus = (device: unknown): device is NordicNrplusDevice =>
 	typeof device === 'object' &&
 	device !== null &&
-	/*'type' in device &&
-	(device as Device).type === DeviceType.NORDIC_NRPLUS &&*/
+	'type' in device &&
+	(device as Device).type === DeviceType.NORDIC_NRPLUS &&
 	'state' in device &&
 	typeof (device as Device).state === 'object' &&
 	(device as Device).state !== null &&

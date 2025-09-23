@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { isNordicNrplus } from '../context/Devices.js'
+import { DeviceType, isNordicNrplus } from '../context/Devices.js'
 
 void describe('FakeNordicNrplus', () => {
 	void it('should create valid Nordic NR+ device structure', () => {
 		// Mock device data similar to what FakeNordicNrplus would create
 		const mockSinkDevice = {
 			id: 'test-sink-12345678',
+			type: DeviceType.NORDIC_NRPLUS,
 			state: {
 				nordicNrplus: {
 					connectionProfile: {
@@ -39,6 +40,7 @@ void describe('FakeNordicNrplus', () => {
 
 		const mockLeafDevice = {
 			id: 'test-leaf-12345679',
+			type: DeviceType.NORDIC_NRPLUS,
 			state: {
 				nordicNrplus: {
 					connectionProfile: {
@@ -112,6 +114,7 @@ void describe('FakeNordicNrplus', () => {
 		const mockDevices = [
 			{
 				id: 'sink1',
+				type: DeviceType.NORDIC_NRPLUS,
 				state: {
 					nordicNrplus: {
 						connectionProfile: {
@@ -127,6 +130,7 @@ void describe('FakeNordicNrplus', () => {
 			},
 			{
 				id: 'leaf1',
+				type: DeviceType.NORDIC_NRPLUS,
 				state: {
 					nordicNrplus: {
 						connectionProfile: {
@@ -142,6 +146,7 @@ void describe('FakeNordicNrplus', () => {
 			},
 			{
 				id: 'leaf2',
+				type: DeviceType.NORDIC_NRPLUS,
 				state: {
 					nordicNrplus: {
 						connectionProfile: {

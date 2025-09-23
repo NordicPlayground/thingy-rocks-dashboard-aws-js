@@ -17,11 +17,16 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 	} = useSettings()
 	const devicesToShow = [
 		...Object.values(devices).filter(
-			(device) => type(device.id) !== DeviceType.WIREPAS_5G_MESH_GW,
+			(device) =>
+				type(device.id) !== DeviceType.WIREPAS_5G_MESH_GW &&
+				type(device.id) !== DeviceType.NORDIC_NRPLUS,
 		),
 		...Object.values(devices)
 			.filter((device) => type(device.id) === DeviceType.WIREPAS_5G_MESH_GW)
 			.map((gw) => ({ ...gw, type: DeviceType.WIREPAS_5G_MESH_GW })),
+		...Object.values(devices)
+			.filter((device) => type(device.id) === DeviceType.NORDIC_NRPLUS)
+			.map((device) => ({ ...device, type: DeviceType.NORDIC_NRPLUS })),
 	]
 		.filter((device) => {
 			if (!showFavorites) return true
