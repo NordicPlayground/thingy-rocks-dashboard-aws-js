@@ -465,6 +465,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					const maybeUpdated = getDeviceLastUpdateTime(
 						knownDevices[deviceId]!,
 						reported,
+						deviceTypes[deviceId],
 					)
 					if (maybeUpdated !== null) {
 						setLastUpdateTs((u) => ({
@@ -528,6 +529,7 @@ export const useDevices = () => useContext(DevicesContext)
 const getDeviceLastUpdateTime = (
 	device: Device,
 	state: Reported,
+	deviceType?: DeviceType,
 ): null | number => {
 	if (isNRPlusGateway(device))
 		return getLastUpdateTime(
@@ -542,14 +544,14 @@ const getDeviceLastUpdateTime = (
 			Object.values(nodes).map((node) => maybeDate(node.ts)?.getTime()),
 		)
 	}
-	if (isNordicNrplus(device)) {
+	if (deviceType === DeviceType.NORDIC_NRPLUS) {
 		return getLastUpdateTime([
 			// Nordic NR+ specific
-			device.state?.nordicNrplus.connectionProfile?.ts,
-			...Object.values(device.state?.nordicNrplus.neighbors ?? {}).map(
+			device.state?.nordicNrplus?.connectionProfile?.ts,
+			...Object.values(device.state?.nordicNrplus?.neighbors ?? {}).map(
 				(n) => n.ts,
 			),
-			...Object.values(device.state?.nordicNrplus.buttonPresses ?? {}).map(
+			...Object.values(device.state?.nordicNrplus?.buttonPresses ?? {}).map(
 				(bp) => bp.ts,
 			),
 		])
