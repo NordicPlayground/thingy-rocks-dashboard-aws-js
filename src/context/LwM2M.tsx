@@ -277,7 +277,7 @@ const processObjects = (
 				6: src,
 			} = object.Resources
 			if ((object.ObjectInstanceID ?? 0) === 0) {
-				// GNSS fix
+				// General location fix (uses source field from resource 6)
 				reported.gnss = {
 					v: {
 						lng,
@@ -289,11 +289,11 @@ const processObjects = (
 					},
 					ts: new Date(object.Resources['99'] * 1000).getTime(),
 				}
-				locations.set('GNSS', {
+				locations.set(src, {
 					lng,
 					lat,
 					accuracy: acc,
-					source: GeoLocationSource.GNSS,
+					source: src as GeoLocationSource,
 					ts: new Date(object.Resources['99'] * 1000),
 				})
 			} else if (object.ObjectInstanceID === 1) {
