@@ -561,6 +561,11 @@ const getDeviceLastUpdateTime = (
 		state?.gnss?.ts,
 		state?.roam?.ts,
 		state?.fg?.ts,
+		state?.nordicNrplus?.connectionProfile?.ts,
+		...Object.values(state?.nordicNrplus?.neighbors ?? {}).map((n) => n.ts),
+		...Object.values(state?.nordicNrplus?.buttonPresses ?? {}).map(
+			(bp) => bp.ts,
+		),
 	])
 }
 
