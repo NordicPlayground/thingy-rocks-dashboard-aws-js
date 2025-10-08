@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { isNordicNrplus } from '../context/Devices.js'
+import { DeviceType, isNordicNrplus, type Device } from '../context/Devices.js'
 
 void describe('FakeNordicNrplus', () => {
 	void it('should create valid Nordic NR+ device structure', () => {
 		// Mock device data similar to what FakeNordicNrplus would create
-		const mockSinkDevice = {
+		const mockSinkDevice: Device = {
 			id: 'test-sink-12345678',
+			type: DeviceType.NORDIC_NRPLUS,
 			state: {
 				nordicNrplus: {
 					connectionProfile: {
@@ -37,8 +38,9 @@ void describe('FakeNordicNrplus', () => {
 			},
 		}
 
-		const mockLeafDevice = {
+		const mockLeafDevice: Device = {
 			id: 'test-leaf-12345679',
+			type: DeviceType.NORDIC_NRPLUS,
 			state: {
 				nordicNrplus: {
 					connectionProfile: {
@@ -70,39 +72,39 @@ void describe('FakeNordicNrplus', () => {
 
 		// Verify the sink device has FT operational mode
 		assert.equal(
-			mockSinkDevice.state.nordicNrplus.connectionProfile.operationalMode,
+			mockSinkDevice.state!.nordicNrplus!.connectionProfile!.operationalMode,
 			'FT',
 		)
 
 		// Verify the leaf device has PT operational mode
 		assert.equal(
-			mockLeafDevice.state.nordicNrplus.connectionProfile.operationalMode,
+			mockLeafDevice.state!.nordicNrplus!.connectionProfile!.operationalMode,
 			'PT',
 		)
 
 		// Verify they have the same network ID
 		assert.equal(
-			mockSinkDevice.state.nordicNrplus.connectionProfile.networkId,
-			mockLeafDevice.state.nordicNrplus.connectionProfile.networkId,
+			mockSinkDevice.state!.nordicNrplus!.connectionProfile!.networkId,
+			mockLeafDevice.state!.nordicNrplus!.connectionProfile!.networkId,
 		)
 
 		// Verify the sink has multiple neighbors (2 leaf devices)
 		assert.equal(
-			Object.keys(mockSinkDevice.state.nordicNrplus.neighbors).length,
+			Object.keys(mockSinkDevice.state!.nordicNrplus!.neighbors).length,
 			2,
 		)
 
 		// Verify the leaf has one neighbor (the sink)
 		assert.equal(
-			Object.keys(mockLeafDevice.state.nordicNrplus.neighbors).length,
+			Object.keys(mockLeafDevice.state!.nordicNrplus!.neighbors).length,
 			1,
 		)
 
 		// Verify RSSI values are in reasonable range (-90 to -50 dBm)
 		const sinkNeighborRssi =
-			mockSinkDevice.state.nordicNrplus.neighbors['0'].rssi
+			mockSinkDevice.state!.nordicNrplus!.neighbors['0']!.rssi!
 		const leafNeighborRssi =
-			mockLeafDevice.state.nordicNrplus.neighbors['0'].rssi
+			mockLeafDevice.state!.nordicNrplus!.neighbors['0']!.rssi!
 
 		assert.ok(sinkNeighborRssi >= -90 && sinkNeighborRssi <= -50)
 		assert.ok(leafNeighborRssi >= -90 && leafNeighborRssi <= -50)

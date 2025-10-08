@@ -380,7 +380,7 @@ type NordicNrPlusState = {
 }
 
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-function initNordicNrPlusState(
+export function initNordicNrPlusState(
 	reported: Reported,
 ): asserts reported is Reported & { nordicNrplus: NordicNrPlusState } {
 	if (reported.nordicNrplus !== undefined) return

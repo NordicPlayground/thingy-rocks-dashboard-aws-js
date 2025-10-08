@@ -337,15 +337,11 @@ export const isWirepasGateway = (
 	'type' in device &&
 	device.type === DeviceType.WIREPAS_5G_MESH_GW
 
-export const isNordicNrplus = (device: unknown): device is NordicNrplusDevice =>
-	typeof device === 'object' &&
-	device !== null &&
-	/*'type' in device &&
-	(device as Device).type === DeviceType.NORDIC_NRPLUS &&*/
-	'state' in device &&
-	typeof (device as Device).state === 'object' &&
-	(device as Device).state !== null &&
-	'nordicNrplus' in ((device as Device).state ?? {})
+export const isNordicNrplus = (device: Device): device is NordicNrplusDevice =>
+	device.type === DeviceType.NORDIC_NRPLUS &&
+	device.state !== null &&
+	typeof device.state === 'object' &&
+	'nordicNrplus' in device.state
 
 export const DevicesContext = createContext<{
 	devices: Devices
