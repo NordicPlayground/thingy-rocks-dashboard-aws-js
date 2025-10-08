@@ -459,7 +459,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					})
 
 					const maybeUpdated = getDeviceLastUpdateTime(
-						knownDevices[deviceId]!,
+						knownDevices[deviceId] ?? { id: deviceId },
 						reported,
 					)
 					if (maybeUpdated !== null) {
