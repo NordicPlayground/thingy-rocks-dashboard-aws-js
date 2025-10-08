@@ -35,6 +35,7 @@ import { KeysightIcon } from './icons/Keysight.js'
 import { MyriotaIcon } from './icons/Myriota.js'
 import { NuSIMIcon } from './icons/NuSIMIcon.js'
 import { SIMIcon } from './icons/SIMIcon.js'
+import { SateliotIcon } from './icons/SateliotIcon.tsx'
 import { SkyloIcon } from './icons/Skylo.js'
 import { SoftSIMIcon } from './icons/SoftSIMIcon.js'
 import { ThingyIcon } from './icons/ThingyIcon.js'
@@ -62,6 +63,8 @@ const StyledNuSIMIcon = styled(NuSIMIcon)`
 `
 
 const BoardIcon = ({ device }: { device: Device }) => {
+	if ((device.id, device.state?.roam?.v?.mccmnc === 90197))
+		return <SateliotIcon class="icon" style={{ padding: '2px 0' }} />
 	const brdV = device.state?.dev?.v?.brdV
 	if (brdV?.includes('keysight') ?? false) return <KeysightIcon class="icon" />
 	if (brdV?.includes('skylo') ?? false)
