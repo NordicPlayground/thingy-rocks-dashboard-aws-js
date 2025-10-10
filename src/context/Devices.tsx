@@ -1,6 +1,6 @@
 import { merge } from 'lodash-es'
 import { createContext, type ComponentChildren } from 'preact'
-import { useContext, useState } from 'preact/hooks'
+import { useContext, useMemo, useState } from 'preact/hooks'
 import type { NRPlusNetworkTopology } from '../nrplus/parseTopology.js'
 
 export type ButtonPress = {
@@ -378,10 +378,24 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 		Record<string, Date | undefined>
 	>({})
 
+	const knownDevicesWithType = useMemo(
+		() =>
+			Object.fromEntries(
+				Object.entries(knownDevices).map(([id, device]) => [
+					id,
+					{
+						...device,
+						type: deviceTypes[id],
+					},
+				]),
+			),
+		[knownDevices],
+	)
+
 	return (
 		<DevicesContext.Provider
 			value={{
-				devices: knownDevices,
+				devices: knownDevicesWithType,
 				updateState: (deviceId, reported) => {
 					updateDevices((devices) => {
 						const updated: Device = {
