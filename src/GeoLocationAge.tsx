@@ -16,5 +16,5 @@ export const GeoLocationAge = ({ age }: { age: Date }) => {
 		}
 	}, [location])
 
-	return <time dateTime={age.toISOString()}>{diff}</time>
+	return <time dateTime={age.toISOString()}>{diff.replace(/^-\s*/, '')}</time>
 }
