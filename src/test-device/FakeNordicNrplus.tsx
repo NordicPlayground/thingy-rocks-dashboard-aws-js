@@ -1,6 +1,7 @@
 import { Ulid } from 'id128'
 import { useEffect, useRef } from 'preact/hooks'
 import {
+	DeviceType,
 	GeoLocationSource,
 	useDevices,
 	type Reported,
@@ -8,7 +9,7 @@ import {
 import { useSettings } from '../context/Settings.js'
 
 export const FakeNordicNrplus = () => {
-	const { updateState, updateLocation } = useDevices()
+	const { updateState, updateLocation, updateType } = useDevices()
 	const {
 		settings: { enableTestDevice },
 	} = useSettings()
@@ -108,11 +109,17 @@ export const FakeNordicNrplus = () => {
 
 	const updateDevices = () => {
 		updateState(deviceIds.current.sink, createSinkState())
+		updateType(deviceIds.current.sink, DeviceType.NORDIC_NRPLUS)
 		updateState(deviceIds.current.leaf1, createLeafState(1))
+		updateType(deviceIds.current.leaf1, DeviceType.NORDIC_NRPLUS)
 		updateState(deviceIds.current.leaf2, createLeafState(2))
+		updateType(deviceIds.current.leaf2, DeviceType.NORDIC_NRPLUS)
 		updateState(deviceIds.current.leaf3, createLeafState(3))
+		updateType(deviceIds.current.leaf3, DeviceType.NORDIC_NRPLUS)
 		updateState(deviceIds.current.leaf4, createLeafState(4))
+		updateType(deviceIds.current.leaf4, DeviceType.NORDIC_NRPLUS)
 		updateState(deviceIds.current.leaf5, createLeafState(5))
+		updateType(deviceIds.current.leaf5, DeviceType.NORDIC_NRPLUS)
 
 		// Center coordinates (Trondheim area)
 		const centerLat = 63.42503380159108
