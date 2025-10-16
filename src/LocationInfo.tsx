@@ -1,10 +1,10 @@
 import { CloudOff, MapPin, MapPinOff } from 'lucide-preact'
 import { styled } from 'styled-components'
-import { GeoLocationAge } from './GeoLocationAge.js'
 import { locationSourceColors } from './colors.js'
 import type { Device } from './context/Devices.js'
 import { LocationSourceLabels } from './context/LocationSourceLabels.js'
 import { useMap } from './context/Map.js'
+import { RelativeTime } from './RelativeTime.tsx'
 import { removeOldLocation } from './removeOldLocation.js'
 import { sortLocations } from './sortLocations.js'
 
@@ -76,7 +76,7 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 										(
 										{location.ts !== undefined && (
 											<>
-												<GeoLocationAge age={location.ts} />,{' '}
+												<RelativeTime time={location.ts} />,{' '}
 											</>
 										)}
 										<span>{Math.round(location.accuracy ?? 500)} m</span>)
