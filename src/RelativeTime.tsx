@@ -2,11 +2,11 @@ import { useEffect, useState } from 'preact/hooks'
 
 const formatDistance = (time: Date): string => {
 	const seconds = Math.floor((Date.now() - time.getTime()) / 1000)
-	if (seconds < 60) return `${seconds} s`
+	if (seconds < 60) return `${seconds} sec`
 	const minutes = Math.floor(seconds / 60)
-	if (minutes < 60) return `${minutes} m`
+	if (minutes < 60) return `${minutes} min`
 	const hours = Math.floor(minutes / 60)
-	return `${hours} h`
+	return `${hours} hour`
 }
 
 export const RelativeTime = ({
