@@ -9,13 +9,19 @@ const formatDistance = (time: Date): string => {
 	return `${hours} h`
 }
 
-export const RelativeTime = ({ time }: { time: Date }) => {
+export const RelativeTime = ({
+	time,
+	updatedIntervalSeconds = 1,
+}: {
+	time: Date
+	updatedIntervalSeconds?: number
+}) => {
 	const [formatted, setFormatted] = useState<string>(formatDistance(time))
 
 	useEffect(() => {
 		const i = setInterval(() => {
 			setFormatted(formatDistance(time))
-		}, 1000)
+		}, 1000 * updatedIntervalSeconds)
 
 		return () => {
 			clearInterval(i)

@@ -76,7 +76,11 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 										(
 										{location.ts !== undefined && (
 											<>
-												<RelativeTime time={location.ts} />,{' '}
+												<RelativeTime
+													time={location.ts}
+													updatedIntervalSeconds={10}
+												/>
+												,{' '}
 											</>
 										)}
 										<span>{Math.round(location.accuracy ?? 500)} m</span>)
