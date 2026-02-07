@@ -3,6 +3,7 @@ import {
 	ArrowLeftRight,
 	Battery,
 	Thermometer,
+	WindArrowDown,
 	X,
 	Zap,
 	type LucideIcon,
@@ -115,6 +116,22 @@ export const DeviceHistory = () => {
 			],
 		})
 	}
+	if (history?.hPa !== undefined) {
+		charts.push({
+			Icon: WindArrowDown,
+			title: 'Press.',
+			color: colors['nordic-blue'],
+			datasets: [
+				{
+					min: 85,
+					max: 110,
+					values: history.hPa.map(([v, d]) => [v, subSeconds(history.base, d)]),
+					color: colors['nordic-blue'],
+					format: (v) => `${(v * 10).toFixed(1)} hPa`,
+				},
+			],
+		})
+	}
 
 	// Fuel gauge data
 	const fgData: Dataset[] = []
@@ -132,7 +149,7 @@ export const DeviceHistory = () => {
 			min: 0,
 			max: 100,
 			values: history.fgSoC.map(([v, d]) => [v, subSeconds(history.base, d)]),
-			color: colors['nordic-blue'],
+			color: colors['nordic-sun'],
 			format: (v) => `${Math.round(v)}%`,
 		})
 	}
