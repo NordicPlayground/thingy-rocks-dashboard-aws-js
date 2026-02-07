@@ -27,6 +27,7 @@ import { useDevices } from './context/Devices.js'
 import { useSettings } from './context/Settings.js'
 import { showDetails } from './hooks/useDetails.js'
 import { DKIcon } from './icons/DKIcon.js'
+import { IridiumIcon } from './icons/Iridium.tsx'
 import { KeysightIcon } from './icons/Keysight.js'
 import { MyriotaIcon } from './icons/Myriota.js'
 import { NuSIMIcon } from './icons/NuSIMIcon.js'
@@ -62,6 +63,8 @@ const BoardIcon = ({ device }: { device: Device }) => {
 	if ((device.id, device.state?.roam?.v?.mccmnc === 90197))
 		return <SateliotIcon class="icon" style={{ padding: '2px 0' }} />
 	const brdV = device.state?.dev?.v?.brdV
+	if ((device.id, device.state?.roam?.v?.mccmnc === 90103))
+		return <IridiumIcon class="icon" />
 	if (brdV?.includes('keysight') ?? false) return <KeysightIcon class="icon" />
 	if (brdV?.includes('skylo') ?? false)
 		return <SkyloIcon class="icon" style={{ padding: '2px 0' }} />
