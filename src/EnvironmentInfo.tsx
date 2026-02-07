@@ -10,7 +10,7 @@ import {
 	XSquare,
 } from 'lucide-preact'
 import { styled } from 'styled-components'
-import type { Device } from './context/Devices.js'
+import type { Device } from './DeviceType.ts'
 
 export const EnvironmentInfo = ({
 	device,

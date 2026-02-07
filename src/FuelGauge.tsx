@@ -9,7 +9,7 @@ import {
 	Zap,
 } from 'lucide-preact'
 import { styled } from 'styled-components'
-import type { Reported } from './context/Devices.js'
+import type { Reported } from './DeviceType.ts'
 
 const Charging = styled.span`
 	color: var(--color-nordic-grass);

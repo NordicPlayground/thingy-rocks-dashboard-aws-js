@@ -8,11 +8,12 @@ import { AttributionControl, Map as MapLibreGlMap } from 'maplibre-gl'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext } from 'preact/hooks'
 import { locationSourceColors } from '../colors.js'
+import type { GeoLocation } from '../DeviceType.ts'
+import { GeoLocationSource } from '../DeviceType.ts'
 import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle.js'
 import { mapStyle } from '../map/style.js'
 import { captureMessage } from '../sentry.js'
 import type { AuthHelper } from '../WithMapAuthHelper.js'
-import { GeoLocationSource, type GeoLocation } from './Devices.js'
 import { LocationSourceLabels } from './LocationSourceLabels.js'
 
 export const MapContext = createContext<DeviceMap>(undefined as any)

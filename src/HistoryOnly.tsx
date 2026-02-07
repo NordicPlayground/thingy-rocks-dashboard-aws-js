@@ -1,7 +1,7 @@
 import { LineChart } from 'lucide-preact'
-import type { Device } from './context/Devices.js'
 import { Title } from './DeviceList.js'
 import { DeviceName } from './DeviceName.js'
+import type { Device } from './DeviceType.ts'
 
 export const HistoryOnly = ({
 	device,

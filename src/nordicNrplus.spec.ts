@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { DeviceType } from '../src/context/Devices.js'
+import { DeviceType } from './DeviceType.ts'
 
 void describe('Nordic NR+ Device Support', () => {
 	void it('should have NORDIC_NRPLUS device type', () => {

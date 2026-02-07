@@ -1,4 +1,4 @@
-import { GeoLocationSource } from './context/Devices.js'
+import { GeoLocationSource } from './DeviceType.ts'
 
 export const colors = {
 	/* Nordic Style Guide: Primary colors */

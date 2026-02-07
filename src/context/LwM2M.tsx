@@ -12,13 +12,9 @@ import {
 } from '@hello.nrfcloud.com/proto-map/lwm2m'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
-import {
-	DeviceType,
-	GeoLocationSource,
-	useDevices,
-	type GeoLocation,
-	type Reported,
-} from './Devices.js'
+import type { GeoLocation, Reported } from '../DeviceType.ts'
+import { DeviceType, GeoLocationSource } from '../DeviceType.ts'
+import { useDevices } from './Devices.js'
 import { MessageContext, useWebsocket } from './WebsocketConnection.js'
 
 // Nordic NR+ object IDs

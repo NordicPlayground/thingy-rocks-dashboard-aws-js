@@ -1,15 +1,15 @@
 import type { LwM2MObjectInstance } from '@hello.nrfcloud.com/proto-map/lwm2m'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useRef, useState } from 'preact/hooks'
+import type {
+	DeviceType,
+	GeoLocation,
+	Reported,
+	Summary,
+} from '../DeviceType.ts'
+import { GeoLocationSource } from '../DeviceType.ts'
 import type { Reboot } from '../memfault/Context.js'
-import {
-	GeoLocationSource,
-	useDevices,
-	type DeviceType,
-	type GeoLocation,
-	type Reported,
-	type Summary,
-} from './Devices.js'
+import { useDevices } from './Devices.js'
 
 export const WebsocketContext = createContext<{
 	connected: boolean

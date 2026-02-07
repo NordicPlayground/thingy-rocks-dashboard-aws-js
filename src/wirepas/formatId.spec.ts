@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { formatId } from './formatId.js'
+import { formatId } from './formatId.ts'
 void describe('formatId()', () => {
 	for (const [example, expected] of [
 		['1', '1'],

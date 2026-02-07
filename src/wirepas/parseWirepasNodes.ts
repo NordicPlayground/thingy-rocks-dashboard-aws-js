@@ -1,4 +1,4 @@
-import { type WirepasGatewayNode } from '../context/Devices.js'
+import type { WirepasGatewayNode } from '../DeviceType.ts'
 
 export type Connection = {
 	from: string

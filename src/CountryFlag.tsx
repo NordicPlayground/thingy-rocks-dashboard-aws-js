@@ -1,5 +1,5 @@
 import { styled } from 'styled-components'
-import type { Device } from './context/Devices.js'
+import type { Device } from './DeviceType.ts'
 import { mccmnc2country } from './mccmnc2country.js'
 
 export const Flag = styled.img`

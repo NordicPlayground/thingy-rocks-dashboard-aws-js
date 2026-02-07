@@ -18,17 +18,17 @@ import {
 import { useState } from 'preact/hooks'
 import { withCancel } from '../cancelEvent.js'
 import { ConfigureCode } from '../ConfigureCode.js'
-import {
-	useDevices,
-	WirepasMeshQOS,
-	type GeoLocation,
-	type WirepasGateway,
-	type WirepasGatewayNode,
-} from '../context/Devices.js'
+import { useDevices } from '../context/Devices.js'
 import { useSettings } from '../context/Settings.js'
 import { useWebsocket } from '../context/WebsocketConnection.js'
 import { LastUpdate, Title } from '../DeviceList.js'
 import { DeviceName } from '../DeviceName.js'
+import {
+	WirepasMeshQOS,
+	type GeoLocation,
+	type WirepasGateway,
+	type WirepasGatewayNode,
+} from '../DeviceType.ts'
 import { showDetails } from '../hooks/useDetails.js'
 import { FiveGMesh } from '../icons/5GMesh.js'
 import { PinTile } from '../PinTile.js'

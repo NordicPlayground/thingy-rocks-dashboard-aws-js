@@ -13,16 +13,12 @@ import {
 } from 'lucide-preact'
 import { useState } from 'preact/hooks'
 import { ConfigureCode } from '../ConfigureCode.js'
-import {
-	useDevices,
-	type GeoLocation,
-	type NRPlusGateway,
-	type NRPlusNode,
-} from '../context/Devices.js'
+import { useDevices } from '../context/Devices.js'
 import { useSettings } from '../context/Settings.js'
 import { useWebsocket } from '../context/WebsocketConnection.js'
 import { LastUpdate, Properties, Title } from '../DeviceList.js'
 import { DeviceName } from '../DeviceName.js'
+import type { GeoLocation, NRPlusGateway, NRPlusNode } from '../DeviceType.ts'
 import { hideDetails } from '../hooks/useDetails.js'
 import { PinTile } from '../PinTile.js'
 import { RelativeTime } from '../RelativeTime.js'

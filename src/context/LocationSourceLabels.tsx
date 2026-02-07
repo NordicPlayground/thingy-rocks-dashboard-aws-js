@@ -1,4 +1,4 @@
-import { GeoLocationSource } from './Devices.js'
+import { GeoLocationSource } from '../DeviceType.ts'
 
 // Uses nrfcloud.com wording
 export const LocationSourceLabels = {

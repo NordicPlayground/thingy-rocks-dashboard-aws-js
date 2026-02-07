@@ -1,8 +1,8 @@
 import { BombIcon } from 'lucide-preact'
 import { styled } from 'styled-components'
-import { ShowWhenHot } from '../ShowWhenHot.js'
-import type { Device } from '../context/Devices.js'
+import type { Device } from '../DeviceType.ts'
 import { Memfault } from '../icons/Memfault.js'
+import { ShowWhenHot } from '../ShowWhenHot.js'
 import { useMemfault, type Reboot } from './Context.js'
 
 const Hot = styled.span`

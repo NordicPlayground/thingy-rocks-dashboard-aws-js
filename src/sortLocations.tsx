@@ -1,4 +1,4 @@
-import { type GeoLocation } from './context/Devices.js'
+import type { GeoLocation } from './DeviceType.ts'
 
 /**
  * Sort locations based on their age

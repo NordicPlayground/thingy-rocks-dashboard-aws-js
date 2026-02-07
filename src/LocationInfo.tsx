@@ -1,9 +1,9 @@
 import { CloudOff, MapPin, MapPinOff } from 'lucide-preact'
 import { styled } from 'styled-components'
 import { locationSourceColors } from './colors.js'
-import type { Device } from './context/Devices.js'
 import { LocationSourceLabels } from './context/LocationSourceLabels.js'
 import { useMap } from './context/Map.js'
+import type { Device, GeoLocation, NoData } from './DeviceType.ts'
 import { RelativeTime } from './RelativeTime.tsx'
 import { removeOldLocation } from './removeOldLocation.js'
 import { sortLocations } from './sortLocations.js'
@@ -40,7 +40,8 @@ const LocationDetails = styled.ul`
 export const LocationInfo = ({ device }: { device: Device }) => {
 	const { location, state } = device
 	const nod = state?.cfg?.nod ?? []
-	const rankedLocations = Object.values(location ?? [])
+	const rankedLocations = Object.values(location ?? {})
+		.filter((x): x is GeoLocation => x != null)
 		.sort(sortLocations)
 		.filter(removeOldLocation)
 	const hasLocation = rankedLocations.length > 0
@@ -90,7 +91,7 @@ export const LocationInfo = ({ device }: { device: Device }) => {
 						))}
 					</LocationDetails>
 					{nod.length > 0 &&
-						nod.map((s) => (
+						nod.map((s: NoData) => (
 							<LocationSourceSamplingDisabled>
 								<CloudOff strokeWidth={1} />
 								{s}

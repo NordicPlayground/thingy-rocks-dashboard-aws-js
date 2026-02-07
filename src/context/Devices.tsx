@@ -1,347 +1,19 @@
 import { merge } from 'lodash-es'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useMemo, useState } from 'preact/hooks'
-import type { NRPlusNetworkTopology } from '../nrplus/parseTopology.js'
-
-export type ButtonPress = {
-	v: number // 4398
-	ts: number // 1669741244042
-}
-
-/**
- * @deprecated Use FuelGauge
- */
-export type BatteryInfo = {
-	v: number // 4398
-	ts: number // 1669741244042
-}
-
-export type NoData = 'gnss' | 'ncell'
-
-/**
- * @see https://infocenter.nordicsemi.com/topic/ref_at_commands/REF/at_commands/mob_termination_ctrl_status/coneval_set.html
- */
-export enum EnergyEstimate {
-	/**
-	 * Bad conditions. Difficulties in setting up connections.
-	 * Maximum number of repetitions might be needed for data.
-	 */
-	Bad = 5,
-	/**
-	 * Poor conditions.
-	 * Setting up a connection might require retries and a higher number of
-	 * repetitions for data.
-	 */
-	Poor = 6,
-	/**
-	 * Normal conditions for cIoT device.
-	 * No repetitions for data or only a few repetitions in the worst case.
-	 */
-	Normal = 7,
-	/**
-	 * Good conditions. Possibly very good conditions for small amounts of data.
-	 */
-	Good = 8,
-	/**
-	 * Excellent conditions.
-	 * Efficient data transfer estimated also for larger amounts of data.
-	 */
-	Excellent = 9,
-}
-
-type GeoLocationData = {
-	v: {
-		lng: number // 10.4383147713927
-		lat: number // 63.42503380159108
-		acc?: number // 19.08224868774414
-		alt?: number // 117.34368896484375
-		spd?: number // 5.4213972091674805
-		hdg?: number // 170.65904235839844
-	}
-	ts: number // 1670245539000
-}
-
-export type Reported = Partial<{
-	cfg: {
-		act: boolean
-		loct: number
-		actwt: number
-		mvres: number
-		mvt: number
-		accath: number
-		accith: number
-		accito: number
-		nod: NoData[]
-	}
-	dev: {
-		v: {
-			imei: string // '351358815341265'
-			iccid?: string // '89457387300008502281'
-			modV?: string // 'mfw_nrf9160_1.3.2'
-			brdV: string // 'thingy91_nrf9160'
-			appV?: string // '1.1.0-thingy91_nrf9160_ns'
-			bat?: string
-		}
-		ts: number // 1669731049109
-	}
-	roam: {
-		v: {
-			band?: number // 20
-			nw?: string // 'LTE-M'
-			rsrp?: number // -88
-			area?: number // 30401
-			mccmnc?: number // 24201
-			cell?: number // 21679616
-			ip?: string // '100.74.127.54'
-			eest?: EnergyEstimate // 8
-		}
-		ts: number // 1669741244010
-	}
-	env: {
-		v: {
-			temp?: number // 27.75
-			hum?: number // 13.257
-			atmp?: number // 101.497
-			/*
-			 * @see https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bme680-ds001.pdf
-			 */
-			bsec_iaq?: number // 137
-		}
-		ts: number //1669741243982
-	}
-	/**
-	 * @deprecated Use `fg`
-	 */
-	bat: BatteryInfo
-	btn: ButtonPress
-	gnss: GeoLocationData
-	lpl: GeoLocationData
-	// Device has a fixed geo location
-	geo: {
-		lng: number // 10.4383147713927
-		lat: number // 63.42503380159108
-	}
-	// Fuel gauge, see https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/pull/836
-	fg: {
-		v: {
-			V?: number // e.g. 2754
-			I?: number // e.g. -250
-			T?: number // e.g. 231
-			SoC?: number // e.g. 93
-			TTF?: number // e.g. 4652
-			TTE?: number // e.g. 4652
-		}
-		ts: number // 1563968747123
-	}
-	// Nordic NR+ specific data
-	nordicNrplus: {
-		neighbors: Record<string, NordicNrplusNeighbor>
-		connectionProfile?: NordicNrplusConnectionProfile
-		buttonPresses: Record<string, NordicNrplusButtonPress>
-	}
-}>
-
-export enum GeoLocationSource {
-	GNSS = 'GNSS',
-	fixed = 'fixed',
-	MCELL = 'MCELL',
-	SCELL = 'SCELL',
-	WIFI = 'WIFI',
-	LPL = 'LPL',
-}
-
-export type GeoLocation = {
-	lat: number
-	lng: number
-	accuracy?: number
-	source: GeoLocationSource
-	label?: string
-	ts: Date
-}
-
-export enum DeviceType {
-	WIREPAS_5G_MESH_GW = 'wirepas-5g-mesh-gateway',
-	NRPLUS_GW = 'nrplus-gateway',
-	SOFT_SIM = 'soft-sim',
-	NORDIC_NRPLUS = 'nordic-nrplus',
-}
-export type Location = Record<GeoLocationSource, GeoLocation>
-export type Device = {
-	id: string
-	state?: Reported
-	location?: Location
-	history?: Summary
-	type?: DeviceType
-}
-
-// NR+ Gateway
-export type NRPlusNode = {
-	pccStatus?: {
-		status: string // e.g. "valid - PDC can be received"
-		ts: number
-	}
-	env?: {
-		modemTemp: number
-		temp?: number
-		ts: number
-	}
-	btn?: {
-		n: number // e.g. 1,
-		ts: number
-	}
-}
-export type NRPlusGateway = {
-	id: string
-	state: {
-		nodes: Record<string, NRPlusNode>
-		id: number // e.g. 38,
-		networkId: number // e.g. 22
-		topology?: NRPlusNetworkTopology
-	}
-	location?: Location
-}
-
-/**
- * Quality of Service
- */
-export enum WirepasMeshQOS {
-	Normal = 0,
-	High = 1,
-}
-
-export type WirepasGatewayNode = {
-	// latency in MS
-	lat: number // e.g. 54
-	hops: number // e.g. 1
-	ts: string // e.g. '2024-02-05T13:44:06.050Z'
-	qos: WirepasMeshQOS // e.g. 1
-	payload?: {
-		temp?: {
-			v: number // e.g. 24.850000381469727
-			ts: number
-		}
-		btn?: {
-			v: number
-			ts: number
-		}
-		led?: {
-			r?: boolean
-			g?: boolean
-			b?: boolean
-		}
-	}
-}
-export type WirepasGateway = {
-	id: string
-	type: DeviceType.WIREPAS_5G_MESH_GW
-	location?: Location
-	state: {
-		nodes: Record<string /* node id */, WirepasGatewayNode>
-	}
-}
-
-// Nordic NRPLUS Device
-export type NordicNrplusNeighbor = {
-	neighborId: number
-	rssi?: number // Radio Signal Strength in dBm
-	ts: number
-}
-
-export type NordicNrplusConnectionProfile = {
-	longRdId: number
-	networkId: number
-	operationalMode: string
-	ts: number
-}
-
-export type NordicNrplusButtonPress = {
-	v: number
-	ts: number
-}
-
-export type NordicNrplusDevice = {
-	id: string
-	type: DeviceType.NORDIC_NRPLUS
-	location?: Location
-	state?: Reported & {
-		nordicNrplus: {
-			neighbors: Record<string, NordicNrplusNeighbor>
-			connectionProfile?: NordicNrplusConnectionProfile
-			buttonPresses: Record<string, NordicNrplusButtonPress>
-		}
-	}
-}
-
-export type Devices = Record<string, Device>
-
-export type Reading = [
-	v: number,
-	// Delta to the base date in seconds
-	d: number,
-]
-export type Summary = {
-	base: Date // '2022-12-07T12:09:59.488Z'
-	/**
-	 * @deprecated use fuel gauge data
-	 */
-	bat?: Array<Reading>
-	temp?: Array<Reading>
-	// Fuel gauge readings, see https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/blob/4713549af719a7e119324853aa117d752ac856e3/docs/cloud-protocol/Reported.ts#L111
-	fgSoC?: Array<Reading>
-	fgI?: Array<Reading>
-	// Latency
-	cqLatency?: Array<Reading>
-}
-
-export const isTracker = (device: Device): boolean => {
-	if (!('state' in device)) return false
-	const { appV, brdV } = device.state?.dev?.v ?? {}
-	return appV !== undefined && brdV !== undefined
-}
-
-export const hasSoftSIM = (device: Device): boolean =>
-	device.state?.dev?.v?.appV?.includes('softsim') ?? false
-
-export const hasNUSIM = (device: Device): boolean =>
-	[
-		'89882280000126652045',
-		'89882280000126652052',
-		'89882280000126652060',
-		'89882280000126652078',
-		'89882280000126652086',
-		'89882280000126652094',
-		'89882280000126652102',
-		'89882280000126652110',
-		'89882280000126652128',
-		'89882280000126652136',
-	].includes(device.state?.dev?.v?.iccid ?? '-1') ||
-	(device.state?.dev?.v?.appV?.toLowerCase().includes('nusim') ?? false)
-
-export const isNRPlusGateway = (device: unknown): device is NRPlusGateway =>
-	typeof device === 'object' &&
-	device !== null &&
-	'id' in device &&
-	typeof device.id === 'string' &&
-	device.id?.startsWith('nrplus-gw-') &&
-	'state' in device &&
-	typeof device.state === 'object' &&
-	'nodes' in (device.state ?? {})
-
-export const isWirepasGateway = (
-	device: Record<string, unknown>,
-): device is WirepasGateway =>
-	typeof device === 'object' &&
-	device !== null &&
-	'id' in device &&
-	typeof device.id === 'string' &&
-	'type' in device &&
-	device.type === DeviceType.WIREPAS_5G_MESH_GW
-
-export const isNordicNrplus = (device: Device): device is NordicNrplusDevice =>
-	device.type === DeviceType.NORDIC_NRPLUS &&
-	device.state !== null &&
-	typeof device.state === 'object' &&
-	'nordicNrplus' in device.state
+import {
+	GeoLocationSource,
+	isNordicNrplus,
+	isNRPlusGateway,
+	isWirepasGateway,
+	type Device,
+	type Devices,
+	type DeviceType,
+	type GeoLocation,
+	type Reported,
+	type Summary,
+	type WirepasGateway,
+} from '../DeviceType.ts'
 
 export const DevicesContext = createContext<{
 	devices: Devices
@@ -417,7 +89,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 									source: GeoLocationSource.GNSS,
 									ts: new Date(reported.gnss.ts),
 								},
-							} as Location
+							}
 						}
 						// Use LPL location from shadow
 						if (
@@ -433,7 +105,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 									source: GeoLocationSource.LPL,
 									ts: new Date(reported.lpl.ts),
 								},
-							} as Location
+							}
 						}
 						// Use fixed location from shadow
 						if (reported.geo !== undefined) {
@@ -444,8 +116,9 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 									lng: reported.geo.lng,
 									accuracy: 1,
 									source: GeoLocationSource.fixed,
+									ts: new Date(),
 								},
-							} as Location
+							}
 						}
 						// Remove values not sent by the device (merge only adds new values)
 						if (reported.fg !== undefined && updated.state?.fg !== undefined) {
@@ -492,7 +165,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 							location: {
 								...(devices[deviceId]?.location ?? {}),
 								[location.source]: location,
-							} as Location,
+							},
 						},
 					}))
 					setLastUpdateTs((u) => ({

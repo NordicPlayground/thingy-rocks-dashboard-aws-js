@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { describe, it } from 'node:test'
-import { DeviceType, isNordicNrplus, type Device } from '../context/Devices.js'
+import { DeviceType, isNordicNrplus, type Device } from '../DeviceType.ts'
 
 void describe('FakeNordicNrplus', () => {
 	void it('should create valid Nordic NR+ device structure', () => {

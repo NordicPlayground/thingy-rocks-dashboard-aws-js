@@ -1,7 +1,8 @@
 import { Ulid } from 'id128'
 import { useEffect, useRef } from 'preact/hooks'
-import { useDevices, type Reported, type Summary } from '../context/Devices.js'
+import { useDevices } from '../context/Devices.js'
 import { useSettings } from '../context/Settings.js'
+import { type Reported, type Summary } from '../DeviceType.ts'
 
 export const FakeDevice = ({
 	fakeState,

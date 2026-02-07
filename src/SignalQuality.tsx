@@ -11,7 +11,8 @@ import {
 	type LucideIcon,
 } from 'lucide-preact'
 import { styled } from 'styled-components'
-import { EnergyEstimate, type Device } from './context/Devices.js'
+import type { Device } from './DeviceType.ts'
+import { EnergyEstimate } from './DeviceType.ts'
 import { LTEm } from './icons/LTE-m.js'
 import { NBIot } from './icons/NBIot.js'
 

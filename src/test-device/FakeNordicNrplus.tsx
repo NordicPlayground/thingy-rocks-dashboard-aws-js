@@ -1,12 +1,8 @@
 import { Ulid } from 'id128'
 import { useEffect, useRef } from 'preact/hooks'
-import {
-	DeviceType,
-	GeoLocationSource,
-	useDevices,
-	type Reported,
-} from '../context/Devices.js'
+import { useDevices } from '../context/Devices.js'
 import { useSettings } from '../context/Settings.js'
+import { DeviceType, GeoLocationSource, type Reported } from '../DeviceType.ts'
 
 export const FakeNordicNrplus = () => {
 	const { updateState, updateLocation, updateType } = useDevices()

@@ -2,11 +2,15 @@ import { Cpu, Leaf, Network, Signal, UploadCloud } from 'lucide-preact'
 import { useEffect, useMemo } from 'preact/hooks'
 import { styled } from 'styled-components'
 import { ButtonPress } from '../ButtonPress.tsx'
-import type { GeoLocation, NordicNrplusDevice } from '../context/Devices.tsx'
-import { useDevices } from '../context/Devices.tsx'
+import { useDevices } from '../context/Devices.js'
 import { useMap } from '../context/Map.js'
 import { LastUpdate, Properties, Title } from '../DeviceList.tsx'
 import { DeviceName } from '../DeviceName.tsx'
+import type {
+	GeoLocation,
+	NordicNrplusButtonPress,
+	NordicNrplusDevice,
+} from '../DeviceType.ts'
 import { hideDetails } from '../hooks/useDetails.ts'
 import { LocationInfo } from '../LocationInfo.tsx'
 import { withCancel } from '../nrplus/cancelEvent.ts'
@@ -231,12 +235,14 @@ export const NordicNrplusNetworkTile = ({
 										)}
 										<dd>
 											{buttonPressList &&
-												Object.entries(buttonPressList).map(([, press]) => (
-													<ButtonPress
-														key={`${device.id}-press-${press.ts}`}
-														buttonPress={press}
-													/>
-												))}
+												Object.entries(buttonPressList).map(
+													([, press]: [string, NordicNrplusButtonPress]) => (
+														<ButtonPress
+															key={`${device.id}-press-${press.ts}`}
+															buttonPress={press}
+														/>
+													),
+												)}
 										</dd>
 										<LocationWrapper>
 											<LocationInfo device={device} />

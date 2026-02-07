@@ -1,7 +1,7 @@
 import { compareVersions } from 'compare-versions'
 import { AlertTriangle } from 'lucide-preact'
 import { styled } from 'styled-components'
-import type { Reported } from './context/Devices.js'
+import type { Reported } from './DeviceType.ts'
 
 const WarningDT = styled.dt`
 	color: var(--color-nordic-fall);

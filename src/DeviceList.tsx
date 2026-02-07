@@ -1,14 +1,13 @@
 import { styled } from 'styled-components'
+import { useMap } from './context/Map.js'
+import { useVisibleDevices } from './context/VisibleDevices.js'
+import type { GeoLocation, NordicNrplusDevice } from './DeviceType.ts'
 import {
 	isNordicNrplus,
 	isNRPlusGateway,
 	isTracker,
 	isWirepasGateway,
-	type GeoLocation,
-	type NordicNrplusDevice,
-} from './context/Devices.js'
-import { useMap } from './context/Map.js'
-import { useVisibleDevices } from './context/VisibleDevices.js'
+} from './DeviceType.ts'
 import { DisconnectedWarning } from './DisconnectedWarning.js'
 import { HistoryOnly } from './HistoryOnly.js'
 import { showDetails } from './hooks/useDetails.js'

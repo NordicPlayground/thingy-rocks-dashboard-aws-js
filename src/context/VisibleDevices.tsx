@@ -1,6 +1,8 @@
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext } from 'preact/hooks'
-import { DeviceType, useDevices, type Device } from './Devices.js'
+import type { Device } from '../DeviceType.ts'
+import { DeviceType } from '../DeviceType.ts'
+import { useDevices } from './Devices.js'
 import { useSettings } from './Settings.js'
 
 export const VisibleDevicesContext = createContext<Array<Device>>([])

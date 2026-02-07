@@ -1,10 +1,6 @@
 import { useEffect } from 'preact/hooks'
-import {
-	useDevices,
-	type Device,
-	type GeoLocation,
-	type Location,
-} from '../context/Devices.js'
+import type { Device, GeoLocation, Location } from '../DeviceType.ts'
+import { useDevices } from '../context/Devices.js'
 import { useMap } from '../context/Map.js'
 import { useVisibleDevices } from '../context/VisibleDevices.js'
 import { removeOldLocation } from '../removeOldLocation.js'
@@ -71,7 +67,7 @@ const DeviceLocation = ({
 	const map = useMap()
 
 	useEffect(() => {
-		map.showDeviceLocation({
+		void map.showDeviceLocation({
 			deviceId: id,
 			deviceAlias: alias ?? id,
 			location: l,

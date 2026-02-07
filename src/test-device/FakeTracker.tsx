@@ -1,4 +1,4 @@
-import type { Reported, Summary } from '../context/Devices.js'
+import { type Reported, type Summary } from '../DeviceType.ts'
 import { FakeDevice } from './FakeDevice.js'
 
 export const FakeTracker = () => (

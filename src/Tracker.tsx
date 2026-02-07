@@ -13,6 +13,8 @@ import {
 	Title,
 } from './DeviceList.js'
 import { DeviceName } from './DeviceName.js'
+import type { Device, GeoLocation } from './DeviceType.ts'
+import { hasNUSIM, hasSoftSIM } from './DeviceType.ts'
 import { EnvironmentInfo } from './EnvironmentInfo.js'
 import { FuelGauge } from './FuelGauge.js'
 import { LocationInfo } from './LocationInfo.js'
@@ -21,13 +23,7 @@ import { RelativeTime } from './RelativeTime.js'
 import { SignalQuality } from './SignalQuality.js'
 import { UpdateWarning } from './UpdateWarning.js'
 import { wifiColor } from './colors.js'
-import {
-	hasNUSIM,
-	hasSoftSIM,
-	useDevices,
-	type Device,
-	type GeoLocation,
-} from './context/Devices.js'
+import { useDevices } from './context/Devices.js'
 import { useSettings } from './context/Settings.js'
 import { showDetails } from './hooks/useDetails.js'
 import { DKIcon } from './icons/DKIcon.js'

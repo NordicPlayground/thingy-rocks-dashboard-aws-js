@@ -1,6 +1,6 @@
 import { Focus } from 'lucide-preact'
 import { styled } from 'styled-components'
-import type { ButtonPress as ButtonPressData } from './context/Devices.js'
+import type { ButtonPress as ButtonPressData } from './DeviceType.ts'
 import { ShowWhenHot } from './ShowWhenHot.js'
 
 export const diff = (ts: ButtonPressData['ts']): number =>
