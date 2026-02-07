@@ -2,8 +2,7 @@ import { format, subSeconds } from 'date-fns'
 import {
 	ArrowLeftRight,
 	Battery,
-	Thermometer,
-	WindArrowDown,
+	CloudSunRain,
 	X,
 	Zap,
 	type LucideIcon,
@@ -97,39 +96,31 @@ export const DeviceHistory = () => {
 			],
 		})
 	}
+	const envData: Dataset[] = []
 	if (history?.temp !== undefined) {
-		charts.push({
-			Icon: Thermometer,
-			title: 'Temp.',
+		envData.push({
+			min: findLowerLimit(history.temp),
+			max: findUpperLimit(history.temp),
+			values: history.temp.map(([v, d]) => [v, subSeconds(history.base, d)]),
 			color: colors['nordic-red'],
-			datasets: [
-				{
-					min: findLowerLimit(history.temp),
-					max: findUpperLimit(history.temp),
-					values: history.temp.map(([v, d]) => [
-						v,
-						subSeconds(history.base, d),
-					]),
-					color: colors['nordic-red'],
-					format: (v) => `${v.toFixed(1)}°C`,
-				},
-			],
+			format: (v) => `${v.toFixed(1)}°C`,
 		})
 	}
 	if (history?.hPa !== undefined) {
-		charts.push({
-			Icon: WindArrowDown,
-			title: 'Press.',
+		envData.push({
+			min: 85,
+			max: 110,
+			values: history.hPa.map(([v, d]) => [v, subSeconds(history.base, d)]),
 			color: colors['nordic-blue'],
-			datasets: [
-				{
-					min: 85,
-					max: 110,
-					values: history.hPa.map(([v, d]) => [v, subSeconds(history.base, d)]),
-					color: colors['nordic-blue'],
-					format: (v) => `${(v * 10).toFixed(1)} hPa`,
-				},
-			],
+			format: (v) => `${(v * 10).toFixed(0)} hPa`,
+		})
+	}
+	if (envData.length > 0) {
+		charts.push({
+			Icon: CloudSunRain,
+			title: 'Env.',
+			color: colors['nordic-red'],
+			datasets: envData,
 		})
 	}
 
@@ -140,7 +131,7 @@ export const DeviceHistory = () => {
 			min: -450, //-500,
 			max: 150, //1000,
 			values: history.fgI.map(([v, d]) => [v, subSeconds(history.base, d)]),
-			color: colors['nordic-sun'],
+			color: colors['nordic-fall'],
 			format: (v) => `${Math.round(v)} mA`,
 		})
 	}
