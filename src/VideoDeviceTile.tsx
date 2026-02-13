@@ -1,5 +1,5 @@
 import Hls from 'hls.js'
-import { LogInIcon, Play, UploadCloud, X } from 'lucide-preact'
+import { AlertTriangle, LogInIcon, Play, UploadCloud, X } from 'lucide-preact'
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 import { useAuth } from './context/Auth.tsx'
 import { useDevices } from './context/Devices.js'
@@ -50,7 +50,6 @@ const LoginRequiredForStreamNote = ({
 		<p class="mt-1 ms-3">
 			<small>
 				You must <LogInIcon class="me-1" />
-				&nbsp;
 				<button
 					type="button"
 					onClick={() => void signIn()}
@@ -158,7 +157,10 @@ export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 }
 
 const StreamPreview = ({ streamArn }: { streamArn: string }) => {
-	const [imageUrl, setImageUrl] = useState<string | null>(null)
+	const [preview, setPreview] = useState<{
+		imageUrl: string
+		startTimestamp: Date
+	} | null>(null)
 	const [error, setError] = useState<string | null>(null)
 	const [loading, setLoading] = useState(true)
 	const { credentials } = useAuth()
@@ -168,12 +170,12 @@ const StreamPreview = ({ streamArn }: { streamArn: string }) => {
 		let cancelled = false
 		setLoading(true)
 		setError(null)
-		setImageUrl(null)
+		setPreview(null)
 
 		fetchLatestKinesisImage(streamArn, credentials)
-			.then((url) => {
-				if (!cancelled) {
-					setImageUrl(url)
+			.then((result) => {
+				if (!cancelled && result !== null) {
+					setPreview(result)
 				}
 			})
 			.catch((err) => {
@@ -194,83 +196,36 @@ const StreamPreview = ({ streamArn }: { streamArn: string }) => {
 
 	if (loading) {
 		return (
-			<div
-				style={{
-					aspectRatio: '16/9',
-					backgroundColor: 'var(--color-panel-bg)',
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center',
-					marginTop: '0.5rem',
-					borderRadius: '4px',
-				}}
-			>
-				<span
-					style={{
-						color: 'var(--color-nordic-light-grey)',
-						fontSize: '0.875rem',
-					}}
-				>
-					Loading stream…
-				</span>
-			</div>
+			<p class="mt-1 ms-3">
+				<small>Loading stream…</small>
+			</p>
 		)
 	}
 
 	if (error !== null) {
 		return (
-			<div
-				style={{
-					aspectRatio: '16/9',
-					backgroundColor: 'var(--color-panel-bg)',
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center',
-					marginTop: '0.5rem',
-					borderRadius: '4px',
-				}}
-			>
-				<span
-					style={{
-						color: 'var(--color-nordic-light-grey)',
-						fontSize: '0.875rem',
-					}}
-				>
+			<p class="mt-1 ms-3">
+				<small>
+					<AlertTriangle class="me-1" />
 					{error}
-				</span>
-			</div>
+				</small>
+			</p>
 		)
 	}
 
-	if (imageUrl === null) {
+	if (preview === null) {
 		return (
-			<div
-				style={{
-					aspectRatio: '16/9',
-					backgroundColor: 'var(--color-panel-bg)',
-					display: 'flex',
-					alignItems: 'center',
-					justifyContent: 'center',
-					marginTop: '0.5rem',
-					borderRadius: '4px',
-				}}
-			>
-				<span
-					style={{
-						color: 'var(--color-nordic-light-grey)',
-						fontSize: '0.875rem',
-					}}
-				>
-					No recent frame available
-				</span>
-			</div>
+			<p class="mt-1 ms-3">
+				<small>No recent frame available</small>
+			</p>
 		)
 	}
 
 	return credentials !== undefined ? (
 		<StreamPreviewWithPlay
 			streamArn={streamArn}
-			imageUrl={imageUrl}
+			imageUrl={preview.imageUrl}
+			startTimestamp={preview.startTimestamp}
 			credentials={credentials}
 		/>
 	) : null
@@ -289,10 +244,12 @@ const streamPreviewContainerStyle = {
 const StreamPreviewWithPlay = ({
 	streamArn,
 	imageUrl,
+	startTimestamp,
 	credentials,
 }: {
 	streamArn: string
 	imageUrl: string
+	startTimestamp: Date
 	credentials: NonNullable<ReturnType<typeof useAuth>['credentials']>
 }) => {
 	const [isPlaying, setIsPlaying] = useState(false)
@@ -320,7 +277,12 @@ const StreamPreviewWithPlay = ({
 		setHlsLoading(true)
 		setHlsError(null)
 		try {
-			const url = await fetchKinesisHlsUrl(streamArn, credentials)
+			const playbackStart = new Date(startTimestamp.getTime() - 60 * 1000)
+			const url = await fetchKinesisHlsUrl(
+				streamArn,
+				credentials,
+				playbackStart,
+			)
 			if (url === null) {
 				setHlsError('Could not get stream URL')
 				return
@@ -332,7 +294,7 @@ const StreamPreviewWithPlay = ({
 		} finally {
 			setHlsLoading(false)
 		}
-	}, [streamArn, credentials])
+	}, [streamArn, credentials, startTimestamp])
 
 	useEffect(() => {
 		if (!isPlaying || hlsUrl === null) {
@@ -459,6 +421,21 @@ const StreamPreviewWithPlay = ({
 							<Play size={32} fill="currentColor" strokeWidth={1.5} />
 						)}
 					</button>
+					<span
+						style={{
+							position: 'absolute',
+							bottom: '20%',
+							left: '0',
+							color: '#ccc',
+							fontSize: '0.75rem',
+							textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+							width: '100%',
+							textAlign: 'center',
+						}}
+						title={startTimestamp.toLocaleString()}
+					>
+						<RelativeTime time={startTimestamp} /> ago
+					</span>
 					{hlsError !== null && (
 						<span
 							style={{
