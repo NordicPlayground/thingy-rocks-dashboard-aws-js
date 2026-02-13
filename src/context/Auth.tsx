@@ -1,7 +1,13 @@
 import { KinesisVideo, ListStreamsCommand } from '@aws-sdk/client-kinesis-video'
 import { GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts'
 import type { AuthUser } from 'aws-amplify/auth'
-import { fetchAuthSession } from 'aws-amplify/auth'
+import {
+	fetchAuthSession,
+	getCurrentUser,
+	signInWithRedirect,
+	signOut,
+} from 'aws-amplify/auth'
+import { Hub } from 'aws-amplify/utils'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useMemo, useState } from 'preact/hooks'
 import type { InitAuthFn } from '../context/InitAuthFn.ts'
@@ -19,10 +25,14 @@ export const AuthContext = createContext<{
 	isLoggedIn: boolean
 	loading: boolean
 	credentials?: AWSCredentials
+	signIn: () => Promise<void>
+	signOut: () => Promise<void>
 }>({
 	isLoggedIn: false,
 	loading: false,
 	credentials: undefined,
+	signIn: async () => {},
+	signOut: async () => {},
 })
 
 export const Provider = ({
@@ -40,14 +50,53 @@ export const Provider = ({
 
 	const isLoggedIn = useMemo(() => cognitoUser !== undefined, [cognitoUser])
 
+	const signIn = async () => {
+		await signInWithRedirect()
+	}
+
+	const handleSignOut = async () => {
+		await signOut()
+		setCognitoUser(undefined)
+		setCredentials(undefined)
+	}
+
 	useEffect(() => {
-		initAuth()
-			.then((maybeUser) => {
-				if (maybeUser === null) return
-				setCognitoUser(maybeUser)
-			})
-			.catch(console.error)
-			.finally(() => setInitialized(false))
+		const isOAuthCallback =
+			typeof window !== 'undefined' &&
+			window.location.search.includes('code=') &&
+			window.location.search.includes('state=')
+
+		const runInitAuth = () => {
+			initAuth()
+				.then((maybeUser) => {
+					if (maybeUser === null) return
+					setCognitoUser(maybeUser)
+				})
+				.catch(console.error)
+				.finally(() => setInitialized(false))
+		}
+
+		if (isOAuthCallback) {
+			// OAuth callback: Amplify's enable-oauth-listener handles the exchange.
+			// Give it time to complete before checking auth state.
+			const t = setTimeout(runInitAuth, 300)
+			return () => clearTimeout(t)
+		}
+
+		runInitAuth()
+		return undefined
+	}, [])
+
+	useEffect(() => {
+		const hubListener = Hub.listen('auth', ({ payload }) => {
+			if (
+				payload.event === 'signedIn' ||
+				payload.event === 'signInWithRedirect'
+			) {
+				getCurrentUser().then(setCognitoUser).catch(console.error)
+			}
+		})
+		return () => hubListener()
 	}, [])
 
 	useEffect(() => {
@@ -97,8 +146,10 @@ export const Provider = ({
 			value={{
 				cognitoUser,
 				isLoggedIn,
-				loading: !initializing,
+				loading: initializing,
 				credentials,
+				signIn,
+				signOut: handleSignOut,
 			}}
 		>
 			{children}

@@ -1,4 +1,3 @@
-import { Amplify } from 'aws-amplify'
 import { getCurrentCognitoUser } from './cognito/getCurrentCognitoUser.ts'
 import { Provider as AuthProvider } from './context/Auth.tsx'
 import { Provider as DevicesProvider } from './context/Devices.js'
@@ -11,20 +10,6 @@ import { Dashboard } from './Dashboard.js'
 import { Provider as MemfaultProvider } from './memfault/Context.js'
 import { FakeNordicNrplus } from './test-device/FakeNordicNrplus.js'
 import { FakeTracker } from './test-device/FakeTracker.js'
-
-Amplify.configure({
-	Auth: {
-		Cognito: {
-			userPoolClientId: COGNITO_USER_POOL_CLIENT_ID,
-			userPoolId: COGNITO_USER_POOL_URL.split('/')[3]!,
-			identityPoolId: COGNITO_IDENTITY_POOL_ID,
-			allowGuestAccess: true, // Required to fetch credentials for unauthenticated users (guests)
-			loginWith: {
-				email: true,
-			},
-		},
-	},
-})
 
 export const App = () => (
 	<AuthProvider initAuth={getCurrentCognitoUser}>

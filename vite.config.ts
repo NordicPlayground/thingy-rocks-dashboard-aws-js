@@ -17,13 +17,19 @@ const {
 	cognitoUserPoolURL,
 	cognitoUserPoolClientId,
 	cognitoIdentityPoolId,
+	cognitoDomainUrl,
 } = fromEnv({
 	websocketEndpoint: 'WEBSOCKET_ENDPOINT',
 	mapApiKey: 'MAP_API_KEY',
 	cognitoUserPoolURL: 'COGNITO_USER_POOL_URL',
 	cognitoUserPoolClientId: 'COGNITO_USER_POOL_CLIENT_ID',
 	cognitoIdentityPoolId: 'COGNITO_IDENTITY_POOL_ID',
+	cognitoDomainUrl: 'COGNITO_DOMAIN_URL',
 })(process.env)
+
+// Optional: for Cognito Hosted UI (managed login)
+const cognitoRedirectUrl =
+	process.env.COGNITO_REDIRECT_URL ?? 'http://localhost:8080/'
 
 console.debug(chalk.yellow('websocketEndpoint'), chalk.blue(websocketEndpoint))
 console.debug(chalk.yellow('mapApiKey'), chalk.blue(mapApiKey))
@@ -38,6 +44,11 @@ console.debug(
 console.debug(
 	chalk.yellow('cognitoIdentityPoolId'),
 	chalk.blue(cognitoIdentityPoolId),
+)
+console.debug(chalk.yellow('cognitoDomainUrl'), chalk.blue(cognitoDomainUrl))
+console.debug(
+	chalk.yellow('cognitoRedirectUrl'),
+	chalk.blue(cognitoRedirectUrl),
 )
 
 // Optional environment variables
@@ -117,6 +128,8 @@ export default defineConfig({
 		COGNITO_USER_POOL_URL: JSON.stringify(cognitoUserPoolURL),
 		COGNITO_USER_POOL_CLIENT_ID: JSON.stringify(cognitoUserPoolClientId),
 		COGNITO_IDENTITY_POOL_ID: JSON.stringify(cognitoIdentityPoolId),
+		COGNITO_DOMAIN_URL: JSON.stringify(cognitoDomainUrl),
+		COGNITO_REDIRECT_URL: JSON.stringify(cognitoRedirectUrl),
 		REGION: JSON.stringify(cognitoIdentityPoolId.split(':')[0]),
 		SENTRY_DSN: JSON.stringify(sentryDSN),
 		BUILD_TIME: JSON.stringify(new Date().toISOString()),

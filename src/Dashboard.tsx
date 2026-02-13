@@ -1,5 +1,6 @@
 import { styled } from 'styled-components'
 import { AppUpdateNotifier } from './AppUpdateNotifier.js'
+import { AuthButton } from './AuthButton.tsx'
 import { DeviceList } from './DeviceList.js'
 import { GitHubButton } from './GitHubButton.js'
 import { FavoritesButton, Settings, SettingsButton } from './Settings.js'
@@ -37,6 +38,7 @@ export const Dashboard = () => (
 		<WirepasTopology />
 		<Settings />
 		<SideMenu>
+			<AuthButton />
 			<GitHubButton />
 			<ZoomToWorldButton />
 			<SettingsButton />
