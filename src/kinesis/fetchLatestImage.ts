@@ -9,7 +9,7 @@ import {
 	ImageSelectorType,
 	KinesisVideoArchivedMediaClient,
 } from '@aws-sdk/client-kinesis-video-archived-media'
-import type { AuthHelper } from '../WithMapAuthHelper.tsx'
+import type { AWSCredentials } from '../context/Auth.tsx'
 
 /**
  * Extract region from Kinesis Video Stream ARN.
@@ -30,14 +30,18 @@ const regionFromStreamArn = (streamArn: string): string => {
  */
 export const fetchLatestKinesisImage = async (
 	streamArn: string,
-	authHelper: AuthHelper,
+	credentials: AWSCredentials,
 ): Promise<string | null> => {
 	const region = regionFromStreamArn(streamArn)
-	const credentials = authHelper.getCredentials()
+
+	console.log({
+		region,
+		credentials,
+	})
 
 	const kinesisVideoClient = new KinesisVideoClient({
 		region,
-		credentials: async () => credentials,
+		credentials,
 	})
 
 	const { DataEndpoint } = await kinesisVideoClient.send(
@@ -54,7 +58,7 @@ export const fetchLatestKinesisImage = async (
 	const archivedMediaClient = new KinesisVideoArchivedMediaClient({
 		region,
 		endpoint: DataEndpoint,
-		credentials: async () => credentials,
+		credentials,
 	})
 
 	const now = Date.now()

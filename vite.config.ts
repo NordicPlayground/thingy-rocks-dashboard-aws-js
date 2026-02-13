@@ -11,14 +11,30 @@ const { version: defaultVersion, homepage } = JSON.parse(
 	fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8'),
 )
 const version = process.env.VERSION ?? defaultVersion
-const { websocketEndpoint, mapApiKey, cognitoIdentityPoolId } = fromEnv({
+const {
+	websocketEndpoint,
+	mapApiKey,
+	cognitoUserPoolURL,
+	cognitoUserPoolClientId,
+	cognitoIdentityPoolId,
+} = fromEnv({
 	websocketEndpoint: 'WEBSOCKET_ENDPOINT',
 	mapApiKey: 'MAP_API_KEY',
+	cognitoUserPoolURL: 'COGNITO_USER_POOL_URL',
+	cognitoUserPoolClientId: 'COGNITO_USER_POOL_CLIENT_ID',
 	cognitoIdentityPoolId: 'COGNITO_IDENTITY_POOL_ID',
 })(process.env)
 
 console.debug(chalk.yellow('websocketEndpoint'), chalk.blue(websocketEndpoint))
 console.debug(chalk.yellow('mapApiKey'), chalk.blue(mapApiKey))
+console.debug(
+	chalk.yellow('cognitoUserPoolURL'),
+	chalk.blue(cognitoUserPoolURL),
+)
+console.debug(
+	chalk.yellow('cognitoUserPoolClientId'),
+	chalk.blue(cognitoUserPoolClientId),
+)
 console.debug(
 	chalk.yellow('cognitoIdentityPoolId'),
 	chalk.blue(cognitoIdentityPoolId),
@@ -98,8 +114,10 @@ export default defineConfig({
 		VERSION: JSON.stringify(version ?? Date.now()),
 		WEBSOCKET_ENDPOINT: JSON.stringify(websocketEndpoint),
 		MAP_API_KEY: JSON.stringify(mapApiKey),
+		COGNITO_USER_POOL_URL: JSON.stringify(cognitoUserPoolURL),
+		COGNITO_USER_POOL_CLIENT_ID: JSON.stringify(cognitoUserPoolClientId),
 		COGNITO_IDENTITY_POOL_ID: JSON.stringify(cognitoIdentityPoolId),
-		REGION: JSON.stringify(cognitoIdentityPoolId.split(':')[0] as string),
+		REGION: JSON.stringify(cognitoIdentityPoolId.split(':')[0]),
 		SENTRY_DSN: JSON.stringify(sentryDSN),
 		BUILD_TIME: JSON.stringify(new Date().toISOString()),
 		FIRMWARE_RELEASE: JSON.stringify(firmwareRelease),

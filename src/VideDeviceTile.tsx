@@ -1,6 +1,6 @@
 import { UploadCloud } from 'lucide-preact'
 import { useEffect, useState } from 'preact/hooks'
-import { useAuthHelper } from './context/AuthHelper.js'
+import { useAuth } from './context/Auth.tsx'
 import { useDevices } from './context/Devices.js'
 import { CountryFlag } from './CountryFlag.js'
 import { LastUpdate, Title } from './DeviceList.js'
@@ -10,11 +10,10 @@ import { ThingyIcon } from './icons/ThingyIcon.js'
 import { fetchLatestKinesisImage } from './kinesis/fetchLatestImage.js'
 import { PinTile } from './PinTile.js'
 import { RelativeTime } from './RelativeTime.js'
-import type { AuthHelper } from './WithMapAuthHelper.tsx'
 
 export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 	const { lastUpdateTs, videoStream } = useDevices()
-	const authHelper = useAuthHelper()
+	const { credentials } = useAuth()
 	const maybeLastUpdateTime = lastUpdateTs[device.id]
 	const streamArn = videoStream(device.id)
 
@@ -34,31 +33,27 @@ export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 				)}
 				<PinTile device={device} />
 			</Title>
-			{streamArn !== undefined && authHelper !== undefined && (
-				<StreamPreview streamArn={streamArn} authHelper={authHelper} />
+			{streamArn !== undefined && credentials !== undefined && (
+				<StreamPreview streamArn={streamArn} />
 			)}
 		</>
 	)
 }
 
-const StreamPreview = ({
-	streamArn,
-	authHelper,
-}: {
-	streamArn: string
-	authHelper: AuthHelper
-}) => {
+const StreamPreview = ({ streamArn }: { streamArn: string }) => {
 	const [imageUrl, setImageUrl] = useState<string | null>(null)
 	const [error, setError] = useState<string | null>(null)
 	const [loading, setLoading] = useState(true)
+	const { credentials } = useAuth()
 
 	useEffect(() => {
+		if (credentials === undefined) return
 		let cancelled = false
 		setLoading(true)
 		setError(null)
 		setImageUrl(null)
 
-		fetchLatestKinesisImage(streamArn, authHelper)
+		fetchLatestKinesisImage(streamArn, credentials)
 			.then((url) => {
 				if (!cancelled) {
 					setImageUrl(url)
@@ -78,7 +73,7 @@ const StreamPreview = ({
 		return () => {
 			cancelled = true
 		}
-	}, [streamArn, authHelper])
+	}, [streamArn, credentials])
 
 	if (loading) {
 		return (

@@ -1,3 +1,6 @@
+import { Amplify } from 'aws-amplify'
+import { getCurrentCognitoUser } from './cognito/getCurrentCognitoUser.ts'
+import { Provider as AuthProvider } from './context/Auth.tsx'
 import { Provider as DevicesProvider } from './context/Devices.js'
 import { Provider as LwM2MProvider } from './context/LwM2M.js'
 import { Provider as MapProvider } from './context/Map.js'
@@ -9,22 +12,38 @@ import { Provider as MemfaultProvider } from './memfault/Context.js'
 import { FakeNordicNrplus } from './test-device/FakeNordicNrplus.js'
 import { FakeTracker } from './test-device/FakeTracker.js'
 
+Amplify.configure({
+	Auth: {
+		Cognito: {
+			userPoolClientId: COGNITO_USER_POOL_CLIENT_ID,
+			userPoolId: COGNITO_USER_POOL_URL.split('/')[3]!,
+			identityPoolId: COGNITO_IDENTITY_POOL_ID,
+			allowGuestAccess: true, // Required to fetch credentials for unauthenticated users (guests)
+			loginWith: {
+				email: true,
+			},
+		},
+	},
+})
+
 export const App = () => (
-	<SettingsProvider>
-		<DevicesProvider>
-			<VisibleDevicesProvider>
-				<WebsocketProvider>
-					<LwM2MProvider>
-						<MemfaultProvider>
-							<MapProvider>
-								<Dashboard />
-							</MapProvider>
-						</MemfaultProvider>
-					</LwM2MProvider>
-				</WebsocketProvider>
-			</VisibleDevicesProvider>
-			<FakeTracker />
-			<FakeNordicNrplus />
-		</DevicesProvider>
-	</SettingsProvider>
+	<AuthProvider initAuth={getCurrentCognitoUser}>
+		<SettingsProvider>
+			<DevicesProvider>
+				<VisibleDevicesProvider>
+					<WebsocketProvider>
+						<LwM2MProvider>
+							<MemfaultProvider>
+								<MapProvider>
+									<Dashboard />
+								</MapProvider>
+							</MemfaultProvider>
+						</LwM2MProvider>
+					</WebsocketProvider>
+				</VisibleDevicesProvider>
+				<FakeTracker />
+				<FakeNordicNrplus />
+			</DevicesProvider>
+		</SettingsProvider>
+	</AuthProvider>
 )
