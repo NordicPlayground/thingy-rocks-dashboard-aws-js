@@ -5,6 +5,7 @@ export enum DeviceType {
 	NRPLUS_GW = 'nrplus-gateway',
 	SOFT_SIM = 'soft-sim',
 	NORDIC_NRPLUS = 'nordic-nrplus',
+	VIDEO = 'video',
 }
 
 export type ButtonPress = {
@@ -341,3 +342,15 @@ export const isNordicNrplus = (device: Device): device is NordicNrplusDevice =>
 	device.state !== null &&
 	typeof device.state === 'object' &&
 	'nordicNrplus' in device.state
+
+export type VideoDevice = {
+	id: string
+	type: DeviceType.VIDEO
+}
+
+export const isVideoDevice = (
+	device: Record<string, unknown>,
+): device is VideoDevice =>
+	typeof device === 'object' &&
+	'type' in device &&
+	device.type === DeviceType.VIDEO

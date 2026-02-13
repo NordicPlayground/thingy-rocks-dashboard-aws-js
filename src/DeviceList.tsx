@@ -1,12 +1,14 @@
 import { styled } from 'styled-components'
 import { useMap } from './context/Map.js'
 import { useVisibleDevices } from './context/VisibleDevices.js'
-import type { GeoLocation, NordicNrplusDevice } from './DeviceType.ts'
 import {
 	isNordicNrplus,
 	isNRPlusGateway,
 	isTracker,
+	isVideoDevice,
 	isWirepasGateway,
+	type GeoLocation,
+	type NordicNrplusDevice,
 } from './DeviceType.ts'
 import { DisconnectedWarning } from './DisconnectedWarning.js'
 import { HistoryOnly } from './HistoryOnly.js'
@@ -14,6 +16,7 @@ import { showDetails } from './hooks/useDetails.js'
 import { NordicNrplusNetworkTile } from './nordicNRPlus/NordicNrplusNetworkTile.tsx'
 import { NRPlusGatewayTile } from './nrplus/NRPlusGatewayTile.js'
 import { Tracker } from './Tracker.js'
+import { VideoDeviceTile } from './VideDeviceTile.tsx'
 import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
 
 const DeviceState = styled.section`
@@ -166,6 +169,9 @@ export const DeviceList = () => {
 								<WirepasGatewayTile gateway={device} onCenter={center} />
 							</li>
 						)
+					}
+					if (isVideoDevice(device)) {
+						return <VideoDeviceTile key={device.id} device={device} />
 					}
 					if (device.history !== undefined)
 						return (

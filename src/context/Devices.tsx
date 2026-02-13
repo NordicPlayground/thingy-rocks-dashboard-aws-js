@@ -26,23 +26,28 @@ export const DevicesContext = createContext<{
 	updateHistory: (deviceId: string, history: Summary) => void
 	updateAlias: (deviceId: string, alias: string) => void
 	updateType: (deviceId: string, type: DeviceType) => void
+	updateVideoStream: (deviceId: string, stream: string) => void
 	lastUpdateTs: Record<string, Date | undefined>
 	alias: (deviceId: string) => string | undefined
 	type: (deviceId: string) => DeviceType | undefined
+	videoStream: (deviceId: string) => string | undefined
 }>({
 	updateState: () => undefined,
 	updateLocation: () => undefined,
 	updateHistory: () => undefined,
 	updateAlias: () => undefined,
+	updateVideoStream: () => undefined,
 	alias: () => undefined,
 	updateType: () => undefined,
 	type: () => undefined,
+	videoStream: () => undefined,
 	lastUpdateTs: {},
 	devices: {},
 })
 
 const deviceAliases: Record<string, string> = {}
 const deviceTypes: Record<string, DeviceType> = {}
+const deviceVideoStreams: Record<string, string> = {}
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const [knownDevices, updateDevices] = useState<Devices>({})
@@ -195,6 +200,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					deviceTypes[deviceId] = type
 				},
 				type: (deviceId) => deviceTypes[deviceId],
+				updateVideoStream: (deviceId, stream) => {
+					deviceVideoStreams[deviceId] = stream
+				},
+				videoStream: (deviceId) => deviceVideoStreams[deviceId],
 			}}
 		>
 			{children}

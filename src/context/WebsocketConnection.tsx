@@ -40,6 +40,7 @@ type Message = {
 	// Fixed location for the device
 	deviceLocation?: string // e.g. 63.42115901688979,10.437200141182338
 	deviceType?: string
+	kinesisVideoStream?: string
 } & (
 	| {
 			'@context': MessageContext.DeviceLocation
@@ -173,6 +174,12 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 				deviceMessages.updateType(
 					message.deviceId,
 					message.deviceType as DeviceType,
+				)
+			}
+			if (message.kinesisVideoStream !== undefined) {
+				deviceMessages.updateVideoStream(
+					message.deviceId,
+					message.kinesisVideoStream,
 				)
 			}
 			listeners.current.map((fn) => fn(message))
