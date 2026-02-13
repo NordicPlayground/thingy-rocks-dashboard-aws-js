@@ -1,0 +1,65 @@
+import {
+	APIName,
+	GetDataEndpointCommand,
+	KinesisVideoClient,
+} from '@aws-sdk/client-kinesis-video'
+import {
+	GetHLSStreamingSessionURLCommand,
+	HLSPlaybackMode,
+	KinesisVideoArchivedMediaClient,
+} from '@aws-sdk/client-kinesis-video-archived-media'
+import type { AWSCredentials } from '../context/Auth.tsx'
+
+/**
+ * Extract region from Kinesis Video Stream ARN.
+ * Format: arn:aws:kinesisvideo:REGION:ACCOUNT:stream/STREAM_NAME/TIMESTAMP
+ */
+const regionFromStreamArn = (streamArn: string): string => {
+	const match = /arn:aws:kinesisvideo:([a-z0-9-]+):/.exec(streamArn)
+	return match?.[1] ?? REGION
+}
+
+/**
+ * Fetch an HLS streaming session URL for live playback of an AWS Kinesis Video Stream.
+ *
+ * @param streamArn - The ARN of the Kinesis Video stream
+ * @param credentials - AWS credentials from Cognito
+ * @returns HLS URL for the stream, or null if it could not be retrieved
+ */
+export const fetchKinesisHlsUrl = async (
+	streamArn: string,
+	credentials: AWSCredentials,
+): Promise<string | null> => {
+	const region = regionFromStreamArn(streamArn)
+
+	const kinesisVideoClient = new KinesisVideoClient({
+		region,
+		credentials,
+	})
+
+	const { DataEndpoint } = await kinesisVideoClient.send(
+		new GetDataEndpointCommand({
+			StreamARN: streamArn,
+			APIName: APIName.GET_HLS_STREAMING_SESSION_URL,
+		}),
+	)
+
+	if (DataEndpoint === undefined || DataEndpoint === '') {
+		return null
+	}
+
+	const archivedMediaClient = new KinesisVideoArchivedMediaClient({
+		region,
+		endpoint: DataEndpoint,
+		credentials,
+	})
+
+	const { HLSStreamingSessionURL } = await archivedMediaClient.send(
+		new GetHLSStreamingSessionURLCommand({
+			StreamARN: streamArn,
+			PlaybackMode: HLSPlaybackMode.LIVE,
+		}),
+	)
+
+	return HLSStreamingSessionURL ?? null
+}

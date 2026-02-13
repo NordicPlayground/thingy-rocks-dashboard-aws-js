@@ -29,8 +29,8 @@
     "test:watch": "node --no-warnings --experimental-transform-types --test --watch \"!(node_modules)/**/*.spec.ts\""
   },
   "dependencies": {
-    "@aws-sdk/client-kinesis-video": "^3.989.0",
-    "@aws-sdk/client-kinesis-video-archived-media": "^3.989.0",
+    "@aws-sdk/client-kinesis-video": "3.989.0",
+    "@aws-sdk/client-kinesis-video-archived-media": "3.989.0",
     "@aws-sdk/client-sts": "3.989.0",
     "@aws/amazon-location-utilities-auth-helper": "1.2.5",
     "@bifravst/rsrp-bar": "8.0.11",
@@ -42,8 +42,9 @@
     "compare-versions": "6.1.1",
     "date-fns": "4.1.0",
     "e118-iin-list": "4.5.0",
+    "hls.js": "1.6.15",
     "lodash-es": "4.17.23",
-    "lucide-preact": "0.563.0",
+    "lucide-preact": "0.564.0",
     "maplibre-gl": "5.18.0",
     "preact": "10.28.3",
     "preact-router": "4.1.2",
