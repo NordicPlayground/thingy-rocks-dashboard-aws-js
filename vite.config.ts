@@ -29,10 +29,6 @@ const {
 	streamMetadataTable: 'STREAM_METADATA_TABLE',
 })(process.env)
 
-// Optional: for Cognito Hosted UI (managed login)
-const cognitoRedirectUrl =
-	process.env.COGNITO_REDIRECT_URL ?? 'http://localhost:8080/'
-
 console.debug(chalk.yellow('websocketEndpoint'), chalk.blue(websocketEndpoint))
 console.debug(chalk.yellow('mapApiKey'), chalk.blue(mapApiKey))
 console.debug(
@@ -48,10 +44,6 @@ console.debug(
 	chalk.blue(cognitoIdentityPoolId),
 )
 console.debug(chalk.yellow('cognitoDomainUrl'), chalk.blue(cognitoDomainUrl))
-console.debug(
-	chalk.yellow('cognitoRedirectUrl'),
-	chalk.blue(cognitoRedirectUrl),
-)
 console.debug(
 	chalk.yellow('streamMetadataTable'),
 	chalk.blue(streamMetadataTable),
@@ -135,7 +127,6 @@ export default defineConfig({
 		COGNITO_USER_POOL_CLIENT_ID: JSON.stringify(cognitoUserPoolClientId),
 		COGNITO_IDENTITY_POOL_ID: JSON.stringify(cognitoIdentityPoolId),
 		COGNITO_DOMAIN_URL: JSON.stringify(cognitoDomainUrl),
-		COGNITO_REDIRECT_URL: JSON.stringify(cognitoRedirectUrl),
 		REGION: JSON.stringify(cognitoIdentityPoolId.split(':')[0]),
 		SENTRY_DSN: JSON.stringify(sentryDSN),
 		BUILD_TIME: JSON.stringify(new Date().toISOString()),

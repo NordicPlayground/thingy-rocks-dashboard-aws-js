@@ -7,7 +7,6 @@ declare const COGNITO_USER_POOL_URL: string
 declare const COGNITO_USER_POOL_CLIENT_ID: string
 declare const COGNITO_IDENTITY_POOL_ID: string
 declare const COGNITO_DOMAIN_URL: string
-declare const COGNITO_REDIRECT_URL: string
 declare const MAP_API_KEY: string
 declare const REGION: string
 declare const BUILD_TIME: string

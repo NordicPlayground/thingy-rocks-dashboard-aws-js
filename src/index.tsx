@@ -5,6 +5,8 @@ import { render } from 'preact'
 import { App } from './App.js'
 import './sentry.js'
 
+const redirectUrl = document.location.protocol + '//' + document.location.host
+
 // Configure Amplify before any auth-dependent code runs (required for OAuth callback handling)
 Amplify.configure({
 	Auth: {
@@ -15,15 +17,13 @@ Amplify.configure({
 			allowGuestAccess: true,
 			loginWith: {
 				email: true,
-				...(COGNITO_DOMAIN_URL?.trim() && {
-					oauth: {
-						domain: COGNITO_DOMAIN_URL.replace(/^https?:\/\//, ''),
-						scopes: ['email', 'profile', 'openid'],
-						redirectSignIn: [COGNITO_REDIRECT_URL],
-						redirectSignOut: [COGNITO_REDIRECT_URL],
-						responseType: 'code' as const,
-					},
-				}),
+				oauth: {
+					domain: COGNITO_DOMAIN_URL.replace(/^https?:\/\//, ''),
+					scopes: ['email', 'profile', 'openid'],
+					redirectSignIn: [redirectUrl],
+					redirectSignOut: [redirectUrl],
+					responseType: 'code' as const,
+				},
 			},
 		},
 	},
