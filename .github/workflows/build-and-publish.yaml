@@ -22,6 +22,7 @@ env:
   COGNITO_USER_POOL_URL: https://cognito-idp.eu-central-1.amazonaws.com/eu-central-1_bC6w3y3Ne
   COGNITO_IDENTITY_POOL_ID: eu-central-1:09c73822-5984-44ff-be03-db63403fdf59
   STREAM_METADATA_TABLE: video-streaming-StreamMetadataD1FE2960-1C369PH9SUBY9
+  COGNITO_DOMAIN_URL: https://thingy-rocks-374216331074.auth.eu-central-1.amazoncognito.com
   # US
   # WEBSOCKET_ENDPOINT: wss://ui1r9dn0sk.execute-api.us-west-2.amazonaws.com/2022-11-22
 
