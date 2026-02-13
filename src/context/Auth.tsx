@@ -1,5 +1,3 @@
-import { KinesisVideo, ListStreamsCommand } from '@aws-sdk/client-kinesis-video'
-import { GetCallerIdentityCommand, STSClient } from '@aws-sdk/client-sts'
 import type { AuthUser } from 'aws-amplify/auth'
 import {
 	fetchAuthSession,
@@ -107,39 +105,6 @@ export const Provider = ({
 			.then((res) => setCredentials(res.credentials))
 			.catch(console.error)
 	}, [initializing])
-
-	useEffect(() => {
-		if (credentials === undefined) return
-
-		const sts = new STSClient({
-			region: REGION,
-			credentials,
-		})
-
-		sts
-			.send(new GetCallerIdentityCommand())
-			.then((res) =>
-				console.log('AWS credentials are valid, caller identity:', res),
-			)
-			.catch((err) => console.error('Error validating AWS credentials:', err))
-
-		const kinesisVideo = new KinesisVideo({
-			region: REGION,
-			credentials,
-		})
-
-		kinesisVideo
-			.send(new ListStreamsCommand())
-			.then((res) =>
-				console.log('AWS credentials are valid, Kinesis Video streams:', res),
-			)
-			.catch((err) =>
-				console.error(
-					'Error validating AWS credentials with Kinesis Video:',
-					err,
-				),
-			)
-	}, [credentials])
 
 	return (
 		<AuthContext.Provider

@@ -13,7 +13,7 @@ import { RelativeTime } from './RelativeTime.js'
 
 export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 	const { lastUpdateTs, videoStream } = useDevices()
-	const { credentials } = useAuth()
+	const { credentials, isLoggedIn } = useAuth()
 	const maybeLastUpdateTime = lastUpdateTs[device.id]
 	const streamArn = videoStream(device.id)
 
@@ -33,7 +33,7 @@ export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 				)}
 				<PinTile device={device} />
 			</Title>
-			{streamArn !== undefined && credentials !== undefined && (
+			{streamArn !== undefined && credentials !== undefined && isLoggedIn && (
 				<StreamPreview streamArn={streamArn} />
 			)}
 		</>
