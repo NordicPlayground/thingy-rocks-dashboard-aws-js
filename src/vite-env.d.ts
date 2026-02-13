@@ -4,7 +4,7 @@ declare const WEBSOCKET_ENDPOINT: string
 declare const VERSION: string
 declare const HOMEPAGE: string
 declare const COGNITO_IDENTITY_POOL_ID: string
-declare const MAP_NAME: string
+declare const MAP_API_KEY: string
 declare const REGION: string
 declare const BUILD_TIME: string
 declare const SENTRY_DSN: string | undefined

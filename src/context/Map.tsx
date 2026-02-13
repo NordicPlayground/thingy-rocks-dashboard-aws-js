@@ -11,14 +11,15 @@ import { locationSourceColors } from '../colors.js'
 import type { GeoLocation } from '../DeviceType.ts'
 import { GeoLocationSource } from '../DeviceType.ts'
 import { geoJSONPolygonFromCircle } from '../map/geoJSONPolygonFromCircle.js'
-import { mapStyle } from '../map/style.js'
 import { captureMessage } from '../sentry.js'
-import type { AuthHelper } from '../WithMapAuthHelper.js'
 import { LocationSourceLabels } from './LocationSourceLabels.js'
 
 export const MapContext = createContext<DeviceMap>(undefined as any)
 
 export const Consumer = MapContext.Consumer
+
+const style = 'Monochrome'
+const colorScheme = 'Dark'
 
 export const useMap = () => useContext(MapContext)
 
@@ -376,26 +377,16 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 	}
 }
 
-export const Provider = ({
-	children,
-	authHelper,
-}: {
-	children: ComponentChildren
-	authHelper: AuthHelper
-}) => {
+export const Provider = ({ children }: { children: ComponentChildren }) => {
 	const map = new MapLibreGlMap({
 		container: 'map',
-		style: mapStyle({
-			region: REGION,
-			mapName: MAP_NAME,
-		}),
+		style: `https://maps.geo.${REGION}.amazonaws.com/v2/styles/${style}/descriptor?key=${MAP_API_KEY}&color-scheme=${colorScheme}`,
 		center: [10.437581513483195, 63.42148461054351],
 		zoom: 12,
 		refreshExpiredTiles: false,
 		trackResize: false,
 		keyboard: false,
 		renderWorldCopies: false,
-		transformRequest: authHelper.getMapAuthenticationOptions().transformRequest,
 		attributionControl: false,
 	})
 	map.addControl(new AttributionControl(), 'bottom-left')

@@ -32,8 +32,18 @@ Provide these configuration settings from the
 [backend](https://github.com/NordicPlayground/thingy-rocks-cloud-aws-js):
 
 - `WEBSOCKET_ENDPOINT`
-- `MAP_NAME`
 - `COGNITO_IDENTITY_POOL_ID`
+
+For the `MAP_API_KEY`, create an new API key in Amazon Location, with these
+permissions:
+
+- `GetStaticMap`
+- `GetTile`
+
+and limit it to these referrers:
+
+- `http://localhost:*`
+- `https://world.thingy.rocks`
 
 ## Run
 

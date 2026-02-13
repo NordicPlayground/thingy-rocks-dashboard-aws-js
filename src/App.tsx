@@ -8,28 +8,23 @@ import { Dashboard } from './Dashboard.js'
 import { Provider as MemfaultProvider } from './memfault/Context.js'
 import { FakeNordicNrplus } from './test-device/FakeNordicNrplus.js'
 import { FakeTracker } from './test-device/FakeTracker.js'
-import { WithMapAuthHelper as MapAuthHelperProvider } from './WithMapAuthHelper.js'
 
 export const App = () => (
-	<MapAuthHelperProvider>
-		{(authHelper) => (
-			<SettingsProvider>
-				<DevicesProvider>
-					<VisibleDevicesProvider>
-						<WebsocketProvider>
-							<LwM2MProvider>
-								<MemfaultProvider>
-									<MapProvider authHelper={authHelper}>
-										<Dashboard />
-									</MapProvider>
-								</MemfaultProvider>
-							</LwM2MProvider>
-						</WebsocketProvider>
-					</VisibleDevicesProvider>
-					<FakeTracker />
-					<FakeNordicNrplus />
-				</DevicesProvider>
-			</SettingsProvider>
-		)}
-	</MapAuthHelperProvider>
+	<SettingsProvider>
+		<DevicesProvider>
+			<VisibleDevicesProvider>
+				<WebsocketProvider>
+					<LwM2MProvider>
+						<MemfaultProvider>
+							<MapProvider>
+								<Dashboard />
+							</MapProvider>
+						</MemfaultProvider>
+					</LwM2MProvider>
+				</WebsocketProvider>
+			</VisibleDevicesProvider>
+			<FakeTracker />
+			<FakeNordicNrplus />
+		</DevicesProvider>
+	</SettingsProvider>
 )

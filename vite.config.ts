@@ -11,14 +11,14 @@ const { version: defaultVersion, homepage } = JSON.parse(
 	fs.readFileSync(path.join(process.cwd(), 'package.json'), 'utf-8'),
 )
 const version = process.env.VERSION ?? defaultVersion
-const { websocketEndpoint, mapName, cognitoIdentityPoolId } = fromEnv({
+const { websocketEndpoint, mapApiKey, cognitoIdentityPoolId } = fromEnv({
 	websocketEndpoint: 'WEBSOCKET_ENDPOINT',
-	mapName: 'MAP_NAME',
+	mapApiKey: 'MAP_API_KEY',
 	cognitoIdentityPoolId: 'COGNITO_IDENTITY_POOL_ID',
 })(process.env)
 
 console.debug(chalk.yellow('websocketEndpoint'), chalk.blue(websocketEndpoint))
-console.debug(chalk.yellow('mapName'), chalk.blue(mapName))
+console.debug(chalk.yellow('mapApiKey'), chalk.blue(mapApiKey))
 console.debug(
 	chalk.yellow('cognitoIdentityPoolId'),
 	chalk.blue(cognitoIdentityPoolId),
@@ -97,7 +97,7 @@ export default defineConfig({
 		HOMEPAGE: JSON.stringify(homepage),
 		VERSION: JSON.stringify(version ?? Date.now()),
 		WEBSOCKET_ENDPOINT: JSON.stringify(websocketEndpoint),
-		MAP_NAME: JSON.stringify(mapName),
+		MAP_API_KEY: JSON.stringify(mapApiKey),
 		COGNITO_IDENTITY_POOL_ID: JSON.stringify(cognitoIdentityPoolId),
 		REGION: JSON.stringify(cognitoIdentityPoolId.split(':')[0] as string),
 		SENTRY_DSN: JSON.stringify(sentryDSN),

@@ -3,7 +3,7 @@ import { render } from 'preact'
 import { App } from './App.js'
 import './sentry.js'
 
-console.debug('mapName', MAP_NAME)
+console.debug('mapApiKey', MAP_API_KEY)
 console.debug(`identityPoolId`, COGNITO_IDENTITY_POOL_ID)
 console.debug('websocketEndpoint', WEBSOCKET_ENDPOINT)
 console.debug('sentryDSN', SENTRY_DSN)
