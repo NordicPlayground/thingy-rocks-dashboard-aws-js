@@ -37,6 +37,7 @@ Provide these configuration settings from the
 - `COGNITO_IDENTITY_POOL_ID`
 - `COGNITO_DOMAIN_URL`
 - `COGNITO_REDIRECT_URL` (optional, default: `http://localhost:8080/`)
+- `STREAM_METADATA_TABLE`
 
 For the `MAP_API_KEY`, create an new API key in Amazon Location, with these
 permissions:

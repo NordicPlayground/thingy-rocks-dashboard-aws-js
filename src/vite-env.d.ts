@@ -12,6 +12,7 @@ declare const MAP_API_KEY: string
 declare const REGION: string
 declare const BUILD_TIME: string
 declare const SENTRY_DSN: string | undefined
+declare const STREAM_METADATA_TABLE: string
 /**
  * Version of the Thingy World firmware that is considered to be the latest release
  *

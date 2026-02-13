@@ -18,6 +18,7 @@ const {
 	cognitoUserPoolClientId,
 	cognitoIdentityPoolId,
 	cognitoDomainUrl,
+	streamMetadataTable,
 } = fromEnv({
 	websocketEndpoint: 'WEBSOCKET_ENDPOINT',
 	mapApiKey: 'MAP_API_KEY',
@@ -25,6 +26,7 @@ const {
 	cognitoUserPoolClientId: 'COGNITO_USER_POOL_CLIENT_ID',
 	cognitoIdentityPoolId: 'COGNITO_IDENTITY_POOL_ID',
 	cognitoDomainUrl: 'COGNITO_DOMAIN_URL',
+	streamMetadataTable: 'STREAM_METADATA_TABLE',
 })(process.env)
 
 // Optional: for Cognito Hosted UI (managed login)
@@ -49,6 +51,10 @@ console.debug(chalk.yellow('cognitoDomainUrl'), chalk.blue(cognitoDomainUrl))
 console.debug(
 	chalk.yellow('cognitoRedirectUrl'),
 	chalk.blue(cognitoRedirectUrl),
+)
+console.debug(
+	chalk.yellow('streamMetadataTable'),
+	chalk.blue(streamMetadataTable),
 )
 
 // Optional environment variables
@@ -136,5 +142,6 @@ export default defineConfig({
 		FIRMWARE_RELEASE: JSON.stringify(firmwareRelease),
 		MODEM_FIRMWARE_RELEASE_9160: JSON.stringify(modemFirmwareRelease9160),
 		MODEM_FIRMWARE_RELEASE_91x: JSON.stringify(modemFirmwareRelease91x),
+		STREAM_METADATA_TABLE: JSON.stringify(streamMetadataTable),
 	},
 })

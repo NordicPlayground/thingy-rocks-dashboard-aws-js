@@ -171,7 +171,11 @@ export const DeviceList = () => {
 						)
 					}
 					if (isVideoDevice(device)) {
-						return <VideoDeviceTile key={device.id} device={device} />
+						return (
+							<li key={device.id}>
+								<VideoDeviceTile key={device.id} device={device} />
+							</li>
+						)
 					}
 					if (device.history !== undefined)
 						return (

@@ -1,5 +1,5 @@
 import Hls from 'hls.js'
-import { Play, UploadCloud, X } from 'lucide-preact'
+import { LogInIcon, Play, UploadCloud, X } from 'lucide-preact'
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 import { useAuth } from './context/Auth.tsx'
 import { useDevices } from './context/Devices.js'
@@ -7,11 +7,114 @@ import { CountryFlag } from './CountryFlag.js'
 import { LastUpdate, Title } from './DeviceList.js'
 import { DeviceName } from './DeviceName.js'
 import type { VideoDevice } from './DeviceType.ts'
-import { ThingyIcon } from './icons/ThingyIcon.js'
+import {
+	fetchStreamStatus,
+	type StreamStatus,
+} from './dynamodb/fetchStreamStatus.js'
 import { fetchKinesisHlsUrl } from './kinesis/fetchKinesisHlsUrl.js'
 import { fetchLatestKinesisImage } from './kinesis/fetchLatestImage.js'
 import { PinTile } from './PinTile.js'
 import { RelativeTime } from './RelativeTime.js'
+
+const LoginRequiredForStreamNote = ({
+	streamArn,
+	credentials,
+	isLoggedIn,
+}: {
+	streamArn: string
+	credentials: NonNullable<ReturnType<typeof useAuth>['credentials']>
+	isLoggedIn: boolean
+}) => {
+	const { signIn } = useAuth()
+	const [status, setStatus] = useState<StreamStatus | undefined>(undefined)
+
+	useEffect(() => {
+		if (isLoggedIn) return
+		let cancelled = false
+		setStatus(undefined)
+		fetchStreamStatus(streamArn, credentials)
+			.then((s) => {
+				if (!cancelled) setStatus(s)
+			})
+			.catch(() => {
+				if (!cancelled) setStatus(null)
+			})
+		return () => {
+			cancelled = true
+		}
+	}, [streamArn, credentials, isLoggedIn])
+
+	if (isLoggedIn || status !== 'active') return null
+
+	return (
+		<p class="mt-1 ms-3">
+			<small>
+				You must <LogInIcon class="me-1" />
+				&nbsp;
+				<button
+					type="button"
+					onClick={() => void signIn()}
+					style={{
+						background: 'none',
+						border: 'none',
+						padding: 0,
+						font: 'inherit',
+						color: 'var(--color-nordic-blue)',
+						textDecoration: 'underline',
+						cursor: 'pointer',
+					}}
+				>
+					log in
+				</button>{' '}
+				to see the live stream.
+			</small>
+		</p>
+	)
+}
+
+const StreamStatusIndicator = ({
+	streamArn,
+	credentials,
+}: {
+	streamArn: string
+	credentials: NonNullable<ReturnType<typeof useAuth>['credentials']>
+}) => {
+	const [status, setStatus] = useState<StreamStatus | undefined>(undefined)
+
+	useEffect(() => {
+		let cancelled = false
+		setStatus(undefined)
+		fetchStreamStatus(streamArn, credentials)
+			.then((s) => {
+				if (!cancelled) setStatus(s)
+			})
+			.catch(() => {
+				if (!cancelled) setStatus(null)
+			})
+		return () => {
+			cancelled = true
+		}
+	}, [streamArn, credentials])
+
+	if (status === undefined) return null
+
+	const isActive = status === 'active'
+	return (
+		<span
+			style={{
+				width: 8,
+				height: 8,
+				borderRadius: '50%',
+				backgroundColor: isActive
+					? '#20e899'
+					: 'var(--color-nordic-middle-grey)',
+				flexShrink: 0,
+				marginRight: '0.5rem',
+			}}
+			title={isActive ? 'Stream active' : 'Stream inactive'}
+		/>
+	)
+}
 
 export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 	const { lastUpdateTs, videoStream } = useDevices()
@@ -22,7 +125,12 @@ export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 	return (
 		<>
 			<Title onClick={() => {}}>
-				<ThingyIcon class="icon" />
+				{streamArn !== undefined && credentials !== undefined && (
+					<StreamStatusIndicator
+						streamArn={streamArn}
+						credentials={credentials}
+					/>
+				)}
 				<span class="info">
 					<DeviceName device={device} />
 				</span>
@@ -37,6 +145,13 @@ export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 			</Title>
 			{streamArn !== undefined && credentials !== undefined && isLoggedIn && (
 				<StreamPreview streamArn={streamArn} />
+			)}
+			{streamArn !== undefined && credentials !== undefined && !isLoggedIn && (
+				<LoginRequiredForStreamNote
+					streamArn={streamArn}
+					credentials={credentials}
+					isLoggedIn={isLoggedIn}
+				/>
 			)}
 		</>
 	)
