@@ -12,8 +12,13 @@ import {
 } from '@hello.nrfcloud.com/proto-map/lwm2m'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
-import type { GeoLocation, Reported } from '../DeviceType.ts'
-import { DeviceType, GeoLocationSource } from '../DeviceType.ts'
+import {
+	DeviceType,
+	GeoLocationSource,
+	isDeviceType,
+	type GeoLocation,
+	type Reported,
+} from '../DeviceType.ts'
 import { useDevices } from './Devices.js'
 import { MessageContext, useWebsocket } from './WebsocketConnection.js'
 
@@ -54,6 +59,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					alias,
 					objects,
 					deviceType,
+					kinesisVideoStreamArn,
 				} of message.shadows) {
 					if (alias !== undefined) deviceMessages.updateAlias(deviceId, alias)
 					const { locations, reported } = processObjects(objects)
@@ -61,9 +67,10 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 					for (const [src, location] of locations) {
 						deviceMessages.updateLocation(deviceId, location, src)
 					}
-					// Set device type if it's a nordic-nrplus device
-					if (deviceType === DeviceType.NORDIC_NRPLUS) {
-						deviceMessages.updateType(deviceId, DeviceType.NORDIC_NRPLUS)
+					if (isDeviceType(deviceType))
+						deviceMessages.updateType(deviceId, deviceType)
+					if (kinesisVideoStreamArn !== undefined) {
+						deviceMessages.updateVideoStream(deviceId, kinesisVideoStreamArn)
 					}
 				}
 			} else if (isLwM2MUpdate(message)) {
@@ -124,6 +131,7 @@ const isLwM2MShadows = (
 		alias?: string
 		deviceType?: string // e.g. 'nordic-nrplus'
 		objects: Array<LwM2MObjectInstance>
+		kinesisVideoStreamArn?: string
 	}>
 } =>
 	message !== null &&

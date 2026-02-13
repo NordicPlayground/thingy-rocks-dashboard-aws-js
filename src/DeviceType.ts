@@ -8,6 +8,9 @@ export enum DeviceType {
 	VIDEO = 'video',
 }
 
+export const isDeviceType = (value: unknown): value is DeviceType =>
+	Object.values(DeviceType).includes(value as DeviceType)
+
 export type ButtonPress = {
 	v: number // 4398
 	ts: number // 1669741244042
