@@ -16,7 +16,7 @@ import { showDetails } from './hooks/useDetails.js'
 import { NordicNrplusNetworkTile } from './nordicNRPlus/NordicNrplusNetworkTile.tsx'
 import { NRPlusGatewayTile } from './nrplus/NRPlusGatewayTile.js'
 import { Tracker } from './Tracker.js'
-import { VideoDeviceTile } from './VideDeviceTile.tsx'
+import { VideoDeviceTile } from './VideoDeviceTile.tsx'
 import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
 
 const DeviceState = styled.section`
