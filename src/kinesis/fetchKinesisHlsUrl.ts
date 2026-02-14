@@ -64,7 +64,10 @@ export const fetchKinesisHlsUrl = async (
 			PlaybackMode: startTimestamp
 				? HLSPlaybackMode.LIVE_REPLAY
 				: HLSPlaybackMode.LIVE,
+			// LIVE_REPLAY defaults to only 5 fragments; request up to 5000 so we can
+			// buffer from start through to the live edge for seek-forward support
 			...(startTimestamp && {
+				MaxMediaPlaylistFragmentResults: 5000,
 				HLSFragmentSelector: {
 					FragmentSelectorType: HLSFragmentSelectorType.SERVER_TIMESTAMP,
 					TimestampRange: {

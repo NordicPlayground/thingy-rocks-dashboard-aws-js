@@ -241,6 +241,8 @@ const streamPreviewContainerStyle = {
 	width: '100%',
 }
 
+const playbackStartOffsetMs = 60 * 1000
+
 const StreamPreviewWithPlay = ({
 	streamArn,
 	imageUrl,
@@ -256,6 +258,7 @@ const StreamPreviewWithPlay = ({
 	const [hlsUrl, setHlsUrl] = useState<string | null>(null)
 	const [hlsError, setHlsError] = useState<string | null>(null)
 	const [hlsLoading, setHlsLoading] = useState(false)
+	const [segmentRecordedAt, setSegmentRecordedAt] = useState<Date | null>(null)
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const hlsRef = useRef<Hls | null>(null)
 
@@ -270,6 +273,7 @@ const StreamPreviewWithPlay = ({
 		}
 		setIsPlaying(false)
 		setHlsUrl(null)
+		setSegmentRecordedAt(null)
 	}, [])
 
 	const handlePlayClick = useCallback(async () => {
@@ -277,7 +281,9 @@ const StreamPreviewWithPlay = ({
 		setHlsLoading(true)
 		setHlsError(null)
 		try {
-			const playbackStart = new Date(startTimestamp.getTime() - 60 * 1000)
+			const playbackStart = new Date(
+				startTimestamp.getTime() - playbackStartOffsetMs,
+			)
 			const url = await fetchKinesisHlsUrl(
 				streamArn,
 				credentials,
@@ -309,7 +315,16 @@ const StreamPreviewWithPlay = ({
 		if (Hls.isSupported()) {
 			const hls = new Hls({
 				enableWorker: true,
-				lowLatencyMode: true,
+				// Disable low-latency mode: it minimizes buffer; we need to buffer
+				// the full replay from start to live edge for seek-forward
+				lowLatencyMode: false,
+				// Buffer aggressively so user can skip forward through entire replay
+				// (LIVE_REPLAY + MaxMediaPlaylistFragmentResults supplies segments to now)
+				maxBufferLength: 3600, // 1 hr forward buffer
+				maxMaxBufferLength: 7200, // allow up to 2 hr
+				startFragPrefetch: true,
+				// DVR-style: set seekable range from start to live edge
+				liveDurationInfinity: true,
 			})
 			hlsRef.current = hls
 			hls.loadSource(hlsUrl)
@@ -339,6 +354,23 @@ const StreamPreviewWithPlay = ({
 		}
 		return
 	}, [isPlaying, hlsUrl])
+
+	// Update displayed segment timestamp as playback progresses
+	const playbackStartMs = startTimestamp.getTime() - playbackStartOffsetMs
+	useEffect(() => {
+		if (!isPlaying) return
+		const video = videoRef.current
+		if (video === null) return
+
+		const onTimeUpdate = () => {
+			const wallClockMs = playbackStartMs + video.currentTime * 1000
+			setSegmentRecordedAt(new Date(wallClockMs))
+		}
+
+		onTimeUpdate()
+		video.addEventListener('timeupdate', onTimeUpdate)
+		return () => video.removeEventListener('timeupdate', onTimeUpdate)
+	}, [isPlaying, playbackStartMs])
 
 	return (
 		<div style={streamPreviewContainerStyle}>
@@ -379,6 +411,29 @@ const StreamPreviewWithPlay = ({
 					>
 						<X size={16} strokeWidth={1.5} />
 					</button>
+					{segmentRecordedAt !== null && (
+						<span
+							style={{
+								position: 'absolute',
+								top: '0.5rem',
+								left: '0.5rem',
+								color: '#ccc',
+								fontSize: '0.75rem',
+								textShadow: [
+									'0 0 2px rgba(0,0,0,1)',
+									'0 0 4px rgba(0,0,0,1)',
+									'0 1px 2px rgba(0,0,0,1)',
+									'1px 0 2px rgba(0,0,0,0.9)',
+									'-1px 0 2px rgba(0,0,0,0.9)',
+									'0 1px 2px rgba(0,0,0,0.9)',
+									'0 -1px 2px rgba(0,0,0,0.9)',
+								].join(', '),
+							}}
+							title={segmentRecordedAt.toLocaleString()}
+						>
+							{segmentRecordedAt.toLocaleString()}
+						</span>
+					)}
 				</>
 			) : (
 				<>
