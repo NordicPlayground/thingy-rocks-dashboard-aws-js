@@ -428,7 +428,15 @@ const StreamPreviewWithPlay = ({
 							left: '0',
 							color: '#ccc',
 							fontSize: '0.75rem',
-							textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+							textShadow: [
+								'0 0 2px rgba(0,0,0,1)',
+								'0 0 4px rgba(0,0,0,1)',
+								'0 1px 2px rgba(0,0,0,1)',
+								'1px 0 2px rgba(0,0,0,0.9)',
+								'-1px 0 2px rgba(0,0,0,0.9)',
+								'0 1px 2px rgba(0,0,0,0.9)',
+								'0 -1px 2px rgba(0,0,0,0.9)',
+							].join(', '),
 							width: '100%',
 							textAlign: 'center',
 						}}
