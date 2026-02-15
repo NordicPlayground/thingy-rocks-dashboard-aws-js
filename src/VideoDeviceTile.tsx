@@ -263,7 +263,6 @@ const StreamPreviewWithPlay = ({
 	const [segmentRecordedAt, setSegmentRecordedAt] = useState<Date | null>(null)
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const hlsRef = useRef<Hls | null>(null)
-	const hasFragProgramDateTimeRef = useRef(false)
 
 	const stopPlaying = useCallback(() => {
 		if (hlsRef.current) {
@@ -277,7 +276,6 @@ const StreamPreviewWithPlay = ({
 		setIsPlaying(false)
 		setHlsUrl(null)
 		setSegmentRecordedAt(null)
-		hasFragProgramDateTimeRef.current = false
 	}, [])
 
 	const handlePlayClick = useCallback(async () => {
@@ -336,7 +334,6 @@ const StreamPreviewWithPlay = ({
 			hls.on(Hls.Events.FRAG_CHANGED, (_, data) => {
 				const pdt = data.frag.programDateTime
 				if (typeof pdt === 'number') {
-					hasFragProgramDateTimeRef.current = true
 					setSegmentRecordedAt(new Date(pdt))
 				}
 			})
@@ -365,35 +362,6 @@ const StreamPreviewWithPlay = ({
 		}
 		return
 	}, [isPlaying, hlsUrl])
-
-	// Update displayed segment timestamp from the currently shown fragment's record time.
-	// HLS.js: FRAG_CHANGED provides the fragment's programDateTime (start only, no interpolation).
-	// Fallback: timeupdate with playingDate or calculated wall-clock when FRAG_CHANGED hasn't fired
-	// or stream lacks programDateTime (ensures timestamp is visible).
-	const playbackStartMs = startTimestamp.getTime() - playbackStartOffsetMs
-	useEffect(() => {
-		if (!isPlaying) return
-		const video = videoRef.current
-		const hls = hlsRef.current
-		if (video === null) return
-
-		const onTimeUpdate = () => {
-			// Skip if HLS.js already provides fragment programDateTime
-			if (hls !== null && hasFragProgramDateTimeRef.current) return
-
-			const fragmentDate = hls?.playingDate ?? null
-			if (fragmentDate !== null) {
-				setSegmentRecordedAt(fragmentDate)
-			} else {
-				const wallClockMs = playbackStartMs + video.currentTime * 1000
-				setSegmentRecordedAt(new Date(wallClockMs))
-			}
-		}
-
-		onTimeUpdate()
-		video.addEventListener('timeupdate', onTimeUpdate)
-		return () => video.removeEventListener('timeupdate', onTimeUpdate)
-	}, [isPlaying, playbackStartMs])
 
 	return (
 		<div style={streamPreviewContainerStyle}>
