@@ -28,21 +28,19 @@ const LoginRequiredForStreamNote = ({
 	const { signIn } = useAuth()
 	const [status, setStatus] = useState<StreamStatus | undefined>(undefined)
 
+	const fetch = useCallback(() => {
+		fetchStreamStatus(streamArn, credentials)
+			.then((s) => setStatus(s))
+			.catch(() => setStatus(null))
+	}, [streamArn, credentials])
+
 	useEffect(() => {
 		if (isLoggedIn) return
-		let cancelled = false
 		setStatus(undefined)
-		fetchStreamStatus(streamArn, credentials)
-			.then((s) => {
-				if (!cancelled) setStatus(s)
-			})
-			.catch(() => {
-				if (!cancelled) setStatus(null)
-			})
-		return () => {
-			cancelled = true
-		}
-	}, [streamArn, credentials, isLoggedIn])
+		fetch()
+		const interval = setInterval(fetch, 60 * 1000)
+		return () => clearInterval(interval)
+	}, [fetch, isLoggedIn])
 
 	if (isLoggedIn || status !== 'active') return null
 
@@ -80,20 +78,18 @@ const StreamStatusIndicator = ({
 }) => {
 	const [status, setStatus] = useState<StreamStatus | undefined>(undefined)
 
-	useEffect(() => {
-		let cancelled = false
-		setStatus(undefined)
+	const fetch = useCallback(() => {
 		fetchStreamStatus(streamArn, credentials)
-			.then((s) => {
-				if (!cancelled) setStatus(s)
-			})
-			.catch(() => {
-				if (!cancelled) setStatus(null)
-			})
-		return () => {
-			cancelled = true
-		}
+			.then((s) => setStatus(s))
+			.catch(() => setStatus(null))
 	}, [streamArn, credentials])
+
+	useEffect(() => {
+		setStatus(undefined)
+		fetch()
+		const interval = setInterval(fetch, 60 * 1000)
+		return () => clearInterval(interval)
+	}, [fetch])
 
 	if (status === undefined) return null
 
@@ -172,25 +168,31 @@ const StreamPreview = ({ streamArn }: { streamArn: string }) => {
 		setError(null)
 		setPreview(null)
 
-		fetchLatestKinesisImage(streamArn, credentials)
-			.then((result) => {
-				if (!cancelled && result !== null) {
-					setPreview(result)
-				}
-			})
-			.catch((err) => {
-				if (!cancelled) {
-					setError(err instanceof Error ? err.message : String(err))
-				}
-			})
-			.finally(() => {
-				if (!cancelled) {
-					setLoading(false)
-				}
-			})
+		const doFetch = () => {
+			fetchLatestKinesisImage(streamArn, credentials)
+				.then((result) => {
+					if (!cancelled && result !== null) {
+						setPreview(result)
+					}
+				})
+				.catch((err) => {
+					if (!cancelled) {
+						setError(err instanceof Error ? err.message : String(err))
+					}
+				})
+				.finally(() => {
+					if (!cancelled) {
+						setLoading(false)
+					}
+				})
+		}
+
+		doFetch()
+		const interval = setInterval(doFetch, 60 * 1000)
 
 		return () => {
 			cancelled = true
+			clearInterval(interval)
 		}
 	}, [streamArn, credentials])
 
