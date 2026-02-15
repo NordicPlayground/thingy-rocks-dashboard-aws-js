@@ -263,6 +263,7 @@ const StreamPreviewWithPlay = ({
 	const [segmentRecordedAt, setSegmentRecordedAt] = useState<Date | null>(null)
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const hlsRef = useRef<Hls | null>(null)
+	const hasFragProgramDateTimeRef = useRef(false)
 
 	const stopPlaying = useCallback(() => {
 		if (hlsRef.current) {
@@ -276,6 +277,7 @@ const StreamPreviewWithPlay = ({
 		setIsPlaying(false)
 		setHlsUrl(null)
 		setSegmentRecordedAt(null)
+		hasFragProgramDateTimeRef.current = false
 	}, [])
 
 	const handlePlayClick = useCallback(async () => {
@@ -331,6 +333,13 @@ const StreamPreviewWithPlay = ({
 			hlsRef.current = hls
 			hls.loadSource(hlsUrl)
 			hls.attachMedia(video)
+			hls.on(Hls.Events.FRAG_CHANGED, (_, data) => {
+				const pdt = data.frag.programDateTime
+				if (typeof pdt === 'number') {
+					hasFragProgramDateTimeRef.current = true
+					setSegmentRecordedAt(new Date(pdt))
+				}
+			})
 			hls.on(Hls.Events.ERROR, (_, data) => {
 				if (data.fatal) {
 					hls.destroy()
@@ -357,9 +366,10 @@ const StreamPreviewWithPlay = ({
 		return
 	}, [isPlaying, hlsUrl])
 
-	// Update displayed segment timestamp from the currently shown fragment's record time
-	// Use HLS.js playingDate (fragment programDateTime) when available; fall back to
-	// calculated wall-clock time for native HLS (Safari/Edge) or streams without PDT
+	// Update displayed segment timestamp from the currently shown fragment's record time.
+	// HLS.js: FRAG_CHANGED provides the fragment's programDateTime (start only, no interpolation).
+	// Fallback: timeupdate with playingDate or calculated wall-clock when FRAG_CHANGED hasn't fired
+	// or stream lacks programDateTime (ensures timestamp is visible).
 	const playbackStartMs = startTimestamp.getTime() - playbackStartOffsetMs
 	useEffect(() => {
 		if (!isPlaying) return
@@ -368,6 +378,9 @@ const StreamPreviewWithPlay = ({
 		if (video === null) return
 
 		const onTimeUpdate = () => {
+			// Skip if HLS.js already provides fragment programDateTime
+			if (hls !== null && hasFragProgramDateTimeRef.current) return
+
 			const fragmentDate = hls?.playingDate ?? null
 			if (fragmentDate !== null) {
 				setSegmentRecordedAt(fragmentDate)
