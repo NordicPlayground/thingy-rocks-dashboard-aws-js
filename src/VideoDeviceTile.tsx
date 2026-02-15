@@ -357,16 +357,24 @@ const StreamPreviewWithPlay = ({
 		return
 	}, [isPlaying, hlsUrl])
 
-	// Update displayed segment timestamp as playback progresses
+	// Update displayed segment timestamp from the currently shown fragment's record time
+	// Use HLS.js playingDate (fragment programDateTime) when available; fall back to
+	// calculated wall-clock time for native HLS (Safari/Edge) or streams without PDT
 	const playbackStartMs = startTimestamp.getTime() - playbackStartOffsetMs
 	useEffect(() => {
 		if (!isPlaying) return
 		const video = videoRef.current
+		const hls = hlsRef.current
 		if (video === null) return
 
 		const onTimeUpdate = () => {
-			const wallClockMs = playbackStartMs + video.currentTime * 1000
-			setSegmentRecordedAt(new Date(wallClockMs))
+			const fragmentDate = hls?.playingDate ?? null
+			if (fragmentDate !== null) {
+				setSegmentRecordedAt(fragmentDate)
+			} else {
+				const wallClockMs = playbackStartMs + video.currentTime * 1000
+				setSegmentRecordedAt(new Date(wallClockMs))
+			}
 		}
 
 		onTimeUpdate()
