@@ -35,3 +35,5 @@ declare const MODEM_FIRMWARE_RELEASE_91x: string
 interface ImportMeta {
 	readonly env: ImportMetaEnv
 }
+
+declare module '*.css'
