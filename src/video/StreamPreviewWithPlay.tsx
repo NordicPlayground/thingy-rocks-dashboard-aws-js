@@ -1,237 +1,11 @@
 import Hls from 'hls.js'
-import { AlertTriangle, LogInIcon, Play, UploadCloud, X } from 'lucide-preact'
+import { Play, X } from 'lucide-preact'
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
-import { useAuth } from './context/Auth.tsx'
-import { useDevices } from './context/Devices.js'
-import { CountryFlag } from './CountryFlag.js'
-import { LastUpdate, Title } from './DeviceList.js'
-import { DeviceName } from './DeviceName.js'
-import type { VideoDevice } from './DeviceType.ts'
-import {
-	fetchStreamStatus,
-	type StreamStatus,
-} from './dynamodb/fetchStreamStatus.js'
+import { useAuth } from '../context/Auth.tsx'
+import { useDevices } from '../context/Devices.tsx'
+import type { VideoDevice } from '../DeviceType.ts'
+import { RelativeTime } from '../RelativeTime.js'
 import { fetchKinesisHlsUrl } from './kinesis/fetchKinesisHlsUrl.js'
-import { fetchLatestKinesisImage } from './kinesis/fetchLatestImage.js'
-import { PinTile } from './PinTile.js'
-import { RelativeTime } from './RelativeTime.js'
-
-const LoginRequiredForStreamNote = ({
-	streamArn,
-	credentials,
-	isLoggedIn,
-}: {
-	streamArn: string
-	credentials: NonNullable<ReturnType<typeof useAuth>['credentials']>
-	isLoggedIn: boolean
-}) => {
-	const { signIn } = useAuth()
-	const [status, setStatus] = useState<StreamStatus | undefined>(undefined)
-
-	const fetch = useCallback(() => {
-		fetchStreamStatus(streamArn, credentials)
-			.then((s) => setStatus(s))
-			.catch(() => setStatus(null))
-	}, [streamArn, credentials])
-
-	useEffect(() => {
-		if (isLoggedIn) return
-		setStatus(undefined)
-		fetch()
-		const interval = setInterval(fetch, 60 * 1000)
-		return () => clearInterval(interval)
-	}, [fetch, isLoggedIn])
-
-	if (isLoggedIn || status !== 'active') return null
-
-	return (
-		<p class="mt-1 ms-3">
-			<small>
-				You must <LogInIcon class="me-1" />
-				<button
-					type="button"
-					onClick={() => void signIn()}
-					style={{
-						background: 'none',
-						border: 'none',
-						padding: 0,
-						font: 'inherit',
-						color: 'var(--color-nordic-blue)',
-						textDecoration: 'underline',
-						cursor: 'pointer',
-					}}
-				>
-					log in
-				</button>{' '}
-				to see the live stream.
-			</small>
-		</p>
-	)
-}
-
-const StreamStatusIndicator = ({
-	streamArn,
-	credentials,
-}: {
-	streamArn: string
-	credentials: NonNullable<ReturnType<typeof useAuth>['credentials']>
-}) => {
-	const [status, setStatus] = useState<StreamStatus | undefined>(undefined)
-
-	const fetch = useCallback(() => {
-		fetchStreamStatus(streamArn, credentials)
-			.then((s) => setStatus(s))
-			.catch(() => setStatus(null))
-	}, [streamArn, credentials])
-
-	useEffect(() => {
-		setStatus(undefined)
-		fetch()
-		const interval = setInterval(fetch, 60 * 1000)
-		return () => clearInterval(interval)
-	}, [fetch])
-
-	if (status === undefined) return null
-
-	const isActive = status === 'active'
-	return (
-		<span
-			style={{
-				width: 8,
-				height: 8,
-				borderRadius: '50%',
-				backgroundColor: isActive
-					? '#20e899'
-					: 'var(--color-nordic-middle-grey)',
-				flexShrink: 0,
-				marginRight: '0.5rem',
-			}}
-			title={isActive ? 'Stream active' : 'Stream inactive'}
-		/>
-	)
-}
-
-export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
-	const { lastUpdateTs, videoStream } = useDevices()
-	const { credentials, isLoggedIn } = useAuth()
-	const maybeLastUpdateTime = lastUpdateTs[device.id]
-	const streamArn = videoStream(device.id)
-
-	return (
-		<>
-			<Title onClick={() => {}}>
-				{streamArn !== undefined && credentials !== undefined && (
-					<StreamStatusIndicator
-						streamArn={streamArn}
-						credentials={credentials}
-					/>
-				)}
-				<span class="info">
-					<DeviceName device={device} />
-				</span>
-				<CountryFlag device={device} />
-				{maybeLastUpdateTime !== undefined && (
-					<LastUpdate title="Last update">
-						<UploadCloud strokeWidth={1} />
-						<RelativeTime time={maybeLastUpdateTime} />
-					</LastUpdate>
-				)}
-				<PinTile device={device} />
-			</Title>
-			{streamArn !== undefined && credentials !== undefined && isLoggedIn && (
-				<StreamPreview streamArn={streamArn} />
-			)}
-			{streamArn !== undefined && credentials !== undefined && !isLoggedIn && (
-				<LoginRequiredForStreamNote
-					streamArn={streamArn}
-					credentials={credentials}
-					isLoggedIn={isLoggedIn}
-				/>
-			)}
-		</>
-	)
-}
-
-const StreamPreview = ({ streamArn }: { streamArn: string }) => {
-	const [preview, setPreview] = useState<{
-		imageUrl: string
-		startTimestamp: Date
-	} | null>(null)
-	const [error, setError] = useState<string | null>(null)
-	const [loading, setLoading] = useState(true)
-	const { credentials } = useAuth()
-
-	useEffect(() => {
-		if (credentials === undefined) return
-		let cancelled = false
-		setLoading(true)
-		setError(null)
-		setPreview(null)
-
-		const doFetch = () => {
-			fetchLatestKinesisImage(streamArn, credentials)
-				.then((result) => {
-					if (!cancelled && result !== null) {
-						setPreview(result)
-					}
-				})
-				.catch((err) => {
-					if (!cancelled) {
-						setError(err instanceof Error ? err.message : String(err))
-					}
-				})
-				.finally(() => {
-					if (!cancelled) {
-						setLoading(false)
-					}
-				})
-		}
-
-		doFetch()
-		const interval = setInterval(doFetch, 60 * 1000)
-
-		return () => {
-			cancelled = true
-			clearInterval(interval)
-		}
-	}, [streamArn, credentials])
-
-	if (loading) {
-		return (
-			<p class="mt-1 ms-3">
-				<small>Loading stream…</small>
-			</p>
-		)
-	}
-
-	if (error !== null) {
-		return (
-			<p class="mt-1 ms-3">
-				<small>
-					<AlertTriangle class="me-1" />
-					{error}
-				</small>
-			</p>
-		)
-	}
-
-	if (preview === null) {
-		return (
-			<p class="mt-1 ms-3">
-				<small>No recent frame available</small>
-			</p>
-		)
-	}
-
-	return credentials !== undefined ? (
-		<StreamPreviewWithPlay
-			streamArn={streamArn}
-			imageUrl={preview.imageUrl}
-			startTimestamp={preview.startTimestamp}
-			credentials={credentials}
-		/>
-	) : null
-}
 
 const streamPreviewContainerStyle = {
 	aspectRatio: '16/9' as const,
@@ -245,17 +19,18 @@ const streamPreviewContainerStyle = {
 
 const playbackStartOffsetMs = 60 * 1000
 
-const StreamPreviewWithPlay = ({
-	streamArn,
+export const StreamPreviewWithPlay = ({
+	device,
 	imageUrl,
 	startTimestamp,
-	credentials,
 }: {
-	streamArn: string
+	device: VideoDevice
 	imageUrl: string
 	startTimestamp: Date
-	credentials: NonNullable<ReturnType<typeof useAuth>['credentials']>
 }) => {
+	const { credentials } = useAuth()
+	const { videoStream } = useDevices()
+	const streamArn = videoStream(device.id)
 	const [isPlaying, setIsPlaying] = useState(false)
 	const [hlsUrl, setHlsUrl] = useState<string | null>(null)
 	const [hlsError, setHlsError] = useState<string | null>(null)
@@ -279,7 +54,7 @@ const StreamPreviewWithPlay = ({
 	}, [])
 
 	const handlePlayClick = useCallback(async () => {
-		if (credentials === undefined) return
+		if (credentials === undefined || streamArn === undefined) return
 		setHlsLoading(true)
 		setHlsError(null)
 		try {

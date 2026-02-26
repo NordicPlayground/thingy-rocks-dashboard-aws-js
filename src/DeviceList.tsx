@@ -16,7 +16,7 @@ import { showDetails } from './hooks/useDetails.js'
 import { NordicNrplusNetworkTile } from './nordicNRPlus/NordicNrplusNetworkTile.tsx'
 import { NRPlusGatewayTile } from './nrplus/NRPlusGatewayTile.js'
 import { Tracker } from './Tracker.js'
-import { VideoDeviceTile } from './VideoDeviceTile.tsx'
+import { VideoDeviceTile } from './video/VideoDeviceTile.tsx'
 import { WirepasGatewayTile } from './wirepas/WirepasGatewayTile.js'
 
 const DeviceState = styled.section`
@@ -150,6 +150,13 @@ export const DeviceList = () => {
 			<DisconnectedWarning />
 			<ul>
 				{otherDevices.map((device) => {
+					if (isVideoDevice(device)) {
+						return (
+							<li key={device.id}>
+								<VideoDeviceTile key={device.id} device={device} />
+							</li>
+						)
+					}
 					if (isTracker(device))
 						return (
 							<li key={`device:${device.id}`}>
@@ -167,13 +174,6 @@ export const DeviceList = () => {
 						return (
 							<li key={device.id}>
 								<WirepasGatewayTile gateway={device} onCenter={center} />
-							</li>
-						)
-					}
-					if (isVideoDevice(device)) {
-						return (
-							<li key={device.id}>
-								<VideoDeviceTile key={device.id} device={device} />
 							</li>
 						)
 					}

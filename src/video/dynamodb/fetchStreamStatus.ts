@@ -1,5 +1,5 @@
 import { DynamoDBClient, GetItemCommand } from '@aws-sdk/client-dynamodb'
-import type { AWSCredentials } from '../context/Auth.tsx'
+import type { AWSCredentials } from '../../context/Auth.tsx'
 
 const regionFromStreamArn = (streamArn: string): string => {
 	const match = /arn:aws:kinesisvideo:([a-z0-9-]+):/.exec(streamArn)

@@ -11,7 +11,7 @@ import {
 	KinesisVideoArchivedMediaClient,
 	ListFragmentsCommand,
 } from '@aws-sdk/client-kinesis-video-archived-media'
-import type { AWSCredentials } from '../context/Auth.tsx'
+import type { AWSCredentials } from '../../context/Auth.tsx'
 
 /**
  * Extract region from Kinesis Video Stream ARN.
