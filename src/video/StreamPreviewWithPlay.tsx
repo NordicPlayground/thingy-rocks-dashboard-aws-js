@@ -35,7 +35,6 @@ export const StreamPreviewWithPlay = ({
 	const [hlsUrl, setHlsUrl] = useState<string | null>(null)
 	const [hlsError, setHlsError] = useState<string | null>(null)
 	const [hlsLoading, setHlsLoading] = useState(false)
-	const [segmentRecordedAt, setSegmentRecordedAt] = useState<Date | null>(null)
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const hlsRef = useRef<Hls | null>(null)
 
@@ -50,7 +49,6 @@ export const StreamPreviewWithPlay = ({
 		}
 		setIsPlaying(false)
 		setHlsUrl(null)
-		setSegmentRecordedAt(null)
 	}, [])
 
 	const handlePlayClick = useCallback(async () => {
@@ -106,12 +104,6 @@ export const StreamPreviewWithPlay = ({
 			hlsRef.current = hls
 			hls.loadSource(hlsUrl)
 			hls.attachMedia(video)
-			hls.on(Hls.Events.FRAG_CHANGED, (_, data) => {
-				const pdt = data.frag.programDateTime
-				if (typeof pdt === 'number') {
-					setSegmentRecordedAt(new Date(pdt))
-				}
-			})
 			hls.on(Hls.Events.ERROR, (_, data) => {
 				if (data.fatal) {
 					hls.destroy()
@@ -177,29 +169,6 @@ export const StreamPreviewWithPlay = ({
 					>
 						<X size={16} strokeWidth={1.5} />
 					</button>
-					{segmentRecordedAt !== null && (
-						<span
-							style={{
-								position: 'absolute',
-								top: '0.5rem',
-								left: '0.5rem',
-								color: '#ccc',
-								fontSize: '0.75rem',
-								textShadow: [
-									'0 0 2px rgba(0,0,0,1)',
-									'0 0 4px rgba(0,0,0,1)',
-									'0 1px 2px rgba(0,0,0,1)',
-									'1px 0 2px rgba(0,0,0,0.9)',
-									'-1px 0 2px rgba(0,0,0,0.9)',
-									'0 1px 2px rgba(0,0,0,0.9)',
-									'0 -1px 2px rgba(0,0,0,0.9)',
-								].join(', '),
-							}}
-							title={segmentRecordedAt.toLocaleString()}
-						>
-							{segmentRecordedAt.toLocaleString()}
-						</span>
-					)}
 				</>
 			) : (
 				<>
