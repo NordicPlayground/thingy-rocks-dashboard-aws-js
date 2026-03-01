@@ -3,7 +3,7 @@ import type { JSX } from 'preact/jsx-runtime'
 import { styled } from 'styled-components'
 import { ButtonPress } from './ButtonPress.js'
 import { ConnectionQuality } from './ConnectionQuality.js'
-import { IssuerName, Properties as PropertiesEl } from './DeviceList.js'
+import { IssuerName } from './DeviceList.js'
 import type { Device } from './DeviceType.ts'
 import { hasNUSIM, hasSoftSIM } from './DeviceType.ts'
 import { EnvironmentInfo } from './EnvironmentInfo.js'
@@ -61,7 +61,7 @@ export const TrackerSensorData = ({ device }: { device: Device }) => {
 	const { iccid } = state?.dev?.v ?? {}
 
 	return (
-		<PropertiesEl>
+		<>
 			<SignalQuality device={device} />
 			<ConnectionQuality
 				device={device}
@@ -102,6 +102,6 @@ export const TrackerSensorData = ({ device }: { device: Device }) => {
 				<UpdateWarning reported={device.state} />
 			)}
 			<Reboots device={device} />
-		</PropertiesEl>
+		</>
 	)
 }

@@ -35,7 +35,7 @@ export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 			</Title>
 			{isLoggedIn && <StreamPreview device={device} />}
 			{!isLoggedIn && <LoginRequiredForStreamNote device={device} />}
-			<Properties>
+			<Properties style={{ marginTop: '0.5em' }}>
 				<TrackerSensorData device={device} />
 			</Properties>
 		</>
