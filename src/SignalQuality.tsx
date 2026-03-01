@@ -14,6 +14,7 @@ import { styled } from 'styled-components'
 import type { Device } from './DeviceType.ts'
 import { EnergyEstimate } from './DeviceType.ts'
 import { LTEm } from './icons/LTE-m.js'
+import { LTE } from './icons/LTE.tsx'
 import { NBIot } from './icons/NBIot.js'
 
 const EnergyEstimateIcons: Record<EnergyEstimate, LucideIcon> = {
@@ -123,8 +124,8 @@ export const SignalQuality = ({ device }: { device: Device }) => {
 
 const Abbr = styled.abbr`
 	svg {
+		width: auto;
 		height: 24px;
-		width: 50px;
 		margin-right: 0.5rem;
 	}
 `
@@ -139,9 +140,16 @@ const NetworkInfo = ({ device }: { device: Device }) => {
 	const { nw, band } = device.state?.roam?.v ?? {}
 	return (
 		<Abbr title={`Band ${band}`} class="me-2">
-			{(nw?.includes('LTE-M') ?? false) ? <LTEm /> : <NBIot />}
+			<NetworkTechnologyIcon nw={nw} />
 		</Abbr>
 	)
+}
+
+const NetworkTechnologyIcon = ({ nw }: { nw?: string }) => {
+	if (nw === 'LTE') return <LTE />
+	if (nw === 'LTE-C1B') return <LTE />
+	if (nw?.includes('NB-IoT') ?? false) return <NBIot />
+	return <LTEm />
 }
 
 const NTN = () => (
