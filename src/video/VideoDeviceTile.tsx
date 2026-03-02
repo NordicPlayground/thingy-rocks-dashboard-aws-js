@@ -1,4 +1,5 @@
 import { UploadCloud } from 'lucide-preact'
+import { BoardIcon } from '../BoardIcon.tsx'
 import { useAuth } from '../context/Auth.tsx'
 import { useDevices } from '../context/Devices.tsx'
 import { CountryFlag } from '../CountryFlag.tsx'
@@ -20,6 +21,7 @@ export const VideoDeviceTile = ({ device }: { device: VideoDevice }) => {
 	return (
 		<>
 			<Title onClick={() => {}}>
+				<BoardIcon device={device} />
 				<StreamStatusIndicator device={device} />
 				<span class="info">
 					<DeviceName device={device} />
