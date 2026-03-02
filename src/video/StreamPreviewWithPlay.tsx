@@ -6,6 +6,9 @@ import { useDevices } from '../context/Devices.tsx'
 import type { VideoDevice } from '../DeviceType.ts'
 import { fetchKinesisHlsUrl } from './kinesis/fetchKinesisHlsUrl.js'
 
+const RETRY_DELAY_INITIAL_MS = 1000
+const RETRY_DELAY_MAX_MS = 30000
+
 const streamPreviewContainerStyle = {
 	aspectRatio: '16/9' as const,
 	marginTop: '0.5rem',
@@ -34,8 +37,13 @@ export const StreamPreviewWithPlay = ({
 	const [hlsLoading, setHlsLoading] = useState(false)
 	const videoRef = useRef<HTMLVideoElement>(null)
 	const hlsRef = useRef<Hls | null>(null)
+	const userWantsToPlayRef = useRef(false)
+	const retryDelayRef = useRef(RETRY_DELAY_INITIAL_MS)
+
+	userWantsToPlayRef.current = isPlaying
 
 	const stopPlaying = useCallback(() => {
+		userWantsToPlayRef.current = false
 		if (hlsRef.current) {
 			hlsRef.current.destroy()
 			hlsRef.current = null
@@ -50,6 +58,7 @@ export const StreamPreviewWithPlay = ({
 
 	const handlePlayClick = useCallback(async () => {
 		if (credentials === undefined || streamArn === undefined) return
+		retryDelayRef.current = RETRY_DELAY_INITIAL_MS
 		setHlsLoading(true)
 		setHlsError(null)
 		try {
@@ -69,6 +78,43 @@ export const StreamPreviewWithPlay = ({
 			setHlsError(err instanceof Error ? err.message : String(err))
 		} finally {
 			setHlsLoading(false)
+		}
+	}, [streamArn, credentials])
+
+	const scheduleRetry = useCallback(async () => {
+		if (
+			!userWantsToPlayRef.current ||
+			credentials === undefined ||
+			streamArn === undefined
+		) {
+			return
+		}
+		const delay = retryDelayRef.current
+		await new Promise((r) => setTimeout(r, delay))
+		if (!userWantsToPlayRef.current) return
+		setHlsError('Reconnecting…')
+		try {
+			// Omit startTimestamp to use LIVE mode and jump to the live edge
+			const url = await fetchKinesisHlsUrl(streamArn, credentials)
+			if (!userWantsToPlayRef.current) return
+			if (url !== null) {
+				retryDelayRef.current = RETRY_DELAY_INITIAL_MS
+				setHlsError(null)
+				setHlsUrl(url)
+			} else {
+				retryDelayRef.current = Math.min(
+					retryDelayRef.current * 2,
+					RETRY_DELAY_MAX_MS,
+				)
+				void scheduleRetry()
+			}
+		} catch {
+			if (!userWantsToPlayRef.current) return
+			retryDelayRef.current = Math.min(
+				retryDelayRef.current * 2,
+				RETRY_DELAY_MAX_MS,
+			)
+			void scheduleRetry()
 		}
 	}, [streamArn, credentials])
 
@@ -103,12 +149,7 @@ export const StreamPreviewWithPlay = ({
 				if (data.fatal) {
 					hls.destroy()
 					hlsRef.current = null
-					setHlsError(
-						data.type === Hls.ErrorTypes.NETWORK_ERROR
-							? 'Stream unavailable'
-							: 'Playback error',
-					)
-					setIsPlaying(false)
+					void scheduleRetry()
 				}
 			})
 			return () => {
@@ -119,11 +160,15 @@ export const StreamPreviewWithPlay = ({
 
 		// Safari and Edge have native HLS support
 		if (video.canPlayType('application/vnd.apple.mpegurl')) {
+			const onError = async () => scheduleRetry()
+			video.addEventListener('error', onError)
 			video.src = hlsUrl
-			return
+			return () => {
+				video.removeEventListener('error', onError)
+			}
 		}
 		return
-	}, [isPlaying, hlsUrl])
+	}, [isPlaying, hlsUrl, scheduleRetry])
 
 	return (
 		<div style={streamPreviewContainerStyle}>
@@ -164,6 +209,22 @@ export const StreamPreviewWithPlay = ({
 					>
 						<X size={16} strokeWidth={1.5} />
 					</button>
+					{hlsError !== null && (
+						<span
+							style={{
+								position: 'absolute',
+								bottom: '0.5rem',
+								left: '0.5rem',
+								right: '0.5rem',
+								color: 'white',
+								fontSize: '0.75rem',
+								textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+								textAlign: 'center',
+							}}
+						>
+							{hlsError}
+						</span>
+					)}
 				</>
 			) : (
 				<>
