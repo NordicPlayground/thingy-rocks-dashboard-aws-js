@@ -4,7 +4,6 @@ import { useCallback, useEffect, useRef, useState } from 'preact/hooks'
 import { useAuth } from '../context/Auth.tsx'
 import { useDevices } from '../context/Devices.tsx'
 import type { VideoDevice } from '../DeviceType.ts'
-import { RelativeTime } from '../RelativeTime.js'
 import { fetchKinesisHlsUrl } from './kinesis/fetchKinesisHlsUrl.js'
 
 const streamPreviewContainerStyle = {
@@ -17,16 +16,14 @@ const streamPreviewContainerStyle = {
 	width: '100%',
 }
 
-const playbackStartOffsetMs = 60 * 1000
+const playbackStartOffsetMs = 10 * 1000
 
 export const StreamPreviewWithPlay = ({
 	device,
 	imageUrl,
-	startTimestamp,
 }: {
 	device: VideoDevice
 	imageUrl: string
-	startTimestamp: Date
 }) => {
 	const { credentials } = useAuth()
 	const { videoStream } = useDevices()
@@ -56,9 +53,7 @@ export const StreamPreviewWithPlay = ({
 		setHlsLoading(true)
 		setHlsError(null)
 		try {
-			const playbackStart = new Date(
-				startTimestamp.getTime() - playbackStartOffsetMs,
-			)
+			const playbackStart = new Date(Date.now() - playbackStartOffsetMs)
 			const url = await fetchKinesisHlsUrl(
 				streamArn,
 				credentials,
@@ -75,7 +70,7 @@ export const StreamPreviewWithPlay = ({
 		} finally {
 			setHlsLoading(false)
 		}
-	}, [streamArn, credentials, startTimestamp])
+	}, [streamArn, credentials])
 
 	useEffect(() => {
 		if (!isPlaying || hlsUrl === null) {
@@ -211,29 +206,6 @@ export const StreamPreviewWithPlay = ({
 							<Play size={32} fill="currentColor" strokeWidth={1.5} />
 						)}
 					</button>
-					<span
-						style={{
-							position: 'absolute',
-							bottom: '20%',
-							left: '0',
-							color: '#ccc',
-							fontSize: '0.75rem',
-							textShadow: [
-								'0 0 2px rgba(0,0,0,1)',
-								'0 0 4px rgba(0,0,0,1)',
-								'0 1px 2px rgba(0,0,0,1)',
-								'1px 0 2px rgba(0,0,0,0.9)',
-								'-1px 0 2px rgba(0,0,0,0.9)',
-								'0 1px 2px rgba(0,0,0,0.9)',
-								'0 -1px 2px rgba(0,0,0,0.9)',
-							].join(', '),
-							width: '100%',
-							textAlign: 'center',
-						}}
-						title={startTimestamp.toLocaleString()}
-					>
-						<RelativeTime time={startTimestamp} /> ago
-					</span>
 					{hlsError !== null && (
 						<span
 							style={{

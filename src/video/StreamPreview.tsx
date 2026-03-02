@@ -84,11 +84,5 @@ export const StreamPreview = ({ device }: { device: VideoDevice }) => {
 		)
 	}
 
-	return (
-		<StreamPreviewWithPlay
-			device={device}
-			imageUrl={preview.imageUrl}
-			startTimestamp={preview.startTimestamp}
-		/>
-	)
+	return <StreamPreviewWithPlay device={device} imageUrl={preview.imageUrl} />
 }

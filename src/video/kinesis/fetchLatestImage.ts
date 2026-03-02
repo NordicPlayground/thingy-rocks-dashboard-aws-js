@@ -68,18 +68,18 @@ export const fetchLatestKinesisImage = async (
 		credentials,
 	})
 
-	// Query the latest available fragment, searching backwards in 15-minute windows
+	// Query the latest available fragment, searching backwards in 1-minute windows
 	// until we find fragments or the start timestamp is older than 24 hours
 	const listNow = Date.now()
 	const twentyFourHoursAgo = listNow - 24 * 60 * 60 * 1000
-	const fifteenMinutes = 15 * 60 * 1000
+	const oneMinute = 1 * 60 * 1000
 
 	let listEndTs = listNow
 	let latestFragment: { ServerTimestamp?: Date } | null = null
 	let listStartTs: number
 
 	do {
-		listStartTs = listEndTs - fifteenMinutes
+		listStartTs = listEndTs - oneMinute
 		if (listStartTs >= twentyFourHoursAgo) {
 			const { Fragments } = await listMediaClient.send(
 				new ListFragmentsCommand({
