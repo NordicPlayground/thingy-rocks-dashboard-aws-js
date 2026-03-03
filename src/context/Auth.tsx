@@ -99,11 +99,26 @@ export const Provider = ({
 
 	useEffect(() => {
 		if (initializing) return
-		// Fetches credentials for authenticated users, or unauthenticated (guest)
-		// role when not logged in (requires identityPoolId + allowGuestAccess in Amplify config)
-		fetchAuthSession()
-			.then((res) => setCredentials(res.credentials))
-			.catch(console.error)
+		let refreshTimer: ReturnType<typeof setTimeout> | undefined
+
+		const refresh = (forceRefresh = false) => {
+			fetchAuthSession(forceRefresh ? { forceRefresh: true } : undefined)
+				.then((res) => {
+					setCredentials(res.credentials)
+					// Schedule next refresh before the credentials expire
+					const expiration = res.credentials?.expiration
+					if (expiration !== undefined) {
+						const msUntilExpiry = expiration.getTime() - Date.now()
+						// Refresh 5 minutes before expiry (or immediately if already close)
+						const refreshIn = Math.max(msUntilExpiry - 5 * 60_000, 0)
+						refreshTimer = setTimeout(() => refresh(true), refreshIn)
+					}
+				})
+				.catch(console.error)
+		}
+
+		refresh()
+		return () => clearTimeout(refreshTimer)
 	}, [initializing])
 
 	return (
