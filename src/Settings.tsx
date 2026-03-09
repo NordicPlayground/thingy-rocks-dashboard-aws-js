@@ -18,12 +18,7 @@ const SettingsPanel = styled.aside`
 
 export const Settings = () => {
 	const {
-		settings: {
-			showSettings,
-			enableTestDevice,
-			showFavorites,
-			showUpdateWarning,
-		},
+		settings: { showSettings, enableTestDevice, showFavorites },
 		update,
 		reset,
 	} = useSettings()
@@ -69,19 +64,6 @@ export const Settings = () => {
 						/>
 						<label class="form-check-label" htmlFor="showTestDevice">
 							Show test device?
-						</label>
-					</div>
-					<h2 class="h4 mt-4">Devices</h2>
-					<div class="form-check mt-2">
-						<input
-							class="form-check-input"
-							type="checkbox"
-							id="showUpdateWarning"
-							checked={showUpdateWarning}
-							onClick={() => update({ showUpdateWarning: !showUpdateWarning })}
-						/>
-						<label class="form-check-label" htmlFor="showUpdateWarning">
-							Show firmware update warning?
 						</label>
 					</div>
 				</div>

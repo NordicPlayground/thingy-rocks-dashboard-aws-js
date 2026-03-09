@@ -6,7 +6,6 @@ type Settings = {
 	showFavorites: boolean
 	showSettings: boolean
 	favorites: string[]
-	showUpdateWarning: boolean
 	managementCodes: Record<string, string>
 }
 
@@ -15,7 +14,6 @@ const defaultSettings: Settings = {
 	showFavorites: false,
 	showSettings: false,
 	favorites: [],
-	showUpdateWarning: true,
 	managementCodes: {},
 }
 

@@ -10,8 +10,6 @@ import { EnvironmentInfo } from './EnvironmentInfo.js'
 import { FuelGauge } from './FuelGauge.js'
 import { LocationInfo } from './LocationInfo.js'
 import { SignalQuality } from './SignalQuality.js'
-import { UpdateWarning } from './UpdateWarning.js'
-import { useSettings } from './context/Settings.js'
 import { showDetails } from './hooks/useDetails.js'
 import { NuSIMIcon } from './icons/NuSIMIcon.js'
 import { SIMIcon } from './icons/SIMIcon.js'
@@ -52,10 +50,6 @@ const SIMTechnology = ({ device }: { device: Device }): JSX.Element => {
 }
 
 export const TrackerSensorData = ({ device }: { device: Device }) => {
-	const {
-		settings: { showUpdateWarning },
-	} = useSettings()
-
 	const { state } = device
 	const buttonPress = state?.btn
 	const { iccid } = state?.dev?.v ?? {}
@@ -98,9 +92,6 @@ export const TrackerSensorData = ({ device }: { device: Device }) => {
 				/>
 			)}
 			<LocationInfo device={device} />
-			{showUpdateWarning && device.state !== undefined && (
-				<UpdateWarning reported={device.state} />
-			)}
 			<Reboots device={device} />
 		</>
 	)
