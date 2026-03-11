@@ -8,6 +8,8 @@ import { fetchKinesisHlsUrl } from './kinesis/fetchKinesisHlsUrl.js'
 
 const RETRY_DELAY_INITIAL_MS = 1000
 const RETRY_DELAY_MAX_MS = 30000
+const NO_FRAGMENTS_ERROR = 'No fragments found in the stream'
+const POLL_FOR_FRAGMENTS_INTERVAL_MS = 20_000
 
 const streamPreviewContainerStyle = {
 	aspectRatio: '16/9' as const,
@@ -56,6 +58,35 @@ export const StreamPreviewWithPlay = ({
 		setHlsUrl(null)
 	}, [])
 
+	const pollForFragments = useCallback(async () => {
+		if (credentials === undefined || streamArn === undefined) return
+		await new Promise((r) => setTimeout(r, POLL_FOR_FRAGMENTS_INTERVAL_MS))
+		if (!userWantsToPlayRef.current) return
+
+		try {
+			const playbackStart = new Date(Date.now() - playbackStartOffsetMs)
+			const url = await fetchKinesisHlsUrl(
+				streamArn,
+				credentials,
+				playbackStart,
+			)
+			if (!userWantsToPlayRef.current) return
+			if (url !== null) {
+				setHlsError(null)
+				setHlsUrl(url)
+				return
+			}
+		} catch (err) {
+			if (!userWantsToPlayRef.current) return
+			const msg = err instanceof Error ? err.message : String(err)
+			if (!msg.includes(NO_FRAGMENTS_ERROR)) {
+				setHlsError(msg)
+				return
+			}
+		}
+		void pollForFragments()
+	}, [streamArn, credentials])
+
 	const handlePlayClick = useCallback(async () => {
 		if (credentials === undefined || streamArn === undefined) return
 		retryDelayRef.current = RETRY_DELAY_INITIAL_MS
@@ -75,11 +106,18 @@ export const StreamPreviewWithPlay = ({
 			setHlsUrl(url)
 			setIsPlaying(true)
 		} catch (err) {
-			setHlsError(err instanceof Error ? err.message : String(err))
+			const msg = err instanceof Error ? err.message : String(err)
+			if (msg.includes(NO_FRAGMENTS_ERROR)) {
+				setIsPlaying(true)
+				setHlsError('Waiting for stream data…')
+				void pollForFragments()
+			} else {
+				setHlsError(msg)
+			}
 		} finally {
 			setHlsLoading(false)
 		}
-	}, [streamArn, credentials])
+	}, [streamArn, credentials, pollForFragments])
 
 	const scheduleRetry = useCallback(async () => {
 		if (
@@ -108,15 +146,21 @@ export const StreamPreviewWithPlay = ({
 				)
 				void scheduleRetry()
 			}
-		} catch {
+		} catch (err) {
 			if (!userWantsToPlayRef.current) return
-			retryDelayRef.current = Math.min(
-				retryDelayRef.current * 2,
-				RETRY_DELAY_MAX_MS,
-			)
-			void scheduleRetry()
+			const msg = err instanceof Error ? err.message : String(err)
+			if (msg.includes(NO_FRAGMENTS_ERROR)) {
+				setHlsError('Waiting for stream data…')
+				void pollForFragments()
+			} else {
+				retryDelayRef.current = Math.min(
+					retryDelayRef.current * 2,
+					RETRY_DELAY_MAX_MS,
+				)
+				void scheduleRetry()
+			}
 		}
-	}, [streamArn, credentials])
+	}, [streamArn, credentials, pollForFragments])
 
 	useEffect(() => {
 		if (!isPlaying || hlsUrl === null) {
