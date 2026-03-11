@@ -1,3 +1,4 @@
+import type { FeatureCollection } from 'geojson'
 import { isEqual } from 'lodash-es'
 import type {
 	GeoJSONSource,
@@ -248,7 +249,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 				// Update existing sources
 				;(areaSource as GeoJSONSource).setData(
 					geoJSONPolygonFromCircle([lng, lat], accuracy ?? 500, 6, Math.PI / 2)
-						.data as GeoJSON.FeatureCollection,
+						.data as FeatureCollection,
 				)
 				;(map.getSource(centerSourceId) as GeoJSONSource)?.setData({
 					type: 'Feature',
