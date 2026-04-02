@@ -44,7 +44,7 @@
     "date-fns": "4.1.0",
     "e118-iin-list": "4.5.0",
     "hls.js": "1.6.15",
-    "lodash-es": "4.17.23",
+    "lodash-es": "4.18.1",
     "lucide-preact": "0.577.0",
     "maplibre-gl": "5.20.0",
     "preact": "10.29.0",
