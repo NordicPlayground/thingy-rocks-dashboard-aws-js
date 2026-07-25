@@ -49,7 +49,7 @@
     "maplibre-gl": "5.20.0",
     "preact": "10.29.0",
     "preact-router": "4.1.2",
-    "styled-components": "6.3.11",
+    "styled-components": "6.4.4",
     "svg-country-flags": "1.2.10"
   },
   "devDependencies": {
