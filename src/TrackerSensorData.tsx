@@ -8,13 +8,14 @@ import type { Device } from './DeviceType.ts'
 import { hasNUSIM, hasSoftSIM } from './DeviceType.ts'
 import { EnvironmentInfo } from './EnvironmentInfo.js'
 import { FuelGauge } from './FuelGauge.js'
-import { LocationInfo } from './LocationInfo.js'
-import { SignalQuality } from './SignalQuality.js'
 import { showDetails } from './hooks/useDetails.js'
 import { NuSIMIcon } from './icons/NuSIMIcon.js'
 import { SIMIcon } from './icons/SIMIcon.js'
 import { SoftSIMIcon } from './icons/SoftSIMIcon.js'
+import { LocationInfo } from './LocationInfo.js'
 import { Reboots } from './memfault/Reboots.js'
+import { NTNObservation } from './NTNObservation.tsx'
+import { SignalQuality } from './SignalQuality.js'
 
 const StyledSIMIcon = styled(SIMIcon)`
 	width: 20px;
@@ -63,6 +64,7 @@ export const TrackerSensorData = ({ device }: { device: Device }) => {
 					showDetails(device.id)
 				}}
 			/>
+			<NTNObservation device={device} />
 			{iccid !== undefined && (
 				<>
 					<dt>
