@@ -23,7 +23,7 @@
   "scripts": {
     "start": "vite",
     "build": "node --max_old_space_size=8192 ./node_modules/vite/bin/vite.js build --emptyOutDir",
-    "prepare": "husky",
+    "prepare": "husky && case \"$npm_command\" in install|ci) check-node-version --package ;; esac",
     "postinstall": "cp -r node_modules/svg-country-flags/svg/ static/flags",
     "test": "node --no-warnings --experimental-transform-types --test \"!(node_modules)/**/*.spec.ts\"",
     "test:watch": "node --no-warnings --experimental-transform-types --test --watch \"!(node_modules)/**/*.spec.ts\""
@@ -66,6 +66,7 @@
     "@typescript/native-preview": "7.0.0-dev.20260311.1",
     "bootstrap": "5.3.8",
     "chalk": "5.6.2",
+    "check-node-version": "4.2.1",
     "commitlint": "20.4.3",
     "handlebars": "4.7.8",
     "husky": "9.1.7",
@@ -76,8 +77,8 @@
     "vite": "7.3.1"
   },
   "engines": {
-    "node": ">=22",
-    "npm": ">=10"
+    "node": ">=24.19.0 <25",
+    "npm": ">=12.0.2 <13"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
