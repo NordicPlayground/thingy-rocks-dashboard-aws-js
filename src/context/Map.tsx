@@ -1,11 +1,15 @@
-import type { FeatureCollection } from 'geojson'
 import { isEqual } from 'lodash-es'
 import type {
 	GeoJSONSource,
 	LngLatLike,
 	PropertyValueSpecification,
 } from 'maplibre-gl'
-import { AttributionControl, Map as MapLibreGlMap } from 'maplibre-gl'
+import {
+	AttributionControl,
+	Map as MapLibreGlMap,
+	setWorkerUrl,
+} from 'maplibre-gl'
+import maplibreWorkerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext } from 'preact/hooks'
 import { locationSourceColors } from '../colors.js'
@@ -247,17 +251,17 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 				})
 			} else {
 				// Update existing sources
-				;(areaSource as GeoJSONSource).setData(
+				void (areaSource as GeoJSONSource).setData(
 					geoJSONPolygonFromCircle([lng, lat], accuracy ?? 500, 6, Math.PI / 2)
-						.data as FeatureCollection,
+						.data,
 				)
-				;(map.getSource(centerSourceId) as GeoJSONSource)?.setData({
+				void (map.getSource(centerSourceId) as GeoJSONSource)?.setData({
 					type: 'Feature',
 					geometry: {
 						type: 'Point',
 						coordinates: [lng, lat],
 					},
-				} as GeoJSON.Feature)
+				})
 			}
 		},
 		removeDeviceLocation: ({ deviceId, location }) => {
@@ -379,6 +383,7 @@ const deviceMap = (map: MapLibreGlMap | undefined): DeviceMap => {
 }
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
+	setWorkerUrl(maplibreWorkerUrl)
 	const map = new MapLibreGlMap({
 		container: 'map',
 		style: `https://maps.geo.${REGION}.amazonaws.com/v2/styles/${style}/descriptor?key=${MAP_API_KEY}&color-scheme=${colorScheme}`,

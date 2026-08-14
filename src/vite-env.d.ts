@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 // These constants are string-replaced compile time.
 // See https://vitejs.dev/config/shared-options.html#define
 declare const WEBSOCKET_ENDPOINT: string
