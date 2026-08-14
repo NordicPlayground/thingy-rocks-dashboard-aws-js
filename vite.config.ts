@@ -103,6 +103,9 @@ export default defineConfig({
 			},
 		],
 	},
+	optimizeDeps: {
+		exclude: ['maplibre-gl'],
+	},
 	build: {
 		outDir: './build',
 		sourcemap: true,
@@ -113,9 +116,6 @@ export default defineConfig({
 				'wirepas-topology': path.join(process.cwd(), 'wirepas-topology.html'),
 			},
 		},
-	},
-	esbuild: {
-		logOverride: { 'this-is-undefined-in-esm': 'silent' },
 	},
 	// string values will be used as raw expressions, so if defining a string constant, it needs to be explicitly quoted
 	define: {
