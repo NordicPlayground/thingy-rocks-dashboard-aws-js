@@ -10,10 +10,12 @@ import { ThingyIcon } from './icons/ThingyIcon.js'
 import { ThingyXIcon } from './icons/ThingyXIcon.js'
 
 export const BoardIcon = ({ device }: { device: Device }) => {
-	if ((device.id, device.state?.roam?.v?.mccmnc === 90197))
+	if (device.state?.roam?.v?.mccmnc === 90129)
+		return <MyriotaIcon class="icon" />
+	if (device.state?.roam?.v?.mccmnc === 90197)
 		return <SateliotIcon class="icon" style={{ padding: '2px 0' }} />
 	const brdV = device.state?.dev?.v?.brdV
-	if ((device.id, device.state?.roam?.v?.mccmnc === 90103))
+	if (device.state?.roam?.v?.mccmnc === 90103)
 		return <IridiumIcon class="icon" />
 	if (isVideoDevice(device)) return <NRF93 class="icon" />
 	if (brdV?.includes('keysight') ?? false) return <KeysightIcon class="icon" />
