@@ -1,4 +1,4 @@
-import { Cpu, Leaf, Network, Signal, UploadCloud } from 'lucide-preact'
+import { Cpu, Leaf, Network, Radio, Signal, UploadCloud } from 'lucide-preact'
 import { useEffect, useMemo } from 'preact/hooks'
 import { styled } from 'styled-components'
 import { ButtonPress } from '../ButtonPress.tsx'
@@ -11,12 +11,16 @@ import type {
 	NordicNrplusButtonPress,
 	NordicNrplusDevice,
 } from '../DeviceType.ts'
-import { hideDetails } from '../hooks/useDetails.ts'
+import { EnvironmentInfo } from '../EnvironmentInfo.tsx'
+import { FuelGauge } from '../FuelGauge.tsx'
+import { hideDetails, showDetails } from '../hooks/useDetails.ts'
 import { LocationInfo } from '../LocationInfo.tsx'
 import { withCancel } from '../nrplus/cancelEvent.ts'
 import { NRPlus } from '../nrplus/NRPlusIcon.tsx'
 import { PinTile } from '../PinTile.tsx'
 import { RelativeTime } from '../RelativeTime.tsx'
+import { LedIndicator } from './LedIndicator.tsx'
+import { addressDetails, linkDetails } from './linkDetails.ts'
 
 const DevicesList = styled.div`
 	margin-top: 0.5rem;
@@ -43,10 +47,44 @@ const DeviceInfo = styled.div`
 	width: 100%;
 `
 
-const LocationWrapper = styled.div`
+// Keep the values next to their icons instead of spreading the columns.
+// Do not use styled(Properties): DeviceList imports this file, so Properties is
+// not initialized yet when this module is evaluated.
+const LeafProperties = styled.div`
+	> dl {
+		grid-template-columns: auto 1fr;
+		align-items: center;
+	}
+`
+
+// The pin button is centered, the LED sits on the same vertical axis at the
+// height of the device name
+const RightColumn = styled.div`
+	position: relative;
+	display: flex;
+	align-self: stretch;
+	align-items: center;
+	justify-content: center;
+`
+
+const LedSlot = styled.div`
+	position: absolute;
+	top: 0.35rem;
+	left: 50%;
+	transform: translateX(-50%);
+`
+
+const SignalRow = styled.div`
 	display: flex;
 	align-items: center;
-	gap: 0.25rem;
+`
+
+// The button press as it was before: icon above the time, next to the signal
+const ButtonSlot = styled.div`
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-left: 1.5rem;
 `
 
 const DeviceNameWrapper = styled.div`
@@ -126,6 +164,12 @@ export const NordicNrplusNetworkTile = ({
 		return deviceTime > latestTime ? device : latest
 	}, devices[0])
 
+	// Band and channel are the same for the whole network
+	const { band, channel } =
+		devices
+			.map((device) => device.state?.nordicNrplus?.connectionProfile)
+			.find((profile) => profile?.band !== undefined) ?? {}
+
 	const lastUpdateTime = mostRecentDevice
 		? lastUpdateTs[mostRecentDevice.id]
 		: undefined
@@ -142,18 +186,15 @@ export const NordicNrplusNetworkTile = ({
 		hideDetails()
 	})
 
-	const networkSinkRSSI = useMemo(
+	const networkSinkSignal = useMemo(
 		() =>
 			new Map(
 				leafDevices.map((device) => {
 					const nordicData = device.state?.nordicNrplus
-					return [
-						device.id,
+					const toSink =
 						nordicData?.neighbors[0]?.neighborId ===
 						sinkDevice?.state?.nordicNrplus.connectionProfile?.longRdId
-							? nordicData?.neighbors[0]?.rssi
-							: null,
-					]
+					return [device.id, toSink ? nordicData?.neighbors[0] : undefined]
 				}),
 			),
 		[leafDevices],
@@ -185,7 +226,14 @@ export const NordicNrplusNetworkTile = ({
 		<>
 			<Title onClick={handleClick}>
 				<NRPlus class="icon" />
-				{sinkDevice && <DeviceName device={sinkDevice} />}
+				{sinkDevice && (
+					<DeviceName
+						device={sinkDevice}
+						details={addressDetails(
+							sinkDevice.state?.nordicNrplus.connectionProfile,
+						)}
+					/>
+				)}
 				<SinkInfo>
 					{lastUpdateTime !== undefined && (
 						<LastUpdate title="Last update">
@@ -205,49 +253,101 @@ export const NordicNrplusNetworkTile = ({
 					<Network size={16} />
 				</dt>
 				{`NR+ Network ${networkId}`}
+				{band !== undefined && channel !== undefined && (
+					<>
+						<dt>
+							<Radio size={16} />
+						</dt>
+						{`Channel ${channel} (Band ${band})`}
+					</>
+				)}
 				{sinkDevice && <LocationInfo device={sinkDevice} />}
 			</Properties>
 			<DevicesList>
 				{leafDevices.map((device) => {
-					const sinkRssi = networkSinkRSSI.get(device.id)
+					const sinkSignal = networkSinkSignal.get(device.id)
+					const sinkRssi = sinkSignal?.rssi
 					const buttonPressList = deviceButtonPresses.get(device.id)
 					const connectionProfile = connectionProfiles.get(device.id)
+					const buttonPresses = buttonPressList !== undefined && (
+						<ButtonSlot>
+							{Object.entries(buttonPressList).map(
+								([, press]: [string, NordicNrplusButtonPress]) => (
+									<ButtonPress
+										key={`${device.id}-press-${press.ts}`}
+										buttonPress={press}
+									/>
+								),
+							)}
+						</ButtonSlot>
+					)
 					return (
 						<DeviceItem key={device.id}>
 							<DeviceInfo>
 								<DeviceNameWrapper>
 									<Leaf size={16} />
-									<DeviceName device={device} />
+									<DeviceName
+										device={device}
+										details={addressDetails(connectionProfile)}
+									/>
 								</DeviceNameWrapper>
 								{connectionProfile && (
-									<Properties>
-										{/* Show signal strength to sink */}
-										{sinkRssi != null && (
-											<>
-												<dt>
-													<Signal size={16} />
-													<dd>{sinkRssi} dBm</dd>
-												</dt>
-											</>
-										)}
-										<dd>
-											{buttonPressList &&
-												Object.entries(buttonPressList).map(
-													([, press]: [string, NordicNrplusButtonPress]) => (
-														<ButtonPress
-															key={`${device.id}-press-${press.ts}`}
-															buttonPress={press}
-														/>
-													),
-												)}
-										</dd>
-										<LocationWrapper>
+									<LeafProperties>
+										<Properties>
+											{/* Show signal strength to sink, and the button press next to it */}
+											{sinkRssi != null ? (
+												<>
+													<dt>
+														<Signal size={16} />
+													</dt>
+													<dd>
+														<SignalRow>
+															<span
+																title={
+																	sinkSignal !== undefined
+																		? linkDetails(sinkSignal)
+																		: undefined
+																}
+															>
+																{sinkRssi} dBm
+																{sinkSignal?.snr !== undefined &&
+																	` (SNR ${sinkSignal.snr} dB)`}
+															</span>
+															{buttonPresses}
+														</SignalRow>
+													</dd>
+												</>
+											) : (
+												<>
+													<dt />
+													<dd>{buttonPresses}</dd>
+												</>
+											)}
+											<EnvironmentInfo
+												device={device}
+												onClick={() => {
+													showDetails(device.id)
+												}}
+											/>
+											{device.state?.fg !== undefined && (
+												<FuelGauge
+													fg={device.state.fg}
+													onClick={() => {
+														showDetails(device.id)
+													}}
+												/>
+											)}
 											<LocationInfo device={device} />
-										</LocationWrapper>
-									</Properties>
+										</Properties>
+									</LeafProperties>
 								)}
 							</DeviceInfo>
-							<PinTile device={device} />
+							<RightColumn>
+								<LedSlot>
+									<LedIndicator led={device.state?.led} />
+								</LedSlot>
+								<PinTile device={device} />
+							</RightColumn>
 						</DeviceItem>
 					)
 				})}

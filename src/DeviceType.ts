@@ -144,6 +144,17 @@ export type Reported = Partial<{
 		}
 		ts: number // 1563968747123
 	}
+	// RGB LED (first instance), brightness levels 0..255
+	led: {
+		v: {
+			red: number
+			green: number
+			blue: number
+			mode?: string // e.g. 'breathe', 'blink', 'steady', 'off'
+			period?: number // ms, duration of one cycle of the effect
+		}
+		ts: number
+	}
 	// Nordic NR+ specific data
 	nordicNrplus: {
 		neighbors: Record<string, NordicNrplusNeighbor>
@@ -253,6 +264,15 @@ export type WirepasGateway = {
 export type NordicNrplusNeighbor = {
 	neighborId: number
 	rssi?: number // Radio Signal Strength in dBm
+	snr?: number // Signal-to-noise ratio in dB
+	rxMcs?: number // MCS the neighbor uses towards this device
+	txPower?: number // dBm, used by this device
+	neighborTxPower?: number // dBm, used by the neighbor
+	// The counters are taken from the modem's statistics window, they are not totals
+	txAttempts?: number
+	harqNack?: number
+	missedBeacons?: number
+	lastSeen?: number // seconds since the last reception, saturates at 65535
 	ts: number
 }
 
@@ -260,6 +280,10 @@ export type NordicNrplusConnectionProfile = {
 	longRdId: number
 	networkId: number
 	operationalMode: string
+	band?: number // DECT NR+ band
+	channel?: number // DECT NR+ channel
+	globalIpv6?: string
+	linkLocalIpv6?: string
 	ts: number
 }
 
@@ -296,11 +320,15 @@ export type Summary = {
 	bat?: Array<Reading>
 	temp?: Array<Reading>
 	hPa?: Array<Reading>
+	hum?: Array<Reading> // Humidity in percent
 	// Fuel gauge readings, see https://github.com/NordicSemiconductor/asset-tracker-cloud-docs/blob/4713549af719a7e119324853aa117d752ac856e3/docs/cloud-protocol/Reported.ts#L111
 	fgSoC?: Array<Reading>
 	fgI?: Array<Reading>
 	// Latency
 	cqLatency?: Array<Reading>
+	// DECT NR+: link to the parent device
+	rssi?: Array<Reading> // dBm
+	snr?: Array<Reading> // dB
 }
 
 export const isTracker = (device: Device): boolean => {
