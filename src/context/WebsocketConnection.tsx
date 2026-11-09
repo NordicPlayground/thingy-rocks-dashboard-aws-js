@@ -23,15 +23,17 @@ export const WebsocketContext = createContext<{
 	removeMessageListener: () => undefined,
 })
 
-export enum MessageContext {
-	DeviceShadow = 'https://thingy.rocks/device-shadow',
-	DeviceMessage = 'https://thingy.rocks/device-message',
-	DeviceLocation = 'https://thingy.rocks/device-location',
-	DeviceHistory = 'https://thingy.rocks/device-history',
-	LwM2MShadows = 'https://thingy.rocks/lwm2m-shadows',
-	MemfaultReboot = 'https://thingy.rocks/memfault-reboot',
-	LwM2MUpdate = 'https://thingy.rocks/lwm2m-update',
-}
+export const MessageContext = {
+	DeviceShadow: 'https://thingy.rocks/device-shadow',
+	DeviceMessage: 'https://thingy.rocks/device-message',
+	DeviceLocation: 'https://thingy.rocks/device-location',
+	DeviceHistory: 'https://thingy.rocks/device-history',
+	LwM2MShadows: 'https://thingy.rocks/lwm2m-shadows',
+	MemfaultReboot: 'https://thingy.rocks/memfault-reboot',
+	LwM2MUpdate: 'https://thingy.rocks/lwm2m-update',
+} as const
+export type MessageContext =
+	(typeof MessageContext)[keyof typeof MessageContext]
 
 type Message = {
 	'@context': MessageContext
@@ -43,31 +45,31 @@ type Message = {
 	kinesisVideoStreamArn?: string
 } & (
 	| {
-			'@context': MessageContext.DeviceLocation
+			'@context': typeof MessageContext.DeviceLocation
 			location: GeoLocation
 			ts: number
 	  }
 	| {
-			'@context': MessageContext.DeviceShadow
+			'@context': typeof MessageContext.DeviceShadow
 			reported: Reported
 	  }
 	| {
-			'@context': MessageContext.DeviceMessage
+			'@context': typeof MessageContext.DeviceMessage
 			message: Reported
 	  }
 	| {
-			'@context': MessageContext.DeviceHistory
+			'@context': typeof MessageContext.DeviceHistory
 			history: Summary
 	  }
 	| {
-			'@context': MessageContext.LwM2MShadows
+			'@context': typeof MessageContext.LwM2MShadows
 	  }
 	| {
-			'@context': MessageContext.MemfaultReboot
+			'@context': typeof MessageContext.MemfaultReboot
 			reboot: Reboot
 	  }
 	| {
-			'@context': MessageContext.LwM2MUpdate
+			'@context': typeof MessageContext.LwM2MUpdate
 			deviceId: string
 			objects: Array<LwM2MObjectInstance>
 	  }
@@ -76,7 +78,7 @@ type Message = {
 type Listener = (message: Record<string, unknown>) => void
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
-	const connection = useRef<WebSocket>()
+	const connection = useRef<WebSocket | undefined>(undefined)
 	const deviceMessages = useDevices()
 	const [connected, setConnected] = useState<boolean>(false)
 	const [connectionAttempt, setConnectionAttempt] = useState<number>(1)
@@ -114,7 +116,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			try {
 				message = JSON.parse(msg.data) as Message
 				console.debug(`[WS]`, message['@context'], message)
-			} catch (err) {
+			} catch {
 				console.error(`[WS]`, `Failed to parse message as JSON`, msg.data)
 				return
 			}

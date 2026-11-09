@@ -17,7 +17,7 @@ export const NRPlusTopology = ({
 	showHelpers?: boolean
 }) => {
 	// Start with the sink nodes, for now we assume only one sink
-	const sinkNodes = topology.nodes.filter(({ sink }) => sink)
+	const sinkNodes = topology.nodes.filter(({ sink }) => sink === true)
 	const s = nodeSize ?? 20
 	return (
 		<svg

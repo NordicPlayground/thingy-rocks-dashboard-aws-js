@@ -1,12 +1,13 @@
 import type { NRPlusNetworkTopology } from './nrplus/parseTopology.ts'
 
-export enum DeviceType {
-	WIREPAS_5G_MESH_GW = 'wirepas-5g-mesh-gateway',
-	NRPLUS_GW = 'nrplus-gateway',
-	SOFT_SIM = 'soft-sim',
-	NORDIC_NRPLUS = 'nordic-nrplus',
-	VIDEO = 'video',
-}
+export const DeviceType = {
+	WIREPAS_5G_MESH_GW: 'wirepas-5g-mesh-gateway',
+	NRPLUS_GW: 'nrplus-gateway',
+	SOFT_SIM: 'soft-sim',
+	NORDIC_NRPLUS: 'nordic-nrplus',
+	VIDEO: 'video',
+} as const
+export type DeviceType = (typeof DeviceType)[keyof typeof DeviceType]
 
 export const isDeviceType = (value: unknown): value is DeviceType =>
 	Object.values(DeviceType).includes(value as DeviceType)
@@ -29,33 +30,35 @@ export type NoData = 'gnss' | 'ncell'
 /**
  * @see https://infocenter.nordicsemi.com/topic/ref_at_commands/REF/at_commands/mob_termination_ctrl_status/coneval_set.html
  */
-export enum EnergyEstimate {
+export const EnergyEstimate = {
 	/**
 	 * Bad conditions. Difficulties in setting up connections.
 	 * Maximum number of repetitions might be needed for data.
 	 */
-	Bad = 5,
+	Bad: 5,
 	/**
 	 * Poor conditions.
 	 * Setting up a connection might require retries and a higher number of
 	 * repetitions for data.
 	 */
-	Poor = 6,
+	Poor: 6,
 	/**
 	 * Normal conditions for cIoT device.
 	 * No repetitions for data or only a few repetitions in the worst case.
 	 */
-	Normal = 7,
+	Normal: 7,
 	/**
 	 * Good conditions. Possibly very good conditions for small amounts of data.
 	 */
-	Good = 8,
+	Good: 8,
 	/**
 	 * Excellent conditions.
 	 * Efficient data transfer estimated also for larger amounts of data.
 	 */
-	Excellent = 9,
-}
+	Excellent: 9,
+} as const
+export type EnergyEstimate =
+	(typeof EnergyEstimate)[keyof typeof EnergyEstimate]
 
 type GeoLocationData = {
 	v: {
@@ -149,14 +152,16 @@ export type Reported = Partial<{
 	}
 }>
 
-export enum GeoLocationSource {
-	GNSS = 'GNSS',
-	fixed = 'fixed',
-	MCELL = 'MCELL',
-	SCELL = 'SCELL',
-	WIFI = 'WIFI',
-	LPL = 'LPL',
-}
+export const GeoLocationSource = {
+	GNSS: 'GNSS',
+	fixed: 'fixed',
+	MCELL: 'MCELL',
+	SCELL: 'SCELL',
+	WIFI: 'WIFI',
+	LPL: 'LPL',
+} as const
+export type GeoLocationSource =
+	(typeof GeoLocationSource)[keyof typeof GeoLocationSource]
 
 export type GeoLocation = {
 	lat: number
@@ -206,10 +211,12 @@ export type NRPlusGateway = {
 /**
  * Quality of Service
  */
-export enum WirepasMeshQOS {
-	Normal = 0,
-	High = 1,
-}
+export const WirepasMeshQOS = {
+	Normal: 0,
+	High: 1,
+} as const
+export type WirepasMeshQOS =
+	(typeof WirepasMeshQOS)[keyof typeof WirepasMeshQOS]
 
 export type WirepasGatewayNode = {
 	// latency in MS
@@ -235,7 +242,7 @@ export type WirepasGatewayNode = {
 }
 export type WirepasGateway = {
 	id: string
-	type: DeviceType.WIREPAS_5G_MESH_GW
+	type: typeof DeviceType.WIREPAS_5G_MESH_GW
 	location?: Location
 	state: {
 		nodes: Record<string /* node id */, WirepasGatewayNode>
@@ -263,7 +270,7 @@ export type NordicNrplusButtonPress = {
 
 export type NordicNrplusDevice = {
 	id: string
-	type: DeviceType.NORDIC_NRPLUS
+	type: typeof DeviceType.NORDIC_NRPLUS
 	location?: Location
 	state?: Reported & {
 		nordicNrplus: {
@@ -348,7 +355,7 @@ export const isNordicNrplus = (device: Device): device is NordicNrplusDevice =>
 
 export type VideoDevice = {
 	id: string
-	type: DeviceType.VIDEO
+	type: typeof DeviceType.VIDEO
 }
 
 export const isVideoDevice = (

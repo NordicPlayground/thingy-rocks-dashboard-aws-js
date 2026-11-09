@@ -2,7 +2,7 @@ import { styled } from 'styled-components'
 import type { Device } from './DeviceType.ts'
 import { mccmnc2country } from './mccmnc2country.js'
 
-export const Flag = styled.img`
+export const Flag = styled.img<{ alt?: string; title?: string }>`
 	width: 20px;
 	margin-left: 0.5rem;
 `

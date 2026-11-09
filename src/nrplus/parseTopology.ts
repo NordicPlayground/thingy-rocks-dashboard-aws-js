@@ -50,12 +50,12 @@ export const parseTopology = (topology: string): NRPlusNetworkTopology => {
 
 	const s = new Bytestream(topology)
 
-	let node: null | NRPlusNodeInfo = null
+	let node: null | NRPlusNodeInfo
 	while ((node = readNode(s))) {
 		nodes.push(node)
 	}
 
-	let connection: NRPlusNodeConnection | null = null
+	let connection: NRPlusNodeConnection | null
 	while ((connection = readConnection(s))) {
 		connections.push(connection)
 	}
