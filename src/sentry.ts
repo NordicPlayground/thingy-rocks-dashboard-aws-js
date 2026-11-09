@@ -1,4 +1,3 @@
-import { browserTracingIntegration } from '@sentry/browser'
 import * as Sentry from '@sentry/react'
 
 const enableSentry =
@@ -8,7 +7,7 @@ if (enableSentry) {
 	console.debug(`Sentry enabled.`)
 	Sentry.init({
 		dsn: SENTRY_DSN,
-		integrations: [browserTracingIntegration()],
+		integrations: [Sentry.browserTracingIntegration()],
 		tracesSampleRate: 0.05,
 		release: VERSION,
 	})
