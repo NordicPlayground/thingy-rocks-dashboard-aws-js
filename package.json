@@ -37,7 +37,6 @@
     "@bifravst/rsrp-bar": "9.0.3",
     "@hello.nrfcloud.com/proto-map": "18.1.0",
     "@sentry/react": "11.11.0",
-    "@sentry/tracing": "7.120.4",
     "@sentry/vite-plugin": "11.11.0",
     "aws-amplify": "6.22.2",
     "compare-versions": "6.1.1",
