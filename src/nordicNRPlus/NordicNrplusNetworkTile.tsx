@@ -119,15 +119,12 @@ export const NordicNrplusNetworkTile = ({
 	const { lastUpdateTs } = useDevices()
 
 	// Get the most recently updated device for the network title
-	const mostRecentDevice = devices.reduce(
-		(latest, device) => {
-			if (!latest) return device
-			const deviceTime = lastUpdateTs[device.id]?.getTime() ?? 0
-			const latestTime = lastUpdateTs[latest.id]?.getTime() ?? 0
-			return deviceTime > latestTime ? device : latest
-		},
-		devices[0] as NordicNrplusDevice | undefined,
-	)
+	const mostRecentDevice = devices.reduce((latest, device) => {
+		if (!latest) return device
+		const deviceTime = lastUpdateTs[device.id]?.getTime() ?? 0
+		const latestTime = lastUpdateTs[latest.id]?.getTime() ?? 0
+		return deviceTime > latestTime ? device : latest
+	}, devices[0])
 
 	const lastUpdateTime = mostRecentDevice
 		? lastUpdateTs[mostRecentDevice.id]

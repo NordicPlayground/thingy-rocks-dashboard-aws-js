@@ -16,6 +16,7 @@ import {
 	DeviceType,
 	GeoLocationSource,
 	isDeviceType,
+	type EnergyEstimate,
 	type GeoLocation,
 	type Reported,
 } from '../DeviceType.ts'
@@ -125,7 +126,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 const isLwM2MShadows = (
 	message: unknown,
 ): message is {
-	'@context': MessageContext.LwM2MShadows
+	'@context': typeof MessageContext.LwM2MShadows
 	shadows: Array<{
 		deviceId: string
 		alias?: string
@@ -187,7 +188,7 @@ const isButtonPress = (
 const isLwM2MUpdate = (
 	message: unknown,
 ): message is {
-	'@context': MessageContext.LwM2MUpdate
+	'@context': typeof MessageContext.LwM2MUpdate
 	deviceId: string
 	alias?: string
 	deviceType?: string // e.g. 'nordic-nrplus'
@@ -240,7 +241,16 @@ const processObjects = (
 				11: eest,
 			} = object.Resources
 			reported.roam = {
-				v: { band, nw, rsrp, area, mccmnc, cell, ip, eest },
+				v: {
+					band,
+					nw,
+					rsrp,
+					area,
+					mccmnc,
+					cell,
+					ip,
+					eest: eest as EnergyEstimate | undefined,
+				},
 				ts: new Date(object.Resources['99'] * 1000).getTime(),
 			}
 		} else if (isEnvironment(object)) {

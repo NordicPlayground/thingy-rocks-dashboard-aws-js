@@ -106,7 +106,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 const isMemfaultReboot = (
 	message: unknown,
 ): message is {
-	'@context': MessageContext.MemfaultReboot
+	'@context': typeof MessageContext.MemfaultReboot
 	deviceId: string
 	reboot: Reboot
 } =>
