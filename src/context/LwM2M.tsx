@@ -9,6 +9,7 @@ import {
 	type Geolocation_14201,
 	type LwM2MObjectInstance,
 	type NetworkNeighbor_14502,
+	type RGBLED_14240,
 } from '@hello.nrfcloud.com/proto-map/lwm2m'
 import { createContext, type ComponentChildren } from 'preact'
 import { useContext, useEffect, useState } from 'preact/hooks'
@@ -18,6 +19,7 @@ import {
 	isDeviceType,
 	type EnergyEstimate,
 	type GeoLocation,
+	type NordicNrplusNeighbor,
 	type Reported,
 } from '../DeviceType.ts'
 import { useDevices } from './Devices.js'
@@ -27,6 +29,7 @@ import { MessageContext, useWebsocket } from './WebsocketConnection.js'
 const NETWORK_NEIGHBOR_OBJECT_ID = 14502
 const DECT_NR_PLUS_CONNECTION_PROFILE_OBJECT_ID = 14503
 const BUTTON_PRESS_OBJECT_ID = 14220
+const RGB_LED_OBJECT_ID = 14240
 
 const LwM2MContext = createContext<{
 	objects: Record<string, LwM2MObjectInstance[]>
@@ -184,6 +187,11 @@ const isButtonPress = (
 	object: unknown,
 ): object is LwM2MObjectInstance<ButtonPress_14220> =>
 	isLwM2MObjectInstance(BUTTON_PRESS_OBJECT_ID, object)
+
+const isRGBLED = (
+	object: unknown,
+): object is LwM2MObjectInstance<RGBLED_14240> =>
+	isLwM2MObjectInstance(RGB_LED_OBJECT_ID, object)
 
 const isLwM2MUpdate = (
 	message: unknown,
@@ -348,23 +356,70 @@ const processObjects = (
 			}
 		} else if (isNetworkNeighbor(object)) {
 			// Process 14502 Network Neighbor object
-			const { 0: neighborId, 1: rssi } = object.Resources
+			const {
+				0: neighborId,
+				1: rssi,
+				2: snr,
+				3: rxMcs,
+				4: txPower,
+				5: txAttempts,
+				6: harqNack,
+				7: missedBeacons,
+				8: lastSeen,
+				9: neighborTxPower,
+			} = object.Resources
 			const instanceId = object.ObjectInstanceID?.toString() ?? '0'
 			initNordicNrPlusState(reported)
 			reported.nordicNrplus.neighbors[instanceId] = {
 				neighborId,
 				rssi,
+				snr,
+				rxMcs,
+				// A null clears the value in the shadow
+				txPower: txPower ?? undefined,
+				neighborTxPower,
+				txAttempts,
+				harqNack,
+				missedBeacons,
+				lastSeen,
 				ts: new Date(object.Resources['99'] * 1000).getTime(),
 			}
 		} else if (isDECTNRPlusConnectionProfile(object)) {
 			// Process 14503 DECT NR+ Connection Profile object
-			const { 0: longRdId, 1: networkId, 2: operationalMode } = object.Resources
+			const {
+				0: longRdId,
+				1: networkId,
+				2: operationalMode,
+				3: globalIpv6,
+				4: linkLocalIpv6,
+				5: band,
+				6: channel,
+			} = object.Resources
 			initNordicNrPlusState(reported)
 			reported.nordicNrplus.connectionProfile = {
 				longRdId,
 				networkId,
 				operationalMode,
+				band,
+				channel,
+				globalIpv6,
+				linkLocalIpv6,
 				ts: new Date(object.Resources['99'] * 1000).getTime(),
+			}
+		} else if (isRGBLED(object)) {
+			// Process 14240 RGB LED object (only the first LED is shown)
+			if ((object.ObjectInstanceID ?? 0) === 0) {
+				const {
+					0: red,
+					1: green,
+					2: blue,
+					3: mode,
+					4: period,
+				} = object.Resources
+				reported.led = {
+					v: { red, green, blue, mode, period },
+					ts: new Date(object.Resources['99'] * 1000).getTime(),
+				}
 			}
 		} else if (isButtonPress(object)) {
 			// Process 14220 Button Press object
@@ -381,12 +436,19 @@ const processObjects = (
 }
 
 type NordicNrPlusState = {
-	neighbors: Record<string, { neighborId?: number; rssi?: number; ts: number }>
+	neighbors: Record<
+		string,
+		Omit<NordicNrplusNeighbor, 'neighborId'> & { neighborId?: number }
+	>
 	connectionProfile:
 		| {
 				longRdId?: number
 				networkId?: number
 				operationalMode?: string
+				band?: number
+				channel?: number
+				globalIpv6?: string
+				linkLocalIpv6?: string
 				ts: number
 		  }
 		| undefined

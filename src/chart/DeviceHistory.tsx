@@ -1,8 +1,11 @@
 import { format, subSeconds } from 'date-fns'
 import {
+	Activity,
 	ArrowLeftRight,
 	Battery,
 	CloudSunRain,
+	Gauge,
+	Signal,
 	X,
 	Zap,
 	type LucideIcon,
@@ -67,6 +70,14 @@ const findLowerLimit = (v: Array<Reading>): number =>
 	)
 
 /**
+ * Some devices report the pressure in kPa (e.g. 101.5), others in hPa
+ * (e.g. 1015), which is the unit of the Environment object (14205).
+ * The atmospheric pressure is never below 200 hPa, so a smaller value is kPa.
+ */
+const toHPa = (pressure: number): number =>
+	pressure < 200 ? pressure * 10 : pressure
+
+/**
  * Displays the history chart
  */
 export const DeviceHistory = () => {
@@ -106,13 +117,26 @@ export const DeviceHistory = () => {
 			format: (v) => `${v.toFixed(1)}°C`,
 		})
 	}
-	if (history?.hPa !== undefined) {
+	if (history?.hum !== undefined) {
 		envData.push({
-			min: 85,
-			max: 110,
-			values: history.hPa.map(([v, d]) => [v, subSeconds(history.base, d)]),
+			min: 0,
+			max: 100,
+			values: history.hum.map(([v, d]) => [v, subSeconds(history.base, d)]),
+			color: colors['nordic-power'],
+			format: (v) => `${Math.round(v)}%`,
+		})
+	}
+	const pressureData: Dataset[] = []
+	if (history?.hPa !== undefined) {
+		pressureData.push({
+			min: 850,
+			max: 1100,
+			values: history.hPa.map(([v, d]) => [
+				toHPa(v),
+				subSeconds(history.base, d),
+			]),
 			color: colors['nordic-blue'],
-			format: (v) => `${(v * 10).toFixed(0)} hPa`,
+			format: (v) => `${Math.round(v)} hPa`,
 		})
 	}
 	if (envData.length > 0) {
@@ -121,6 +145,14 @@ export const DeviceHistory = () => {
 			title: 'Env.',
 			color: colors['nordic-red'],
 			datasets: envData,
+		})
+	}
+	if (pressureData.length > 0) {
+		charts.push({
+			Icon: Gauge,
+			title: 'Pressure',
+			color: colors['nordic-blue'],
+			datasets: pressureData,
 		})
 	}
 
@@ -167,6 +199,43 @@ export const DeviceHistory = () => {
 					]),
 					color: colors['nordic-blue'],
 					format: (v) => `${Math.floor(v)} ms`,
+				},
+			],
+		})
+	}
+
+	// DECT NR+ link quality: signal strength and SNR have their own scale
+	if (history?.rssi !== undefined) {
+		charts.push({
+			Icon: Signal,
+			title: 'RSSI',
+			color: colors['nordic-blue'],
+			datasets: [
+				{
+					min: -110,
+					max: -40,
+					values: history.rssi.map(([v, d]) => [
+						v,
+						subSeconds(history.base, d),
+					]),
+					color: colors['nordic-blue'],
+					format: (v) => `${Math.round(v)} dBm`,
+				},
+			],
+		})
+	}
+	if (history?.snr !== undefined) {
+		charts.push({
+			Icon: Activity,
+			title: 'SNR',
+			color: colors['nordic-sun'],
+			datasets: [
+				{
+					min: 0,
+					max: 40,
+					values: history.snr.map(([v, d]) => [v, subSeconds(history.base, d)]),
+					color: colors['nordic-sun'],
+					format: (v) => `${Math.round(v)} dB`,
 				},
 			],
 		})
