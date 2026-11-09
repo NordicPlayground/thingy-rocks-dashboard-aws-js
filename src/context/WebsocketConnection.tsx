@@ -23,6 +23,7 @@ export const WebsocketContext = createContext<{
 	removeMessageListener: () => undefined,
 })
 
+// eslint-disable-next-line no-restricted-syntax
 export enum MessageContext {
 	DeviceShadow = 'https://thingy.rocks/device-shadow',
 	DeviceMessage = 'https://thingy.rocks/device-message',
@@ -76,7 +77,7 @@ type Message = {
 type Listener = (message: Record<string, unknown>) => void
 
 export const Provider = ({ children }: { children: ComponentChildren }) => {
-	const connection = useRef<WebSocket>()
+	const connection = useRef<WebSocket | undefined>(undefined)
 	const deviceMessages = useDevices()
 	const [connected, setConnected] = useState<boolean>(false)
 	const [connectionAttempt, setConnectionAttempt] = useState<number>(1)
@@ -114,7 +115,7 @@ export const Provider = ({ children }: { children: ComponentChildren }) => {
 			try {
 				message = JSON.parse(msg.data) as Message
 				console.debug(`[WS]`, message['@context'], message)
-			} catch (err) {
+			} catch {
 				console.error(`[WS]`, `Failed to parse message as JSON`, msg.data)
 				return
 			}

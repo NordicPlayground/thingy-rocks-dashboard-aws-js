@@ -34,7 +34,7 @@ const Chart = ({ connections }: { connections: Connection[] }) => {
 	}, [])
 
 	const [width, height] = [500, 500]
-	const containerRef = useRef<HTMLDivElement>()
+	const containerRef = useRef<HTMLDivElement | undefined>(undefined)
 	return (
 		<ChartContainer
 			ref={containerRef as Ref<HTMLElement>}

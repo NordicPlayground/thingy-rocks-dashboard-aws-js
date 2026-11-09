@@ -196,7 +196,7 @@ const IconWithText = styled.div`
 `
 
 const Chart = ({ charts: charts }: { charts: ChartInfo[] }) => {
-	const containerRef = useRef<HTMLDivElement>()
+	const containerRef = useRef<HTMLDivElement | undefined>(undefined)
 	const [width, height] = [
 		window.innerWidth * chartBaseWidth,
 		((window.innerHeight * chartBaseHeight) / 3) * charts.length,
